@@ -1,0 +1,50 @@
+@font-face {
+    font-family: Cyber;
+    src: url("https://assets.codepen.io/605876/Blender-Pro-Bold.otf");
+    font-display: swap;
+  }
+
+::placeholder {
+  color: rgb(255, 255, 255);
+  opacity: 1; /* Firefox */
+}
+  
+#data {
+  height: auto; 
+  background-image: url('../imgs/background.jpg');
+  
+  background-position: center; 
+  background-size: cover; 
+  background-repeat: no-repeat; 
+  /* backdrop-filter: blur(2px); */
+  background-attachment: fixed; 
+  /* background: linear-gradient(90deg, rgba(255, 109, 238, 0.5) 70%, rgba(230,222,0,0.5) 70%, rgba(255, 255, 255, 0)); */
+}
+
+
+#neon-text-1 {
+  font-size: 48px;
+  color: #1cf0ff; /* Yellow color */
+  text-shadow: 0 0 10px #1c95ff, 0 0 20px #3fa5ff, 0 0 30px #36a1ff, 0 0 40px #1c95ff, 0 0 70px #ff00ff, 0 0 80px #ff00ff, 0 0 100px #ff00ff, 0 0 150px #ff00ff;
+  animation: neon 1.5s infinite alternate;
+}
+
+#neon-text-2 {
+  font-size: 48px;
+  color: #bbf5f9; /* Yellow color */
+  text-shadow: 0 0 10px #c3f6fa, 0 0 20px #84c2f8, 0 0 30px #8ec4f4, 0 0 40px #6cb5f4, 0 0 70px #ff00ff, 0 0 80px #ff00ff, 0 0 100px #ff00ff, 0 0 150px #ff00ff;
+  animation: neon 1.5s infinite alternate;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  font-family: 'Cyber', sans-serif;
+  /* background-color: rgba(0, 0, 0, 0.1); */
+}
