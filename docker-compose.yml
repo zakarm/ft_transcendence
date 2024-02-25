@@ -2,24 +2,38 @@ version: '3.8'
 
 services:
     back-end:
+        container_name: back-end
         build: 
             context: ./back-end
             dockerfile: Dockerfile
+        depends_on:
+            - data-base
         ports:
             - "8000:8000"
-        volumes:
-            - ./back-end:/back-end
         networks:
             - ft_transcendence
 
     front-end:
+        container_name: front-end
         build: 
             context: ./front-end
             dockerfile: Dockerfile
+        depends_on:
+            - back-end
         ports:
             - "3000:3000"
-        volumes:
-            - ./front-end:/front-end
+        networks:
+            - ft_transcendence
+    
+    data-base:
+        container_name: data-base
+        build: 
+            context: ./data-base
+            dockerfile: Dockerfile
+        environment:
+            POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+            - "3306:3306"
         networks:
             - ft_transcendence
 
