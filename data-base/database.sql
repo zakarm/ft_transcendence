@@ -1,0 +1,113 @@
+CREATE DATABASE transcendence;
+
+\c transcendence;
+
+CREATE TABLE IF NOT EXISTS public."Users"
+(
+    user_id SERIAL PRIMARY KEY,
+    first_name character(20) NOT NULL,
+    last_name character(20) NOT NULL,
+    nick_name character(20) NOT NULL,
+    user_xp real NOT NULL,
+    image_url character(200) NOT NULL,
+    cover_url character(200) NOT NULL,
+    first_log date NOT NULL,
+    last_log date NOT NULL,
+    is_log boolean NOT NULL,
+    is_two_fact boolean NOT NULL,
+    two_fact_secret character(200) NOT NULL,
+    country character(60) NOT NULL,
+    city character(60) NOT NULL,
+    password character(200) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS public."Messages"
+(
+    user_one integer NOT NULL,
+    user_two integer NOT NULL,
+    message_content character(512) NOT NULL,
+    message_date date NOT NULL,
+    message_direction character(20) NOT NULL,
+    PRIMARY KEY (user_one, user_two)
+);
+
+CREATE TABLE IF NOT EXISTS public."Friendship"
+(
+    user_from integer NOT NULL,
+    user_to integer NOT NULL,
+    is_accepted boolean NOT NULL,
+    PRIMARY KEY (user_from, user_to)
+);
+
+CREATE TABLE IF NOT EXISTS public."Rgames"
+(
+    id_rgame SERIAL PRIMARY KEY,
+    user_one integer NOT NULL,
+    user_two integer NOT NULL,
+    score_user_one integer NOT NULL,
+    score_user_two integer,
+    game_time time(0) without time zone NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS public."Achievements"
+(
+    achievement_id SERIAL PRIMARY KEY,
+    user_id integer NOT NULL,
+    achiev_name character(45) NOT NULL,
+    xp_to_get real NOT NULL
+);
+
+ALTER TABLE IF EXISTS public."Messages"
+    ADD CONSTRAINT user_one FOREIGN KEY (user_one)
+    REFERENCES public."Users" (user_id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."Messages"
+    ADD CONSTRAINT user_two FOREIGN KEY (user_two)
+    REFERENCES public."Users" (user_id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."Friendship"
+    ADD CONSTRAINT user_from FOREIGN KEY (user_from)
+    REFERENCES public."Users" (user_id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."Friendship"
+    ADD CONSTRAINT user_to FOREIGN KEY (user_to)
+    REFERENCES public."Users" (user_id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."Rgames"
+    ADD CONSTRAINT user_one FOREIGN KEY (user_one)
+    REFERENCES public."Users" (user_id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."Rgames"
+    ADD CONSTRAINT user_two FOREIGN KEY (user_two)
+    REFERENCES public."Users" (user_id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."Achievements"
+    ADD CONSTRAINT user_id FOREIGN KEY (user_id)
+    REFERENCES public."Users" (user_id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
