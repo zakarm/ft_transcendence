@@ -6,34 +6,40 @@ services:
         build: 
             context: ./back-end
             dockerfile: Dockerfile
+        restart: always
         depends_on:
             - data-base
         ports:
             - "8000:8000"
+        env_file:
+            - .env
         networks:
             - ft_transcendence
 
-    front-end:
-        container_name: front-end
-        build: 
-            context: ./front-end
-            dockerfile: Dockerfile
-        depends_on:
-            - back-end
-        ports:
-            - "3000:3000"
-        networks:
-            - ft_transcendence
+    # front-end:
+    #     container_name: front-end
+    #     build: 
+    #         context: ./front-end
+    #         dockerfile: Dockerfile
+    #     depends_on:
+    #         - back-end
+    #     ports:
+    #         - "3000:3000"
+    #     env_file:
+    #         - .env
+    #     networks:
+    #         - ft_transcendence
     
     data-base:
         container_name: data-base
         build: 
             context: ./data-base
             dockerfile: Dockerfile
-        environment:
-            POSTGRES_HOST_AUTH_METHOD: trust
+        restart: always
         ports:
-            - "3306:3306"
+            - "5432:5432"
+        env_file:
+            - .env
         networks:
             - ft_transcendence
 
