@@ -2,7 +2,7 @@
 
 ## I. Conception
 ### 1. UML [Unified Modeling Language]
-#### - Use Case
+> - Use Case
 
 <img src="https://github.com/zakarm/ft_transcendence_trash/blob/main/use_case.drawio.png">
 
