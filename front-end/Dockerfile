@@ -1,8 +1,8 @@
-FROM node:14.15.4
+FROM node:20.6.1
 
-WORKDIR /front-end
+WORKDIR /app
 
-COPY . .
+COPY ./app .
 
 RUN npm install
 
