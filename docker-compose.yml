@@ -18,19 +18,19 @@ services:
         networks:
             - ft_transcendence
 
-    # front-end:
-    #     container_name: front-end
-    #     build: 
-    #         context: ./front-end
-    #         dockerfile: Dockerfile
-    #     depends_on:
-    #         - back-end
-    #     ports:
-    #         - "3000:3000"
-    #     env_file:
-    #         - .env
-    #     networks:
-    #         - ft_transcendence
+    front-end:
+        container_name: front-end
+        build: 
+            context: ./front-end
+            dockerfile: Dockerfile
+        depends_on:
+            - back-end
+        ports:
+            - "3000:3000"
+        env_file:
+            - .env
+        networks:
+            - ft_transcendence
     
     data-base:
         container_name: data-base

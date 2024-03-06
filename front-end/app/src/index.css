@@ -14,23 +14,28 @@ body {
   border: 1px solid black;
   display: flex ;
   justify-content: center;
-  align-items: center;
+  height: 100vh;
+  max-width: 2400px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .row {
   display: flex ;
   border: 1px solid black;
-  width: 80%;
+  width: 90%;
 }
 
 .col-2{
   float: left;
-  width: 10%;
+  width: 5%;
   border: 1px solid rgb(201, 83, 83);
+  background-color: #161625;
 }
 
 .col-8{
   float: left;
-  width: 90%;
+  width: 95%;
   border: 1px solid rgb(127, 61, 189);
+  background-color: #000000;
 }
