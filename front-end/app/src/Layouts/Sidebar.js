@@ -1,5 +1,7 @@
 
 import { Link } from 'react-router-dom';
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 import './Sidebar.css';
 
 import { IoSettings , IoChatbubbles} from "react-icons/io5";
