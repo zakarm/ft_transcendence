@@ -1,0 +1,12 @@
+
+.side-icon{
+    height: 48px; /* Set the height of the image */
+    width: auto;
+}
+.side-icon:hover
+{
+    /* fill: #FF4755; */
+    border: 1px solid #FF4755;
+    border-radius: 50%; /* Make the border circular */
+    padding: 5px;
+}
