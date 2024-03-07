@@ -6,29 +6,31 @@ import './Sidebar.css';
 
 import { IoSettings , IoChatbubbles} from "react-icons/io5";
 import { GiLaurelsTrophy } from "react-icons/gi";
-import { GiGamepad } from "react-icons/gi";
 import { BiSolidDashboard } from "react-icons/bi";
-
-import { useState } from 'react';
+import { GiGamepad } from "react-icons/gi";
+import { IoChatbubblesSharp , IoSettings , IoTrophy } from "react-icons/io5";
+import { AiOutlineLogout } from "react-icons/ai";
+import './Sidebar.css'
 
 function SideBar() {
-  const [activeIcon, setActiveIcon] = useState(null);
   return (
-      <div className="d-inline-flex flex-column justify-content-around align-items-center vh-100 p-3" style={{backgroundColor: '#161625', borderRadius: '25px 25px 25px 25px'}}>
-        <div className="flex-grow-1 pt-3">
-          <img src="assets/LOGO.svg" className="img-fluid rounded rounded-circle" alt="ying" style={{height: '64px', width: '64px'}} />
+    <div class="container vh-100">
+      <div class="d-flex flex-column justify-content-around align-items-center vh-100" >
+        <div class="flex-grow-1 d-flex align-items-start pt-3">
+          <img src="yin_yang.jpg" class="img-thumbnail" alt="ying" />
         </div>
-        <div className="flex-grow-1 d-flex flex-column justify-content-around">
-          <Link className="" to="/"             ><BiSolidDashboard className="side-icon" color={activeIcon === 0 ? '#FF4755' : '#FFEBEB'} onClick={() => {setActiveIcon(0)}}/></Link>
-          <Link className="" to="/game"         ><GiGamepad className="side-icon" color={activeIcon === 1 ? '#FF4755' : '#FFEBEB'} onClick={() => {setActiveIcon(1)}}/></Link>
-          <Link className="" to="/chat"         ><IoChatbubbles className="side-icon" color={activeIcon === 2 ? '#FF4755' : '#FFEBEB'} onClick={() => {setActiveIcon(2)}}/></Link>
-          <Link className="" to="/achievement"  ><GiLaurelsTrophy className="side-icon" color={activeIcon === 3 ? '#FF4755' : '#FFEBEB'} onClick={() => {setActiveIcon(3)}}/></Link>
-          <Link className="" to="/settings"     ><IoSettings className="side-icon" color={activeIcon === 4 ? '#FF4755' : '#FFEBEB'} onClick={() => {setActiveIcon(4)}}/></Link>
+        <div class="flex-grow-1 d-flex flex-column justify-content-around align-items-center">
+          <Link class="" to="/"         ><BiSolidDashboard color='#FFEBEB' size='3em'/></Link>
+          <Link class="" to="/game"     ><GiGamepad color='#FFEBEB' size='3em'/></Link>
+          <Link class="" to="/chat"     ><IoChatbubblesSharp color='#FFEBEB' size='3em'/></Link>
+          <Link class="" to="/settings" ><IoSettings color='#FFEBEB' size='3em'/></Link>
+          <Link class="" to="/settings" ><IoTrophy color='#FFEBEB' size='3em'/></Link>
         </div>
-        <div className="flex-grow-1 d-flex align-items-end pb-3">
-          <img className="" src="assets/Logout.svg" alt="logout"/>
+        <div class="flex-grow-1 d-flex align-items-end pb-3">
+          <AiOutlineLogout color='#FFEBEB' size='3em'/>
         </div>
       </div>
+    </div>
   );
 }
 
