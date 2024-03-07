@@ -2,13 +2,13 @@ CREATE DATABASE transcendence;
 
 \c transcendence;
 
+
 BEGIN;
 
 
 CREATE TABLE IF NOT EXISTS public."Achievements"
 (
     achievement_id serial NOT NULL,
-    user_id integer NOT NULL,
     achiev_name character(45) COLLATE pg_catalog."default" NOT NULL,
     xp_to_get real NOT NULL,
     CONSTRAINT "Achievements_pkey" PRIMARY KEY (achievement_id)
@@ -16,10 +16,11 @@ CREATE TABLE IF NOT EXISTS public."Achievements"
 
 CREATE TABLE IF NOT EXISTS public."Friendship"
 (
+    freindship_id serial NOT NULL,
     user_from integer NOT NULL,
     user_to integer NOT NULL,
     is_accepted boolean NOT NULL,
-    CONSTRAINT "Friendship_pkey" PRIMARY KEY (user_from, user_to)
+    PRIMARY KEY (freindship_id)
 );
 
 CREATE TABLE IF NOT EXISTS public."Messages"
@@ -32,16 +33,18 @@ CREATE TABLE IF NOT EXISTS public."Messages"
     CONSTRAINT "Messages_pkey" PRIMARY KEY (user_one, user_two)
 );
 
-CREATE TABLE IF NOT EXISTS public."Rgames"
+CREATE TABLE IF NOT EXISTS public."Matches"
 (
-    id_rgame serial NOT NULL,
+    match_id serial NOT NULL,
     user_one integer NOT NULL,
     user_two integer NOT NULL,
     score_user_one integer NOT NULL,
     score_user_two integer NOT NULL,
-    game_start date NOT NULL,
-    game_end date NOT NULL,
-    CONSTRAINT "Rgames_pkey" PRIMARY KEY (id_rgame)
+    match_start date NOT NULL,
+    match_end date NOT NULL,
+    tackle_user_one integer NOT NULL,
+    tackle_user_two integer NOT NULL,
+    CONSTRAINT "Rgames_pkey" PRIMARY KEY (match_id)
 );
 
 CREATE TABLE IF NOT EXISTS public."Users"
@@ -64,25 +67,30 @@ CREATE TABLE IF NOT EXISTS public."Users"
     CONSTRAINT "Users_pkey" PRIMARY KEY (user_id)
 );
 
-CREATE TABLE IF NOT EXISTS public."Tgames"
+CREATE TABLE IF NOT EXISTS public."UserAchievements"
 (
-    id_tgame serial NOT NULL,
-    rgame_one integer NOT NULL,
-    rgame_two integer NOT NULL,
-    rgame_three integer NOT NULL,
-    rgame_four integer NOT NULL,
-    game_start date NOT NULL,
-    game_end date NOT NULL,
-    PRIMARY KEY (id_tgame)
+    user_id integer NOT NULL,
+    achivement_id integer NOT NULL,
+    achive_date date NOT NULL,
+    PRIMARY KEY (user_id, achivement_id)
 );
 
-ALTER TABLE IF EXISTS public."Achievements"
-    ADD CONSTRAINT user_id FOREIGN KEY (user_id)
-    REFERENCES public."Users" (user_id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
+CREATE TABLE IF NOT EXISTS public."Tournaments"
+(
+    tournament_id serial NOT NULL,
+    tournament_name character(30) NOT NULL,
+    tournament_start date NOT NULL,
+    tournament_end date NOT NULL,
+    PRIMARY KEY (tournament_name)
+);
 
+CREATE TABLE IF NOT EXISTS public."TournamentsMatches"
+(
+    tournament_id integer NOT NULL,
+    match_id integer NOT NULL,
+    tournament_round character(30) NOT NULL,
+    PRIMARY KEY (tournament_round, match_id)
+);
 
 ALTER TABLE IF EXISTS public."Friendship"
     ADD CONSTRAINT user_from FOREIGN KEY (user_from)
@@ -116,7 +124,7 @@ ALTER TABLE IF EXISTS public."Messages"
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public."Rgames"
+ALTER TABLE IF EXISTS public."Matches"
     ADD CONSTRAINT user_one FOREIGN KEY (user_one)
     REFERENCES public."Users" (user_id) MATCH SIMPLE
     ON UPDATE NO ACTION
@@ -124,7 +132,7 @@ ALTER TABLE IF EXISTS public."Rgames"
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public."Rgames"
+ALTER TABLE IF EXISTS public."Matches"
     ADD CONSTRAINT user_two FOREIGN KEY (user_two)
     REFERENCES public."Users" (user_id) MATCH SIMPLE
     ON UPDATE NO ACTION
@@ -132,33 +140,33 @@ ALTER TABLE IF EXISTS public."Rgames"
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public."Tgames"
-    ADD CONSTRAINT rgame_one FOREIGN KEY (rgame_one)
-    REFERENCES public."Rgames" (id_rgame) MATCH SIMPLE
+ALTER TABLE IF EXISTS public."UserAchievements"
+    ADD CONSTRAINT user_id FOREIGN KEY (user_id)
+    REFERENCES public."Users" (user_id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public."Tgames"
-    ADD CONSTRAINT rgame_two FOREIGN KEY (rgame_two)
-    REFERENCES public."Rgames" (id_rgame) MATCH SIMPLE
+ALTER TABLE IF EXISTS public."UserAchievements"
+    ADD CONSTRAINT achivement_id FOREIGN KEY (achivement_id)
+    REFERENCES public."Achievements" (achievement_id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public."Tgames"
-    ADD CONSTRAINT rgame_three FOREIGN KEY (rgame_three)
-    REFERENCES public."Rgames" (id_rgame) MATCH SIMPLE
+ALTER TABLE IF EXISTS public."TournamentsMatches"
+    ADD CONSTRAINT tournament_id FOREIGN KEY (tournament_id)
+    REFERENCES public."Tournaments" (tournament_id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public."Tgames"
-    ADD CONSTRAINT rgame_four FOREIGN KEY (rgame_four)
-    REFERENCES public."Rgames" (id_rgame) MATCH SIMPLE
+ALTER TABLE IF EXISTS public."TournamentsMatches"
+    ADD CONSTRAINT match_id FOREIGN KEY (match_id)
+    REFERENCES public."Matches" (match_id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
