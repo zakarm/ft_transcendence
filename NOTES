@@ -1,0 +1,2 @@
+# to run the front container
+docker run -p 3000:3000 react-app 
