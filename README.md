@@ -5,7 +5,7 @@
 
 <h4 align="center">Use Case</h4>
 
-<img src="https://github.com/zakarm/ft_transcendence_trash/blob/main/use_case.drawio.png">
+<img src="https://github.com/zakarm/ft_transcendence/docs/use_case.drawio.png">
 
 - Sign Up: This use case allows a new user to create an account on the website. Users will provide necessary information such as username, email, and password to register themselves.
 
