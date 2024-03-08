@@ -1,4 +1,8 @@
 
+.side-container{
+    background-color: #161625;
+    border-radius: 25px 25px 25px 25px;
+}
 .side-icon{
     height: 48px;
     width: auto;
@@ -8,4 +12,12 @@
     border: 1px solid #FF4755;
     border-radius: 50%; 
     padding: 5px;
+}
+.icon-5{
+    cursor: pointer;
+}
+.logo{
+    cursor: pointer;
+    height: 64px;
+    width: 64px;
 }
