@@ -5,6 +5,7 @@ class Users(models.Model):
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     nick_name = models.CharField(max_length=20)
+    email = models.CharField(max_length=60)
     user_xp = models.FloatField()
     image_url = models.CharField(max_length=200)
     cover_url = models.CharField(max_length=200)

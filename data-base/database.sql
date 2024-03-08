@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS public."Users"
     first_name character(20) COLLATE pg_catalog."default" NOT NULL,
     last_name character(20) COLLATE pg_catalog."default" NOT NULL,
     nick_name character(20) COLLATE pg_catalog."default" NOT NULL,
+    email character(60) COLLATE pg_catalog."default" NOT NULL,
     user_xp real NOT NULL,
     image_url character(200) COLLATE pg_catalog."default" NOT NULL,
     cover_url character(200) COLLATE pg_catalog."default" NOT NULL,
