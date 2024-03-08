@@ -1,7 +1,17 @@
-from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse 
+from .serializer import UsersSerializer
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
+class SignUp(APIView):
+    serializer_class = UsersSerializer
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=201)
 
-def LoginView(request):
-    
-    return HttpResponse("Hello, world. You're at the polls index.")
+class SignIn(APIView):
+    pass
+
+class SignOut(APIView):
+    pass

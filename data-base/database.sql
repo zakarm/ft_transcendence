@@ -1,7 +1,11 @@
-CREATE DATABASE transcendence;
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT FROM pg_database WHERE datname = 'transcendence') THEN
+        CREATE DATABASE transcendence;
+    END IF;
+END $$;
 
 \c transcendence;
-
 
 BEGIN;
 
@@ -44,7 +48,7 @@ CREATE TABLE IF NOT EXISTS public."Matches"
     match_end date NOT NULL,
     tackle_user_one integer NOT NULL,
     tackle_user_two integer NOT NULL,
-    CONSTRAINT "Rgames_pkey" PRIMARY KEY (match_id)
+    CONSTRAINT "Matches_pkey" PRIMARY KEY (match_id)
 );
 
 CREATE TABLE IF NOT EXISTS public."Users"
@@ -81,7 +85,7 @@ CREATE TABLE IF NOT EXISTS public."Tournaments"
     tournament_name character(30) NOT NULL,
     tournament_start date NOT NULL,
     tournament_end date NOT NULL,
-    PRIMARY KEY (tournament_name)
+    PRIMARY KEY (tournament_id)
 );
 
 CREATE TABLE IF NOT EXISTS public."TournamentsMatches"
@@ -89,7 +93,7 @@ CREATE TABLE IF NOT EXISTS public."TournamentsMatches"
     tournament_id integer NOT NULL,
     match_id integer NOT NULL,
     tournament_round character(30) NOT NULL,
-    PRIMARY KEY (tournament_round, match_id)
+    PRIMARY KEY (tournament_id, match_id)
 );
 
 ALTER TABLE IF EXISTS public."Friendship"

@@ -3,7 +3,6 @@ from django.db import models
 
 class Achievements(models.Model):
     achievement_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey('Users', models.DO_NOTHING)
     achiev_name = models.CharField(max_length=45)
     xp_to_get = models.FloatField()
 
@@ -13,14 +12,30 @@ class Achievements(models.Model):
 
 
 class Friendship(models.Model):
-    user_from = models.OneToOneField('Users', models.DO_NOTHING, db_column='user_from', primary_key=True)  # The composite primary key (user_from, user_to) found, that is not supported. The first column is selected.
+    freindship_id = models.AutoField(primary_key=True)
+    user_from = models.ForeignKey('Users', models.DO_NOTHING, db_column='user_from')
     user_to = models.ForeignKey('Users', models.DO_NOTHING, db_column='user_to', related_name='friendship_user_to_set')
     is_accepted = models.BooleanField()
 
     class Meta:
         managed = False
         db_table = 'Friendship'
-        unique_together = (('user_from', 'user_to'),)
+
+
+class Matches(models.Model):
+    match_id = models.AutoField(primary_key=True)
+    user_one = models.ForeignKey('Users', models.DO_NOTHING, db_column='user_one')
+    user_two = models.ForeignKey('Users', models.DO_NOTHING, db_column='user_two', related_name='matches_user_two_set')
+    score_user_one = models.IntegerField()
+    score_user_two = models.IntegerField()
+    match_start = models.DateField()
+    match_end = models.DateField()
+    tackle_user_one = models.IntegerField()
+    tackle_user_two = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'Matches'
 
 
 class Messages(models.Model):
@@ -36,32 +51,37 @@ class Messages(models.Model):
         unique_together = (('user_one', 'user_two'),)
 
 
-class Rgames(models.Model):
-    id_rgame = models.AutoField(primary_key=True)
-    user_one = models.ForeignKey('Users', models.DO_NOTHING, db_column='user_one')
-    user_two = models.ForeignKey('Users', models.DO_NOTHING, db_column='user_two', related_name='rgames_user_two_set')
-    score_user_one = models.IntegerField()
-    score_user_two = models.IntegerField()
-    game_start = models.DateField()
-    game_end = models.DateField()
+class Tournaments(models.Model):
+    tournament_id = models.AutoField(primary_key=True)
+    tournament_name = models.CharField(max_length=30)
+    tournament_start = models.DateField()
+    tournament_end = models.DateField()
 
     class Meta:
         managed = False
-        db_table = 'Rgames'
+        db_table = 'Tournaments'
 
 
-class Tgames(models.Model):
-    id_tgame = models.AutoField(primary_key=True)
-    rgame_one = models.ForeignKey(Rgames, models.DO_NOTHING, db_column='rgame_one')
-    rgame_two = models.ForeignKey(Rgames, models.DO_NOTHING, db_column='rgame_two', related_name='tgames_rgame_two_set')
-    rgame_three = models.ForeignKey(Rgames, models.DO_NOTHING, db_column='rgame_three', related_name='tgames_rgame_three_set')
-    rgame_four = models.ForeignKey(Rgames, models.DO_NOTHING, db_column='rgame_four', related_name='tgames_rgame_four_set')
-    game_start = models.DateField()
-    game_end = models.DateField()
+class Tournamentsmatches(models.Model):
+    tournament = models.OneToOneField(Tournaments, models.DO_NOTHING, primary_key=True)  # The composite primary key (tournament_id, match_id) found, that is not supported. The first column is selected.
+    match = models.ForeignKey(Matches, models.DO_NOTHING)
+    tournament_round = models.CharField(max_length=30)
 
     class Meta:
         managed = False
-        db_table = 'Tgames'
+        db_table = 'TournamentsMatches'
+        unique_together = (('tournament', 'match'),)
+
+
+class Userachievements(models.Model):
+    user = models.OneToOneField('Users', models.DO_NOTHING, primary_key=True)  # The composite primary key (user_id, achivement_id) found, that is not supported. The first column is selected.
+    achivement = models.ForeignKey(Achievements, models.DO_NOTHING)
+    achive_date = models.DateField()
+
+    class Meta:
+        managed = False
+        db_table = 'UserAchievements'
+        unique_together = (('user', 'achivement'),)
 
 
 class Users(models.Model):
