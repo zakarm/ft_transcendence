@@ -10,7 +10,7 @@ import SideBar from "./Layouts/Sidebar";
 
 function App() {
   return (
-    <div className="container-fluid vh-100" style={{backgroundColor: '#000000'}}>
+    <div className="container-fluid p-0 vh-100" style={{backgroundColor: '#000000', overflow: 'hidden'}}>
       <div className="row">
         <Router >
           <div className="col-md-1" style={{backgroundColor: '#000000'}}>

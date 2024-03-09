@@ -6,9 +6,8 @@ import { useGSAP } from "@gsap/react";
 import './Sidebar.css';
 
 import { IoSettings , IoChatbubbles} from "react-icons/io5";
-import { GiLaurelsTrophy } from "react-icons/gi";
-import { GiGamepad } from "react-icons/gi";
-import { BiSolidDashboard } from "react-icons/bi";
+import { GiPingPongBat , GiTrophy } from "react-icons/gi";
+import { MdSpaceDashboard } from "react-icons/md";
 import { IoMdLogOut } from "react-icons/io";
 
 import { useEffect, useState } from 'react';
@@ -34,26 +33,26 @@ function SideBar() {
   }, [location]);
 
   return (
-      <div className="side-container d-inline-flex flex-column justify-content-around align-items-center vh-100 p-3">
+      <div className="side-container d-inline-flex flex-column justify-content-around align-items-center vh-100 p-4">
         <div className="flex-grow-1 pt-3">
           <Link to="/" >
             <img src="assets/LOGO.svg" className="logo img-fluid rounded rounded-circle" alt="ying"/>
           </Link>
           </div>
         <div className="flex-grow-1 d-flex flex-column justify-content-around">
-          <Link className="" to="/"             >
-            <BiSolidDashboard className={`side-icon icon-0`} color={activeIcon === 0 ? '#FF4755' : '#FFEBEB'}/>
+          <Link className="" to="/">
+            <MdSpaceDashboard className={`side-icon icon-0`} color={activeIcon === 0 ? '#FF4755' : '#FFEBEB'}/>
             </Link>
-          <Link className="" to="/game"         >
-            <GiGamepad className={`side-icon icon-1`} color={activeIcon === 1 ? '#FF4755' : '#FFEBEB'}/>
+          <Link className="" to="/game">
+            <GiPingPongBat className={`side-icon icon-1`} color={activeIcon === 1 ? '#FF4755' : '#FFEBEB'}/>
             </Link>
-          <Link className="" to="/chat"         >
+          <Link className="" to="/chat">
             <IoChatbubbles className={`side-icon icon-2`} color={activeIcon === 2 ? '#FF4755' : '#FFEBEB'}/>
             </Link>
-          <Link className="" to="/achievement"  >
-            <GiLaurelsTrophy className={`side-icon icon-3`} color={activeIcon === 3 ? '#FF4755' : '#FFEBEB'}/>
+          <Link className="" to="/achievement">
+            <GiTrophy className={`side-icon icon-3`} color={activeIcon === 3 ? '#FF4755' : '#FFEBEB'}/>
             </Link>
-          <Link className="" to="/settings"     >
+          <Link className="" to="/settings">
             <IoSettings className={`side-icon icon-4`} color={activeIcon === 4 ? '#FF4755' : '#FFEBEB'}/>
             </Link>
           </div>

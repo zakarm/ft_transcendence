@@ -1,7 +1,7 @@
 
 function Chat(){
     return(
-        <h1>CHAT</h1>
+        <h1>HELLO</h1>
     );
 }
 
