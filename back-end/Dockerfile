@@ -12,4 +12,4 @@ COPY . .
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "while ! nc -z data-base 5432; do sleep 6; done; python manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"]
+CMD ["python3", "init.py"]

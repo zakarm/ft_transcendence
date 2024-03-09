@@ -1,14 +1,9 @@
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT FROM pg_database WHERE datname = 'transcendence') THEN
-        CREATE DATABASE transcendence;
-    END IF;
-END $$;
+SELECT 'CREATE DATABASE transcendence;'
+WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'transcendence')\gexec
 
 \c transcendence;
 
 BEGIN;
-
 
 CREATE TABLE IF NOT EXISTS public."Achievements"
 (
