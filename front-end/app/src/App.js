@@ -16,7 +16,7 @@ function App() {
           <div className="col-md-1" style={{backgroundColor: '#000000'}}>
             <SideBar />
           </div>
-          <div className="col-md-9" style={{backgroundColor: '#000000'}}>
+          <div className="col-md-9 p-0" style={{backgroundColor: '#000000'}}>
             <Routes>
               <Route path='/'         element={<Home />}      />
               <Route path='/chat'     element={<Chat />}      />

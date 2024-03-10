@@ -1,7 +1,9 @@
 
 function Settings(){
     return(
-        <h1>SETTINGS</h1>
+        <div className="d-flex justify-content-center align-items-center vh-100 border ">
+            <h1 className="valo-font">SETTINGS</h1>
+        </div>
     );
 }
 

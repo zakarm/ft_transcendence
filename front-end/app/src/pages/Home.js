@@ -1,7 +1,9 @@
 
 function Home(){
     return(
-        <h1>HOME</h1>
+        <div className="d-flex justify-content-center align-items-center vh-100 border ">
+            <h1 className="valo-font">HOME</h1>
+        </div>
     );
 }
 

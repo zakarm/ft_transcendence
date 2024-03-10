@@ -1,7 +1,9 @@
 
 function Chat(){
     return(
-        <h1>HELLO</h1>
+        <div className="d-flex justify-content-center align-items-center vh-100 border ">
+            <h1 className="valo-font">CHAT</h1>
+        </div>
     );
 }
 
