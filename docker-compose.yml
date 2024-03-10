@@ -54,7 +54,7 @@ volumes:
         driver_opts:
             type: none
             o: bind
-            device: /Users/zmrabet/Desktop/data
+            device: /Users/${USER}/Desktop/data
 networks:
     ft_transcendence:
         name: ft_transcendence

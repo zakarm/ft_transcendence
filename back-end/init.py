@@ -1,10 +1,7 @@
 #This script is not for django, it is a custom script to check if the database is available and 
 #then run the migrations and start the server [Kolchi moujtahid, m3ndnach m3a lkousala]
 
-import socket, time, os, subprocess, logging, psycopg2
-
-logging.basicConfig(level=logging.INFO)
-
+import socket, time, os, subprocess, logging, psycopg2, django, sys
 
 def ping_postgres():
     POSTGRES_HOST = os.getenv('POSTGRES_HOST', 'data-base')
@@ -23,6 +20,7 @@ def ping_postgres():
         )
         conn.close()
         logging.info(f"Connection to {POSTGRES_HOST} successful")
+        time.sleep(3)
         return True
     except psycopg2.OperationalError:
         logging.info(f"Connection to {POSTGRES_HOST} failed")
@@ -48,13 +46,32 @@ def database_connection():
 
 def migrate_and_run_server():
     logging.info("Applying migrations...")
+    make_migrations_cmd = "python manage.py makemigrations authentication"
+    subprocess.run(make_migrations_cmd.split())
     migrate_cmd = "python manage.py migrate"
     subprocess.run(migrate_cmd.split())
-
+    time.sleep(3)
+    create_superuser()
     logging.info("Starting server...")
     server_cmd = "python manage.py runserver 0.0.0.0:8000"
     subprocess.run(server_cmd.split())
 
+def create_superuser():
+    email = os.getenv('DJANGO_SUPERUSER_EMAIL', 'zakariaemrabet48@gmail.com')
+    password = os.getenv('DJANGO_SUPERUSER_PASSWORD', 'admin')
+    
+    create_superuser_cmd = [
+        'python3',
+        'manage.py',
+        'createsuperuser',
+        '--noinput',
+        '--email', email,
+    ]
+    
+    subprocess.run(create_superuser_cmd, input=f'{password}\n{password}\n', text=True, check=True)
+
+
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     database_connection()
     migrate_and_run_server()

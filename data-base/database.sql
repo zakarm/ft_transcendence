@@ -1,14 +1,31 @@
-SELECT 'CREATE DATABASE transcendence;'
-WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'transcendence')\gexec
+SELECT 'CREATE DATABASE db_member;'
+WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'db_member')\gexec
 
-\c transcendence;
+\c db_member;
 
 BEGIN;
+
+CREATE TABLE IF NOT EXISTS public."authentication_users" 
+(
+    id serial NOT NULL PRIMARY KEY,
+    password varchar(128) NOT NULL,
+    last_login timestamp with time zone NOT NULL,
+    is_superuser boolean NOT NULL,
+    username varchar(150) NOT NULL UNIQUE,
+    first_name varchar(30) NOT NULL,
+    last_name varchar(30) NOT NULL,
+    email varchar(254) NOT NULL,
+    is_staff boolean NOT NULL,
+    is_active boolean NOT NULL,
+    date_joined timestamp with time zone NOT NULL,
+    image_url varchar(200) NOT NULL,
+    cover_url varchar(200) NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS public."Achievements"
 (
     achievement_id serial NOT NULL,
-    achiev_name character(45) COLLATE pg_catalog."default" NOT NULL,
+    achiev_name varchar(45) NOT NULL,
     xp_to_get real NOT NULL,
     CONSTRAINT "Achievements_pkey" PRIMARY KEY (achievement_id)
 );
@@ -26,9 +43,9 @@ CREATE TABLE IF NOT EXISTS public."Messages"
 (
     user_one integer NOT NULL,
     user_two integer NOT NULL,
-    message_content character(512) COLLATE pg_catalog."default" NOT NULL,
+    message_content varchar(512) NOT NULL,
     message_date date NOT NULL,
-    message_direction character(20) COLLATE pg_catalog."default" NOT NULL,
+    message_direction varchar(20) NOT NULL,
     CONSTRAINT "Messages_pkey" PRIMARY KEY (user_one, user_two)
 );
 
@@ -46,39 +63,18 @@ CREATE TABLE IF NOT EXISTS public."Matches"
     CONSTRAINT "Matches_pkey" PRIMARY KEY (match_id)
 );
 
-CREATE TABLE IF NOT EXISTS public."Users"
-(
-    user_id serial NOT NULL,
-    first_name character(20) COLLATE pg_catalog."default" NOT NULL,
-    last_name character(20) COLLATE pg_catalog."default" NOT NULL,
-    nick_name character(20) COLLATE pg_catalog."default" NOT NULL,
-    email character(60) COLLATE pg_catalog."default" NOT NULL,
-    user_xp real NOT NULL,
-    image_url character(200) COLLATE pg_catalog."default" NOT NULL,
-    cover_url character(200) COLLATE pg_catalog."default" NOT NULL,
-    first_log date NOT NULL,
-    last_log date NOT NULL,
-    is_log boolean NOT NULL,
-    is_two_fact boolean NOT NULL,
-    two_fact_secret character(200) COLLATE pg_catalog."default" NOT NULL,
-    country character(60) COLLATE pg_catalog."default" NOT NULL,
-    city character(60) COLLATE pg_catalog."default" NOT NULL,
-    password character(200) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT "Users_pkey" PRIMARY KEY (user_id)
-);
-
 CREATE TABLE IF NOT EXISTS public."UserAchievements"
 (
-    user_id integer NOT NULL,
+    id integer NOT NULL,
     achivement_id integer NOT NULL,
     achive_date date NOT NULL,
-    PRIMARY KEY (user_id, achivement_id)
+    PRIMARY KEY (id, achivement_id)
 );
 
 CREATE TABLE IF NOT EXISTS public."Tournaments"
 (
     tournament_id serial NOT NULL,
-    tournament_name character(30) NOT NULL,
+    tournament_name varchar(30) NOT NULL,
     tournament_start date NOT NULL,
     tournament_end date NOT NULL,
     PRIMARY KEY (tournament_id)
@@ -88,13 +84,13 @@ CREATE TABLE IF NOT EXISTS public."TournamentsMatches"
 (
     tournament_id integer NOT NULL,
     match_id integer NOT NULL,
-    tournament_round character(30) NOT NULL,
+    tournament_round varchar(30) NOT NULL,
     PRIMARY KEY (tournament_id, match_id)
 );
 
 ALTER TABLE IF EXISTS public."Friendship"
     ADD CONSTRAINT user_from FOREIGN KEY (user_from)
-    REFERENCES public."Users" (user_id) MATCH SIMPLE
+    REFERENCES public."authentication_users" (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
@@ -102,7 +98,7 @@ ALTER TABLE IF EXISTS public."Friendship"
 
 ALTER TABLE IF EXISTS public."Friendship"
     ADD CONSTRAINT user_to FOREIGN KEY (user_to)
-    REFERENCES public."Users" (user_id) MATCH SIMPLE
+    REFERENCES public."authentication_users" (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
@@ -110,7 +106,7 @@ ALTER TABLE IF EXISTS public."Friendship"
 
 ALTER TABLE IF EXISTS public."Messages"
     ADD CONSTRAINT user_one FOREIGN KEY (user_one)
-    REFERENCES public."Users" (user_id) MATCH SIMPLE
+    REFERENCES public."authentication_users" (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
@@ -118,7 +114,7 @@ ALTER TABLE IF EXISTS public."Messages"
 
 ALTER TABLE IF EXISTS public."Messages"
     ADD CONSTRAINT user_two FOREIGN KEY (user_two)
-    REFERENCES public."Users" (user_id) MATCH SIMPLE
+    REFERENCES public."authentication_users" (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
@@ -126,7 +122,7 @@ ALTER TABLE IF EXISTS public."Messages"
 
 ALTER TABLE IF EXISTS public."Matches"
     ADD CONSTRAINT user_one FOREIGN KEY (user_one)
-    REFERENCES public."Users" (user_id) MATCH SIMPLE
+    REFERENCES public."authentication_users" (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
@@ -134,15 +130,15 @@ ALTER TABLE IF EXISTS public."Matches"
 
 ALTER TABLE IF EXISTS public."Matches"
     ADD CONSTRAINT user_two FOREIGN KEY (user_two)
-    REFERENCES public."Users" (user_id) MATCH SIMPLE
+    REFERENCES public."authentication_users" (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
 ALTER TABLE IF EXISTS public."UserAchievements"
-    ADD CONSTRAINT user_id FOREIGN KEY (user_id)
-    REFERENCES public."Users" (user_id) MATCH SIMPLE
+    ADD CONSTRAINT id FOREIGN KEY (id)
+    REFERENCES public."authentication_users" (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
