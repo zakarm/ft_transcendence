@@ -8,3 +8,13 @@ body {
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
 }
+
+@font-face {
+  font-family: 'valorax';
+  src: url('../public/fonts/valorax.otf') format('opentype')
+}
+
+.valo-font {
+  font-family: 'valorax', Georgia, 'Times New Roman', Times, serif;
+  color: #FFEBEB;
+}
