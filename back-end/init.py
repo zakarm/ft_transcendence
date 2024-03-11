@@ -57,18 +57,34 @@ def migrate_and_run_server():
     subprocess.run(server_cmd.split())
 
 def create_superuser():
+    conn = psycopg2.connect(
+        host=os.getenv('POSTGRES_HOST', 'data-base'),
+        port=os.getenv('POSTGRES_PORT', '5432'),
+        user=os.getenv('POSTGRES_USER', 'postgres'),
+        password=os.getenv('POSTGRES_PASSWORD', 'postgres'),
+        dbname=os.getenv('POSTGRES_DB', 'postgres')
+    )
+    cursor = conn.cursor()
     email = os.getenv('DJANGO_SUPERUSER_EMAIL', 'zakariaemrabet48@gmail.com')
-    password = os.getenv('DJANGO_SUPERUSER_PASSWORD', 'admin')
-    
-    create_superuser_cmd = [
-        'python3',
-        'manage.py',
-        'createsuperuser',
-        '--noinput',
-        '--email', email,
-    ]
-    
-    subprocess.run(create_superuser_cmd, input=f'{password}\n{password}\n', text=True, check=True)
+    query = "SELECT COUNT(*) FROM authentication_users WHERE email = %s"
+    cursor.execute(query, (email,))
+    user_count = cursor.fetchone()[0]
+    if user_count == 0:
+        email = os.getenv('DJANGO_SUPERUSER_EMAIL', 'zakariaemrabet48@gmail.com')
+        password = os.getenv('DJANGO_SUPERUSER_PASSWORD', 'admin')
+        
+        create_superuser_cmd = [
+            'python3',
+            'manage.py',
+            'createsuperuser',
+            '--noinput',
+            '--email', email,
+        ]
+        subprocess.run(create_superuser_cmd, input=f'{password}\n{password}\n', text=True, check=True)
+    else:
+        logging.info("Superuser already exists in the database")
+    cursor.close()
+    conn.close()
 
 
 if __name__ == "__main__":
