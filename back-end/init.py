@@ -48,6 +48,8 @@ def migrate_and_run_server():
     logging.info("Applying migrations...")
     make_migrations_cmd = "python manage.py makemigrations authentication"
     subprocess.run(make_migrations_cmd.split())
+    migrate_cmd = "python manage.py migrate authentication"
+    subprocess.run(migrate_cmd.split())
     migrate_cmd = "python manage.py migrate"
     subprocess.run(migrate_cmd.split())
     time.sleep(3)
