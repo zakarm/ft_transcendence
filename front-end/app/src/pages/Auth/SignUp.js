@@ -28,7 +28,7 @@ function SignUp()
                             </div>
                         </div>
                         <div className='row  p-2 d-flex justify-content-center'>
-                            <button className='sign-btn col-md-3 btn-lg m-2 p-3' type='button' >SIGN UP</button>
+                            <button className='sign-btn col-md-3 m-2 ' type='button' >SIGN UP</button>
                             <Form.Label className='' style={{fontFamily: "itim", color: '#565A69'}}>Already have an account? <a href="/home" style={{color: '#FF4755', fontFamily: 'itim'}}>sign in</a></Form.Label>
                         </div>
                         <div className='row text-start '>
