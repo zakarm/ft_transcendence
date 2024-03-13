@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS public."authentication_users"
     is_active boolean NOT NULL,
     date_joined timestamp with time zone NOT NULL,
     image_url varchar(200) NOT NULL,
-    cover_url varchar(200) NOT NULL
+    cover_url varchar(200) NOT NULL,
 );
 
 CREATE TABLE IF NOT EXISTS public."Achievements"
