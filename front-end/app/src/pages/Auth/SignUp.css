@@ -1,0 +1,44 @@
+.sign-btn{
+    background-color: #FF4755;
+    font-family: 'valorax';
+    font-size: 1.5em;
+    border-radius: 25px;
+    color: #161625;
+    border: 0;
+}
+
+.auth-btn{
+  background-color: #161625;
+  border-radius: 25px;
+}
+
+.input-class{
+  color: #565A69;
+  background-color: #2C3143;
+  border-radius: 15px;
+  font-family: 'itim';
+}
+
+.sign-btn:hover{
+  box-shadow: #FF4755 0 10px 30px -10px;
+  box-sizing: border-box;
+  opacity: 1;
+  border-radius: 1px solid #FFFFFF;
+  font-size: 1.6em;
+}
+
+.auth-btn:hover{
+  background-color: #111111;
+  box-shadow: #FF4755 0 10px 30px -10px;
+  box-sizing: border-box;
+  opacity: 1;
+  font-size: 1.2em;
+}
+
+.main-class{
+  background-color: #161625;
+  border-radius: 25px;
+  box-shadow: #FFEBEB 0 0px 20px 0;
+  box-sizing: border-box;
+  opacity: 1;
+}
