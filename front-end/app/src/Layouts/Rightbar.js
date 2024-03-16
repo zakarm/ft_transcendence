@@ -1,9 +1,11 @@
 import { RiNotification4Fill } from "react-icons/ri";
+import { IoIosSearch } from "react-icons/io";
+import { ImUserPlus } from "react-icons/im";
 import './Rightbar.css'
 
 function RightBar() {
     return (
-        <div className="conatinaer p-2">
+        <div className="conatinaer d-flex flex-column justify-content-between p-2 vh-100">
             <div className="row">
                 <div className="col">
                     <div className="notification">
@@ -11,21 +13,35 @@ function RightBar() {
                         <span class="badge">3</span>
                     </div>
                 </div>
-            </div>
-            <div className="row d-flex flex-column text-center">
-                <div className="col">
-                    <img className="img-class" src="assets/char3.png" alt='Profile'/>
+                <div className="row d-flex flex-column text-center">
+                    <div className="col">
+                        <img className="img-class" src="assets/char3.png" alt='Profile'/>
+                    </div>
+                    <div className="col mt-2">
+                        <h3 className="valo-font">!SNAKE_007</h3>
+                        <h4 style={{fontFamily: 'intim', color: '#FFEBEB'}}>#7777</h4>
+                    </div>
                 </div>
-                <div className="col mt-2">
-                    <h3 className="valo-font">!SNAKE_007</h3>
-                    <h4 style={{fontFamily: 'intim', color: '#FFEBEB'}}>#7777</h4>
+                <div className="col search-inpt p-2 m-2 d-flex align-items-center">
+                    <div className="col-md-2 ">
+                        <IoIosSearch color="#FFEBEB" size='2em'/>
+                    </div>
+                    <div className="col p-2">
+                        <input className="" type="text" placeholder="Find a player ..." style={{backgroundColor: '#2C3143', border: 0}}/>
+                    </div>
                 </div>
             </div>
-            <div className="row"></div>
-            <div className="row"></div>
-            <div className="row"></div>
-            <div className="row"></div>
-            <div className="row"></div>
+            <div className="row">
+                
+            </div>
+            <div className="row search-inpt p-2 mb-4 m-1" style={{cursor: "pointer"}}>
+                <div className="col p-2 d-flex justify-content-center">
+                    <div style={{fontFamily: 'intim', color: '#FFEBEB'}}>add friend</div>
+                </div>
+                <div className="col-md-3 d-flex align-items-center">
+                    <ImUserPlus color="#FFEBEB" size='2em'/>
+                </div>
+            </div>
         </div>
     );
 }
