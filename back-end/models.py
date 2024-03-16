@@ -5,7 +5,6 @@ class Achievements(models.Model):
     achievement_id = models.AutoField(primary_key=True)
     achiev_name = models.CharField(max_length=45)
     xp_to_get = models.FloatField()
-
     class Meta:
         managed = False
         db_table = 'Achievements'
@@ -16,7 +15,6 @@ class Friendship(models.Model):
     user_from = models.ForeignKey('Users', models.DO_NOTHING, db_column='user_from')
     user_to = models.ForeignKey('Users', models.DO_NOTHING, db_column='user_to', related_name='friendship_user_to_set')
     is_accepted = models.BooleanField()
-
     class Meta:
         managed = False
         db_table = 'Friendship'

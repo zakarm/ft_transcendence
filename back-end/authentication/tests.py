@@ -1,7 +1,7 @@
 from django.test import TestCase
 from rest_framework.test import APIClient, force_authenticate
 from rest_framework import status
-from .models import Users
+from .models import User
 import requests_mock
 from django.test import TestCase, RequestFactory
 from .views import GithubLogin
@@ -11,7 +11,7 @@ from django.test import Client
 class SignInTest(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.user = Users.objects.create_user( email='zakariaemrabet48@gmail.com', password='admin')
+        self.user = User.objects.create_user( email='zakariaemrabet48@gmail.com', password='admin')
 
     def test_login(self):
         response = self.client.post('/api/sign-in', {'email': 'zakariaemrabet48@gmail.com', 'password': 'admin'}, format='json')

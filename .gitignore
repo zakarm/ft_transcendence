@@ -2,3 +2,5 @@ back-end/.venv
 back-end/venv
 back-end/db.sqlite3
 back-end/models.py
+back-end/__pycache__
+back-end/migrations

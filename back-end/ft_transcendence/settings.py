@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
-    'social_django',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -56,8 +56,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'social_django.middleware.SocialAuthExceptionMiddleware',
-    # 'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'ft_transcendence.urls'
@@ -74,8 +72,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                # 'social_django.context_processors.backends',
-                # 'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -101,7 +97,6 @@ DATABASES = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
-        'social_core.backends.github.GithubOAuth2',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
@@ -115,7 +110,6 @@ SIMPLE_JWT = {
 }
 
 AUTHENTICATION_BACKENDS = {
-    'social_core.backends.github.GithubOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 }
 
@@ -138,7 +132,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = 'authentication.Users'
+AUTH_USER_MODEL = 'authentication.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -176,6 +170,15 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+GOOGLE_REDIRECT_URI = os.environ.get('GOOGLE_REDIRECT_URI')
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=os.environ.get('GOOGLE_CLIENT_ID')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=os.environ.get('GOOGLE_CLIENT_SECRET')
+
+
 SOCIAL_AUTH_GITHUB_KEY = os.environ.get('GITHUB_CLIENT_ID')
 SOCIAL_AUTH_GITHUB_SECRET = os.environ.get('GITHUB_CLIENT_SECRET')
 GITHUB_REDIRECT_URI = os.environ.get('GITHUB_REDIRECT_URI')
+
+FORTYTWO_CLIENT_ID = os.environ.get('FORTYTWO_CLIENT_ID')
+FORTYTWO_CLIENT_SECRET = os.environ.get('FORTYTWO_CLIENT_SECRET')
+FORTYTWO_REDIRECT_URI = os.environ.get('FORTYTWO_REDIRECT_URI')

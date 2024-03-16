@@ -1,68 +1,94 @@
 from rest_framework import serializers
-from .models import Users
+from .models import User
 from django.contrib.auth import authenticate
-import requests
+import requests, sys
 from requests.exceptions import RequestException
+from django.db import IntegrityError, transaction
 
 
 class UsersSignUpSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Users
-        fields = "__all__"
-        extra_kwargs = {'password': {'required': True}, 'id': {'read_only': True}, 'email': {'write_only': True}}
+        model = User
+        fields = ('email', 'password', 'first_name', 'last_name')
+        extra_kwargs = {'password': {'required': True}}
 
     def create(self, validated_data):
         password = validated_data.pop('password')
-        user = Users.objects.create(**validated_data)
+        user = User.objects.create(**validated_data)
         user.set_password(password)
         user.save()
         return user
 
-class UserSignInSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Users
-        fields = ("email", "password")
-        extra_kwargs = {'password': {'required': True}, 'id': {'read_only': True}, 'email': {'write_only': True}}
-
+class UserSignInSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
     def validate(self, data):
-        user = authenticate(**data)
-        if user and user.is_active:
-            return user
-        raise serializers.ValidationError("Incorrect Credentials")
+        user = authenticate(username=data.get('email'), password=data.get('password'))
+        if not user:
+            raise serializers.ValidationError("Incorrect email or password.")
+        return user
 
 
-class GithubAuthSerializer(serializers.Serializer):
+class SocialAuthSerializer(serializers.Serializer):
     token = serializers.CharField()
-    class Meta:
-        fields = ('token',)
-        extra_kwargs = {'token': {'required': True}}
 
     def validate(self, data):
         token = data.get('token')
-        headers = {'Authorization': f'token {token}'}
+        platform = self.context.get('platform')
+        headers = {'Authorization': f'Bearer {token}'}
+        if platform == 'github':
+            try:
+                response = requests.get('https://api.github.com/user', headers=headers)
+                response.raise_for_status()
+                user_info = response.json()
+                username = user_info.get('login')
+                if not username:
+                    raise serializers.ValidationError("GitHub username not found in response")
+                email_response = requests.get('https://api.github.com/user/emails', headers=headers)
+                email_response.raise_for_status()
+                email_info = email_response.json()
+                print(email_info, file=sys.stderr) 
+                email = next((email['email'] for email in email_info if email['primary']), None)
+                if not email:
+                    email = next((email['email'] for email in email_info), None)
+                if not email:
+                    raise serializers.ValidationError("Email not provided by GitHub")
+                
+                if User.objects.filter(email=email).exists():
+                    raise serializers.ValidationError("Email already exist")
+                user, created = User.objects.get_or_create(email=email)
+                if created:
+                    user.email = email
+                    user.first_name = user_info.get('name')
+                    user.username = user_info.get('login')
+                    user.image_url = "https://github.com/" + user_info.get('login') + ".png"
+                    user.save()
+                data['email'] = email
+                return data
+            except requests.exceptions.RequestException as e:
+                raise serializers.ValidationError("Failed to fetch user data from GitHub")
+            except IntegrityError:
+                raise serializers.ValidationError("Email already exists")
+        elif platform == 'google':
+            try :
+                response = requests.get('https://www.googleapis.com/oauth2/v1/userinfo?alt=json', headers=headers)
+                response.raise_for_status()
+                user_info = response.json()
+                email = user_info['email']
+                firstname = user_info['given_name']
+                lastname = user_info['family_name']
+                image_url = user_info['picture']
+                user ,created = User.objects.get_or_create(email=email)
+                if created:
+                    user.first_name = firstname
+                    user.last_name = lastname
+                    user.image_url = image_url
+                    user.save()
+                data['email'] = email
+                return data
+            except requests.exceptions.RequestException as e:
+                    raise serializers.ValidationError("Failed to fetch user data from Google")
+            except IntegrityError:
+                raise serializers.ValidationError("Email already exists")
+
         
-        try:
-            response = requests.get('https://api.github.com/user', headers=headers)
-            response.raise_for_status()
-            user_info = response.json()
-            username = user_info.get('login')
-            if not username:
-                raise serializers.ValidationError("GitHub username not found in response")
-
-            email_response = requests.get('https://api.github.com/user/emails', headers=headers)
-            email_response.raise_for_status()
-            email_info = email_response.json()
-            email = next((email['email'] for email in email_info if email['primary']), None)
-            if not email:
-                email = next((email['email'] for email in email_info), None)
-            if not email:
-                raise serializers.ValidationError("Email not provided by GitHub")
-
-            user, created = Users.objects.get_or_create(username=username)
-            if created:
-                user.email = email
-                user.save()
-
-            return data
-        except requests.exceptions.RequestException as e:
-            raise serializers.ValidationError("Failed to fetch user data from GitHub")

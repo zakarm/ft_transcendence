@@ -28,6 +28,7 @@ ps:
 prune:
 	$(drm)
 
-fclean: rmdir prune
+clean:
+	$(dc-downp)
 
-re: fclean all
+fclean: rmdir prune
