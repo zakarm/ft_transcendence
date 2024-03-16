@@ -1,19 +1,27 @@
 .notification {
-    color: white;
+    color: #FFEBEB;
     text-decoration: none;
-    /* padding: 15px 26px; */
     position: relative;
     display: inline-block;
-    /* border-radius: 2px; */
   }
   
-  .notification .badge {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    /* padding: 5px 10px; */
-    border-radius: 100%;
-    background: red;
-    color: white;
-    font-size: 0.4em;
-  }
+.notification .badge {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  border-radius: 100%;
+  background: #FF4755;
+  color: #FFEBEB;
+  font-size: 0.4em;
+}
+
+.img-class{
+  width: 100px; /* Adjust as needed */
+  height: 100px; /* Adjust as needed */
+  border-radius: 50%; /* This creates the circle */
+  overflow: hidden; /* Hide overflowing parts of the image */
+  border: 1px solid #27B299;
+  box-shadow: #27B299 0 0px 20px 0;
+  box-sizing: border-box;
+  opacity: 1;
+}
