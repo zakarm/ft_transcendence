@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Settings from "./pages/Settings";
 import Achievement from './pages/Achievement';
 import SideBar from "./Layouts/Sidebar";
+import RightBar from "./Layouts/Rightbar";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             </Routes>
           </div>
           <div className="col-md-2" style={{backgroundColor: '#161625'}}>
+            <RightBar />
           </div>
         </Router>
       </div>
