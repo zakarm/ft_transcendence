@@ -160,23 +160,23 @@ ALLOWED_HOSTS = ['*']
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-SOCIALACCOUNT_PROVIDERS = {
-    'github': {
-        'APP': {
-            'client_id': os.environ.get('GITHUB_CLIENT_ID'),
-            'secret': os.environ.get('GITHUB_CLIENT_SECRET'),
-            'key': ''
-        }
-    }
-}
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
 
 GOOGLE_REDIRECT_URI = os.environ.get('GOOGLE_REDIRECT_URI')
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=os.environ.get('GOOGLE_CLIENT_ID')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=os.environ.get('GOOGLE_CLIENT_SECRET')
+GOOGLE_CLIENT_ID=os.environ.get('GOOGLE_CLIENT_ID')
+GOOGLE_CLIENT_SECRET=os.environ.get('GOOGLE_CLIENT_SECRET')
 
 
-SOCIAL_AUTH_GITHUB_KEY = os.environ.get('GITHUB_CLIENT_ID')
-SOCIAL_AUTH_GITHUB_SECRET = os.environ.get('GITHUB_CLIENT_SECRET')
+GITHUB_CLIENT_ID = os.environ.get('GITHUB_CLIENT_ID')
+GITHUB_CLIENT_SECRET = os.environ.get('GITHUB_CLIENT_SECRET')
 GITHUB_REDIRECT_URI = os.environ.get('GITHUB_REDIRECT_URI')
 
 FORTYTWO_CLIENT_ID = os.environ.get('FORTYTWO_CLIENT_ID')

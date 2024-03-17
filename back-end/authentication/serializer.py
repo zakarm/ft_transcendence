@@ -31,7 +31,6 @@ class UserSignInSerializer(serializers.Serializer):
 
 class SocialAuthSerializer(serializers.Serializer):
     token = serializers.CharField()
-
     def validate(self, data):
         token = data.get('token')
         platform = self.context.get('platform')
@@ -41,27 +40,25 @@ class SocialAuthSerializer(serializers.Serializer):
                 response = requests.get('https://api.github.com/user', headers=headers)
                 response.raise_for_status()
                 user_info = response.json()
-                username = user_info.get('login')
-                if not username:
-                    raise serializers.ValidationError("GitHub username not found in response")
                 email_response = requests.get('https://api.github.com/user/emails', headers=headers)
                 email_response.raise_for_status()
                 email_info = email_response.json()
-                print(email_info, file=sys.stderr) 
                 email = next((email['email'] for email in email_info if email['primary']), None)
                 if not email:
                     email = next((email['email'] for email in email_info), None)
                 if not email:
                     raise serializers.ValidationError("Email not provided by GitHub")
-                
                 if User.objects.filter(email=email).exists():
                     raise serializers.ValidationError("Email already exist")
                 user, created = User.objects.get_or_create(email=email)
                 if created:
                     user.email = email
-                    user.first_name = user_info.get('name')
+                    if user_info.get('name'):
+                        user.first_name = user_info.get('name').split()[0]
+                        user.last_name = user_info.get('name').split()[1]
                     user.username = user_info.get('login')
-                    user.image_url = "https://github.com/" + user_info.get('login') + ".png"
+                    user.image_url = user_info.get('avatar_url')
+                    user.location = user_info.get('location')
                     user.save()
                 data['email'] = email
                 return data
@@ -90,5 +87,24 @@ class SocialAuthSerializer(serializers.Serializer):
                     raise serializers.ValidationError("Failed to fetch user data from Google")
             except IntegrityError:
                 raise serializers.ValidationError("Email already exists")
-
-        
+        elif platform == "42":
+            try:
+                print(headers, file=sys.stderr)
+                response = requests.get('https://api.intra.42.fr/v2/me', headers=headers)
+                response.raise_for_status()
+                user_info = response.json()
+                email = user_info['email']
+                user ,created = User.objects.get_or_create(email=email)
+                if created:
+                    user.username = user_info['login']
+                    user.first_name = user_info['first_name']
+                    user.last_name = user_info['last_name']
+                    user.image_url = user_info['image']['link']
+                    user.location = user_info['campus'][0]['city']
+                    user.save()
+                data['email'] = email
+                return data
+            except requests.exceptions.RequestException as e:
+                    raise serializers.ValidationError("Failed to fetch user data from 42")
+            except IntegrityError:
+                raise serializers.ValidationError("Email already exists")

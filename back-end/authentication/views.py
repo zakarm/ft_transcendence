@@ -49,20 +49,42 @@ class SignOutView(APIView):
         return Response({'message:', 'Successfully logged out'}, status=status.HTTP_200_OK)
 
 # send the access token to the front-end
-class GitHubAuthExchangeView(APIView):
-    def get(self, request, *args, **kwargs):
+class SocialAuthExchangeView(APIView):
+    def get(self, request, platform):
         code = request.GET.get('code')
-        if not code:
+        platform = platform.lower()
+        if not code :
             return Response({"error": "No code provided"}, status=400)
-        data = {
-            'client_id': settings.SOCIAL_AUTH_GITHUB_KEY,
-            'client_secret': settings.SOCIAL_AUTH_GITHUB_SECRET,
-            'code': code,
-            'redirect_uri': settings.GITHUB_REDIRECT_URI,
-        }
+        if platform == 'github':
+            data = {
+                'client_id': settings.GITHUB_CLIENT_ID,
+                'client_secret': settings.GITHUB_CLIENT_SECRET,
+                'code': code,
+                'redirect_uri': settings.GITHUB_REDIRECT_URI,
+            }
+            url = "https://github.com/login/oauth/access_token"
+        elif platform == 'google':
+            data = {
+                'client_id': settings.GOOGLE_CLIENT_ID,
+                'client_secret': settings.GOOGLE_CLIENT_SECRET,
+                'code': code,
+                'redirect_uri': settings.GOOGLE_REDIRECT_URI,
+                'response_type': 'code',
+                'grant_type': 'authorization_code',
+            }
+            url = "https://oauth2.googleapis.com/token"
+        elif platform == '42':
+            data = {
+                'grant_type': 'authorization_code',
+                'client_id': settings.FORTYTWO_CLIENT_ID,
+                'client_secret': settings.FORTYTWO_CLIENT_SECRET,
+                'code': code,
+                'redirect_uri': settings.FORTYTWO_REDIRECT_URI,
+            }
+            url = "https://api.intra.42.fr/oauth/token"
         headers = {'Accept': 'application/json'}
         try:
-            response = requests.post('https://github.com/login/oauth/access_token', data=data, headers=headers)
+            response = requests.post(url, data=data, headers=headers)
             response.raise_for_status()
         except HTTPError as e:
             return Response({"error": str(e)}, status=400)
@@ -70,75 +92,25 @@ class GitHubAuthExchangeView(APIView):
         if not access_token:
             return Response({"error": "No access token returned"}, status=400)
         return Response({"access_token": access_token})
+        
 
-
-class GitHubAuthRedirectView(APIView):
-    def get(self, request):
-        CLIENT_ID = settings.SOCIAL_AUTH_GITHUB_KEY
-        REDIRECT_URI = settings.GITHUB_REDIRECT_URI
-        return redirect(f'https://github.com/login/oauth/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&scope=user:email')
-
-class GoogleAuthExchangeView(APIView):
-    def get(self, request, *args, **kwargs):
-        code = request.GET.get('code')
-        if not code:
-            return Response({"error": "No code provided"}, status=400)
-        data = {
-            'client_id': settings.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY,
-            'client_secret': settings.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET,
-            'code': code,
-            'redirect_uri': settings.GOOGLE_REDIRECT_URI,
-            'response_type': 'code',
-            'grant_type': 'authorization_code',
-        }
-        headers = {'Accept': 'application/json'}
-        try:
-            response = requests.post('https://oauth2.googleapis.com/token', data=data, headers=headers)
-            response.raise_for_status()
-        except HTTPError as e:
-            return Response({"error": str(e)}, status=400)
-        access_token = response.json().get('access_token')
-        if not access_token:
-            return Response({"error": "No access token returned"}, status=400)
-        return Response({"access_token": access_token})
-
-
-class GoogleAuthRedirectView(APIView):
-    def get(self, request):
-        CLIENT_ID = settings.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY
-        REDIRECT_URI = settings.GOOGLE_REDIRECT_URI
-        SCOPE = "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email"
-        return redirect(f'https://accounts.google.com/o/oauth2/v2/auth?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&scope={urllib.parse.quote(SCOPE)}&response_type=code')    
-
-class FortyTwoAuthExchangeView(APIView):
-    def get(self, request):
-        code = request.GET.get('code')
-        if not code:
-            return Response({"error": "No code provided"}, status=400)
-        data = {
-            'grant_type': 'client_credentials',
-            'client_id': settings.FORTYTWO_CLIENT_ID,
-            'client_secret': settings.FORTYTWO_CLIENT_SECRET,
-            'code': code,
-            'redirect_uri': settings.FORTYTWO_REDIRECT_URI,
-        }
-        headers = {'Accept': 'application/json'}
-        try:
-            response = requests.post('https://api.intra.42.fr/oauth/token', data=data, headers=headers)
-            response.raise_for_status()
-        except HTTPError as e:
-            return Response({"error": str(e)}, status=400)
-        access_token = response.json().get('access_token')
-        if not access_token:
-            return Response({"error": "No access token returned"}, status=400)
-        return Response({"access_token": access_token})
-
-# class FortyTwoAuthRedirectView(APIView):
-#     def get(self, request):
-#         CLIENT_ID = settings.FORTYTWO_CLIENT_ID
-#         REDIRECT_URI = settings.FORTYTWO_REDIRECT_URI
-#         return redirect(f'https://api.intra.42.fr/oauth/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&response_type=code')
-
+class SocialAuthRedirectView(APIView):
+    def get(self, request, platform):
+        platform = platform.lower()
+        if platform == 'github':
+            CLIENT_ID = settings.GITHUB_CLIENT_ID
+            REDIRECT_URI = settings.GITHUB_REDIRECT_URI
+            return redirect(f'https://github.com/login/oauth/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&scope=user:email')
+        elif platform == 'google':
+            CLIENT_ID = settings.GOOGLE_CLIENT_ID
+            REDIRECT_URI = settings.GOOGLE_REDIRECT_URI
+            SCOPE = "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email"
+            return redirect(f'https://accounts.google.com/o/oauth2/v2/auth?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&scope={urllib.parse.quote(SCOPE)}&response_type=code')
+        elif platform == '42':
+            CLIENT_ID = settings.FORTYTWO_CLIENT_ID
+            REDIRECT_URI = settings.FORTYTWO_REDIRECT_URI
+            SCOPE = "public"
+            return redirect(f'https://api.intra.42.fr/oauth/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&scope={SCOPE}&response_type=code')
 
 class SocialAuthView(APIView):
     serializer_class = SocialAuthSerializer

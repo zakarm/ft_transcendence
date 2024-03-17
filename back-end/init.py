@@ -62,7 +62,7 @@ def create_superuser():
         port=os.getenv('POSTGRES_PORT', '5432'),
         user=os.getenv('POSTGRES_USER', 'postgres'),
         password=os.getenv('POSTGRES_PASSWORD', 'postgres'),
-        dbname=os.getenv('POSTGRES_DB', 'postgres')
+        dbname=os.getenv('POSTGRES_DB', 'db_member')
     )
     cursor = conn.cursor()
     email = os.getenv('DJANGO_SUPERUSER_EMAIL', 'zakariaemrabet48@gmail.com')

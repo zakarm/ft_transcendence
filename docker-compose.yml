@@ -24,6 +24,7 @@ services:
         build: 
             context: ./front-end
             dockerfile: Dockerfile
+        restart: always
         depends_on:
             - back-end
         ports:
