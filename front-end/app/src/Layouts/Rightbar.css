@@ -30,6 +30,7 @@
   background-color: #2C3143;
   border: 0;
   border-radius: 15px;
+  overflow: hidden;
 }
 
 .search-inpt:hover{
