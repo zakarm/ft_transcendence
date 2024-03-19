@@ -12,9 +12,9 @@ function RightBar() {
     // const [isHoverd, setIsHoverd] = useState(false);
     return (
         <div className="container vh-100">
-            <div className="d-flex flex-column vh-100  border">
+            <div className="d-flex flex-column vh-100">
                 <div className="flex-grow-2">
-                    <div className="row-inline border">
+                    <div className="row-inline">
                          <div className="col">
                              <div className="notification">
                                  <RiNotification4Fill color="#FF4755" size='1.5em'/>
@@ -40,14 +40,7 @@ function RightBar() {
                          </div>
                     </div>
                 </div>
-                <div className="p-3 flex-grow-1">
-                    <Player nickname={"!Snake_007"} id={7777}/>
-                    <Player nickname={"!Snake_007"} id={7777}/>
-                    <Player nickname={"!Snake_007"} id={7777}/>
-                    <Player nickname={"!Snake_007"} id={7777}/>
-                    <Player nickname={"!Snake_007"} id={7777}/>
-                    <Player nickname={"!Snake_007"} id={7777}/>
-                    {/* <Player nickname={"!Snake_007"} id={7777}/>
+                <div className="p-3 flex-grow-1" style={{ overflowY: 'scroll' }}>
                     <Player nickname={"!Snake_007"} id={7777}/>
                     <Player nickname={"!Snake_007"} id={7777}/>
                     <Player nickname={"!Snake_007"} id={7777}/>
@@ -62,7 +55,6 @@ function RightBar() {
                     <Player nickname={"!Snake_007"} id={7777}/>
                     <Player nickname={"!Snake_007"} id={7777}/>
                     <Player nickname={"!Snake_007"} id={7777}/>
-                    <Player nickname={"!Snake_007"} id={7777}/> */}
                 </div>
                 <div className="flex-grow-3">
                     <div className="row search-inpt p-2 mb-4 m-1" style={{cursor: "pointer"}}>
