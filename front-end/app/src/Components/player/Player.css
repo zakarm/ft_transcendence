@@ -9,7 +9,6 @@
   height: 65px;
   border-radius: 25px;
   overflow: hidden; /* Hide overflowing parts of the image */
-  border: 1px solid #27B299;
 }
 
 .opt-class:hover{

@@ -1,15 +1,24 @@
 import { RiNotification4Fill } from "react-icons/ri";
 import { IoIosSearch } from "react-icons/io";
 import { ImUserPlus } from "react-icons/im";
-// import { RxDotsVertical } from "react-icons/rx";
-// import Player from '../Components/player/Player';
-
 import './Rightbar.css'
 import Player from "../Components/player/Player";
-// import { useState } from "react";
+import friends from '../services/friends.json';
 
 function RightBar() {
-    // const [isHoverd, setIsHoverd] = useState(false);
+    const friendsData = friends.sort((usr1, usr2) => {
+        if (usr1.isConnected && !usr2.isConnected) {
+            return -1;
+        }
+          // Sort disconnected users second
+        if (!usr1.isConnected && usr2.isConnected) {
+            return 1;
+        }
+          // Sort by ID if isConnected flag is the same
+        return usr1.id - usr2.id;
+    }).map(user => 
+        <Player nickname={user.name} id={user.id} image={user.profileImageUrl} isConnected={user.isConnected}/>
+    );
     return (
         <div className="container vh-100">
             <div className="d-flex flex-column vh-100">
@@ -40,21 +49,8 @@ function RightBar() {
                          </div>
                     </div>
                 </div>
-                <div className="p-3 flex-grow-1" style={{ overflowY: 'scroll' }}>
-                    <Player nickname={"!Snake_007"} id={7777}/>
-                    <Player nickname={"!Snake_007"} id={7777}/>
-                    <Player nickname={"!Snake_007"} id={7777}/>
-                    <Player nickname={"!Snake_007"} id={7777}/>
-                    <Player nickname={"!Snake_007"} id={7777}/>
-                    <Player nickname={"!Snake_007"} id={7777}/>
-                    <Player nickname={"!Snake_007"} id={7777}/>
-                    <Player nickname={"!Snake_007"} id={7777}/>
-                    <Player nickname={"!Snake_007"} id={7777}/>
-                    <Player nickname={"!Snake_007"} id={7777}/>
-                    <Player nickname={"!Snake_007"} id={7777}/>
-                    <Player nickname={"!Snake_007"} id={7777}/>
-                    <Player nickname={"!Snake_007"} id={7777}/>
-                    <Player nickname={"!Snake_007"} id={7777}/>
+                <div className="p-3 mb-2 flex-grow-1" style={{ overflowY: 'scroll' }}>
+                    {friendsData}
                 </div>
                 <div className="flex-grow-3">
                     <div className="row search-inpt p-2 mb-4 m-1" style={{cursor: "pointer"}}>

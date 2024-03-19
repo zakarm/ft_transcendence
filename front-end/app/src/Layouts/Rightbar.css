@@ -3,6 +3,7 @@
     text-decoration: none;
     position: relative;
     display: inline-block;
+    cursor: pointer;
   }
   
 .notification .badge {

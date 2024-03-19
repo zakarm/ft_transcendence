@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1001,
+    "name": "John Doe",
+    "profileImageUrl": "https://randomuser.me/api/portraits/men/1.jpg",
+    "isConnected": true
+  },
+  {
+    "id": 1002,
+    "name": "Jane Smith",
+    "profileImageUrl": "https://randomuser.me/api/portraits/women/2.jpg",
+    "isConnected": false
+  },
+  {
+    "id": 1003,
+    "name": "David Johnson",
+    "profileImageUrl": "https://randomuser.me/api/portraits/men/3.jpg",
+    "isConnected": true
+  },
+  {
+    "id": 1004,
+    "name": "Emily Brown",
+    "profileImageUrl": "https://randomuser.me/api/portraits/women/4.jpg",
+    "isConnected": true
+  },
+  {
+    "id": 1005,
+    "name": "Michael Wilson",
+    "profileImageUrl": "https://randomuser.me/api/portraits/men/5.jpg",
+    "isConnected": false
+  },
+  {
+    "id": 1006,
+    "name": "Emma Taylor",
+    "profileImageUrl": "https://randomuser.me/api/portraits/women/6.jpg",
+    "isConnected": true
+  },
+  {
+    "id": 1007,
+    "name": "James Martinez",
+    "profileImageUrl": "https://randomuser.me/api/portraits/men/7.jpg",
+    "isConnected": false
+  },
+  {
+    "id": 1008,
+    "name": "Olivia Anderson",
+    "profileImageUrl": "https://randomuser.me/api/portraits/women/8.jpg",
+    "isConnected": true
+  },
+  {
+    "id": 1009,
+    "name": "William Lopez",
+    "profileImageUrl": "https://randomuser.me/api/portraits/men/9.jpg",
+    "isConnected": false
+  },
+  {
+    "id": 1010,
+    "name": "Sophia Lee",
+    "profileImageUrl": "https://randomuser.me/api/portraits/women/10.jpg",
+    "isConnected": true
+  },
+  {
+    "id": 1011,
+    "name": "Daniel Garcia",
+    "profileImageUrl": "https://randomuser.me/api/portraits/men/11.jpg",
+    "isConnected": false
+  },
+  {
+    "id": 1012,
+    "name": "Isabella Hernandez",
+    "profileImageUrl": "https://randomuser.me/api/portraits/women/12.jpg",
+    "isConnected": true
+  },
+  {
+    "id": 1013,
+    "name": "Matthew Martinez",
+    "profileImageUrl": "https://randomuser.me/api/portraits/men/13.jpg",
+    "isConnected": true
+  },
+  {
+    "id": 1014,
+    "name": "Ava Lopez",
+    "profileImageUrl": "https://randomuser.me/api/portraits/women/14.jpg",
+    "isConnected": false
+  },
+  {
+    "id": 1015,
+    "name": "Ethan Wilson",
+    "profileImageUrl": "https://randomuser.me/api/portraits/men/15.jpg",
+    "isConnected": true
+  },
+  {
+    "id": 1016,
+    "name": "Mia Brown",
+    "profileImageUrl": "https://randomuser.me/api/portraits/women/16.jpg",
+    "isConnected": true
+  },
+  {
+    "id": 1017,
+    "name": "Alexander Taylor",
+    "profileImageUrl": "https://randomuser.me/api/portraits/men/17.jpg",
+    "isConnected": false
+  },
+  {
+    "id": 1018,
+    "name": "Charlotte Hernandez",
+    "profileImageUrl": "https://randomuser.me/api/portraits/women/18.jpg",
+    "isConnected": true
+  },
+  {
+    "id": 1019,
+    "name": "Benjamin Lee",
+    "profileImageUrl": "https://randomuser.me/api/portraits/men/19.jpg",
+    "isConnected": true
+  },
+  {
+    "id": 1020,
+    "name": "Amelia Smith",
+    "profileImageUrl": "https://randomuser.me/api/portraits/women/20.jpg",
+    "isConnected": false
+  }
+]
