@@ -1,11 +1,25 @@
 import { RiNotification4Fill } from "react-icons/ri";
+// import Dropdown from 'react-bootstrap/Dropdown';
 import { IoIosSearch } from "react-icons/io";
 import { ImUserPlus } from "react-icons/im";
 import './Rightbar.css'
 import Player from "../Components/player/Player";
 import friends from '../services/friends.json';
+import React from 'react';
 
 function RightBar() {
+
+    
+    // const NotifToglle = React.forwardRef(({ children, onClick }, ref) => {
+    //     <div>
+    //         {children}
+    //     </div>
+    // });
+
+    // const Notifdata = React.forwardRef(({}) => {
+
+    // });
+
     const friendsData = friends.sort((usr1, usr2) => {
         if (usr1.connected && !usr2.connected) {
             return -1;
@@ -25,10 +39,31 @@ function RightBar() {
                 <div className="flex-grow-2">
                     <div className="row-inline">
                          <div className="col">
-                             <div className="notification">
-                                 <RiNotification4Fill color="#FF4755" size='1.5em'/>
+                             <div className="notification dropdown-center">
+                                <div className="dropdown-toggle">
+                                    <RiNotification4Fill color="#FF4755" size='1.5em'/>
+                                </div>
+                                <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item" href="/">Action</a></li>
+                                  <li><a class="dropdown-item" href="/">Action two</a></li>
+                                  <li><a class="dropdown-item" href="/">Action three</a></li>
+                                </ul>
                                  <span class="badge">3</span>
                              </div>
+                             {/* <Dropdown>
+                             <Dropdown.Toggle as={NotifToglle} id="dropdown-custom-components">
+                                <div className="notification">
+                                    <RiNotification4Fill color="#FF4755" size='1.5em'/>
+                                    <span class="badge">3</span>
+                                </div>
+                             </Dropdown.Toggle>
+
+                             <Dropdown.Menu>
+                               <Dropdown.Item href="/">Action</Dropdown.Item>
+                               <Dropdown.Item href="/">Another action</Dropdown.Item>
+                               <Dropdown.Item href="/">Something else</Dropdown.Item>
+                             </Dropdown.Menu>
+                            </Dropdown> */}
                          </div>
                          <div className="row d-flex flex-column text-center">
                              <div className="col">
