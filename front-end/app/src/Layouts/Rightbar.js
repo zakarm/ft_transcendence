@@ -7,17 +7,17 @@ import friends from '../services/friends.json';
 
 function RightBar() {
     const friendsData = friends.sort((usr1, usr2) => {
-        if (usr1.isConnected && !usr2.isConnected) {
+        if (usr1.connected && !usr2.connected) {
             return -1;
         }
           // Sort disconnected users second
-        if (!usr1.isConnected && usr2.isConnected) {
+        if (!usr1.connected && usr2.connected) {
             return 1;
         }
           // Sort by ID if isConnected flag is the same
         return usr1.id - usr2.id;
     }).map(user => 
-        <Player nickname={user.name} id={user.id} image={user.profileImageUrl} isConnected={user.isConnected}/>
+        <Player nickname={user.nickname} id={user.id} image={user.image_url} isConnected={user.connected}/>
     );
     return (
         <div className="container vh-100">

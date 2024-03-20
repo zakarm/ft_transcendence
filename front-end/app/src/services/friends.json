@@ -1,122 +1,92 @@
 [
   {
-    "id": 1001,
-    "name": "John Doe",
-    "profileImageUrl": "https://randomuser.me/api/portraits/men/1.jpg",
-    "isConnected": true
+      "id": 1234,
+      "nickname": "ValorantPlayer1",
+      "image_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468",
+      "connected": true
   },
   {
-    "id": 1002,
-    "name": "Jane Smith",
-    "profileImageUrl": "https://randomuser.me/api/portraits/women/2.jpg",
-    "isConnected": false
+      "id": 5678,
+      "nickname": "LeaguePlayer1",
+      "image_url": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Aatrox_0.jpg",
+      "connected": false
   },
   {
-    "id": 1003,
-    "name": "David Johnson",
-    "profileImageUrl": "https://randomuser.me/api/portraits/men/3.jpg",
-    "isConnected": true
+      "id": 9876,
+      "nickname": "ValorantPlayer2",
+      "image_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468",
+      "connected": true
   },
   {
-    "id": 1004,
-    "name": "Emily Brown",
-    "profileImageUrl": "https://randomuser.me/api/portraits/women/4.jpg",
-    "isConnected": true
+      "id": 4321,
+      "nickname": "LeaguePlayer2",
+      "image_url": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_0.jpg",
+      "connected": true
   },
   {
-    "id": 1005,
-    "name": "Michael Wilson",
-    "profileImageUrl": "https://randomuser.me/api/portraits/men/5.jpg",
-    "isConnected": false
+      "id": 7890,
+      "nickname": "ValorantPlayer3",
+      "image_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468",
+      "connected": false
   },
   {
-    "id": 1006,
-    "name": "Emma Taylor",
-    "profileImageUrl": "https://randomuser.me/api/portraits/women/6.jpg",
-    "isConnected": true
+      "id": 6543,
+      "nickname": "LeaguePlayer3",
+      "image_url": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Akali_0.jpg",
+      "connected": true
   },
   {
-    "id": 1007,
-    "name": "James Martinez",
-    "profileImageUrl": "https://randomuser.me/api/portraits/men/7.jpg",
-    "isConnected": false
+      "id": 2109,
+      "nickname": "ValorantPlayer4",
+      "image_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468",
+      "connected": false
   },
   {
-    "id": 1008,
-    "name": "Olivia Anderson",
-    "profileImageUrl": "https://randomuser.me/api/portraits/women/8.jpg",
-    "isConnected": true
+      "id": 8765,
+      "nickname": "LeaguePlayer4",
+      "image_url": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Alistar_0.jpg",
+      "connected": true
   },
   {
-    "id": 1009,
-    "name": "William Lopez",
-    "profileImageUrl": "https://randomuser.me/api/portraits/men/9.jpg",
-    "isConnected": false
+      "id": 5432,
+      "nickname": "ValorantPlayer5",
+      "image_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468",
+      "connected": true
   },
   {
-    "id": 1010,
-    "name": "Sophia Lee",
-    "profileImageUrl": "https://randomuser.me/api/portraits/women/10.jpg",
-    "isConnected": true
+      "id": 1098,
+      "nickname": "LeaguePlayer5",
+      "image_url": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Amumu_0.jpg",
+      "connected": false
   },
   {
-    "id": 1011,
-    "name": "Daniel Garcia",
-    "profileImageUrl": "https://randomuser.me/api/portraits/men/11.jpg",
-    "isConnected": false
+      "id": 3210,
+      "nickname": "ValorantPlayer6",
+      "image_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468",
+      "connected": true
   },
   {
-    "id": 1012,
-    "name": "Isabella Hernandez",
-    "profileImageUrl": "https://randomuser.me/api/portraits/women/12.jpg",
-    "isConnected": true
+      "id": 6543,
+      "nickname": "LeaguePlayer6",
+      "image_url": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Anivia_0.jpg",
+      "connected": false
   },
   {
-    "id": 1013,
-    "name": "Matthew Martinez",
-    "profileImageUrl": "https://randomuser.me/api/portraits/men/13.jpg",
-    "isConnected": true
+      "id": 9876,
+      "nickname": "ValorantPlayer7",
+      "image_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468",
+      "connected": false
   },
   {
-    "id": 1014,
-    "name": "Ava Lopez",
-    "profileImageUrl": "https://randomuser.me/api/portraits/women/14.jpg",
-    "isConnected": false
+      "id": 8765,
+      "nickname": "LeaguePlayer7",
+      "image_url": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Annie_0.jpg",
+      "connected": true
   },
   {
-    "id": 1015,
-    "name": "Ethan Wilson",
-    "profileImageUrl": "https://randomuser.me/api/portraits/men/15.jpg",
-    "isConnected": true
-  },
-  {
-    "id": 1016,
-    "name": "Mia Brown",
-    "profileImageUrl": "https://randomuser.me/api/portraits/women/16.jpg",
-    "isConnected": true
-  },
-  {
-    "id": 1017,
-    "name": "Alexander Taylor",
-    "profileImageUrl": "https://randomuser.me/api/portraits/men/17.jpg",
-    "isConnected": false
-  },
-  {
-    "id": 1018,
-    "name": "Charlotte Hernandez",
-    "profileImageUrl": "https://randomuser.me/api/portraits/women/18.jpg",
-    "isConnected": true
-  },
-  {
-    "id": 1019,
-    "name": "Benjamin Lee",
-    "profileImageUrl": "https://randomuser.me/api/portraits/men/19.jpg",
-    "isConnected": true
-  },
-  {
-    "id": 1020,
-    "name": "Amelia Smith",
-    "profileImageUrl": "https://randomuser.me/api/portraits/women/20.jpg",
-    "isConnected": false
+      "id": 5432,
+      "nickname": "ValorantPlayer8",
+      "image_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468",
+      "connected": true
   }
 ]
