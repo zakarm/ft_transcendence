@@ -31,5 +31,3 @@ function Player({ nickname , id , image , isConnected }) {
 }
 
 export default Player;
-
-//border: 1px solid #27B299;

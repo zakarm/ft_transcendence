@@ -49,7 +49,7 @@ function RightBar() {
                          </div>
                     </div>
                 </div>
-                <div className="p-3 mb-2 flex-grow-1" style={{ overflowY: 'scroll' }}>
+                <div className="p-3 mb-2 flex-grow-1" style={{ overflowY: 'auto' }}>
                     {friendsData}
                 </div>
                 <div className="flex-grow-3">
