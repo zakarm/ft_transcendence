@@ -13,6 +13,8 @@ from requests.exceptions import HTTPError
 import requests
 import os
 import urllib.parse
+
+
 class SignUpView(APIView):
     serializer_class = UsersSignUpSerializer
     def post(self, request):
@@ -39,6 +41,7 @@ class SignInView(APIView):
             }, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class SignOutView(APIView):
     def post(self, request):
         refresh_token = request.data.get('refresh')
@@ -47,6 +50,7 @@ class SignOutView(APIView):
         token = RefreshToken(refresh_token)
         token.blacklist()
         return Response({'message:', 'Successfully logged out'}, status=status.HTTP_200_OK)
+
 
 # send the access token to the front-end
 class SocialAuthExchangeView(APIView):
@@ -111,6 +115,7 @@ class SocialAuthRedirectView(APIView):
             REDIRECT_URI = settings.FORTYTWO_REDIRECT_URI
             SCOPE = "public"
             return redirect(f'https://api.intra.42.fr/oauth/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&scope={SCOPE}&response_type=code')
+
 
 class SocialAuthView(APIView):
     serializer_class = SocialAuthSerializer
