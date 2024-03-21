@@ -4,6 +4,7 @@ import { IoIosSearch } from "react-icons/io";
 import { ImUserPlus } from "react-icons/im";
 import './Rightbar.css'
 import Player from "../Components/player/Player";
+import Notification from "../Components/Notification/Notification";
 import friends from '../services/friends.json';
 import React from 'react';
 
@@ -43,10 +44,12 @@ function RightBar() {
                                       <span class="badge">3</span>
                                   </div>
                                 </Dropdown.Toggle>
-                                <Dropdown.Menu style={{backgroundColor: '#2C3143'}}>
-                                  <Dropdown.Item style={{color: '#FFEBEB'}} eventKey="1">Red</Dropdown.Item>
-                                  <Dropdown.Item eventKey="2">Blue</Dropdown.Item>
-                                  <Dropdown.Item eventKey="3">Orange</Dropdown.Item>
+                                <Dropdown.Menu className="drop-class">
+                                  <Dropdown.Item eventKey="1"><Notification /></Dropdown.Item>
+                                  <hr class="dropdown-divider" />
+                                  <Dropdown.Item eventKey="2"><Notification /></Dropdown.Item>
+                                  <hr class="dropdown-divider" />
+                                  <Dropdown.Item eventKey="3"><Notification /></Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
                          </div>

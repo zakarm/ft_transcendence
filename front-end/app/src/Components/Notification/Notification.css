@@ -1,0 +1,19 @@
+.notif-class{
+    background-color: #2C3143;
+    border: 0;
+    border-radius: 15px;
+    overflow: hidden;
+  }
+  
+  .notif-class:hover{
+    border: 1px solid #FFEBEB;
+    box-shadow: #383838 0 0px 20px 0;
+    box-sizing: border-box;
+    opacity: 1;
+  }
+
+  .fixed-width-p {
+    width: 200px; /* Example width */
+    word-wrap: break-word; /* For older browsers */
+    overflow-wrap: break-word; /* For newer browsers */
+  }

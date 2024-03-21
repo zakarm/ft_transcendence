@@ -41,6 +41,10 @@
   opacity: 1;
 }
 
+.drop-class{
+  background-color: #ffffff;
+}
+
 input:focus{
   outline: none;
   box-shadow: none;
