@@ -5,6 +5,7 @@ import json, sys
 from urllib.parse import parse_qs
 
 class AsyncConsumer(AsyncWebsocketConsumer):
+    
     async def connect(self):
         # query_string = parse_qs(self.scope['query_string'].decode())
         # token = query_string.get('token')

@@ -31,6 +31,10 @@ services:
             - "3000:3000"
         env_file:
             - .env
+        volumes:
+            - ./front-end:/app
+            - /app/node_modules 
+            - /app/.next
         networks:
             - ft_transcendence
     
