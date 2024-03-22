@@ -58,7 +58,7 @@ class SocialAuthExchangeView(APIView):
         code = request.GET.get('code')
         platform = platform.lower()
         if not code :
-            return Response({"error": "No code provided"}, status=400)
+            return Response({"error": "No code provided"}, status=status.HTTP_400_BAD_REQUEST)
         if platform == 'github':
             data = {
                 'client_id': settings.GITHUB_CLIENT_ID,
@@ -91,10 +91,10 @@ class SocialAuthExchangeView(APIView):
             response = requests.post(url, data=data, headers=headers)
             response.raise_for_status()
         except HTTPError as e:
-            return Response({"error": str(e)}, status=400)
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         access_token = response.json().get('access_token')
         if not access_token:
-            return Response({"error": "No access token returned"}, status=400)
+            return Response({"error": "No access token returned"}, status=status.HTTP_400_BAD_REQUEST)
         return Response({"access_token": access_token})
         
 
@@ -123,7 +123,7 @@ class SocialAuthView(APIView):
         platform = platform.lower()
         print(platform, file=sys.stderr)
         if platform not in ['github', 'google', '42']:
-            return Response({"error": "Invalid platform"}, status=400)
+            return Response({"error": "Invalid platform"}, status=status.HTTP_400_BAD_REQUEST)
         serializer = self.serializer_class(data=request.data, context={"platform": platform})
         serializer.is_valid(raise_exception=True)
         email = serializer.validated_data.get('email')
