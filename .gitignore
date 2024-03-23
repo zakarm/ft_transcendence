@@ -8,3 +8,5 @@ back-end/authentication/__pycache__
 back-end/authentication/migrations
 back-end/ft_transcendence/__pycache__
 .venv
+front-end/node_modules
+front-end/.next

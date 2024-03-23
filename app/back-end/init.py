@@ -1,7 +1,7 @@
 #This script is not for django, it is a custom script to check if the database is available and 
 #then run the migrations and start the server [Kolchi moujtahid, m3ndnach m3a lkousala]
 
-import socket, time, os, subprocess, logging, psycopg2, django, sys
+import socket, time, os, subprocess, logging, psycopg2
 
 def ping_postgres():
     POSTGRES_HOST = os.getenv('POSTGRES_HOST', 'data-base')

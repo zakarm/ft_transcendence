@@ -4,7 +4,7 @@ services:
     back-end:
         container_name: back-end
         build: 
-            context: ./back-end
+            context: ./app/back-end
             dockerfile: Dockerfile
         restart: always
         depends_on:
@@ -14,7 +14,7 @@ services:
         env_file:
             - .env
         volumes:
-            - ./back-end:/back-end
+            - ./app/back-end:/back-end
             - v_data-base:/var/lib/postgresql/data
         networks:
             - ft_transcendence
@@ -22,7 +22,7 @@ services:
     front-end:
         container_name: front-end
         build: 
-            context: ./front-end
+            context: ./app/front-end
             dockerfile: Dockerfile
         restart: always
         depends_on:
@@ -32,16 +32,16 @@ services:
         env_file:
             - .env
         volumes:
-            - ./front-end:/app
-            - /app/node_modules 
-            - /app/.next
+            - ./app/front-end:/front-end
+            - /front-end/node_modules
+            - /front-end/.next
         networks:
             - ft_transcendence
     
     data-base:
         container_name: data-base
         build: 
-            context: ./data-base
+            context: ./app/data-base
             dockerfile: Dockerfile
         restart: always
         ports:
@@ -61,6 +61,7 @@ volumes:
             type: none
             o: bind
             device: /Users/${USER}/Desktop/data
+
 networks:
     ft_transcendence:
         name: ft_transcendence
