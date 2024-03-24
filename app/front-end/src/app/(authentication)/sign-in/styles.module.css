@@ -1,113 +1,126 @@
 @import url('https://fonts.googleapis.com/css2?family=Itim&display=swap');
 
-.global_class
+.main_card
 {
-    background-color: #111111;
+    background-color: #161625;
+    border-radius: 15px;
 }
 
-.section_pad
+.auth_btn
 {
-  padding: 7em 0;
+    background-color: transparent;
+    font-family: 'valorax';
+    font-size: 1.2em;
+    border-radius: 15px;
+    border: 1;
+    border-style: solid;
 }
 
-.wrap {
-  width: 100%;
-  overflow: hidden;
-  background: #fff;
-  border-radius: 5px;
-  -webkit-box-shadow: 0px 10px 34px -15px rgba(0, 0, 0, 0.24);
-  -moz-box-shadow: 0px 10px 34px -15px rgba(0, 0, 0, 0.24);
-  box-shadow: 0px 10px 34px -15px rgba(0, 0, 0, 0.24);
-}
-
-.login_wrap, .img
+.input_class
 {
-  width: 50%;
-}
-
-.img
-{
-    background-image: url('/signimage.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-}
-
-.sign_btn{
-  background-color: #FF4755;
-  font-family: 'valorax';
-  font-size: 0.9em;
-  border-radius: 25px;
-  color: #161625;
-  width: 28%;
-  height: 50px;
-  border: 0;
-}
-
-.input_class{
     color: #565A69;
     background-color: #2C3143;
     border-radius: 15px;
     font-family: 'itim';
-}
- 
-.main_class{
-background-color: #161625;
-border-radius: 25px;
-box-shadow: #2C3143 0 0px 20px 0;
+    /* width: 400px; */
 }
 
-.auth_btn {
-width: 100px;
-height: 40px;
-font-size: 20px;
-background: transparent;
-position: relative;
-color: #f0f0f0;
-cursor: pointer;
-z-index: 1;
-padding: 10px 20px;
-display: flex;
-align-items: center;
-justify-content: center;
-white-space: nowrap;
-user-select: none;
-touch-action: manipulation;
-border: 3;
-border-color: #2C3143;
-border-style: solid;
-border-radius: 25px;
+.input_class::placeholder
+{
+    color: #565A69;
 }
 
-
-@media only screen and (min-width: 768px) {
-  /* For desktop: */
-  .col-1 {width: 8.33%;}
-  .col-2 {width: 16.66%;}
-  .col-3 {width: 25%;}
-  .col-4 {width: 33.33%;}
-  .col-5 {width: 41.66%;}
-  .col-6 {width: 50%;}
-  .col-7 {width: 58.33%;}
-  .col-8 {width: 66.66%;}
-  .col-9 {width: 75%;}
-  .col-10 {width: 83.33%;}
-  .col-11 {width: 91.66%;}
-  .col-12 {width: 100%;}
+.sign_btn
+{
+    background-color: #FF4755;
+    font-family: 'valorax';
+    font-size: 1.4em;
+    border-radius: 15px;
+    color: #161625;
+    border: 0;
+    /* width: 190px;
+    height: 50px; */
+    height: 60px;
 }
 
-@media only screen and (min-width: 600px) {
-  /* For tablets: */
-  .col-s-1 {width: 8.33%;}
-  .col-s-2 {width: 16.66%;}
-  .col-s-3 {width: 25%;}
-  .col-s-4 {width: 33.33%;}
-  .col-s-5 {width: 41.66%;}
-  .col-s-6 {width: 50%;}
-  .col-s-7 {width: 58.33%;}
-  .col-s-8 {width: 66.66%;}
-  .col-s-9 {width: 75%;}
-  .col-s-10 {width: 83.33%;}
-  .col-s-11 {width: 91.66%;}
-  .col-s-12 {width: 100%;}
+.sign_btn:hover
+{
+    background-color: #fc606d;
+    color: #161625;
+}
+
+.flexx
+{
+  padding-top: 5%;
+  padding-left: 13%;
+  padding-right: 13%;
+}
+/* 
+@media screen and (max-width: 1279px) and (min-width: 769px)
+{
+  .flexx
+  {
+    padding-top: 5%;
+    padding-left: 8%;
+    padding-right: 8%;
+  }
+  .input_class
+  {
+      color: #565A69;
+      background-color: #2C3143;
+      border-radius: 15px;
+      font-family: 'itim';
+      width: 280px;
+  }
+}
+
+@media screen and (max-width: 768px) and (min-width: 481)
+{
+  .flexx
+  {
+    padding-top: 5%;
+    padding-left: 1%;
+    padding-right: 1%;
+  }
+  .input_class
+  {
+      color: #565A69;
+      background-color: #2C3143;
+      border-radius: 15px;
+      font-family: 'itim';
+      width: 200px;
+  }
+  .main_img
+  {
+    display: none;
+  }
+}
+
+*/
+@media screen and (max-width: 480px) 
+{
+  /* .flexx
+  {
+    padding-top: 5%;
+    padding-left: 1%;
+    padding-right: 1%;
+  } */
+
+  .sign_btn
+{
+    background-color: #FF4755;
+    font-family: 'valorax';
+    font-size: 1em;
+    border-radius: 15px;
+    color: #161625;
+    border: 0;
+    /* width: 190px;
+    height: 50px; */
+    height: 50px;
+}
+
+  .main_img
+  {
+    display: none;
+  }
 }

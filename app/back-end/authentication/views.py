@@ -19,7 +19,7 @@ class SignUpView(APIView):
     serializer_class = UsersSignUpSerializer
     def post(self, request):
         if User.objects.filter(email=request.data['email']).exists():
-            return Response({"error": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Email already exists"}, status=status.HTTP_409_CONFLICT)
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
@@ -39,7 +39,7 @@ class SignInView(APIView):
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
             }, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class SignOutView(APIView):
