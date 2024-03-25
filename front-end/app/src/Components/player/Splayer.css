@@ -1,0 +1,17 @@
+.usr-class1:hover{
+    border: 1px solid FFEBEB;
+    background-color: #2C3143;
+    border-radius: 15px;
+    cursor: pointer;
+  }
+
+.img-usr-class1{
+  width: 65px;
+  height: 65px;
+  border-radius: 25px;
+  overflow: hidden; /* Hide overflowing parts of the image */
+}
+
+.opt-class1:hover{
+  cursor: pointer;
+}

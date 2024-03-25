@@ -3,12 +3,12 @@ import { FaAngleRight } from "react-icons/fa";
 import Dropdown from 'react-bootstrap/Dropdown';
 import { IoIosSearch } from "react-icons/io";
 import { ImUserPlus } from "react-icons/im";
-import './Rightbar.css'
 import Player from "../Components/player/Player";
 import Notification from "../Components/Notification/Notification";
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import friends from '../services/friends.json';
 import React from 'react';
+import './Rightbar.css';
 
 function RightBar(props) {
 
@@ -16,10 +16,7 @@ function RightBar(props) {
         return(
         <div
             ref={ref}
-            onClick={(e) => {
-                e.preventDefault();
-                onClick(e);
-            }} >
+            onClick={onClick} >
           {children}
         </div>
         );
@@ -42,12 +39,12 @@ function RightBar(props) {
         <Offcanvas show={props.show} onHide={props.handleClose} placement='end' scroll={true} backdrop={false}>
             <Offcanvas.Body className='p-0 m-0' style={{backgroundColor: '#161625'}}>
                 <div className='row-fluid d-flex flex-row align-items-center p-0 vh-100'>
-                    <div className='col-1 vh-100 d-flex justify-content-end align-items-center text-center' style={{backgroundColor: '#000000'}}>
+                    <div className='col-1 vh-100 d-flex justify-content-end align-items-center text-center' style={{backgroundColor: '#000000'}} >
                         <div className='drag-class pt-3 pb-3' style={{backgroundColor: '#161625', borderRadius: '15px 0 0 15px', cursor: 'pointer'}}>
-                            <FaAngleRight  color="#FFEBEB" size='1.2em' onClick={props.toggleShow}/>
+                            <FaAngleRight  color="#FFEBEB" size='1.2em' />
                         </div>
                     </div>
-                    <div className='col-11'>
+                    <div className='col-11' onClick={props.toggleShow}>
                         <div className="container vh-100">
                             <div className="d-flex flex-column vh-100">
                                 <div className="flex-grow-2">
@@ -56,10 +53,10 @@ function RightBar(props) {
                                             <Dropdown>
                                                 <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
                                                   <div className="notification">
-                                                     <div className="">
+                                                     <div>
                                                          <RiNotification4Fill color="#FF4755" size='1.5em'/>
                                                      </div>
-                                                      <span className="badge">3</span>
+                                                      <span className="badge">5</span>
                                                   </div>
                                                 </Dropdown.Toggle>
                                                 <Dropdown.Menu className="drop-class">
