@@ -1,10 +1,17 @@
 
+/* ::root 
+{
+  --text-color: #161625;
+  --button-color : #FF4755;
+  --button-hover : #fc606d;
+} */
+
+@import url('https://fonts.googleapis.com/css2?family=Itim&display=swap');
+  
 @font-face {
     font-family: 'valorax';
     src: url('/valorax.otf') format('opentype')
   }
-  
-  @import url('https://fonts.googleapis.com/css2?family=Itim&display=swap');
   
   * {
     box-sizing: border-box;

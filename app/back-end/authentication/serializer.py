@@ -30,9 +30,8 @@ class UserSignInSerializer(serializers.Serializer):
 
 
 class SocialAuthSerializer(serializers.Serializer):
-    token = serializers.CharField()
     def validate(self, data):
-        token = data.get('token')
+        token = self.context.get('access_token')
         platform = self.context.get('platform')
         headers = {'Authorization': f'Bearer {token}'}
         if platform == 'github':

@@ -3,8 +3,9 @@ import Form from 'react-bootstrap/Form';
 import { FaGithub , FaGoogle } from "react-icons/fa";
 import { Si42 } from "react-icons/si";
 import styles from './styles.module.css';
+import Link from 'next/link';
 
-function SignInPage() 
+export default function SignInPage() 
 {
     return (
         <div className={`container-fluid vh-100 d-flex justify-content-center align-items-center ${styles.global_class}`}>
@@ -28,7 +29,7 @@ function SignInPage()
                         </div>
                         <div className='row p-2 d-flex justify-content-center'>
                             <button className={`${styles.sign_btn} col-md-4 m-2`} type='button' >SIGN UP</button>
-                            <Form.Label className='' style={{fontFamily: "itim", color: '#565A69'}}>Already have an account? <a href="/home" style={{color: '#FF4755', fontFamily: 'itim'}}>sign in</a></Form.Label>
+                            <Form.Label className='' style={{fontFamily: "itim", color: '#565A69'}}>Already have an account? <Link href="/sign-in" style={{color: '#FF4755', fontFamily: 'itim'}}>sign in</Link></Form.Label>
                         </div>
                         <div className='row text-start'>
                             <Form.Label style={{fontFamily: "itim", color: '#565A69'}}>or sign up with :</Form.Label>
@@ -44,5 +45,3 @@ function SignInPage()
         </div>
     );
 }
-
-export default SignInPage;

@@ -13,6 +13,7 @@ from requests.exceptions import HTTPError
 import requests
 import os
 import urllib.parse
+from django.http import HttpResponseRedirect
 
 
 class SignUpView(APIView):
@@ -54,6 +55,7 @@ class SignOutView(APIView):
 
 # send the access token to the front-end
 class SocialAuthExchangeView(APIView):
+    serializer_class = SocialAuthSerializer
     def get(self, request, platform):
         code = request.GET.get('code')
         platform = platform.lower()
@@ -93,9 +95,24 @@ class SocialAuthExchangeView(APIView):
         except HTTPError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         access_token = response.json().get('access_token')
-        if not access_token:
-            return Response({"error": "No access token returned"}, status=status.HTTP_400_BAD_REQUEST)
-        return Response({"access_token": access_token})
+        serializer = self.serializer_class(data=request.data, context={"platform": platform, "access_token": access_token})
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data.get('email')
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if user and user.is_active:
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+            response = HttpResponseRedirect(settings.FRONTEND_HOST)
+            response.set_cookie('access_token', access_token, httponly=True, samesite='Lax')
+            response.set_cookie('refresh_token', refresh, httponly=True, samesite='Lax')
+            return response
+        else:
+            return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+        
         
 
 class SocialAuthRedirectView(APIView):
@@ -117,25 +134,25 @@ class SocialAuthRedirectView(APIView):
             return redirect(f'https://api.intra.42.fr/oauth/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&scope={SCOPE}&response_type=code')
 
 
-class SocialAuthView(APIView):
-    serializer_class = SocialAuthSerializer
-    def post(self, request, platform):
-        platform = platform.lower()
-        print(platform, file=sys.stderr)
-        if platform not in ['github', 'google', '42']:
-            return Response({"error": "Invalid platform"}, status=status.HTTP_400_BAD_REQUEST)
-        serializer = self.serializer_class(data=request.data, context={"platform": platform})
-        serializer.is_valid(raise_exception=True)
-        email = serializer.validated_data.get('email')
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
-        if user and user.is_active:
-            refresh = RefreshToken.for_user(user)
-            return Response({
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
-            }, status=status.HTTP_200_OK)
-        else:
-            return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+# class SocialAuthView(APIView):
+#     serializer_class = SocialAuthSerializer
+#     def post(self, request, platform):
+#         platform = platform.lower()
+#         print(platform, file=sys.stderr)
+#         if platform not in ['github', 'google', '42']:
+#             return Response({"error": "Invalid platform"}, status=status.HTTP_400_BAD_REQUEST)
+#         serializer = self.serializer_class(data=request.data, context={"platform": platform})
+#         serializer.is_valid(raise_exception=True)
+#         email = serializer.validated_data.get('email')
+#         try:
+#             user = User.objects.get(email=email)
+#         except User.DoesNotExist:
+#             return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+#         if user and user.is_active:
+#             refresh = RefreshToken.for_user(user)
+#             return Response({
+#                 'refresh': str(refresh),
+#                 'access': str(refresh.access_token),
+#             }, status=status.HTTP_200_OK)
+#         else:
+#             return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)

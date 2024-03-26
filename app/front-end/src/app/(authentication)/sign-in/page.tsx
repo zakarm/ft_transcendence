@@ -10,7 +10,8 @@ import { FormEvent } from 'react';
 import Cookies from 'js-cookie';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import Link from 'next/link';
+import SocialAuth from "../../../components/socialAuth";
 
 export default function SignInPage() {
     const router = useRouter();
@@ -77,14 +78,15 @@ export default function SignInPage() {
                                     </button>
                                 </div>
                                 <div className='row p-2 text-center'>
-                                    <Form.Label className='' style={{fontFamily: "itim", color: '#565A69'}}>Already have an account? <a href="/home" style={{color: '#FF4755', fontFamily: 'itim'}}>sign in</a></Form.Label>
+                                    <Form.Label className='' style={{fontFamily: "itim", color: '#565A69'}}>Already have an account? <Link href="/sign-up" style={{color: '#FF4755', fontFamily: 'itim'}}>sign up</Link></Form.Label>
                                 </div>
                                 <div className='row text-start mt-3'>
                                     <Form.Label style={{fontFamily: "itim", color: '#565A69'}}>or sign up with :</Form.Label>
                                     <div className='d-flex justify-content-around align-items-center'>
-                                        <button className={`${styles.auth_btn} col-sm-2`} type='button' ><Si42 color='#FFEBEB'/></button>
-                                        <button className={`${styles.auth_btn} col-sm-2`}  type='button' ><FaGithub color='#FFEBEB'/></button>
-                                        <button className={`${styles.auth_btn} col-sm-2`}  type='button' ><FaGoogle color='#FFEBEB'/></button>
+                                        <SocialAuth className={`${styles.auth_btn} col-sm-2`} platform="google" />
+                                        {/* <button className={`${styles.auth_btn} col-sm-2`} type='button' ><Si42 color='#FFEBEB'/></button> */}
+                                        {/* <button className={`${styles.auth_btn} col-sm-2`}  type='button' ><FaGithub color='#FFEBEB'/></button> */}
+                                        {/* <button className={`${styles.auth_btn} col-sm-2`}  type='button' ><FaGoogle color='#FFEBEB'/></button> */}
                                     </div>
                                 </div>
                             </form>
