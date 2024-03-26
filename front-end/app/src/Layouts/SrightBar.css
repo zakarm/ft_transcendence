@@ -46,6 +46,50 @@
   opacity: 1;
 }
 
+@media (min-width: 1600px)
+{
+  .img-class1{
+    width: 75px;
+    height: 75px;
+  }
+  .usr h5 {
+    font-size: large;
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1599px) {
+  .img-class1{
+    width: 55px;
+    height: 55px;
+  }
+
+  .usr h5 {
+    font-size: small;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .img-class1{
+    width: 35px;
+    height: 35px;
+  }
+
+  .usr h5 {
+    font-size: x-small;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .img-class1{
+    width: 25px;
+    height: 25px;
+  }
+
+  .usr h5 {
+    font-size: xx-small;
+  }
+}
+
 
 
 
