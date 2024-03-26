@@ -66,6 +66,17 @@
   .usr h5 {
     font-size: small;
   }
+
+  .notification1 .badge1 {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    border-radius: 25px;
+    background: #FF4755;
+    color: #FFEBEB;
+    font-size: 0.5em;
+    padding: 2px;
+  }
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
@@ -77,6 +88,17 @@
   .usr h5 {
     font-size: x-small;
   }
+
+  .notification1 .badge1 {
+    position: absolute;
+    top: 25px;
+    left: 25px;
+    border-radius: 25px;
+    background: #FF4755;
+    color: #FFEBEB;
+    font-size: 0.4em;
+    padding: 2px;
+  }
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
@@ -87,6 +109,17 @@
 
   .usr h5 {
     font-size: xx-small;
+  }
+
+  .notification1 .badge1 {
+    position: absolute;
+    top: 17px;
+    left: 17px;
+    border-radius: 25px;
+    background: #FF4755;
+    color: #FFEBEB;
+    font-size: 0.3em;
+    padding: 2px;
   }
 }
 
