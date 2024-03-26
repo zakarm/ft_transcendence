@@ -102,13 +102,12 @@ class SocialAuthExchangeView(APIView):
             user = User.objects.get(email=email)
         except User.DoesNotExist:
             return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
-
         if user and user.is_active:
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)
             response = HttpResponseRedirect(settings.FRONTEND_HOST)
-            response.set_cookie('access_token', access_token, httponly=True, samesite='Lax')
-            response.set_cookie('refresh_token', refresh, httponly=True, samesite='Lax')
+            response.set_cookie('access_token', access_token, httponly=True, samesite='Lax', secure=True)
+            response.set_cookie('refresh_token', refresh, httponly=True, samesite='Lax', secure=True)
             return response
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
@@ -132,27 +131,3 @@ class SocialAuthRedirectView(APIView):
             REDIRECT_URI = settings.FORTYTWO_REDIRECT_URI
             SCOPE = "public"
             return redirect(f'https://api.intra.42.fr/oauth/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&scope={SCOPE}&response_type=code')
-
-
-# class SocialAuthView(APIView):
-#     serializer_class = SocialAuthSerializer
-#     def post(self, request, platform):
-#         platform = platform.lower()
-#         print(platform, file=sys.stderr)
-#         if platform not in ['github', 'google', '42']:
-#             return Response({"error": "Invalid platform"}, status=status.HTTP_400_BAD_REQUEST)
-#         serializer = self.serializer_class(data=request.data, context={"platform": platform})
-#         serializer.is_valid(raise_exception=True)
-#         email = serializer.validated_data.get('email')
-#         try:
-#             user = User.objects.get(email=email)
-#         except User.DoesNotExist:
-#             return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
-#         if user and user.is_active:
-#             refresh = RefreshToken.for_user(user)
-#             return Response({
-#                 'refresh': str(refresh),
-#                 'access': str(refresh.access_token),
-#             }, status=status.HTTP_200_OK)
-#         else:
-#             return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)

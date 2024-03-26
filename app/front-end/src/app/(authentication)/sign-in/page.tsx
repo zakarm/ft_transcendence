@@ -84,9 +84,8 @@ export default function SignInPage() {
                                     <Form.Label style={{fontFamily: "itim", color: '#565A69'}}>or sign up with :</Form.Label>
                                     <div className='d-flex justify-content-around align-items-center'>
                                         <SocialAuth className={`${styles.auth_btn} col-sm-2`} platform="google" />
-                                        {/* <button className={`${styles.auth_btn} col-sm-2`} type='button' ><Si42 color='#FFEBEB'/></button> */}
-                                        {/* <button className={`${styles.auth_btn} col-sm-2`}  type='button' ><FaGithub color='#FFEBEB'/></button> */}
-                                        {/* <button className={`${styles.auth_btn} col-sm-2`}  type='button' ><FaGoogle color='#FFEBEB'/></button> */}
+                                        <SocialAuth className={`${styles.auth_btn} col-sm-2`} platform="github" />
+                                        <SocialAuth className={`${styles.auth_btn} col-sm-2`} platform="42" />
                                     </div>
                                 </div>
                             </form>
