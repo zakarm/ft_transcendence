@@ -46,13 +46,11 @@ function SrightBar(props) {
                             <div className="row m-0">
                                 <div className='d-flex flex-column align-items-center p-2'>
                                     <div className='holder p-2'>
-                                        <div className="col ">
+                                        <div className="col notification1">
                                            <Dropdown>
                                                <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
-                                                 <div className="notification1">
                                                     <img className="img-class1" src="assets/char3.png" alt='Profile'/>
                                                     <span className="badge1">3</span>
-                                                 </div>
                                                </Dropdown.Toggle>
                                                <Dropdown.Menu className="drop-class">
                                                  <Dropdown.Item eventKey="1"><Notification /></Dropdown.Item>

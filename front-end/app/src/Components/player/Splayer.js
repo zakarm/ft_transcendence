@@ -30,8 +30,8 @@ function Player({ nickname , id , image , isConnected }) {
                       <Dropdown.Item eventKey="3">opt 3</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
-                <div className=" p-2">
-                    <h5 style={{fontFamily: 'intim', color: '#FFEBEB'}}>{nickname}</h5>
+                <div className="p-2">
+                    <h5 className='hold' >{nickname}</h5>
                 </div>
             </div>
         </div>

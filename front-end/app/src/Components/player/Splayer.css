@@ -15,3 +15,48 @@
 .opt-class1:hover{
   cursor: pointer;
 }
+
+@media (min-width: 1200px) {
+  .hold  {
+        font-size: 75%;
+        font-family: itim;
+        color: #FFEBEB;
+        background-color: transparent;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .hold  {
+    font-size: 60%;
+    font-family: itim;
+    color: #FFEBEB;
+    background-color: transparent;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .hold  {
+    font-size: 50%;
+    font-family: itim;
+    color: #FFEBEB;
+    background-color: transparent;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+  .hold  {
+    font-size: 40%;
+    font-family: itim;
+    color: #FFEBEB;
+    background-color: transparent;
+  }
+}
+
+@media (max-width: 575px) {
+  .hold  {
+    font-size: 30%;
+    font-family: itim;
+    color: #FFEBEB;
+    background-color: transparent;
+  }
+}
