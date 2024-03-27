@@ -12,23 +12,44 @@ import SrightBar from './Layouts/SrightBar';
 
 import { FaAngleLeft } from "react-icons/fa";
 
+import Offcanvas from 'react-bootstrap/Offcanvas';
+
 import { useState } from 'react';
 import './App.css';
 
 function App() {
 
   const [show, setShow] = useState(false);
+  const [showSide, setShowSide] = useState(false);
+
   const handleClose = () => setShow(false);
   const toggleShow = () => setShow((s) => !s);
+
+  const handleToggle = () => setShowSide(false);
+  const showToggle = () => setShowSide(true);
 
   return (
     <div className="container-fluid p-0 vh-100" style={{backgroundColor: '#000000', overflow: 'hidden'}}>
       <div className="row">
         <Router >
-          <div className="col-md-1" style={{backgroundColor: '#000000'}}>
+          <div className='col-1 toglle p-0'>
+            <img src="assets/LOGO.svg" className="logo img-fluid rounded rounded-circle" alt="ying" onClick={showToggle}/>
+            <Offcanvas show={showSide} placement='start' onHide={handleToggle} scroll={false} backdrop={true} >
+              <div className='sidebar-toggle vh-100'>
+                <Offcanvas.Header closeButton>
+                  <Offcanvas.Title>Offcanvas</Offcanvas.Title>
+                </Offcanvas.Header>
+                <Offcanvas.Body>
+                  Some text as placeholder. In real life you can have the elements you
+                  have chosen. Like, text, images, lists, etc.
+                </Offcanvas.Body>
+                </div>
+            </Offcanvas>
+          </div>
+          <div className="sidebar col-md-1 d-none d-sm-none d-md-block border" style={{backgroundColor: '#000000'}}>
             <SideBar />
           </div>
-          <div className="col-md-10 p-0" style={{backgroundColor: '#000000'}}>
+          <div className="col-md-10 col-sm-12 p-0 border border-danger" style={{backgroundColor: '#000000'}}>
             <Routes>
               <Route path='/'         element={<Home />}      />
               <Route path='/chat'     element={<Chat />}      />
@@ -37,7 +58,7 @@ function App() {
               <Route path='/achievement'     element={<Achievement />}      />
             </Routes>
           </div>
-          <div className="col-md-1 p-0" style={{backgroundColor: '#161625'}}>
+          <div className="rightbar col-md-1 d-none d-sm-none d-md-block p-0 border" style={{backgroundColor: '#161625'}}>
             <div className='row-fluid d-flex flex-row align-items-center p-0 vh-100'>
               <div className='col-1 vh-100 d-flex justify-content-end align-items-center text-center' style={{backgroundColor: '#000000'}}>
                 <div className='drag-class pt-3 pb-3' style={{backgroundColor: '#161625', borderRadius: '15px 0 0 15px', cursor: 'pointer'}} onClick={toggleShow}>

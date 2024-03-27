@@ -33,7 +33,7 @@ function SideBar() {
   }, [location]);
 
   return (
-      <div className="side-container d-inline-flex flex-column justify-content-around align-items-center vh-100 p-4">
+      <div className="side-container d-inline-flex flex-column justify-content-around align-items-center vh-100 py-4 px-2">
         <div className="flex-grow-1 pt-3">
           <Link to="/" >
             <img src="assets/LOGO.svg" className="logo img-fluid rounded rounded-circle" alt="ying"/>

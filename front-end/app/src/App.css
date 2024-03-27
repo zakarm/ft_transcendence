@@ -5,3 +5,30 @@
     box-sizing: border-box;
     opacity: 1;
 }
+
+.sidebar-toggle {
+    background-color: #161625;
+}
+
+
+.toglle{
+    display: none;
+}
+
+@media (max-width: 767px) {
+    
+
+    .toglle{
+        display: block;
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        border-radius: 25px;
+        box-shadow: white 0 0px 20px 0;
+        box-sizing: border-box;
+        opacity: 1;
+        cursor: pointer;
+        height: 64px;
+        width: 64px;
+    }
+}
