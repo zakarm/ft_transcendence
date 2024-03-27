@@ -1,0 +1,12 @@
+.title:hover{
+    border: 1px solid white;
+    border-radius: 25px;
+    box-shadow: #383838 0 0px 20px 0;
+    box-sizing: border-box;
+    opacity: 1;
+    background-color: #606060;
+}
+
+.link{
+    text-decoration: none;
+}

@@ -16,6 +16,7 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 
 import { useState } from 'react';
 import './App.css';
+import Togglebar from './Components/SideBar/Togglebar';
 
 function App() {
 
@@ -37,14 +38,16 @@ function App() {
             <Offcanvas show={showSide} placement='start' onHide={handleToggle} scroll={false} backdrop={true} >
               <div className='sidebar-toggle vh-100'>
                 <Offcanvas.Header closeButton>
-                  <Offcanvas.Title>Offcanvas</Offcanvas.Title>
+                  <Offcanvas.Title><img src="assets/LOGO.svg" className="logo img-fluid rounded rounded-circle" alt="ying"/></Offcanvas.Title>
                 </Offcanvas.Header>
-                <Offcanvas.Body>
-                  Some text as placeholder. In real life you can have the elements you
-                  have chosen. Like, text, images, lists, etc.
+                <Offcanvas.Body className='d-flex justify-content-center' style={{height: '93%'}} closeButton>
+                  <Togglebar handleToggle={handleToggle}/>
                 </Offcanvas.Body>
                 </div>
             </Offcanvas>
+            <div className='col-1 slider d-flex align-items-center justify-content-center' onClick={toggleShow}>
+              <FaAngleLeft  color="#FFEBEB"/>
+            </div>
           </div>
           <div className="sidebar col-md-1 d-none d-sm-none d-md-block border" style={{backgroundColor: '#000000'}}>
             <SideBar />

@@ -15,6 +15,11 @@
     display: none;
 }
 
+.slider{
+    display: none;
+}
+  
+
 @media (max-width: 767px) {
     
 
@@ -28,7 +33,20 @@
         box-sizing: border-box;
         opacity: 1;
         cursor: pointer;
+        
+    }
+
+    .slider {
+        display: block;
+        position: fixed;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+        border-radius: 25px 0 25px 25px;
+        background-color: #161625;
+        border: 1px solid white;
+        background-color: 161625;
+        cursor: pointer;
         height: 64px;
-        width: 64px;
     }
 }
