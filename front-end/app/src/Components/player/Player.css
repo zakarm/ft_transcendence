@@ -14,3 +14,24 @@
 .opt-class:hover{
   cursor: pointer;
 }
+
+@media (max-height: 500px)
+{
+  .img-usr-class{
+    width: 30px;
+    height: 30px;
+  }
+
+  .usr-class h5{
+    font-size: small;
+  }
+
+  .usr-class h6{
+    font-size: small;
+  }
+
+  .opt-class{
+    width: 20px;
+    height: 20px;
+  }
+}

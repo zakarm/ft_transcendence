@@ -33,7 +33,7 @@ function Togglebar(props) {
       gsap.to(".logo", { rotation: "+=1080", duration: 1 });
     }, [location]);
     return (
-        <div className="d-inline-flex flex-column justify-content-around align-items-center py-4 px-2" style={{height: '100%'}}>
+        <div className="d-inline-flex flex-column justify-content-around align-items-center py-4 pt-0 px-2" style={{height: '100%'}}>
             <div className="flex-grow-1 d-flex flex-column justify-content-around">
                 <Link className="title link valo-font d-flex flex-row align-items-center justify-content-start p-2" to="/" onClick={props.handleToggle}>
                     <MdSpaceDashboard className={`side-icon icon-0`} color={activeIcon === 0 ? '#FF4755' : '#FFEBEB'}/>

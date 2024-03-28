@@ -37,10 +37,10 @@ function App() {
             <img src="assets/LOGO.svg" className="logo img-fluid rounded rounded-circle" alt="ying" onClick={showToggle}/>
             <Offcanvas show={showSide} placement='start' onHide={handleToggle} scroll={false} backdrop={true} >
               <div className='sidebar-toggle vh-100'>
-                <Offcanvas.Header closeButton>
+                <Offcanvas.Header closeButton closeVariant='white'>
                   <Offcanvas.Title><img src="assets/LOGO.svg" className="logo img-fluid rounded rounded-circle" alt="ying"/></Offcanvas.Title>
                 </Offcanvas.Header>
-                <Offcanvas.Body className='d-flex justify-content-center' style={{height: '93%'}} closeButton>
+                <Offcanvas.Body className='pt-0 d-flex justify-content-center' style={{height: '93%'}}>
                   <Togglebar handleToggle={handleToggle}/>
                 </Offcanvas.Body>
                 </div>
