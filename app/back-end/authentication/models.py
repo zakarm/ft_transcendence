@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser, BaseUserManager
 
-class CustomUserManager(BaseUserManager):
+class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError('The Email field must be set')
@@ -37,8 +37,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     image_url = models.CharField(max_length=200, blank=True, null=True)
     cover_url = models.CharField(max_length=200, blank=True, null=True)
     location = models.CharField(max_length=100, blank=True, null=True)
+    is_2fa_enabled = models.BooleanField(default=False)
+    is_email_verified = models.BooleanField(default=False)
+    two_fa_secret_key = models.CharField(max_length=200, blank=True, null=True)
+    # otp_expiry = models.DateTimeField(blank=True, null=True)
+    # otp_max_out = models.DateTimeField(blank=True, null=True)
 
-    objects = CustomUserManager()
+
+    objects = UserManager()
     USERNAME_FIELD = 'email'
     class Meta:
         # managed = True

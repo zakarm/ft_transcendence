@@ -4,7 +4,7 @@ import { FaGithub , FaGoogle } from "react-icons/fa";
 import { Si42 } from "react-icons/si";
 import styles from './styles.module.css';
 import NextImage from 'next/image';
-import React from 'react';
+import React, {useState} from 'react';
 import {useRouter} from 'next/navigation';
 import { FormEvent } from 'react';
 import Cookies from 'js-cookie';
@@ -12,9 +12,12 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Link from 'next/link';
 import SocialAuth from "../../../components/socialAuth";
+import QRCode from 'react-qr-code';
+
 
 export default function SignInPage() {
     const router = useRouter();
+    const [qrCode, setQrCode] = useState(null);
     const signInPost = async (event: FormEvent<HTMLFormElement>) => {
         try {
             event.preventDefault();
@@ -31,12 +34,19 @@ export default function SignInPage() {
             {
                 const data = await response.json();
                 console.log(data);
-                const {accessToken, refreshToken} = data;
-                Cookies.set("accessToken", accessToken)
-                Cookies.set("refreshToken", refreshToken)
-                toast.success('Successfully signed in !');
-                console.log(response);
-                router.push('/')
+                const {accessToken, refreshToken, is_2fa_enabled} = data;
+                if (is_2fa_enabled == 'True')
+                {
+                    const {url_code} = data;
+                    setQrCode(<QRCode value={url_code} />)
+                }
+                else 
+                {
+                    toast.success('Successfully signed in !');   
+                    Cookies.set("accessToken", accessToken)
+                    Cookies.set("refreshToken", refreshToken)
+                    router.push('/')
+                }
             }
             else if (response.status === 401){
                 toast.error('Invalid email or password !');
@@ -52,6 +62,7 @@ export default function SignInPage() {
     return (
         <div className='container'>
             <ToastContainer />
+            { qrCode }
             <div className={`${styles.flexx}`}>
                 <div className={`${styles.main_card} shadow row`}>
                     <div className={`col-lg-6 ${styles.main_img}`} style={{position: 'relative', minHeight: '300px'}}>

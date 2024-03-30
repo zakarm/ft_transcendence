@@ -4,7 +4,8 @@ from django.contrib.auth import authenticate
 import requests, sys
 from requests.exceptions import RequestException
 from django.db import IntegrityError, transaction
-
+import pyotp
+import pyqrcode
 
 class UsersSignUpSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,8 +25,27 @@ class UserSignInSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
     def validate(self, data):
         user = authenticate(username=data.get('email'), password=data.get('password'))
+        user.is_2fa_enabled = True
+        user.save()
         if not user:
             raise serializers.ValidationError("Incorrect email or password.")
+        if user.is_2fa_enabled:
+            user.two_fa_secret_key = pyotp.random_base32()
+            user.save()
+            url_code = pyotp.totp.TOTP(user.two_fa_secret_key).provisioning_uri(name = user.email, issuer_name = "ft_transcendence")
+            data['user'] = user
+            data['url_code'] = url_code
+            return data
+        data['user'] = user
+        return data
+
+class User2FASerializer(serializers.Serializer):
+    code = serializers.CharField()
+
+    def validate(self, data):
+        user = self.context.get('user')
+        if not user.verify_2fa(data.get('code')):
+            raise serializers.ValidationError("Invalid 2FA code.")
         return user
 
 

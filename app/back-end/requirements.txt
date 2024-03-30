@@ -20,3 +20,5 @@ requests-mock
 daphne
 channels
 djangochannelsrestframework
+pyotp
+pyqrcode
