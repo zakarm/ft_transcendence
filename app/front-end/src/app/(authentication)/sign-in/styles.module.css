@@ -16,6 +16,15 @@
     border-style: solid;
 }
 
+
+
+.input_class:focus {
+  background-color: #2C3143;
+  color: #FFEBEB;
+  outline: none;
+  border: none;
+}
+
 .input_class
 {
     color: #565A69;

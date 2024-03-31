@@ -1,0 +1,12 @@
+.input_class
+{
+    color: #565A69;
+    background-color: #2C3143;
+    border-radius: 15px;
+    font-family: 'itim';
+}
+
+.input_class::placeholder
+{
+    color: #565A69;
+}
