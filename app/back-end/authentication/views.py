@@ -35,15 +35,30 @@ class SignInView(APIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             data = serializer.validated_data
-            refresh = RefreshToken.for_user(data['user'])
             response_data = {
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
+                'email': str(data['user']),
                 'is_2fa_enabled': str(data['user'].is_2fa_enabled),
             }
-            if data['user'].is_2fa_enabled:
+            if not data['user'].is_2fa_enabled:
+                refresh = RefreshToken.for_user(data['user'])
+                response_data['refresh'] = str(refresh) 
+                response_data['access'] = str(refresh.access_token) 
+            else :
                 response_data['url_code'] = str(data['url_code']) 
             return Response(response_data, status=status.HTTP_200_OK) 
+        return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
+
+class SignIn2Fa(APIView):
+    serializer_class = User2FASerializer
+    def post(self, request):
+        serializer = self.serializer_class(data = request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token)
+            }, status = status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
 
 

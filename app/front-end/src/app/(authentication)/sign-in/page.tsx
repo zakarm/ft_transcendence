@@ -1,7 +1,5 @@
 "use client";
 import Form from 'react-bootstrap/Form';
-import { FaGithub , FaGoogle } from "react-icons/fa";
-import { Si42 } from "react-icons/si";
 import styles from './styles.module.css';
 import NextImage from 'next/image';
 import React, {useState} from 'react';
@@ -13,9 +11,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import Link from 'next/link';
 import SocialAuth from "../../../components/socialAuth";
 import TwoFa from '@/components/twoFa';
-import QRCode from 'react-qr-code';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 
 
 export default function SignInPage() {
@@ -32,16 +27,15 @@ export default function SignInPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
               })
-            console.log(response);
             if (response.ok)
             {
                 const data = await response.json();
                 console.log(data);
-                const {accessToken, refreshToken, is_2fa_enabled} = data;
+                const {accessToken, refreshToken, is_2fa_enabled, email} = data;
                 if (is_2fa_enabled == 'True')
                 {
                     const {url_code} = data;
-                    setQrCode(<TwoFa value={url_code} />)
+                    setQrCode(<TwoFa value={url_code} email={email} />)
                 }
                 else 
                 {
@@ -80,10 +74,10 @@ export default function SignInPage() {
                             </div>
                             <form className={`form-group mt-3 mb-3 w-75`} onSubmit={signInPost}>
                                 <div className='mb-3'>
-                                    <input className={`form-control ${styles.input_class} p-3 mb-3 border-0`} type='email' autocomplete="off" placeholder='Email' name="email" required/>
+                                    <input className={`form-control ${styles.input_class} p-3 mb-3 border-0`} type='email' autoComplete="off" placeholder='Email' name="email" required/>
                                 </div>
                                 <div className='mb-5'>
-                                    <input className={`form-control ${styles.input_class} p-3 mb-3 border-0`} type='password' autocomplete="off" placeholder='Password' name="password" required/>
+                                    <input className={`form-control ${styles.input_class} p-3 mb-3 border-0`} type='password' autoComplete="off" placeholder='Password' name="password" required/>
                                 </div>
 
                                 <div className='mb-3 text-center'>

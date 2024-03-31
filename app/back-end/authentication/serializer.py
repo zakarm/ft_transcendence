@@ -5,7 +5,6 @@ import requests, sys
 from requests.exceptions import RequestException
 from django.db import IntegrityError, transaction
 import pyotp
-import pyqrcode
 
 class UsersSignUpSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,9 +23,7 @@ class UserSignInSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
     def validate(self, data):
-        user = authenticate(username=data.get('email'), password=data.get('password'))
-        user.is_2fa_enabled = True
-        user.save()
+        user = authenticate(email=data.get('email'), password=data.get('password'))
         if not user:
             raise serializers.ValidationError("Incorrect email or password.")
         if user.is_2fa_enabled:
@@ -40,11 +37,17 @@ class UserSignInSerializer(serializers.Serializer):
         return data
 
 class User2FASerializer(serializers.Serializer):
-    code = serializers.CharField()
-
+    otp = serializers.CharField()
+    email = serializers.CharField()
     def validate(self, data):
-        user = self.context.get('user')
-        if not user.verify_2fa(data.get('code')):
+        email = data.get('email')
+        # print(f'hello -> {email}', sys.stderr)
+        user = User.objects.get(email = email)
+        print(user, file = sys.stderr)
+        if not user:
+            raise serializers.ValidationError("Invalid email.")
+        verifier = pyotp.TOTP(user.two_fa_secret_key)
+        if not verifier.verify(data.get('otp')):
             raise serializers.ValidationError("Invalid 2FA code.")
         return user
 
