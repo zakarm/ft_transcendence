@@ -9,10 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.0",
     "@types/react-bootstrap": "^0.32.36",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "flowbite-react": "^0.7.5",
+    "gsap": "^3.12.5",
     "jquery": "^3.7.1",
     "js-cookie": "^3.0.5",
     "js-cookies": "^1.0.4",
