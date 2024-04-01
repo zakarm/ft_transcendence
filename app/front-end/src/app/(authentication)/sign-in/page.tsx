@@ -89,7 +89,7 @@ export default function SignInPage() {
                                     <Form.Label className='' style={{fontFamily: "itim", color: '#565A69'}}>Already have an account? <Link href="/sign-up" style={{color: '#FF4755', fontFamily: 'itim'}}>sign up</Link></Form.Label>
                                 </div>
                                 <div className='row text-start mt-3'>
-                                    <Form.Label style={{fontFamily: "itim", color: '#565A69'}}>or sign up with :</Form.Label>
+                                    <Form.Label style={{fontFamily: "itim", color: '#565A69'}}>or sign in with :</Form.Label>
                                     <div className='d-flex justify-content-around align-items-center'>
                                         <SocialAuth className={`${styles.auth_btn} col-sm-2`} platform="google" />
                                         <SocialAuth className={`${styles.auth_btn} col-sm-2`} platform="github" />

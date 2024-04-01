@@ -9,7 +9,7 @@ import pyotp
 class UsersSignUpSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('email', 'password', 'first_name', 'last_name')
+        fields = ('email', 'password', 'first_name', 'last_name', 'username')
         extra_kwargs = {'password': {'required': True}}
 
     def create(self, validated_data):
