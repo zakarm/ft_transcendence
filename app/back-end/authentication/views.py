@@ -21,6 +21,8 @@ class SignUpView(APIView):
     def post(self, request):
         if User.objects.filter(email=request.data['email']).exists():
             return Response({"error": "Email already exists"}, status=status.HTTP_409_CONFLICT)
+        if User.objects.filter(username=request.data['username']).exists():
+            return Response({"error": "Username already exists"}, status=status.HTTP_409_CONFLICT)
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
@@ -34,12 +36,31 @@ class SignInView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
+            data = serializer.validated_data
+            response_data = {
+                'email': str(data['user']),
+                'is_2fa_enabled': str(data['user'].is_2fa_enabled),
+            }
+            if not data['user'].is_2fa_enabled:
+                refresh = RefreshToken.for_user(data['user'])
+                response_data['refresh'] = str(refresh) 
+                response_data['access'] = str(refresh.access_token) 
+            else :
+                response_data['url_code'] = str(data['url_code']) 
+            return Response(response_data, status=status.HTTP_200_OK) 
+        return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
+
+class SignIn2Fa(APIView):
+    serializer_class = User2FASerializer
+    def post(self, request):
+        serializer = self.serializer_class(data = request.data)
+        if serializer.is_valid():
             user = serializer.validated_data
             refresh = RefreshToken.for_user(user)
             return Response({
                 'refresh': str(refresh),
-                'access': str(refresh.access_token),
-            }, status=status.HTTP_200_OK)
+                'access': str(refresh.access_token)
+            }, status = status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
 
 

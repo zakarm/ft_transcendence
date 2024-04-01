@@ -4,12 +4,12 @@ from django.contrib.auth import authenticate
 import requests, sys
 from requests.exceptions import RequestException
 from django.db import IntegrityError, transaction
-
+import pyotp
 
 class UsersSignUpSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('email', 'password', 'first_name', 'last_name')
+        fields = ('email', 'password', 'first_name', 'last_name', 'username')
         extra_kwargs = {'password': {'required': True}}
 
     def create(self, validated_data):
@@ -23,9 +23,32 @@ class UserSignInSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
     def validate(self, data):
-        user = authenticate(username=data.get('email'), password=data.get('password'))
+        user = authenticate(email=data.get('email'), password=data.get('password'))
         if not user:
             raise serializers.ValidationError("Incorrect email or password.")
+        if user.is_2fa_enabled:
+            user.two_fa_secret_key = pyotp.random_base32()
+            user.save()
+            url_code = pyotp.totp.TOTP(user.two_fa_secret_key).provisioning_uri(name = user.email, issuer_name = "ft_transcendence")
+            data['user'] = user
+            data['url_code'] = url_code
+            return data
+        data['user'] = user
+        return data
+
+class User2FASerializer(serializers.Serializer):
+    otp = serializers.CharField()
+    email = serializers.CharField()
+    def validate(self, data):
+        email = data.get('email')
+        # print(f'hello -> {email}', sys.stderr)
+        user = User.objects.get(email = email)
+        print(user, file = sys.stderr)
+        if not user:
+            raise serializers.ValidationError("Invalid email.")
+        verifier = pyotp.TOTP(user.two_fa_secret_key)
+        if not verifier.verify(data.get('otp')):
+            raise serializers.ValidationError("Invalid 2FA code.")
         return user
 
 

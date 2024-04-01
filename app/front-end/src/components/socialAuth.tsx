@@ -14,13 +14,6 @@ export default function SocialAuth({ className, platform }: Props) {
       try {
             window.location.href = `http://localhost:8000/api/social/${platform}/redirect`;
             console.log(window.location.href );
-
-          
-          // if (!response.ok) {
-          //     throw new Error('Failed to fetch authorization URL');
-          // }
-          // const data = await response.json();
-          // window.location.href = data.redirect_url; // Assuming the server returns a redirect_url
       } catch (error) {
           console.error('Error:', error);
       }
