@@ -1,0 +1,35 @@
+.title:hover{
+    border: 1px solid white;
+    border-radius: 25px;
+    box-shadow: #383838 0 0px 20px 0;
+    box-sizing: border-box;
+    opacity: 1;
+    background-color: #606060;
+}
+
+.link{
+    text-decoration: none;
+}
+
+@media (max-height: 500px) and (min-height: 350px) {
+    .title h3{
+        font-size: small;
+    }
+
+    .side_icon{
+        height: 38px;
+        width: 38px;
+    }
+}
+
+@media (max-height: 349px)
+{
+    .title h3{
+        font-size: x-small;
+    }
+
+    .side_icon{
+        height: 24px;
+        width: 24px;
+    }
+}

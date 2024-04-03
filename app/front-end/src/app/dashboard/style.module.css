@@ -1,12 +1,11 @@
-
-.drag-class:hover{
+.drag_class:hover{
     border: 1px solid white;
     box-shadow: #383838 0 0px 20px 0;
     box-sizing: border-box;
     opacity: 1;
 }
 
-.sidebar-toggle {
+.sidebar_toggle {
     background-color: #161625;
 }
 
@@ -19,7 +18,7 @@
     display: none;
 }
 
-.close-btn{
+.close_btn{
     color: #F4E6E6;
 }
   

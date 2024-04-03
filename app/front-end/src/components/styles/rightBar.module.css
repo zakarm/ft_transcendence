@@ -1,0 +1,133 @@
+.notification {
+    color: #FFEBEB;
+    text-decoration: none;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+  }
+  
+.notification .badge {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  border-radius: 100%;
+  background: #FFEBEB;
+  color: #000000;
+  font-size: 0.4em;
+}
+
+.img_class{
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden; /* Hide overflowing parts of the image */
+  border: 1px solid #27B299;
+  box-shadow: #27B299 0 0px 20px 0;
+  box-sizing: border-box;
+  opacity: 1;
+}
+
+.search_inpt{
+  background-color: #2C3143;
+  border: 0;
+  border-radius: 15px;
+  overflow: hidden;
+  margin: 2px;;
+}
+
+.search_inpt2{
+  background-color: #2C3143;
+  border: 0;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.search_inpt:hover{
+  border: 1px solid #FFEBEB;
+  box-shadow: #383838 0 0px 20px 0;
+  box-sizing: border-box;
+  opacity: 1;
+}
+
+.search_inpt2:hover{
+  border: 1px solid #FFEBEB;
+  box-shadow: #383838 0 0px 20px 0;
+  box-sizing: border-box;
+  opacity: 1;
+}
+
+.drop_class{
+  background-color: #ffffff;
+}
+
+.data:focus{
+  outline: none;
+  box-shadow: none;
+  cursor: text;
+}
+
+.data::placeholder{
+  color: #FFEBEB;
+  font-family: 'itim';
+}
+
+/* Change input text color when not empty */
+.data:not(:placeholder-shown) {
+  color: #FFEBEB; /* Adjust text color as needed */
+}
+
+/* For modern browsers */
+.data::placeholder {
+  color: #FFEBEB; /* Adjust placeholder color as needed */
+}
+
+
+@media (max-height: 500px)
+{
+  .img_class{
+    width: 40px;
+    height: 40px;;
+  }
+
+  .profile h3{
+    font-size: small;
+  }
+
+  .profile h4{
+    font-size: small;
+  }
+
+  .search_inpt{
+    height: 30px;
+    margin: 0;
+  }
+
+  .search_inpt2{
+    height: 35px;
+    margin: 0;
+  }
+
+  
+  .search_inpt .ico{
+    height: 15px;
+    width: 15px;
+  }
+  
+  .search_inpt .place{
+    font-size: smaller;
+  }
+  
+  .search_inpt2 .place{
+    font-size: smaller;
+    padding: 0;
+  }
+
+  .search_inpt2 .ico{
+    height: 15px;
+    width: 15px;
+    padding: 0;
+  }
+}
+
+
+
