@@ -10,12 +10,14 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Link from 'next/link';
 import SocialAuth from "../../../components/socialAuth";
-import TwoFa from '@/components/twoFa';
+import TwoFa from '../../../components/twoFa';
 
 
 export default function SignInPage() {
     const router = useRouter();
-    const [qrCode, setQrCode] = useState(null);
+    // const [qrCode, setQrCode] = useState(null);
+    const [twoFaData, setTwoFaData] = useState<{ value: string; email: string }>();
+
     const signInPost = async (event: FormEvent<HTMLFormElement>) => {
         try {
             event.preventDefault();
@@ -35,7 +37,7 @@ export default function SignInPage() {
                 if (is_2fa_enabled == 'True')
                 {
                     const {url_code} = data;
-                    setQrCode(<TwoFa value={url_code} email={email} />)
+                    setTwoFaData({ value: url_code, email });
                 }
                 else 
                 {
@@ -59,7 +61,7 @@ export default function SignInPage() {
     return (
         <div className='container'>
             <ToastContainer />
-            { qrCode }
+            {twoFaData && <TwoFa value={twoFaData.value} email={twoFaData.email} />}
             <div className={`${styles.flexx}`}>
                 <div className={`${styles.main_card} shadow row`}>
                     <div className={`col-lg-6 ${styles.main_img}`} style={{position: 'relative', minHeight: '300px'}}>

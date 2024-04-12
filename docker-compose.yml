@@ -3,6 +3,7 @@ version: '3.8'
 services:
     back-end:
         container_name: back-end
+        image: back-end
         build: 
             context: ./app/back-end
             dockerfile: Dockerfile
@@ -21,6 +22,7 @@ services:
 
     front-end:
         container_name: front-end
+        image: front-end
         build: 
             context: ./app/front-end
             dockerfile: Dockerfile
@@ -33,13 +35,15 @@ services:
             - .env
         volumes:
             - ./app/front-end:/front-end
-            - /front-end/node_modules
-            - /front-end/.next
+            - ./app/front-end/node_modules:/front-end/node_modules
+            - ./app/front-end/.next:/front-end/.next
+
         networks:
             - ft_transcendence
     
     data-base:
         container_name: data-base
+        image: data-base
         build: 
             context: ./app/data-base
             dockerfile: Dockerfile

@@ -1,12 +1,13 @@
 'use client'
 import { FaAngleLeft } from "react-icons/fa";
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import SideBar from "./sideBar";
 import RightBar from './rightBar';
-import SrightBar from './srightBar';
+import SrightBar from "./srightBar";
 import Togglebar from './toggleBar';
 import styles from './styles/mainContainer.module.css'
+import Image from 'next/image'
 
 
 export default function MainContainer({ children }: { children: React.ReactNode }) {
@@ -20,11 +21,11 @@ export default function MainContainer({ children }: { children: React.ReactNode 
       <div className="container-fluid p-0 vh-100" style={{backgroundColor: '#000000', overflow: 'hidden'}}>
       <div className="row">
           <div className={`col-1 ${styles.toglle} p-0`}>
-            <img src="/LOGO.svg" className={`${styles.logo} img-fluid rounded rounded-circle`} alt="ying" onClick={showToggle}/>
+            <Image src="/LOGO.svg" className={`${styles.logo} img-fluid rounded rounded-circle`} alt="ying" onClick={showToggle}/>
             <Offcanvas show={showSide} placement='start' onHide={handleToggle} scroll={false} backdrop={true} >
               <div className={`${styles.sidebar_toggle} vh-100`}>
                 <Offcanvas.Header closeButton closeVariant='white'>
-                  <Offcanvas.Title><img src="/LOGO.svg" className={`${styles.logo} img-fluid rounded rounded-circle`} alt="ying"/></Offcanvas.Title>
+                  <Offcanvas.Title><Image src="/LOGO.svg" className={`${styles.logo} img-fluid rounded rounded-circle`} alt="ying"/></Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body className='pt-0 d-flex justify-content-center' style={{height: '93%'}}>
                   <Togglebar handleToggle={handleToggle}/>

@@ -28,6 +28,15 @@ ps:
 prune:
 	$(drm)
 
+front-end:
+	docker-compose up -d front-end
+
+back-end:
+	docker-compose up -d back-end
+
+data-base:
+	docker-compose up -d data-base
+
 clean:
 	$(dc-downp)
 

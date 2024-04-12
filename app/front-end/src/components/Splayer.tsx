@@ -1,6 +1,7 @@
 import React from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import styles from './styles/Splayer.module.css'
+import Image from 'next/image'
 
 interface PlayerProps {
   nickname: string;
@@ -14,21 +15,23 @@ interface CustomToggleProps {
   children: React.ReactNode;
 }
 
-const Player: React.FC<PlayerProps> = ({ nickname, id, image, isConnected }) => {
-  const CustomToggle = React.forwardRef<HTMLDivElement, CustomToggleProps>(
-    ({ children, onClick }, ref) => (
-      <div ref={ref} onClick={onClick}>
-        {children}
-      </div>
-    )
-  );
+const CustomToggle = React.forwardRef<HTMLDivElement, CustomToggleProps>(
+  ({ children, onClick }, ref) => (
+    <div ref={ref} onClick={onClick}>
+      {children}
+    </div>
+  )
+);
+CustomToggle.displayName = 'CustomToggle';
 
+export default function Player({ nickname, id, image, isConnected }: PlayerProps) {
+  
   return (
     <div className={`${styles.usr_class1} row-inline`}>
       <div className="d-flex flex-column align-items-center justify-content-center">
         <Dropdown>
           <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
-            <img
+            <Image
               className={`${styles.img_usr_class1}`}
               src={image}
               alt="Profile"
@@ -53,5 +56,3 @@ const Player: React.FC<PlayerProps> = ({ nickname, id, image, isConnected }) => 
     </div>
   );
 };
-
-export default Player;

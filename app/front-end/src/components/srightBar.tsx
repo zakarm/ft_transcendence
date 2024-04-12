@@ -6,6 +6,7 @@ import Splayer from "./Splayer";
 import Notification from "./Notification";
 import friends from './friends.json';
 import React, { forwardRef } from 'react';
+import Image from 'next/image'
 
 interface Props
 {
@@ -37,7 +38,9 @@ const CustomToggle = forwardRef<HTMLDivElement, CustomToggleProps>(
     )
   );
 
-function SrightBar({toggleShow} : Props) {
+CustomToggle.displayName = 'CustomToggle';
+
+export default function SrightBar({toggleShow} : Props) {
     const friendsData = friends.sort((usr1, usr2) => {
         if (usr1.connected && !usr2.connected) {
             return -1;
@@ -61,7 +64,7 @@ function SrightBar({toggleShow} : Props) {
                                     <div className={`col-inline ${styles.notification1}`}>
                                        <Dropdown>
                                            <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
-                                                <img className={`${styles.img_class1}`} src="/char3.png" alt='Profile'/>
+                                                <Image className={`${styles.img_class1}`} src="/char3.png" alt='Profile'/>
                                                 <span className={`${styles.badge1}`}>3</span>
                                            </Dropdown.Toggle>
                                            <Dropdown.Menu className="drop-class">
@@ -93,5 +96,3 @@ function SrightBar({toggleShow} : Props) {
             </div>
     );
 }
-
-export default SrightBar;

@@ -9,6 +9,7 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import friends from './friends.json';
 import React, { forwardRef } from 'react';
 import styles from './styles/rightBar.module.css';
+import Image from 'next/image'
 
 
 interface Props
@@ -30,21 +31,23 @@ interface CustomToggleProps {
 }
 
 interface Friend {
-    id: number;
-    nickname: string;
-    image_url: string;
-    connected: boolean;
+	id: number;
+	nickname: string;
+	image_url: string;
+	connected: boolean;
 }
 
 const CustomToggle = forwardRef<HTMLDivElement, CustomToggleProps>(
     ({ children, onClick }, ref) => (
-      <div ref={ref} onClick={onClick}>
+        <div ref={ref} onClick={onClick}>
         {children}
-      </div>
+        </div>
     )
-  );
+);
 
-function RightBar({setShow, show, handleClose, toggleShow} : Props) {
+CustomToggle.displayName = 'CustomToggle';
+
+export default function RightBar({setShow, show, handleClose, toggleShow} : Props) {
 
     const friendsData = friends
     .sort((usr1: Friend, usr2: Friend) => {
@@ -101,7 +104,7 @@ function RightBar({setShow, show, handleClose, toggleShow} : Props) {
                                          </div>
                                          <div className="row d-flex flex-column text-center">
                                              <div className="col">
-                                                 <img className={`${styles.img_class}`} src="assets/char3.png" alt='Profile'/>
+                                                 <Image className={`${styles.img_class}`} src="assets/char3.png" alt='Profile'/>
                                              </div>
                                              <div className={`col ${styles.profile} mt-2`}>
                                                  <h3 className="valo-font">!SNAKE_007</h3>
@@ -139,5 +142,3 @@ function RightBar({setShow, show, handleClose, toggleShow} : Props) {
         </Offcanvas>
     );
 }
-
-export default RightBar;

@@ -3,7 +3,7 @@ import { RxDotsVertical } from "react-icons/rx";
 import { useState } from "react";
 import Dropdown from 'react-bootstrap/Dropdown';
 import styles from './styles/Player.module.css'
-
+import Image from 'next/image'
 interface PlayerProps {
   nickname: string;
   id: number;
@@ -23,7 +23,7 @@ function Player({ nickname, id, image, isConnected }: PlayerProps) {
   return (
     <div className={`${styles.usr_class} row-inline d-flex flex-row`}>
       <div className="col-9 d-flex flex-row align-items-center">
-        <img
+        <Image
           className={`${styles.img_usr_class} m-2`}
           src={image}
           alt='Profile'
