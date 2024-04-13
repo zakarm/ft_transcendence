@@ -37,7 +37,7 @@ export default function SideBar() {
       <div className={`${styles.side_container} d-inline-flex flex-column justify-content-around align-items-center vh-100 py-4 px-2`}>
         <div className="flex-grow-1 pt-3">
           <Link href="/" >
-            <Image src="/LOGO.svg" className={`${styles.logo} logo img-fluid rounded rounded-circle`} alt="ying"/>
+            <Image src="/LOGO.svg" width={60} height={60} className={`${styles.logo} logo img-fluid rounded rounded-circle`} alt="ying"/>
           </Link>
 		</div>
         <div className="flex-grow-1 d-flex flex-column justify-content-around">

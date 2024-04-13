@@ -27,6 +27,7 @@ function Player({ nickname, id, image, isConnected }: PlayerProps) {
           className={`${styles.img_usr_class} m-2`}
           src={image}
           alt='Profile'
+          width={60} height={60}
           style={{
             border: isConnected ? "3px solid #27B299" : "3px solid #7E7E8D",
             filter: isConnected ? '' : "grayscale(100%)"

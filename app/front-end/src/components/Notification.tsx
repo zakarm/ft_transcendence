@@ -5,7 +5,7 @@ function Notification() {
     return(
         <Toast>
           <Toast.Header>
-            <Image src="/char3.png" className="rounded me-2" alt="" style={{height: '30px', width: '30px'}}/>
+            <Image src="/char3.png" width={60} height={60} className="rounded me-2" alt="" style={{height: '30px', width: '30px'}}/>
             <strong className="me-auto">Bootstrap</strong>
             <small>11 mins ago</small>
           </Toast.Header>

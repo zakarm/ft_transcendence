@@ -104,7 +104,7 @@ export default function RightBar({setShow, show, handleClose, toggleShow} : Prop
                                          </div>
                                          <div className="row d-flex flex-column text-center">
                                              <div className="col">
-                                                 <Image className={`${styles.img_class}`} src="assets/char3.png" alt='Profile'/>
+                                                 <Image className={`${styles.img_class}`} width={60} height={60} src="/char3.png" alt='Profile'/>
                                              </div>
                                              <div className={`col ${styles.profile} mt-2`}>
                                                  <h3 className="valo-font">!SNAKE_007</h3>

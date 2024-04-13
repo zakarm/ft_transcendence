@@ -64,7 +64,7 @@ export default function SrightBar({toggleShow} : Props) {
                                     <div className={`col-inline ${styles.notification1}`}>
                                        <Dropdown>
                                            <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
-                                                <Image className={`${styles.img_class1}`} src="/char3.png" alt='Profile'/>
+                                                <Image className={`${styles.img_class1}`} width={60} height={60} src="/char3.png" alt='Profile'/>
                                                 <span className={`${styles.badge1}`}>3</span>
                                            </Dropdown.Toggle>
                                            <Dropdown.Menu className="drop-class">
