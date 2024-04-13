@@ -1,0 +1,65 @@
+.game_history_card {
+  background-color: transparent;
+  color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.header {
+  display: none; /* Hide header on smaller screens */
+}
+
+.card_body {
+  padding: 12px;
+}
+
+.game_row {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap to the next line */
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  background-color: #1B1E2C;
+  border-radius: 15px;
+  margin-bottom: 8px; /* Add some spacing between rows */
+}
+
+.game_row > div {
+  flex: 1; /* Allow items to grow and take up available space */
+  margin-right: 8px; /* Add some spacing between items */
+}
+
+.player_info {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto; /* Prevent player_info from growing */
+}
+
+.player_info img {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+  border-radius: 50%;
+}
+
+/* Media queries for larger screens */
+@media (min-width: 768px) {
+  .header {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+    background-color: transparent;
+    font-weight: bold;
+  }
+
+  .game_row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr; /* Display items in a grid layout */
+    flex-wrap: nowrap;
+    margin-bottom: 0;
+  }
+
+  .game_row > div {
+    margin-right: 0;
+  }
+}

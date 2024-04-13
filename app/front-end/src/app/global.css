@@ -1,11 +1,3 @@
-
-/* ::root 
-{
-  --text-color: #161625;
-  --button-color : #FF4755;
-  --button-hover : #fc606d;
-} */
-
 @import url('https://fonts.googleapis.com/css2?family=Itim&display=swap');
   
 @font-face {
@@ -19,12 +11,11 @@
   
   body {
     background-color: #111111;
-    /* margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-      sans-serif; */
   }
-  
+
+  .itim-font {
+    font-family: 'itim', cursive !important;
+  }
   
   .valo-font {
     font-family: 'valorax', Georgia, 'Times New Roman', Times, serif;
