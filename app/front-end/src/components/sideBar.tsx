@@ -41,7 +41,7 @@ export default function SideBar() {
           </Link>
 		</div>
         <div className="flex-grow-1 d-flex flex-column justify-content-around">
-            <Link className="" href="/">
+            <Link className="" href="/dashboard">
         		<TbAppsFilled className={`${styles.side_icon} side_icon icon-0`}  color={activeIcon === 0 ? '#FF4755' : '#FFEBEB'}/>
             </Link>
             <Link className="" href="/game">
