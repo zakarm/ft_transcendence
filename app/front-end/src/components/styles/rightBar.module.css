@@ -9,11 +9,14 @@
 .notification .badge {
   position: absolute;
   top: 20px;
-  left: 20px;
+  left: 15px;
   border-radius: 100%;
-  background: #FFEBEB;
-  color: #000000;
-  font-size: 0.4em;
+  background: #161625;
+  color: #ff4755;
+  font-size: 0.5em;
+  width: 10px;
+  height: 10px;
+  text-align: center;
 }
 
 .img_class{
