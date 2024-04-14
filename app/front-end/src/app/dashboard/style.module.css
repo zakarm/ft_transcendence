@@ -78,7 +78,7 @@
 .med_titles {
     color: #FFEBEB;
     font-size: medium;
-    width: 75%;
+    width: 100%;
 }
 .small_title {
     color: #FF4755;
@@ -95,7 +95,10 @@
     max-height: 100%;
     object-fit: contain;
 }
-  
+
+.page_body {
+    overflow: auto;
+}
 @media (max-width: 767px) {
     .imageContainer > img {
       position: static;

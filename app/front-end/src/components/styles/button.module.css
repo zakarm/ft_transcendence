@@ -1,0 +1,18 @@
+/* :root {
+  --clr-red: #FF4755;
+  --clr-ldark : #161625;
+  --clr--white: #FFEBEB;
+  --clr-dark: #111111;
+  --clr--green : #27B299;
+  --clr--grey : #2C3143;
+
+  --border-r : 25px;
+} */
+
+.submit_button {
+    border : none;
+    border-radius : 25px;
+    background-color : #FF4755;
+    color : #111111;
+    font-size : clamp(14px, 1.8vw, 60px);
+  }

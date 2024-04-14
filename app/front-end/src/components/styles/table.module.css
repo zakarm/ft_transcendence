@@ -1,38 +1,12 @@
-.game_history_card {
-  background-color: transparent;
-  color: #ffffff;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.header {
-  display: none; /* Hide header on smaller screens */
-}
-
-.card_body {
-  padding: 12px;
-}
-
-.game_row {
-  display: flex;
-  flex-wrap: wrap; /* Allow items to wrap to the next line */
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-  background-color: #1B1E2C;
-  border-radius: 15px;
-  margin-bottom: 8px; /* Add some spacing between rows */
-}
-
-.game_row > div {
-  flex: 1; /* Allow items to grow and take up available space */
-  margin-right: 8px; /* Add some spacing between items */
+.table {
+  border-spacing: 0px 0.8rem !important;
+  border-collapse: separate !important;
 }
 
 .player_info {
   display: flex;
   align-items: center;
-  flex: 0 0 auto; /* Prevent player_info from growing */
+  flex: 0 0 auto;
 }
 
 .player_info img {
@@ -42,24 +16,37 @@
   border-radius: 50%;
 }
 
-/* Media queries for larger screens */
-@media (min-width: 768px) {
-  .header {
-    display: flex;
-    justify-content: space-between;
-    padding: 16px;
-    background-color: transparent;
-    font-weight: bold;
-  }
+.titles {
+  background-color: #161625 !important;
+  color: #FFEBEB !important;
+  border: none;
+}
 
-  .game_row {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr; /* Display items in a grid layout */
-    flex-wrap: nowrap;
-    margin-bottom: 0;
-  }
+.game_row {
+  border-radius: 25px !important;
+  color: #FFEBEB !important;
+  background-color: transparent !important;
 
-  .game_row > div {
-    margin-right: 0;
-  }
+}
+
+.left_col {
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+}
+
+.right_col {
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+}
+
+.game_main_col{
+  margin: 50px !important;
+  padding: 50px !important;
+}
+
+.game_col 
+{
+  border: none;
+  background-color: #1B1E2C !important;
+  color : #FFEBEB !important;
 }
