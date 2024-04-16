@@ -20,15 +20,6 @@ import { CategoryScale,
 
 
 export default function Dashboard() {
-    // ChartJS.register(
-    //     CategoryScale,
-    //     LinearScale,
-    //     PointElement,
-    //     LineElement,
-    //     Title,
-    //     Tooltip,
-    //     Legend
-    //   );
     Chart.register(CategoryScale, LinearScale, Title, Legend, Tooltip, LineController, PointElement, LineElement);
     
     const options: Chart.ChartOptions = {

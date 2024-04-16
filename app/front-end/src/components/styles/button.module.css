@@ -14,5 +14,5 @@
     border-radius : 25px;
     background-color : #FF4755;
     color : #111111;
-    font-size : clamp(14px, 1.8vw, 60px);
+    font-size : clamp(14px, 1.5vw, 40px);
   }
