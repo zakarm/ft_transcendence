@@ -8,7 +8,6 @@
   width: 65px;
   height: 65px;
   border-radius: 25px;
-  overflow: hidden; /* Hide overflowing parts of the image */
 }
 
 .opt_class:hover{

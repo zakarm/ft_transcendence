@@ -42,8 +42,8 @@ function Player({ nickname, id, image, isConnected }: PlayerProps) {
           }}
         />
         <div className="p-2">
-          <h5 style={{ fontFamily: 'intim', color: '#FFEBEB' }}>{nickname}</h5>
-          <h6 style={{ fontFamily: 'intim', color: '#FFEBEB' }}>#{id}</h6>
+          <h5 style={{ fontFamily: 'itim', color: '#FFEBEB' }}>{nickname}</h5>
+          <h6 style={{ fontFamily: 'itim', color: '#FFEBEB' }}>#{id}</h6>
         </div>
       </div>
       <div className="col d-flex align-items-center justify-content-center">

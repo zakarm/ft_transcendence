@@ -1,0 +1,21 @@
+.container{
+    background-image: url("/bg.jpg");
+    filter: brightness(40%);
+}
+
+.bg_holder{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-color: rgba(17, 17, 17, 0.8);
+    margin-top: 10%;
+}
+
+.holder{
+    border: 1px solid white;
+    margin-top: 5%;
+    filter: brightness(250%);
+}
