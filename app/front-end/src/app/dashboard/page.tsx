@@ -98,10 +98,10 @@ export default function Dashboard() {
                             <div className={`d-flex flex-column p-3 ${styles.card} ${styles.buttom_cards} m-1`}>
                                 <div className='row'>
                                     <div className='col-6 d-flex align-items-start justify-content-start'>
-                                    <p className={`itim-font ${styles.med_titles}`}><FaHistory color='FFEBEB'/> GAME HISTORY</p>
+                                    <p className={`itim-font ${styles.med_titles}`}><FaHistory color='#FFEBEB'/> GAME HISTORY</p>
                                     </div>
                                     <div className='col-6 d-flex align-items-end justify-content-end'>
-                                        <p className={`itim-font ${styles.all_down}`}>ALL <FaChevronDown color='FFEBEB'/></p>
+                                        <p className={`itim-font ${styles.all_down}`}>ALL <FaChevronDown color='#FFEBEB'/></p>
                                     </div>
                                 </div>
                                 <hr style={{color: '#FFEBEB', backgroundColor: '#FFEBEB', height: 1}}/>
@@ -113,10 +113,10 @@ export default function Dashboard() {
                             <div className={`d-flex flex-column p-3 ${styles.card} ${styles.buttom_cards} m-1`}>
                                 <div className='row'>
                                     <div className='col-6 d-flex align-items-start justify-content-start'>
-                                        <p className={`itim-font ${styles.med_titles}`}><BiStats color='FFEBEB'/> MY GAME STATS</p>
+                                        <p className={`itim-font ${styles.med_titles}`}><BiStats color='#FFEBEB'/> MY GAME STATS</p>
                                     </div>
                                     <div className='col-6 d-flex align-items-end justify-content-end'>
-                                        <p className={`itim-font ${styles.all_down}`}>ALL <FaChevronDown color='FFEBEB'/></p>
+                                        <p className={`itim-font ${styles.all_down}`}>ALL <FaChevronDown color='#FFEBEB'/></p>
                                     </div>
                                 </div>
                                 <hr style={{color: '#FFEBEB', backgroundColor: '#FFEBEB', height: 1}}/>
