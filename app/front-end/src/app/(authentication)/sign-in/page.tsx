@@ -65,7 +65,7 @@ export default function SignInPage() {
             <div className={`${styles.flexx}`}>
                 <div className={`${styles.main_card} shadow row`}>
                     <div className={`col-lg-6 ${styles.main_img}`} style={{position: 'relative', minHeight: '300px'}}>
-                            <NextImage layout="fill" src='/signimage.png' alt='Sign' className={`${styles.main_img}`} />
+                            <NextImage fill={true} src='/signimage.png' alt='Sign' className={`${styles.main_img}`} />
                     </div>
                     <div className={`col-lg-6 mb-5`}>
                         <div className={`d-flex align-items-center flex-column`}>

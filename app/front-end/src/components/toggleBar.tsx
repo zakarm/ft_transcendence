@@ -22,12 +22,12 @@ const Togglebar: React.FC<Props> = ({ handleToggle }) => {
   return (
     <div className="d-inline-flex flex-column justify-content-around align-items-center py-4 pt-0 px-2" style={{ height: '100%' }}>
       <div className="flex-grow-1 d-flex flex-column justify-content-around">
-        <Link className={`${styles.title} link valo-font d-flex flex-row align-items-center justify-content-start p-2`} href="/dashboard" onClick={() => handleLinkClick(0)}>
-          <MdSpaceDashboard className={`${styles.s_icon} ${styles.icon_0}`} color={activeIcon === 0 ? '#FF4755' : '#FFEBEB'} />
+        <Link className={`${styles.title} ${styles.link} valo-font d-flex flex-row align-items-center justify-content-start p-2`} href="/dashboard" onClick={() => handleLinkClick(0)}>
+          <MdSpaceDashboard className={`${styles.side_icon} ${styles.icon_0}`} color={activeIcon === 0 ? '#FF4755' : '#FFEBEB'} />
           <h3 className='px-4'>HOME</h3>
         </Link>
-        <Link className={`${styles.title} ${styles.link} valo-font d-flex flex-row align-items-center justify-content-start p-2`} href="/sign-in" onClick={() => handleLinkClick(1)}>
-          <GiPingPongBat className={`${styles.s_icon} ${styles.icon_1}`} color={activeIcon === 1 ? '#FF4755' : '#FFEBEB'} />
+        <Link className={`${styles.title} ${styles.link} valo-font d-flex flex-row align-items-center justify-content-start p-2`} href="/game" onClick={() => handleLinkClick(1)}>
+          <GiPingPongBat className={`${styles.side_icon} ${styles.icon_1}`} color={activeIcon === 1 ? '#FF4755' : '#FFEBEB'} />
           <h3 className='px-4'>GAME</h3>
         </Link>
         <Link className={`${styles.title} ${styles.link} valo-font d-flex flex-row align-items-center justify-content-start p-2`} href="/chat" onClick={() => handleLinkClick(2)}>

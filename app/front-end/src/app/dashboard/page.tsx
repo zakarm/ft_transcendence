@@ -1,13 +1,59 @@
+"use client"
+
 import styles from './style.module.css'
 import Image from 'next/image';
 import { FaHistory } from "react-icons/fa";
 import { BiStats } from "react-icons/bi";
 import { FaChevronDown } from "react-icons/fa";
-import Table from 'react-bootstrap/Table';
 import GameHistoryCard from '../../components/table';
 import ButtonValo from '../../components/button'
+import { Line } from 'react-chartjs-2';
+import Chart from 'chart.js/auto';
+import { CategoryScale, 
+    LinearScale, 
+    Title, 
+    Legend, 
+    Tooltip, 
+    LineController, 
+    PointElement, 
+    LineElement } from 'chart.js';
+
 
 export default function Dashboard() {
+    Chart.register(CategoryScale, LinearScale, Title, Legend, Tooltip, LineController, PointElement, LineElement);
+    
+    const options: Chart.ChartOptions = {
+        responsive: true,
+        plugins: {
+        legend: {
+            position: 'top' as const,
+        },
+        title: {
+            display: true,
+            text: 'Total minutes per month',
+        },
+        },
+    };
+    
+    const labels: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+    Chart.defaults.font.family = 'Itim';
+    const data: Chart.ChartData = {
+        labels,
+        datasets: [
+        {
+            label: 'time',
+            data: [10, 20, 30, 40, 30, 15, 28, 25, 40, 50],
+            borderColor: 'rgb(255, 99, 132, 0)',
+            backgroundColor: 'rgb(255, 99, 132, 0.5)',
+            fill: true,
+            font: {
+            family: 'itim',
+            size: 14,
+            },
+        },
+        ],
+    };
+
     return (
         <div className={`container-fluid ${styles.page_body} vh-100`}>
             <div className="row m-0">
@@ -69,6 +115,10 @@ export default function Dashboard() {
                                     <p className={`itim-font ${styles.all_down}`}>ALL <FaChevronDown color='#FFEBEB'/></p>
                                 </div>
                                 <hr style={{color: '#FFEBEB', backgroundColor: '#FFEBEB', height: 1}}/>
+                                <div>
+                                    <div>&nbsp;</div>
+                                    <Line className='itim-font' options={options} data={data} />
+                                </div>
                             </div>
                         </div>
                     </div>
