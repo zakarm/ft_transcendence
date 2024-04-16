@@ -25,11 +25,6 @@ interface CustomToggleProps {
     onClick: () => void;
 }
 
-interface CustomToggleProps {
-    children: React.ReactNode;
-    onClick: () => void;
-}
-
 interface Friend {
 	id: number;
 	nickname: string;
@@ -70,15 +65,15 @@ export default function RightBar({setShow, show, handleClose, toggleShow} : Prop
     ));
     
     return (
-        <Offcanvas show={show} onHide={handleClose} placement='end' scroll={true} backdrop={false}>
-            <Offcanvas.Body className='p-0 m-0' style={{backgroundColor: '#161625'}}>
-                <div className='row-fluid d-flex flex-row align-items-center p-0 vh-100'>
-                    <div className='col-1 vh-100 d-flex justify-content-end align-items-center text-center' style={{backgroundColor: '#000000'}} >
+        <Offcanvas className={`${styles.offcanvas} border-0`}  show={show} onHide={handleClose} placement='end' scroll={true} backdrop={false} >
+            <Offcanvas.Body className={`p-0 m-0`}>
+                <div className={`row-fluid d-flex flex-row align-items-center p-0 vh-100`}>
+                    <div className='col-1 vh-100 d-flex justify-content-end align-items-center text-center'>
                         <div className='drag-class pt-3 pb-3' style={{backgroundColor: '#161625', borderRadius: '15px 0 0 15px', cursor: 'pointer'}}>
                             <FaAngleRight  color="#FFEBEB" size='1.2em' />
                         </div>
                     </div>
-                    <div className='col-11' onClick={toggleShow}>
+                    <div className='col-11' onClick={toggleShow} style={{backgroundColor: '#161625'}}>
                         <div className="container vh-100">
                             <div className="d-flex flex-column vh-100">
                                 <div className="flex-grow-2">

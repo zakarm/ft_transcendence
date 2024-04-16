@@ -1,3 +1,7 @@
+.offcanvas {
+  background-color: rgba(255,255,255,0);
+}
+
 .notification {
     color: #FFEBEB;
     text-decoration: none;
@@ -86,6 +90,53 @@
 
 
 @media (max-height: 500px)
+{
+  .img_class{
+    width: 40px;
+    height: 40px;;
+  }
+
+  .profile h3{
+    font-size: small;
+  }
+
+  .profile h4{
+    font-size: small;
+  }
+
+  .search_inpt{
+    height: 30px;
+    margin: 0;
+  }
+
+  .search_inpt2{
+    height: 35px;
+    margin: 0;
+  }
+
+  
+  .search_inpt .ico{
+    height: 15px;
+    width: 15px;
+  }
+  
+  .search_inpt .place{
+    font-size: smaller;
+  }
+  
+  .search_inpt2 .place{
+    font-size: smaller;
+    padding: 0;
+  }
+
+  .search_inpt2 .ico{
+    height: 15px;
+    width: 15px;
+    padding: 0;
+  }
+}
+
+@media (max-width: 500px)
 {
   .img_class{
     width: 40px;

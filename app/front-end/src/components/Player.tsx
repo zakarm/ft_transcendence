@@ -1,9 +1,10 @@
 'use client';
 import { RxDotsVertical } from "react-icons/rx";
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import Dropdown from 'react-bootstrap/Dropdown';
-import styles from './styles/Player.module.css'
-import Image from 'next/image'
+import styles from './styles/Player.module.css';
+import Image from 'next/image';
+
 interface PlayerProps {
   nickname: string;
   id: number;
@@ -11,10 +12,17 @@ interface PlayerProps {
   isConnected: boolean;
 }
 
-const CustomToggle = ({ children, onClick }: { children: React.ReactNode, onClick: () => void }) => (
-  <div onClick={onClick}>
-    {children}
-  </div>
+interface CustomToggleProps {
+  children: React.ReactNode;
+  onClick: () => void;
+}
+
+const CustomToggle = forwardRef<HTMLDivElement, CustomToggleProps>(
+  ({ children, onClick }, ref) => (
+      <div ref={ref} onClick={onClick}>
+      {children}
+      </div>
+  )
 );
 
 function Player({ nickname, id, image, isConnected }: PlayerProps) {

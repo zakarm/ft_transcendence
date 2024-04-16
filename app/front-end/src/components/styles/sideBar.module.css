@@ -7,7 +7,7 @@
     height: 34px;
     width: auto;
 }
-.side-icon:hover
+.side_icon:hover
 {
     border: 1px solid #FF4755;
     border-radius: 50%; 
@@ -24,12 +24,12 @@
 
 @media (min-width: 1150px) and (max-width: 1300px)
 {
-    .side-icon{
+    .side_icon{
         height: 32px;
         width: 32px;
     }
 
-    .side-icon:hover
+    .side_icon:hover
     {
         border: 1px solid #FF4755;
         border-radius: 50%; 
@@ -39,12 +39,12 @@
 
 @media (min-width: 950px) and (max-width: 1149px)
 {
-    .side-icon{
+    .side_icon{
         height: 30px;
         width: 30px;
     }
 
-    .side-icon:hover
+    .side_icon:hover
     {
         border: 1px solid #FF4755;
         border-radius: 50%; 
@@ -54,12 +54,12 @@
 
 @media (min-width: 768px) and (max-width: 949px)
 {
-    .side-icon{
+    .side_icon{
         height: 25px;
         width: 25px;
     }
 
-    .side-icon:hover
+    .side_icon:hover
     {
         border: 1px solid #FF4755;
         border-radius: 50%; 
