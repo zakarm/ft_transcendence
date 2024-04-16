@@ -20,39 +20,17 @@ export default function SideBar() {
   const [activeIcon, setActiveIcon] = useState(0);
 
   useGSAP(() => {
-    gsap.to(`${styles.side_icon}`, { rotation: "+=360", duration: 1 });
     gsap.to(".logo", { rotation: "+=360", duration: 1 });
   });
 
-  // useEffect(() => {
-  //   const pathUrls = ["/dashboard", "/game", "/chat", "/achievement", "/settings"];
-  //   const index = pathUrls.indexOf(pathname);
-  //   setActiveIcon(index);
-  //   // gsap.to(`${styles.side_icon}`, { rotation: "0" });
-  //   // gsap.to(`.icon_${index}`, { rotation: "45" });
-  //   // gsap.to(".logo", { rotation: "+=1080", duration: 1 });
-
-    
-  // }, [pathname]);
-
-
   useEffect(() => {
-    
     const pathUrls = ["/dashboard", "/game", "/chat", "/achievement", "/settings"];
     const index = pathUrls.indexOf(pathname);
     setActiveIcon(index);
-
-    // Animation timeline
-    const tl = gsap.timeline({ defaults: { duration: 1 } });
-
-    // Rotate side icons and logo
-    tl.to(`${styles.side_icon}`, { rotation: 0 })
-      .to(`.icon_${index}`, { rotation: 45 }, 0) // Animate current icon
-      .to(".logo", { rotation: "+=1080" }, 0);
-
-    // Cleanup animations
-    return () => tl.kill();
+    gsap.to(`.icon_${index}`, { rotation: "45" });
+    gsap.to(".logo", { rotation: "+=1080", duration: 1 }); 
   }, [pathname]);
+
 
   return (
       <div className={`${styles.side_container} d-inline-flex flex-column justify-content-around align-items-center vh-100 py-4 px-2`}>

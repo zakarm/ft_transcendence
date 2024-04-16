@@ -35,7 +35,7 @@
         box-sizing: border-box;
         opacity: 1;
         cursor: pointer;
-        z-index: 10px;
+        z-index: 10;
     }
 
     .slider {
