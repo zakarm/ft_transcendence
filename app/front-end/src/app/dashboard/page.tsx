@@ -108,8 +108,7 @@ export default function Dashboard() {
                                 <GameHistoryCard/>
                             </div>
                         </div>
-                        <div className="col-12 col-md-6">
-
+                        <div className={`col-12 col-md-6 ${styles.chart_grid}`}>
                             <div className={`d-flex flex-column p-3 ${styles.card} ${styles.buttom_cards} m-1`}>
                                 <div className='row'>
                                     <div className='col-6 d-flex align-items-start justify-content-start'>

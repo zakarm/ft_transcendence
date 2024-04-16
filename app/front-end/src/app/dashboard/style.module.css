@@ -9,7 +9,6 @@
     background-color: #161625;
 }
 
-
 .toglle{
     display: none;
 }
@@ -20,37 +19,6 @@
 
 .close_btn{
     color: #F4E6E6;
-}
-  
-
-@media (max-width: 767px) {
-    
-    .toglle{
-        display: block;
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        border-radius: 25px;
-        box-shadow: white 0 0px 20px 0;
-        box-sizing: border-box;
-        opacity: 1;
-        cursor: pointer;
-        z-index: 10;
-    }
-
-    .slider {
-        display: block;
-        position: fixed;
-        top: 50%;
-        right: 0;
-        transform: translateY(-50%);
-        border-radius: 25px 0 25px 25px;
-        background-color: hwb(240 9% 85%);
-        border: 1px solid white;
-        background-color: #161625;
-        cursor: pointer;
-        height: 64px;
-    }
 }
 
 .card {
@@ -100,13 +68,6 @@
 .page_body {
     overflow: auto;
 }
-@media (max-width: 767px) {
-    .imageContainer > img {
-      position: static;
-      margin: 0 auto;
-    }
-    
-}
 
 @media (max-height: 500px)
 {
@@ -122,4 +83,45 @@
     .titles {
         font-size: large;
     }
+}
+
+@media (max-width: 767px) {
+    
+    .toglle{
+        display: block;
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        border-radius: 25px;
+        box-shadow: white 0 0px 20px 0;
+        box-sizing: border-box;
+        opacity: 1;
+        cursor: pointer;
+        z-index: 10;
+    }
+
+    .slider {
+        display: block;
+        position: fixed;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+        border-radius: 25px 0 25px 25px;
+        background-color: hwb(240 9% 85%);
+        border: 1px solid white;
+        background-color: #161625;
+        cursor: pointer;
+        height: 64px;
+    }
+    .imageContainer > img {
+        position: static;
+        margin: 0 auto;
+      }
+      .chart_grid {
+          margin-top: 20px;
+      }
+      .card {
+          height: 100%;
+          border-radius: 15px;
+      }
 }
