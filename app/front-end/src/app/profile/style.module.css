@@ -1,3 +1,5 @@
+
+
 .container{
     background-image: url("/bg.png");
     background-size: cover;
@@ -13,17 +15,16 @@
     height: 100%;
     z-index: -1;
     background-color: rgba(17, 17, 17, 0.9);
-    margin-top: 10%;
+    margin-top: 15%;
 }
 
 .holder{
-    border: 1px solid white;
-    margin-top: 7.5%;
+    margin-top: 10%;
 }
 
 .profile_img{
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
     overflow: hidden; /* Hide overflowing parts of the image */
     border: 1px solid #27B299;
@@ -32,14 +33,20 @@
     opacity: 1;
 }
 
+.info{
+    height: 100%;
+}
+
 .info h4{
     color: #61627C;
     font-family: 'itim';
+    font-size: 1.8em;
 }
 
 .info span{
     color: #FFEBEB;
     font-family: 'itim';
+    font-size: 1.5em;
 }
 
 .action button{
@@ -53,6 +60,7 @@
     border: 1px solid #27B299;
     border-radius: 25px;
     margin: 5px;
+    padding: 5px;
 }
 
 .btn:hover{
