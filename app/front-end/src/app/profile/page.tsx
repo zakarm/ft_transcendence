@@ -80,11 +80,11 @@ export default function ()
                     <div className='text-center'>
                         <div className='row m-0 p-0'>
                             <div className='col-xl-2 order-xl-2 my-3 text-center'>
-                                <Image className={`${styles.profile_img}`} width={60} height={60} src="/char3.png" alt='Profile'/>
-                                <div><span className='valo-font' style={{color: '#FFEBEB'}}>!SNAKE_007</span></div>
-                                <div className={`${styles.action} d-flex`}>
-                                    <div className={`col ${styles.btn}`}><button>Message</button></div>
-                                    <div className={`col ${styles.btn}`}><button>invite</button></div>
+                                <Image className={`${styles.profile_img}`} width={200   } height={200  } src="/char3.png" alt='Profile'/>
+                                <div><span className='valo-font' style={{color: '#FFEBEB', fontSize: '1.5em'}}>!SNAKE_007</span></div>
+                                <div className={`${styles.action} row d-flex justify-content-center`}>
+                                    <div className={`col-md-5 col-8 ${styles.btn}`}><button>Message</button></div>
+                                    <div className={`col-md-5 col-8 ${styles.btn}`}><button>invite</button></div>
                                 </div>
                             </div> 
                             <div className='col-xl-4 order-xl-3 my-3'>
@@ -146,7 +146,7 @@ export default function ()
                                     <span style={{color: '#FFEBEB', fontFamily: 'itim'}}>10513</span>
                                 </div>
                             </div>
-                            <div className={`col-6 ${styles.edit_btn} valo-font text-center`}><button>EDIT PROFILE</button></div>
+                            <div className={`col-6 ${styles.edit_btn} valo-font text-center p-2 m-2`}><button>EDIT PROFILE</button></div>
                             <Image className={`${styles.rank}`} width={200} height={200} src="/rank.png" alt='rank'/>
                         </div>
                         <div className={`${styles.data_holder} col-xl-6 col-lg-12 p-4 my-1`}>

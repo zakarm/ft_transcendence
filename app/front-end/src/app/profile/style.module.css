@@ -5,6 +5,7 @@
     background-size: cover;
     background-position: center;
     backdrop-filter: grayscale(50%) blur(5px);
+    overflow: auto;
 }
 
 .bg_holder{
@@ -12,9 +13,9 @@
     top: 0;
     left: 0;
     bottom: 0;
-    margin-top: 13%;
+    margin-top: 7%;
     width: 100%;
-    height: 100%;
+    height: 88%;
     z-index: -2;
     background-color: rgba(17, 17, 17, 0.9);
     border-top-right-radius: 25px;
@@ -26,7 +27,7 @@
 }
 
 .holder{
-    margin-top: 10%;
+    margin-top: 5%;
 }
 
 .profile_img{
@@ -88,7 +89,7 @@
 }
 
 .square{
-    height: 370px;
+    height: 320px;
     width: 125px;
     background-color: #FF4755;
 }
@@ -143,37 +144,54 @@
 }
 
 @media (max-width: 1200px) {
-    .container{
-        overflow: auto;
-    }
-
-    .flag{
-        position: fixed;
-        top: 0;
-        right: 50px;
-        z-index: -1;
-    }
-    
     .square{
         height: 175px;
         width: 125px;
         background-color: #FF4755;
     }
-    
+}
+
+@media (max-width: 500px) {
+
+    .flag{
+        position: fixed;
+        top: 0;
+        right: 25px;
+        z-index: -1;
+    }
+
+    .square{
+        height: 175px;
+        width: 75px;
+        background-color: #FF4755;
+    }
+
     .triangle {
         width: 0;
         height: 0;
-        border-left: 62.5px solid transparent; 
-        border-right: 62.5px solid transparent; 
+        border-left: 37.5px solid transparent; 
+        border-right: 37.5px solid transparent; 
         border-top: 40px solid #FF4755; 
     }
-    
-    .eagle{
+}
+
+@media (max-width: 370px) {
+    .square{
+        height: 110px;
+        width: 75px;
+        background-color: #FF4755;
+    }
+
+    .rank{
         position: absolute;
         bottom: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        height: 100px;
+        right: 2%;
+        height: 175px;
         width: 100px;
+    }
+
+    .profile_img{
+        width: 100px;
+        height: 100px;
     }
 }
