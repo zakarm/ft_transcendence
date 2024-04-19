@@ -15,7 +15,7 @@
     margin-top: 13%;
     width: 100%;
     height: 100%;
-    z-index: -1;
+    z-index: -2;
     background-color: rgba(17, 17, 17, 0.9);
     border-top-right-radius: 25px;
     border-top-left-radius: 25px;
@@ -84,6 +84,7 @@
     position: fixed;
     top: 0;
     right: 50px;
+    z-index: -1;
 }
 
 .square{
@@ -143,10 +144,36 @@
 
 @media (max-width: 1200px) {
     .container{
-        background-image: url("/bg.png");
-        background-size: cover;
-        background-position: center;
-        backdrop-filter: grayscale(50%) blur(5px);
         overflow: auto;
+    }
+
+    .flag{
+        position: fixed;
+        top: 0;
+        right: 50px;
+        z-index: -1;
+    }
+    
+    .square{
+        height: 175px;
+        width: 125px;
+        background-color: #FF4755;
+    }
+    
+    .triangle {
+        width: 0;
+        height: 0;
+        border-left: 62.5px solid transparent; 
+        border-right: 62.5px solid transparent; 
+        border-top: 40px solid #FF4755; 
+    }
+    
+    .eagle{
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        height: 100px;
+        width: 100px;
     }
 }

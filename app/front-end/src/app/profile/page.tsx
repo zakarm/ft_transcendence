@@ -79,7 +79,27 @@ export default function ()
                 <div className={`${styles.holder}`}>
                     <div className='text-center'>
                         <div className='row m-0 p-0'>
-                            <div className='col-5 '>
+                            <div className='col-xl-2 order-xl-2 my-3 text-center'>
+                                <Image className={`${styles.profile_img}`} width={60} height={60} src="/char3.png" alt='Profile'/>
+                                <div><span className='valo-font' style={{color: '#FFEBEB'}}>!SNAKE_007</span></div>
+                                <div className={`${styles.action} d-flex`}>
+                                    <div className={`col ${styles.btn}`}><button>Message</button></div>
+                                    <div className={`col ${styles.btn}`}><button>invite</button></div>
+                                </div>
+                            </div> 
+                            <div className='col-xl-4 order-xl-3 my-3'>
+                                <div className={`${styles.info} d-flex`}>
+                                    <div className='col-xl-5 col-6 d-flex flex-column justify-content-end'>
+                                        <div><SlUser size='1.9em' color='#FFEBEB'/></div>
+                                        <span style={{fontSize: '1.2em'}}>Othman Nouakchi</span>
+                                    </div>
+                                    <div className='col-xl-5 col-6 d-flex flex-column justify-content-end '>
+                                        <div><GrFlag size='1.9em' color='#FFEBEB'/></div>
+                                        <span style={{fontSize: '1.2em'}}>Morroco / Casablanca</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='col-xl-5 order-xl-1 my-3'>
                                 <div className={`${styles.info} d-flex `}>
                                     <div className='col d-flex flex-column justify-content-end '>
                                         <h4>Total game</h4>
@@ -92,26 +112,6 @@ export default function ()
                                     <div className='col d-flex flex-column justify-content-end '>
                                         <h4>Lose</h4>
                                         <span>15%</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-2 text-center'>
-                                <Image className={`${styles.profile_img}`} width={60} height={60} src="/char3.png" alt='Profile'/>
-                                <div><span className='valo-font' style={{color: '#FFEBEB'}}>!SNAKE_007</span></div>
-                                <div className={`${styles.action} d-flex`}>
-                                    <div className={`col ${styles.btn}`}><button>Message</button></div>
-                                    <div className={`col ${styles.btn}`}><button>+ invite</button></div>
-                                </div>
-                            </div> 
-                            <div className='col-4'>
-                                <div className={`${styles.info} d-flex`}>
-                                    <div className='col-5 d-flex flex-column justify-content-end'>
-                                        <div><SlUser size='1.9em' color='#FFEBEB'/></div>
-                                        <span style={{fontSize: '1.2em'}}>Othman Nouakchi</span>
-                                    </div>
-                                    <div className='col-5 d-flex flex-column justify-content-end'>
-                                        <div><GrFlag size='1.9em' color='#FFEBEB'/></div>
-                                        <span style={{fontSize: '1.2em'}}>Morroco / Casablanca</span>
                                     </div>
                                 </div>
                             </div>
