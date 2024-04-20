@@ -131,10 +131,10 @@
 
 .rank{
     position: absolute;
-    bottom: 10px;
-    right: 5%;
+    bottom: 20px;
+    right: 1%;
     height: 220px;
-    width: 200px;
+    width: 180px;
 }
 
 .progres_bar{
@@ -146,6 +146,23 @@
 .edit_modal{
     background-color: #161625;
 }
+
+.form_control:focus{
+   color:#bebebe;
+}
+
+.form_control::placeholder{
+    color: #7C7C7C;
+}
+
+.selector{
+    border: none;
+    background-color: #2C3143;
+    border-radius: 25px;
+    color: #7C7C7C;
+    cursor: pointer;
+}
+
 
 @media (max-width: 1200px) {
     .square{

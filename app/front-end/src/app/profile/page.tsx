@@ -3,6 +3,8 @@
 import styles from './style.module.css';
 import Image from 'next/image';
 import ProgressBar from 'react-bootstrap/ProgressBar';
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
 import { Line } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 import {    CategoryScale, 
@@ -16,17 +18,47 @@ import {    CategoryScale,
         } from 'chart.js';
 import Modal from 'react-bootstrap/Modal'
 import { useState } from 'react';
-import { FaUserEdit } from "react-icons/fa";
+import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 
+import { FaUserEdit } from "react-icons/fa";
 import { SlUser } from "react-icons/sl";
 import { GrFlag } from "react-icons/gr";
 import { CiUser } from "react-icons/ci";
 import { GiPodiumWinner, GiLaurelsTrophy } from "react-icons/gi";
 import { FaFileInvoice } from "react-icons/fa6";
+import { ImUsers } from "react-icons/im";
+import { SiRepublicofgamers } from "react-icons/si";
+import { BsFillChatLeftQuoteFill } from "react-icons/bs";
+import { MdRoundaboutRight } from "react-icons/md";
 
 export default function ()
 {
-    const [modalShow, setModalShow] = useState(false);
+    const [modalShow, setModalShow] = useState<boolean>(false);
+
+    const [country, setCountry] = useState<string>('');
+    const [region, setRegion] = useState<string>('');
+
+    const selectCountry = (val: string) => {
+        setCountry(val);
+        setRegion('');
+      }
+    
+    const selectRegion = (val: string) => {
+      setRegion(val);
+    }
+
+    const [validated, setValidated] = useState<boolean>(false);
+
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+      const form = event.currentTarget;
+      if (form.checkValidity() === false) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+      setValidated(true);
+    };
+
     Chart.register(CategoryScale, LinearScale, Title, Legend, Tooltip, LineController, PointElement, LineElement);
     Chart.defaults.font.family = 'Itim';
     const labels: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
@@ -71,6 +103,8 @@ export default function ()
           }
         }
       }
+    
+    const parag: string =   "Hey there! I'm Snake07, a dedicated ping pong gamer. From lightning-fast reflexes to strategic plays, I'm all about dominating the virtual table. Join me as we smash our way to victory, one pixel at a time!";
     
     return (
         <>
@@ -156,17 +190,58 @@ export default function ()
                             <div >
 
                             <Modal contentClassName={`${styles.edit_modal}`} show={modalShow} onHide={() => {setModalShow(false)}} size='lg' aria-labelledby="contained-modal-title-vcenter" centered backdrop="static" scrollable animation>
-                                <Modal.Header closeButton>
+                                <Modal.Header closeButton closeVariant='white'>
                                     <Modal.Title id="contained-modal-title-vcenter">
                                       <span style={{color: '#FFEBEB', fontFamily: 'itim'}}><FaUserEdit color='#7aa6d6'/> Edit Profile</span>
                                     </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
-
+                                    <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                                        <InputGroup hasValidation className={`mb-3`}>
+                                          <InputGroup.Text style={{backgroundColor: '#2C3143'}}><SiRepublicofgamers color='#FFEBEB'/></InputGroup.Text>
+                                          <Form.Control className={`${styles.form_control}`} required type="text" color='red' aria-label='Nickname' placeholder='Nickname' defaultValue="!Snake_007" style={{backgroundColor: '#2C3143'}}/>
+                                            <Form.Control.Feedback type="invalid">
+                                              Please choose a Nickname.
+                                            </Form.Control.Feedback>
+                                        </InputGroup>
+                                        <InputGroup hasValidation className='mb-3'>
+                                            <InputGroup.Text style={{backgroundColor: '#2C3143'}}><ImUsers color='#FFEBEB'/></InputGroup.Text>
+                                            <Form.Control className={`${styles.form_control}`} required type="text" placeholder='Full name' aria-label='Full name' defaultValue="Othman Nouakchi" style={{backgroundColor: '#2C3143'}}/>
+                                            <Form.Control.Feedback type="invalid">
+                                              Please enter your full name.
+                                            </Form.Control.Feedback>
+                                        </InputGroup>
+                                        <InputGroup hasValidation className='mb-3'>
+                                            <InputGroup.Text style={{backgroundColor: '#2C3143'}}><BsFillChatLeftQuoteFill color='#FFEBEB'/></InputGroup.Text>
+                                            <Form.Control className={`${styles.form_control}`} required type="text" placeholder='Quote' aria-label='Quote' defaultValue="Game on! 🎮 Play hard, level up! 💪" style={{backgroundColor: '#2C3143'}}/>
+                                            <Form.Control.Feedback type="invalid">
+                                              Please choose a Quote.
+                                            </Form.Control.Feedback>
+                                        </InputGroup>
+                                        <InputGroup hasValidation className='mb-3'>
+                                            <InputGroup.Text style={{backgroundColor: '#2C3143'}}><MdRoundaboutRight color='#FFEBEB'/></InputGroup.Text>
+                                            <Form.Control className={`${styles.form_control}`} required as="textarea" placeholder='Intro' aria-label='Intro' defaultValue={parag} style={{backgroundColor: '#2C3143'}}/>
+                                            <Form.Control.Feedback type="invalid">
+                                              Please talk about yourslef.
+                                            </Form.Control.Feedback>
+                                        </InputGroup>
+                                        <InputGroup className='mb-2 row p-0 m-0 d-flex justify-content-center'>
+                                            <CountryDropdown
+                                                classes={`${styles.selector} col-md-5 col-sm-10 mx-3 mb-1 p-2`}
+                                                value={country}
+                                                onChange={(val) => selectCountry(val)} />
+                                            <RegionDropdown
+                                                classes={`${styles.selector} col-md-5 col-sm-10 mx-3 mb-1 p-2`}
+                                                country={country}
+                                                value={region}
+                                                onChange={(val) => selectRegion(val)} />
+                                        </InputGroup>
+                                        <div className='row d-flex justify-content-center pb-1 m-0'>
+                                            <div className={`${styles.edit_btn} col-md-3 col-sm-5 valo-font text-center m-2 px-2`} onClick={() => {setModalShow(false)}}><button onClick={() => {setModalShow(false)}}>Cancel</button></div>
+                                            <div className={`${styles.edit_btn} col-md-3 col-sm-5 valo-font text-center m-2 px-2`} ><button type="submit" >Save</button></div>
+                                        </div>
+                                    </Form>
                                 </Modal.Body>
-                                <Modal.Footer>
-
-                                </Modal.Footer>
                             </Modal>
                             </div>
                         </div>

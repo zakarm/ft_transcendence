@@ -24,6 +24,7 @@
     "react-auth-code-input": "^3.2.1",
     "react-bootstrap": "^2.10.2",
     "react-chartjs-2": "^5.2.0",
+    "react-country-region-selector": "^3.6.1",
     "react-dom": "^18",
     "react-icons": "^5.0.1",
     "react-otp-input": "^3.1.1",
