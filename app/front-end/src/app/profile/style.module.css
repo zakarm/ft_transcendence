@@ -143,6 +143,10 @@
     border-radius: 25px;
 }
 
+.edit_modal .modal_content{
+    background-color: #61627C;
+}
+
 @media (max-width: 1200px) {
     .square{
         height: 175px;

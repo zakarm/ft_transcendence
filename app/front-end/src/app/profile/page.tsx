@@ -14,14 +14,17 @@ import {    CategoryScale,
             PointElement, 
             LineElement 
         } from 'chart.js';
+import Modal from 'react-bootstrap/Modal'
 import { SlUser } from "react-icons/sl";
 import { GrFlag } from "react-icons/gr";
 import { CiUser } from "react-icons/ci";
 import { GiPodiumWinner, GiLaurelsTrophy } from "react-icons/gi";
 import { FaFileInvoice } from "react-icons/fa6";
+import { useState } from 'react';
 
 export default function ()
 {
+    const [modalShow, setModalShow] = useState(false);
     Chart.register(CategoryScale, LinearScale, Title, Legend, Tooltip, LineController, PointElement, LineElement);
     Chart.defaults.font.family = 'Itim';
     const labels: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
@@ -146,8 +149,21 @@ export default function ()
                                     <span style={{color: '#FFEBEB', fontFamily: 'itim'}}>10513</span>
                                 </div>
                             </div>
-                            <div className={`col-6 ${styles.edit_btn} valo-font text-center p-2 m-2`}><button>EDIT PROFILE</button></div>
                             <Image className={`${styles.rank}`} width={200} height={200} src="/rank.png" alt='rank'/>
+                            <div className={`col-6 ${styles.edit_btn} valo-font text-center p-2 m-2`} onClick={() => {setModalShow(true)}}><button onClick={() => {setModalShow(true)}}>EDIT PROFILE</button></div>
+                            <Modal className='edit_modal' show={modalShow} onHide={() => {setModalShow(false)}} size='lg' aria-labelledby="contained-modal-title-vcenter" centered backdrop="static" scrollable animation>
+                                <Modal.Header closeButton>
+                                    <Modal.Title id="contained-modal-title-vcenter">
+                                      <span style={{color: '#FFEBEB', fontFamily: 'itim', fontSize: '1.8em'}}>Edit Profile</span>
+                                    </Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+
+                                </Modal.Body>
+                                <Modal.Footer>
+
+                                </Modal.Footer>
+                            </Modal>
                         </div>
                         <div className={`${styles.data_holder} col-xl-6 col-lg-12 p-4 my-1`}>
                             <div className='d-flex align-items-center'>
@@ -157,6 +173,7 @@ export default function ()
                             <hr className=" my-3" style={{color: '#61627C', borderWidth: '2px'}}/>
                             <div className='col p-0 m-0'>
                                 <Line className='itim-font' options={options} data={data} />
+                                &nbsp;
                             </div>
                         </div>
                     </div>
