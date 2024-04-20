@@ -15,12 +15,14 @@ import {    CategoryScale,
             LineElement 
         } from 'chart.js';
 import Modal from 'react-bootstrap/Modal'
+import { useState } from 'react';
+import { FaUserEdit } from "react-icons/fa";
+
 import { SlUser } from "react-icons/sl";
 import { GrFlag } from "react-icons/gr";
 import { CiUser } from "react-icons/ci";
 import { GiPodiumWinner, GiLaurelsTrophy } from "react-icons/gi";
 import { FaFileInvoice } from "react-icons/fa6";
-import { useState } from 'react';
 
 export default function ()
 {
@@ -151,10 +153,12 @@ export default function ()
                             </div>
                             <Image className={`${styles.rank}`} width={200} height={200} src="/rank.png" alt='rank'/>
                             <div className={`col-6 ${styles.edit_btn} valo-font text-center p-2 m-2`} onClick={() => {setModalShow(true)}}><button onClick={() => {setModalShow(true)}}>EDIT PROFILE</button></div>
-                            <Modal className='edit_modal' show={modalShow} onHide={() => {setModalShow(false)}} size='lg' aria-labelledby="contained-modal-title-vcenter" centered backdrop="static" scrollable animation>
+                            <div >
+
+                            <Modal contentClassName={`${styles.edit_modal}`} show={modalShow} onHide={() => {setModalShow(false)}} size='lg' aria-labelledby="contained-modal-title-vcenter" centered backdrop="static" scrollable animation>
                                 <Modal.Header closeButton>
                                     <Modal.Title id="contained-modal-title-vcenter">
-                                      <span style={{color: '#FFEBEB', fontFamily: 'itim', fontSize: '1.8em'}}>Edit Profile</span>
+                                      <span style={{color: '#FFEBEB', fontFamily: 'itim'}}><FaUserEdit color='#7aa6d6'/> Edit Profile</span>
                                     </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
@@ -164,6 +168,7 @@ export default function ()
 
                                 </Modal.Footer>
                             </Modal>
+                            </div>
                         </div>
                         <div className={`${styles.data_holder} col-xl-6 col-lg-12 p-4 my-1`}>
                             <div className='d-flex align-items-center'>
