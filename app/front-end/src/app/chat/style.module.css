@@ -23,16 +23,27 @@
 
 .usr_container {
     width: 100%;
-    overflow: auto; /* Enable scrollbar while hiding it */
-    -ms-overflow-style: none; /* Hide scrollbar in Internet Explorer */
-    scrollbar-width: none; /* Hide scrollbar in Firefox */
-
-    /* Optional: Add padding to prevent content from touching the edges */
-    padding-right: 15px; /* Adjust as needed based on scrollbar width */
+    overflow: auto;
+    -ms-overflow-style: none; 
+    scrollbar-width: none; 
+    padding-right: 15px; 
 }
 
 .usr_container::-webkit-scrollbar {
-    display: none; /* Hide scrollbar in WebKit browsers */
+    display: none;
+} 
+
+
+.chat_container {
+    width: 100%;
+    overflow: auto;
+    -ms-overflow-style: none; 
+    scrollbar-width: none; 
+    padding-right: 15px; 
 }
+
+.chat_container::-webkit-scrollbar {
+    display: none;
+} 
 
 

@@ -29,9 +29,11 @@ export default function ()
     );;
     return (
         <>
-            <div className='row vh-100 p-0 m-0 border' style={{backgroundColor: '#111111'}}>
-                <div className='col-10 p-0 m-0 d-flex flex-row border border-primary'>
-                    <div className='col-4  border border-danger' style={{height: '100%'}}>
+            <div className="row vh-100 p-0 m-0 ">
+              <div className="col-10 p-0 m-0 d-flex flex-row ">
+                <div className="col-4 ">
+                  <div className="d-flex flex-column  vh-100">
+                    <div className="w-100">
                         <div className={`${styles.welcome}  text-start`}>
                             <span className='d-flex flex-column p-2 text-center valo-font '>
                                 <span className='display-5' style={{color: '#FF4755'}}>GAME HUB</span>
@@ -49,19 +51,32 @@ export default function ()
                         <div className={`${styles.usr_container} d-flex overflow-auto`}>
                             {friendsData}
                         </div>
-                        <hr className="m-3" style={{color: '#FFFFFF', borderWidth: '2px'}}/>
-                        <div>
+                        <hr className="m-3" style={{color: '#FFEBEB', borderWidth: '2px'}}/>
+                    </div>
+                    <div className={`${styles.chat_container} p-2 flex-grow-1`}>
                             <UserChat />
-                        </div>
+                            <UserChat />
+                            <UserChat />
+                            <UserChat />
+                            <UserChat />
+                            <UserChat />
+                            <UserChat />
+                            <UserChat />
+                            <UserChat />
+                            <UserChat />
+                            <UserChat />
                     </div>
-                    <div className='col-8 p-0 m-0 border border-warning' style={{height: '100%'}}>
-                        col 2
-                    </div>
+                  </div>
                 </div>
-                <div className='col-2 p-0 m-0 border'>
-                    col 3
+                <div className="col-8 p-0 m-0 border border-warning">
+
                 </div>
+              </div>
+              <div className="col-2 p-0 m-0 border">
+
+              </div>
             </div>
+
         </>
     );
 }
