@@ -16,7 +16,7 @@ export default function UserChat ()
                 </div>
                 <div className={`col d-flex flex-column d-flex justify-content-evenly align-items-start`}>
                     <span>!Snake_007</span>
-                    <span>Hey, do you wanna play, i dear you to win ,</span>
+                    <span style={{color: '#bebebe'}}>Hey, do you wanna play, i dear you to win ,</span>
                 </div>
                 <div className='col-2 text-end'>
                     <span>now</span>

@@ -4,11 +4,13 @@ import { InputGroup } from 'react-bootstrap';
 import styles from './style.module.css';
 import Image from 'next/image';
 import User from '../../components/user';
-import friends from '../../components/friends.json'
+import UserChat from '@/components/user_chat';
+import friends from '../../components/friends.json';
+import StepsPrograssBar from 'react-line-progress-bar-steps';
 
 import { CiSearch } from "react-icons/ci";
 import Form from 'react-bootstrap/Form';
-import UserChat from '@/components/user_chat';
+import { IoCloseCircleSharp } from "react-icons/io5";
 
 export default function ()
 {
@@ -30,7 +32,7 @@ export default function ()
     return (
         <>
             <div className="row vh-100 p-0 m-0 ">
-              <div className="col-10 p-0 m-0 d-flex flex-row ">
+              <div className="col-9 p-0 m-0 d-flex flex-row ">
                 <div className="col-4 ">
                   <div className="d-flex flex-column  vh-100">
                     <div className="w-100">
@@ -72,8 +74,30 @@ export default function ()
 
                 </div>
               </div>
-              <div className="col-2 p-0 m-0 border">
-
+              <div className={`${styles.about_container} col-3 p-0 m-0 d-flex flex-column border`}>
+                <div className='border p-4'>
+                    <div className='text-end'><IoCloseCircleSharp color='white' size='1.5em'/></div>
+                </div>
+                <div className='flex-grow-1 d-flex flex-column align-items-center justify-content-evenly border'>
+                    <div><Image className={`${styles.about_img}`} width={200} height={200} src="/profile.jpeg" alt='welcome'/></div>
+                    <div className='d-flex flex-column text-center'>
+                        <span className='valo-font'>OTHMAN NOUAKCHI</span>
+                        <span style={{color: '#A6A0A0'}}>Casablanca, Morocco</span>
+                        <span style={{color: '#A6A0A0'}}>Game on! 🎮 Play hard, level up! 💪</span>
+                    </div>
+                    <div>chart</div>
+                </div>
+                <div className='d-flex flex-column border p-4 pt-0'>
+                    <hr className="m-3" style={{color: '#FFEBEB', borderWidth: '2px'}}/>
+                    <div className='row m-0 text-center'>
+                        <span className='col '>High score: 1337</span>
+                        <span className='col'>Rank: 90135</span>
+                    </div>
+                    <span>Matches</span>
+                    <span><StepsPrograssBar /> 10 / 15</span>
+                    <span>Tournaments</span>
+                    <span><StepsPrograssBar /> 3 / 5</span>
+                </div>
               </div>
             </div>
 

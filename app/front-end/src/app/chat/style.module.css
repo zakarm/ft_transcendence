@@ -46,4 +46,15 @@
     display: none;
 } 
 
+.about_container{
+    background-color: #181B20;
+    color: #FFEBEB;
+    font-family: 'itim';
+}
 
+.about_img{
+    width: 200px;
+    height: 200px;
+    border-radius: 999px;
+    border: 2px solid #27B299;
+}
