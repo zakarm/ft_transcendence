@@ -19,6 +19,7 @@ import {    CategoryScale,
 import Modal from 'react-bootstrap/Modal'
 import { useState } from 'react';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
+import profile from '../../services/profile.json';
 
 import { FaUserEdit } from "react-icons/fa";
 import { SlUser } from "react-icons/sl";
@@ -61,13 +62,12 @@ export default function ()
 
     Chart.register(CategoryScale, LinearScale, Title, Legend, Tooltip, LineController, PointElement, LineElement);
     Chart.defaults.font.family = 'Itim';
-    const labels: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
     const data: Chart.ChartData = {
-      labels: labels,
+      labels: profile.summary.months,
       datasets: [
         {
             label: 'WIN',
-            data: [10, 20, 30, 40, 30, 15, 28, 25, 40, 50],
+            data: profile.summary.win,
             borderColor: 'rgba(116,206,151, 0.5)',
             backgroundColor: 'green',
             font: {
@@ -79,7 +79,7 @@ export default function ()
         },
         {
             label: 'LOSS',
-            data: [30, 20, 10, 40, 5, 15, 28, 90, 10, 88],
+            data: profile.summary.loss,
             borderColor: 'rgba(181,55,49, 0.5)',
             backgroundColor: 'red',
             font: {
@@ -99,7 +99,7 @@ export default function ()
           },
           title: {
             display: true,
-            text: 'Win/Loss for !SNAKE_007'
+            text: `Win/Loss for ${profile.nickname}`
           }
         }
       }
@@ -120,7 +120,7 @@ export default function ()
                         <div className='row m-0 p-0'>
                             <div className='col-xl-2 order-xl-2 my-3 text-center'>
                                 <Image className={`${styles.profile_img}`} width={200   } height={200  } src="/char3.png" alt='Profile'/>
-                                <div><span className='valo-font' style={{color: '#FFEBEB', fontSize: '1.5em'}}>!SNAKE_007</span></div>
+                                <div><span className='valo-font' style={{color: '#FFEBEB', fontSize: '1.5em'}}>{profile.nickname}</span></div>
                                 <div className={`${styles.action} row d-flex justify-content-center`}>
                                     <div className={`col-md-5 col-8 ${styles.btn}`}><button>Message</button></div>
                                     <div className={`col-md-5 col-8 ${styles.btn}`}><button>invite</button></div>
@@ -130,11 +130,11 @@ export default function ()
                                 <div className={`${styles.info} d-flex`}>
                                     <div className='col-xl-5 col-6 d-flex flex-column justify-content-end'>
                                         <div><SlUser size='1.9em' color='#FFEBEB'/></div>
-                                        <span style={{fontSize: '1.2em'}}>Othman Nouakchi</span>
+                                        <span style={{fontSize: '1.2em'}}>{profile.fullname}</span>
                                     </div>
                                     <div className='col-xl-5 col-6 d-flex flex-column justify-content-end '>
                                         <div><GrFlag size='1.9em' color='#FFEBEB'/></div>
-                                        <span style={{fontSize: '1.2em'}}>Morroco / Casablanca</span>
+                                        <span style={{fontSize: '1.2em'}}>{profile.country} / {profile.region}</span>
                                     </div>
                                 </div>
                             </div>
@@ -142,15 +142,15 @@ export default function ()
                                 <div className={`${styles.info} d-flex `}>
                                     <div className='col d-flex flex-column justify-content-end '>
                                         <h4>Total game</h4>
-                                        <span>613</span>
+                                        <span>{profile.total_games}</span>
                                     </div>
                                     <div className='col d-flex flex-column justify-content-end '>
                                         <h4 style={{borderLeft: '1px solid #61627C', borderRight: '1px solid #61627C'}}>Win</h4>
-                                        <span style={{borderLeft: '1px solid #61627C', borderRight: '1px solid #61627C'}}>85%</span>
+                                        <span style={{borderLeft: '1px solid #61627C', borderRight: '1px solid #61627C'}}>{profile.win}%</span>
                                     </div>
                                     <div className='col d-flex flex-column justify-content-end '>
                                         <h4>Lose</h4>
-                                        <span>15%</span>
+                                        <span>{profile.lose}%</span>
                                     </div>
                                 </div>
                             </div>
@@ -165,30 +165,25 @@ export default function ()
                             </div>
                             <hr className=" my-3" style={{color: '#61627C', borderWidth: '2px'}}/>
                             <p className='text-center px-3 py-3' style={{color: '#61627C', fontSize: '1.2em'}}>
-                                Hey there! I'm Snake07, a dedicated ping pong gamer.
-                                From  lightning-fast reflexes to strategic plays,
-                                I'm all about dominating the  virtual table. 
-                                Join me as we smash our way to victory,
-                                one pixel at a  time!
+                                {profile.about.intro}
                             </p>
-                            <h2 className='text-center' style={{color: '#ACACAC', fontFamily: 'itim'}}>Game on! 🎮 Play hard, level up! 💪</h2>
-                            <ProgressBar className={`${styles.progres_bar} my-5`} now={80.56} label={`${8.56}`} striped variant="danger" animated/>
+                            <h2 className='text-center' style={{color: '#ACACAC', fontFamily: 'itim'}}>{profile.about.quote}</h2>
+                            <ProgressBar className={`${styles.progres_bar} my-5`} now={profile.about.level * 10} label={`${profile.about.level}`} striped variant="danger" animated/>
                             <hr className=" my-2 mx-2" style={{color: '#61627C', borderWidth: '2px'}}/>
                             <span style={{color: '#61627C', fontFamily: 'itim'}}>Rank</span>
                             <div className='d-flex flex-row my-4'>
                                 <div className='col-3 d-flex flex-column text-center'>
                                     <span><GiPodiumWinner size='2em' color='#7aa6d6'/></span>
-                                    <span style={{color: '#FFEBEB', fontFamily: 'itim'}}>27</span>
+                                    <span style={{color: '#FFEBEB', fontFamily: 'itim'}}>{profile.about.rank}</span>
                                 </div>
                                 <div className='col-3 d-flex flex-column text-center'>
                                     <span><GiLaurelsTrophy size='2em' color='#7aa6d6'/></span>
-                                    <span style={{color: '#FFEBEB', fontFamily: 'itim'}}>10513</span>
+                                    <span style={{color: '#FFEBEB', fontFamily: 'itim'}}>{profile.about.score}</span>
                                 </div>
                             </div>
                             <Image className={`${styles.rank}`} width={200} height={200} src="/rank.png" alt='rank'/>
                             <div className={`col-6 ${styles.edit_btn} valo-font text-center p-2 m-2`} onClick={() => {setModalShow(true)}}><button onClick={() => {setModalShow(true)}}>EDIT PROFILE</button></div>
                             <div >
-
                             <Modal contentClassName={`${styles.edit_modal}`} show={modalShow} onHide={() => {setModalShow(false)}} size='lg' aria-labelledby="contained-modal-title-vcenter" centered backdrop="static" scrollable animation>
                                 <Modal.Header closeButton closeVariant='white'>
                                     <Modal.Title id="contained-modal-title-vcenter">

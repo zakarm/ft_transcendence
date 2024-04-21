@@ -147,6 +147,10 @@
     background-color: #161625;
 }
 
+.form_control{
+    font-family: 'itim';
+}
+
 .form_control:focus{
    color:#bebebe;
 }
@@ -161,6 +165,8 @@
     border-radius: 25px;
     color: #7C7C7C;
     cursor: pointer;
+    font-family: 'itim';
+    padding: 5px;
 }
 
 
