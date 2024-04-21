@@ -13,3 +13,4 @@ app/back-end/game/migrations
 app/front-end/node_modules
 app/front-end/.next
 .env
+node_modules
