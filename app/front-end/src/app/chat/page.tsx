@@ -7,12 +7,16 @@ import User from '../../components/user';
 import UserChat from '@/components/user_chat';
 import friends from '../../components/friends.json';
 import StepsPrograssBar from 'react-line-progress-bar-steps';
+import { Radar } from 'react-chartjs-2';
+import Form from 'react-bootstrap/Form';
+import Chart from 'chart.js/auto';
+import Button from 'react-bootstrap/Button';
 
 import { CiSearch } from "react-icons/ci";
-import Form from 'react-bootstrap/Form';
 import { IoCloseCircleSharp } from "react-icons/io5";
-import Chart from 'chart.js/auto';
-import { Radar } from 'react-chartjs-2';
+import { FaTableTennisPaddleBall } from 'react-icons/fa6';
+import { ImUserMinus } from 'react-icons/im';
+import { IoIosSend } from "react-icons/io";
 
 export default function ()
 {
@@ -76,6 +80,9 @@ export default function ()
                 },
                 pointLabels: {
                     color: '#FE4755'
+                },
+                ticks: {
+                  color: '#FE4755',
                 }
             }
         }
@@ -85,17 +92,18 @@ export default function ()
         <>
             <div className="row vh-100 p-0 m-0 ">
               <div className="col-9 p-0 m-0 d-flex flex-row ">
-                <div className="col-4 ">
+                <div className="col-5 ">
                   <div className="d-flex flex-column  vh-100">
-                    <div className="w-100">
-                        <div className={`${styles.welcome}  text-start`}>
-                            <span className='d-flex flex-column p-2 text-center valo-font '>
-                                <span className='display-5' style={{color: '#FF4755'}}>GAME HUB</span>
-                                <span className='h2' style={{color: '#FFEBEB'}}>LET'S CHAT</span>
-                                <span className='h2' style={{color: '#FFEBEB'}}>& PLAY</span>
-                            </span>
-                            <Image className={`${styles.welcome_img}`} width={200} height={200} src="/welcome.png" alt='welcome'/>
-                        </div>
+                    <div className="">
+                      <div className={`${styles.welcome}`}>
+                          <span className={`d-flex flex-column p-2 text-center valo-font`}>
+                              <span className='display-5' style={{color: '#FF4755'}}>GAME HUB</span>
+                              <span className='h2' style={{color: '#FFEBEB'}}>LET'S CHAT</span>
+                              <span className='h2' style={{color: '#FFEBEB'}}>& PLAY</span>
+                          </span>
+                          <Image className={`${styles.welcome_img}`} width={300} height={300} src="/welcome.png" alt='welcome' />
+                      </div>
+
                         <div className={`mx-3 mb-2`}>
                             <InputGroup size="lg">
                               <InputGroup.Text style={{backgroundColor: '#2C3143'}}><CiSearch color='#FFEBEB'/></InputGroup.Text>
@@ -122,8 +130,31 @@ export default function ()
                     </div>
                   </div>
                 </div>
-                <div className="col-8 p-0 m-0 border border-warning">
-
+                <div className="col-7  p-0 m-0 d-flex flex-column border border-dark">
+                  <div className='row p-0 m-0 d-flex justify-content-center ' style={{fontFamily: 'itim', color: '#FFEBEB'}}>
+                    <div className='col-2 py-3 text-end' style={{backgroundColor: '#161625', borderBottomLeftRadius: '25px'}}><Image className={`${styles.chat_img}`} width={200} height={200} src="/profile.jpeg" alt='welcome'/></div>
+                    <div className='col-5 py-3 d-flex flex-column justify-content-evenly' style={{backgroundColor: '#161625'}}>
+                      <div><span>!Snake_007</span></div>
+                      <div><span>Online</span></div>
+                    </div>
+                    <div className='col-3 py-3 d-flex align-items-center justify-content-end' style={{backgroundColor: '#161625', borderBottomRightRadius: '25px'}}>
+                      <FaTableTennisPaddleBall className='mx-2' size='1.8em' style={{cursor: 'pointer'}}/>
+                      <ImUserMinus className='mx-2' size='1.8em' style={{cursor: 'pointer'}}/>
+                    </div>
+                  </div>
+                  <div className='flex-grow-1 valo-font d-flex justify-content-center align-items-center'>CHAT</div>
+                  <div className='p-4 mx-2' style={{backgroundColor: '#181B20', borderTopRightRadius: '25px', borderTopLeftRadius: '25px'}}> 
+                    <InputGroup size="lg" style={{fontFamily: 'itim'}}>
+                      <Form.Control
+                        placeholder="Type..."
+                        aria-label="Type..."
+                        aria-describedby="basic-addon2"
+                      />
+                      <Button variant="outline-secondary" id="button-addon2">
+                        <IoIosSend className='mx-2' size='1.8em' color='#FF4755' style={{cursor: 'pointer'}}/>
+                      </Button>
+                    </InputGroup>
+                  </div>
                 </div>
               </div>
               <div className={`${styles.about_container} col-3 p-0 m-0 d-flex flex-column`}>

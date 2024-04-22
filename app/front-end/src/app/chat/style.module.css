@@ -1,13 +1,14 @@
 
-.welcome{
+.welcome {
     position: relative;
 }
 
-.welcome_img{
+.welcome_img {
     position: absolute;
     top: 0;
     right: 0;
 }
+
 
 .form_control{
     font-family: 'itim';
@@ -24,22 +25,17 @@
 .usr_container {
     width: 100%;
     overflow: auto;
-    -ms-overflow-style: none; 
-    scrollbar-width: none; 
-    padding-right: 15px; 
+    padding: 15px;
+    -ms-overflow-style: none;
+    /* scrollbar-width: none;  */
 }
-
-.usr_container::-webkit-scrollbar {
-    display: none;
-} 
 
 
 .chat_container {
     width: 100%;
     overflow: auto;
     -ms-overflow-style: none; 
-    scrollbar-width: none; 
-    padding-right: 15px; 
+    scrollbar-width: none;
 }
 
 .chat_container::-webkit-scrollbar {
@@ -57,4 +53,10 @@
     height: 200px;
     border-radius: 999px;
     border: 2px solid #27B299;
+}
+
+.chat_img{
+    height: 64px;
+    width: 64px;
+    border-radius: 999px;
 }

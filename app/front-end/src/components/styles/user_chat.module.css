@@ -41,3 +41,32 @@
     background-color: #43C016;
     border-radius: 25px;
 }
+
+@media (max-width: 1600px) {
+    .profile_img{
+        height: 50px;
+        width: 50px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .profile_img{
+        height: 35px;
+        width: 35px;
+    }
+
+    .status{
+        bottom: 28px;
+        right: 8px;
+        height: 10px;
+        width: 10px;
+    }
+
+    .status_flag{
+        height: 5px;
+        width: 5px;
+        background-color: #43C016;
+        border-radius: 25px;
+    }
+}
+
