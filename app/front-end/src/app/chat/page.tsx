@@ -1,18 +1,6 @@
 "use client";
 
-import { InputGroup } from 'react-bootstrap';
 import styles from './style.module.css';
-import Image from 'next/image';
-import User from '../../components/user';
-import UserChat from '@/components/user_chat';
-import friends from '../../components/friends.json';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-
-import { CiSearch } from "react-icons/ci";
-import { FaTableTennisPaddleBall } from 'react-icons/fa6';
-import { ImUserMinus } from 'react-icons/im';
-import { IoIosSend } from "react-icons/io";
 import ChatAbout from '@/components/chat_about';
 import ChatFriends from '@/components/chat_friends';
 import ChatMessages from '@/components/chat_messages';
