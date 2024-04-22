@@ -95,27 +95,31 @@ export default function Dashboard() {
                 <div className="col-12 mt-3">
                     <div className="row">
                         <div className="col-12 col-md-6">
-                            <div className={`row p-3 ${styles.card} ${styles.buttom_cards} m-1`}>
-                                <div className='col-6 d-flex align-items-start justify-content-start'>
+                            <div className={`d-flex flex-column p-3 ${styles.card} ${styles.buttom_cards} m-1`}>
+                                <div className='row'>
+                                    <div className='col-6 d-flex align-items-start justify-content-start'>
                                     <p className={`itim-font ${styles.med_titles}`}><FaHistory color='#FFEBEB'/> GAME HISTORY</p>
-                                </div>
-                                <div className='col-6 d-flex align-items-end justify-content-end'>
-                                    <p className={`itim-font ${styles.all_down}`}>ALL <FaChevronDown color='#FFEBEB'/></p>
+                                    </div>
+                                    <div className='col-6 d-flex align-items-end justify-content-end'>
+                                        <p className={`itim-font ${styles.all_down}`}>ALL <FaChevronDown color='#FFEBEB'/></p>
+                                    </div>
                                 </div>
                                 <hr style={{color: '#FFEBEB', backgroundColor: '#FFEBEB', height: 1}}/>
                                 <GameHistoryCard/>
                             </div>
                         </div>
-                        <div className="col-12 col-md-6">
-                            <div className={`row p-3 ${styles.card} ${styles.buttom_cards} m-1`}>
-                                <div className='col-6 d-flex align-items-start justify-content-start'>
-                                    <p className={`itim-font ${styles.med_titles}`}><BiStats color='#FFEBEB'/> MY GAME STATS</p>
-                                </div>
-                                <div className='col-6 d-flex align-items-end justify-content-end'>
-                                    <p className={`itim-font ${styles.all_down}`}>ALL <FaChevronDown color='#FFEBEB'/></p>
+                        <div className={`col-12 col-md-6 ${styles.chart_grid}`}>
+                            <div className={`d-flex flex-column p-3 ${styles.card} ${styles.buttom_cards} m-1`}>
+                                <div className='row'>
+                                    <div className='col-6 d-flex align-items-start justify-content-start'>
+                                        <p className={`itim-font ${styles.med_titles}`}><BiStats color='#FFEBEB'/> MY GAME STATS</p>
+                                    </div>
+                                    <div className='col-6 d-flex align-items-end justify-content-end'>
+                                        <p className={`itim-font ${styles.all_down}`}>ALL <FaChevronDown color='#FFEBEB'/></p>
+                                    </div>
                                 </div>
                                 <hr style={{color: '#FFEBEB', backgroundColor: '#FFEBEB', height: 1}}/>
-                                <div>
+                                <div className='d-flex align-items-center justify-content-center h-75'>
                                     <div>&nbsp;</div>
                                     <Line className='itim-font' options={options} data={data} />
                                 </div>

@@ -11,12 +11,6 @@ interface GameData {
 }
 
 const GameHistoryCard: React.FC = () => {
-  const gameData: GameData[] = [
-    { player: 'IBsela_001', score: 65135, date: '2024-02-19', result: 'WIN' },
-    { player: 'IBsela_001', score: 65135, date: '2024-02-19', result: 'WIN' },
-    { player: 'IBsela_001', score: 65135, date: '2024-02-19', result: 'WIN' },
-    { player: 'IBsela_001', score: 65135, date: '2024-02-19', result: 'WIN' },
-  ];
 
   return (
     <Table responsive className={`${styles.table}`}>

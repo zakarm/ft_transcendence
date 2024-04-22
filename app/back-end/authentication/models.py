@@ -24,7 +24,7 @@ class UserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
         return self.create_user(email, password, **extra_fields)
-        
+       
 
 class User(AbstractBaseUser, PermissionsMixin):
     """Class representing a User"""
@@ -44,6 +44,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_2fa_enabled = models.BooleanField(default=False)
     is_email_verified = models.BooleanField(default=False)
     two_fa_secret_key = models.CharField(max_length=200, blank=True, null=True)
+    score = models.IntegerField(blank = True, null = True)
+    level = models.FloatField(blank = True, null = True)
+    rank = models.IntegerField(blank = True, null = True)
+    quote = models.CharField(max_length = 100, blank = True, null = True)
+    intro = models.CharField(max_length = 100, blank = True, null = True)
 
 
     objects = UserManager()
@@ -51,3 +56,4 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Meta:
         """Class to change the behavior of your model fields"""
         db_table = 'authentication_users'
+        
