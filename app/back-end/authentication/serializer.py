@@ -61,10 +61,10 @@ class SocialAuthSerializer(serializers.Serializer):
         headers = {'Authorization': f'Bearer {token}'}
         if platform == 'github':
             try:
-                response = requests.get('https://api.github.com/user', headers=headers, timeout=1000)
+                response = requests.get('https://api.github.com/user', headers=headers)
                 response.raise_for_status()
                 user_info = response.json()
-                email_response = requests.get('https://api.github.com/user/emails', headers=headers, timeout=1000)
+                email_response = requests.get('https://api.github.com/user/emails', headers=headers)
                 email_response.raise_for_status()
                 email_info = email_response.json()
                 email = next((email['email'] for email in email_info if email['primary']), None)
@@ -72,8 +72,6 @@ class SocialAuthSerializer(serializers.Serializer):
                     email = next((email['email'] for email in email_info), None)
                 if not email:
                     raise serializers.ValidationError("Email not provided by GitHub")
-                if User.objects.filter(email=email).exists():
-                    raise serializers.ValidationError("Email already exist")
                 user, created = User.objects.get_or_create(email=email)
                 if created:
                     user.email = email

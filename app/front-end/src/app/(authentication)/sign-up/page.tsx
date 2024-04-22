@@ -10,10 +10,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Link from 'next/link';
 import SocialAuth from "../../../components/socialAuth";
+import '../../global.css'
 
 export default function SignUp()
 {
-
     const router = useRouter();
     const [qrCode, setQrCode] = useState(null);
     const signUpPost = async (event: FormEvent<HTMLFormElement>) => {
@@ -38,7 +38,7 @@ export default function SignUp()
                 toast.success('Successfully signed up !');   
                 Cookies.set("accessToken", accessToken)
                 Cookies.set("refreshToken", refreshToken)
-                router.push('/')
+                router.push('/dashboard')
             }
             else if (response.status === 409){
                 toast.error('Email or Username already exists !');

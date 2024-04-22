@@ -9,7 +9,9 @@ app/back-end/authentication/migrations
 app/back-end/ft_transcendence/__pycache__
 app/back-end/game/__pycache__
 app/back-end/game/migrations
-.venv
+app/back-end/dashboards/migrations
+app/back-end/dashboards/__pycache__
 app/front-end/node_modules
 app/front-end/.next
-.env
+.venv
+# .env
