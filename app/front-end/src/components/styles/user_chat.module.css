@@ -20,26 +20,7 @@
     width: 75px;
     border-radius: 999px;
     overflow: hidden;
-}
-
-.status{
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    height: 15px;
-    width: 15px;
-    background-color: rgba(34, 42, 56, 38.43);
-    border-radius: 999px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.status_flag{
-    height: 7.5px;
-    width: 7.5px;
-    background-color: #43C016;
-    border-radius: 25px;
+    border: 1px solid #27B299;
 }
 
 @media (max-width: 1600px) {
@@ -51,22 +32,8 @@
 
 @media (max-width: 1200px) {
     .profile_img{
-        height: 35px;
-        width: 35px;
-    }
-
-    .status{
-        bottom: 28px;
-        right: 8px;
-        height: 10px;
-        width: 10px;
-    }
-
-    .status_flag{
-        height: 5px;
-        width: 5px;
-        background-color: #43C016;
-        border-radius: 25px;
+        height: 45px;
+        width: 45px;
     }
 }
 

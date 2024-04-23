@@ -4,11 +4,10 @@ import styles from './styles/user_chat.module.css';
 import Image from 'next/image';
 
 interface Props{
-    setShow: React.Dispatch<React.SetStateAction<boolean>>;
     handleShow: () => void;
 }
 
-export default function UserChat ( {setShow , handleShow}: Props )
+export default function UserChatResp ({handleShow}: Props)
 {
     return (
         <>
@@ -18,8 +17,8 @@ export default function UserChat ( {setShow , handleShow}: Props )
                         <Image className={`${styles.profile_img}`} src='/profile.jpeg' height={200} width={200} alt='profile_image' onClick={handleShow}/>
                     </div>
                 </div>
-                <div className={`col d-flex flex-column d-flex justify-content-evenly align-items-start`} onClick={() => setShow(true)}>
-                    <span>!Snake_007</span>
+                <div className={`col d-flex flex-column d-flex justify-content-evenly align-items-start`}>
+                    <span>!Appolo_007</span>
                     <span style={{color: '#bebebe'}}>Hey, do you wanna play, i dare you to win.</span>
                 </div>
                 <div className='col-2 text-end'>

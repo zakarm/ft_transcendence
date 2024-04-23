@@ -8,7 +8,11 @@ import Chart from 'chart.js/auto';
 
 import { IoCloseCircleSharp } from "react-icons/io5";
 
-export default function ChatAbout()
+interface Props{
+    handleClose: () => void;
+}
+
+export default function ChatAbout({handleClose}: Props)
 {
     const data = Chart.ChartData = {
         labels: [
@@ -64,9 +68,9 @@ export default function ChatAbout()
 
     return (
         <>
-            <div className='d-flex flex-column vh-100'>
+            <div className='d-flex flex-column vh-100 overflow-auto'>
                 <div className='p-4'>
-                    <div className='text-end'><IoCloseCircleSharp color='white' size='1.5em'/></div>
+                    <div className='text-end' style={{cursor: 'pointer'}} onClick={handleClose}><IoCloseCircleSharp color='white' size='1.5em'/></div>
                 </div>
                 <div className='flex-grow-1 d-flex flex-column align-items-center justify-content-evenly'>
                     <div><Image className={`${styles.about_img}`} width={200} height={200} src="/profile.jpeg" alt='welcome'/></div>
@@ -77,10 +81,10 @@ export default function ChatAbout()
                     </div>
                     <div className='col-12 p-0 m-0'><Radar className='itim-font' options={options} data={data}/>&nbsp;</div>
                 </div>
-                <div className='d-flex flex-column p-4 pt-0'>
+                <div className='d-flex flex-column p-4 pt-0' style={{color: '#FFEBEB', fontFamily: "itim"}}>
                     <hr className="m-3" style={{color: '#FFEBEB', borderWidth: '2px'}}/>
                     <div className='row m-0 text-center'>
-                        <span className='col '>High score: 1337</span>
+                        <span className='col'>High score: 1337</span>
                         <span className='col'>Rank: 90135</span>
                     </div>
                     <span>Matches</span>

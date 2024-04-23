@@ -25,7 +25,6 @@
     overflow: auto;
     padding: 15px;
     -ms-overflow-style: none;
-    /* scrollbar-width: none;  */
 }
 
 
@@ -38,4 +37,4 @@
 
 .chat_container::-webkit-scrollbar {
     display: none;
-} 
+}
