@@ -1,6 +1,7 @@
 from django.db.models import F, Q
 from datetime import datetime, timedelta
 from game.models import Match
+import sys 
 
 def get_total_games(obj):
     """
@@ -35,7 +36,7 @@ def get_monthly_game_stats(obj):
     current_year = datetime.now().year
     current_month = datetime.now().month
     start_date = datetime(current_year, current_month, 1) - timedelta(days=6*30)
-    months = [(start_date + timedelta(days=30*i)).strftime('%B') for i in range(6)]
+    months = [(start_date + timedelta(days=30*i)).strftime('%B') for i in range(1, 7)]
     for i in range(1, 7):
         month = (current_month - i) % 12 + 1
         win = (
@@ -71,3 +72,39 @@ def get_monthly_game_stats(obj):
         )
         lose_month.insert(0, lose)
     return {'months': months, 'win': win_month, 'lose': lose_month}
+
+def get_total_minutes(obj):
+    current_year = datetime.now().year
+    current_month = datetime.now().month
+    start_date = datetime(current_year, current_month, 1) - timedelta(days=6 * 30)
+    months = [(start_date + timedelta(days=30 * i)).strftime('%B') for i in range(1, 7)]
+    minutes_months = []
+
+    for i in range(1, 7):
+        month = (current_month - i) % 12 + 1
+        print(month, file=sys.stderr)
+        matches = Match.objects.filter(
+            Q(user_one=obj) &
+            Q(match_start__month=month) &
+            Q(match_start__year=current_year)
+        )
+
+        match_durations = []
+        for match in matches:
+            match_duration = match.match_end - match.match_start
+            match_durations.append(match_duration.total_seconds() / 60)
+
+        matches = Match.objects.filter(
+            Q(user_two=obj) &
+            Q(match_start__month=month) &
+            Q(match_start__year=current_year)
+        )
+
+        for match in matches:
+            match_duration = match.match_end - match.match_start
+            match_durations.append(match_duration.total_seconds() / 60)
+
+        total_minutes = sum(match_durations)
+        minutes_months.insert(0, int(total_minutes))
+
+    return {"months": months, "minutes_months": minutes_months}
