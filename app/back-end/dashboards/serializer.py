@@ -19,7 +19,7 @@ class MainDashboardSerializer(serializers.ModelSerializer):
     class Meta:
         """Meta class for MainDashboard serializer"""
         model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 
+        fields = ('username', 'email', 'first_name', 'last_name', 'image_url',
                   'matches_as_user_one', 'matches_as_user_two',
                   'total_minutes')
 
@@ -47,8 +47,8 @@ class ProfileSerializer(serializers.ModelSerializer):
         """Meta class for Profile serializer"""
         model = User
         fields = ('username', 'email', 'first_name', 'last_name',
-                    'intro', 'quote', 'rank', 'level', 'score',
-                    'location', 'total_games', 'win_games', 
+                    'intro', 'quote', 'rank', 'level', 'score', 'cover_url'
+                    'location', 'total_games', 'win_games', 'image_url',
                     'lose_games', 'monthly_stats')
 
     def get_total_games(self, obj):
