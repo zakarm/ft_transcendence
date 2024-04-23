@@ -67,6 +67,10 @@
   background-color: #ffffff;
 }
 
+.drag_class:hover{
+  border: 1px solid #FFEBEB;
+}
+
 .data:focus{
   outline: none;
   box-shadow: none;

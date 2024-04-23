@@ -18,18 +18,6 @@ interface CustomToggleProps {
     onClick: () => void;
 }
 
-interface Friend {
-    id: number;
-    nickname: string;
-    image_url: string;
-    connected: boolean;
-}
-
-interface CustomToggleProps {
-    children: React.ReactNode;
-    onClick: () => void;
-}
-
 const CustomToggle = forwardRef<HTMLDivElement, CustomToggleProps>(
     ({ children, onClick }, ref) => (
       <div ref={ref} onClick={onClick}>
