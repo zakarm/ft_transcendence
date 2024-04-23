@@ -9,7 +9,7 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import friends from './friends.json';
 import React, { forwardRef } from 'react';
 import styles from './styles/rightBar.module.css';
-import Image from 'next/image'
+import Image from 'next/image';
 
 
 interface Props
@@ -69,7 +69,7 @@ export default function RightBar({setShow, show, handleClose, toggleShow} : Prop
             <Offcanvas.Body className={`p-0 m-0`}>
                 <div className={`row-fluid d-flex flex-row align-items-center p-0 vh-100`}>
                     <div className='col-1 vh-100 d-flex justify-content-end align-items-center text-center'>
-                        <div className='drag-class pt-3 pb-3' style={{backgroundColor: '#161625', borderRadius: '15px 0 0 15px', cursor: 'pointer'}}>
+                        <div className={`${styles.drag_class} pt-3 pb-3`} style={{backgroundColor: '#161625', borderRadius: '15px 0 0 15px', cursor: 'pointer'}}>
                             <FaAngleRight  color="#FFEBEB" size='1.2em' />
                         </div>
                     </div>
