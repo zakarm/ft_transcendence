@@ -34,10 +34,10 @@ export default function SignUp()
             {
                 const data = await response.json();
                 console.log(data);
-                const {accessToken, refreshToken} = data;
+                const {access, refresh} = data;
                 toast.success('Successfully signed up !');   
-                Cookies.set("accessToken", accessToken)
-                Cookies.set("refreshToken", refreshToken)
+                Cookies.set("access", access)
+                Cookies.set("refresh", refresh)
                 router.push('/dashboard')
             }
             else if (response.status === 409){
