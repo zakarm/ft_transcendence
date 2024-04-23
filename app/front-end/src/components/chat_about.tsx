@@ -69,7 +69,7 @@ export default function ChatAbout({handleClose}: Props)
     return (
         <>
             <div className='d-flex flex-column vh-100 overflow-auto'>
-                <div className='p-4'>
+                <div className={`p-4 ${styles.close_btn}`}>
                     <div className='text-end' style={{cursor: 'pointer'}} onClick={handleClose}><IoCloseCircleSharp color='white' size='1.5em'/></div>
                 </div>
                 <div className='flex-grow-1 d-flex flex-column align-items-center justify-content-evenly'>
