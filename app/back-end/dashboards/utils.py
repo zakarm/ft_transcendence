@@ -82,7 +82,6 @@ def get_total_minutes(obj):
 
     for i in range(1, 7):
         month = (current_month - i) % 12 + 1
-        print(month, file=sys.stderr)
         matches = Match.objects.filter(
             Q(user_one=obj) &
             Q(match_start__month=month) &

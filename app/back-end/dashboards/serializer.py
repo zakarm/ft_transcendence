@@ -12,8 +12,8 @@ class MatchSerializer(serializers.ModelSerializer):
 
 class MainDashboardSerializer(serializers.ModelSerializer):
     """Serializer class for main dashboard"""
-    matches_as_user_one = MatchSerializer(many=True, read_only=True)
-    matches_as_user_two = MatchSerializer(many=True, read_only=True)
+    matches_as_user_one = serializers.SerializerMethodField()
+    matches_as_user_two = serializers.SerializerMethodField()
     total_minutes = serializers.SerializerMethodField()
 
     class Meta:
@@ -24,10 +24,14 @@ class MainDashboardSerializer(serializers.ModelSerializer):
                   'total_minutes')
 
     def get_matches_as_user_one(self, obj):
-        return obj.match_set.filter(user_one=obj)
+        matches = Match.objects.filter(user_one=obj)[:10]
+        serializer = MatchSerializer(matches, many=True)
+        return serializer.data
 
     def get_matches_as_user_two(self, obj):
-        return obj.match_set.filter(user_two=obj)
+        matches = Match.objects.filter(user_one=obj)[:10]
+        serializer = MatchSerializer(matches, many=True)
+        return serializer.data
     
     def get_total_minutes(self, obj):
         return get_total_minutes(obj)
