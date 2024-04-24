@@ -87,11 +87,11 @@ class SocialAuthSerializer(serializers.Serializer):
         headers = {'Authorization': f'Bearer {token}'}
         if platform == 'github':
             try:
-                response = requests.get('https://api.github.com/user', 
+                response = requests.get('https://api.github.com/user',
                                         headers=headers, timeout=10000)
                 response.raise_for_status()
                 user_info = response.json()
-                email_response = requests.get('https://api.github.com/user/emails', 
+                email_response = requests.get('https://api.github.com/user/emails',
                                               headers=headers, timeout=10000)
                 email_response.raise_for_status()
                 email_info = email_response.json()
@@ -118,7 +118,7 @@ class SocialAuthSerializer(serializers.Serializer):
                 raise serializers.ValidationError("Email already exists") from e
         elif platform == 'google':
             try :
-                response = requests.get('https://www.googleapis.com/oauth2/v1/userinfo?alt=json', 
+                response = requests.get('https://www.googleapis.com/oauth2/v1/userinfo?alt=json',
                                         headers=headers,timeout=10000)
                 response.raise_for_status()
                 user_info = response.json()
@@ -141,7 +141,7 @@ class SocialAuthSerializer(serializers.Serializer):
         elif platform == "42":
             try:
                 print(headers, file=sys.stderr)
-                response = requests.get('https://api.intra.42.fr/v2/me', headers=headers, 
+                response = requests.get('https://api.intra.42.fr/v2/me', headers=headers,
                                         timeout=1000)
                 response.raise_for_status()
                 user_info = response.json()

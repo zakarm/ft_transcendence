@@ -138,7 +138,7 @@ class SocialAuthExchangeView(APIView):
         except HTTPError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         access_token = response.json().get('access_token')
-        serializer = self.serializer_class(data=request.data, context={"platform": platform, 
+        serializer = self.serializer_class(data=request.data, context={"platform": platform,
                                                                        "access_token": access_token})
         serializer.is_valid(raise_exception=True)
         email = serializer.validated_data.get('email')
@@ -155,7 +155,7 @@ class SocialAuthExchangeView(APIView):
             return response
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
-    
+
 
 class SocialAuthRedirectView(APIView):
     """Class for autorize page"""
@@ -175,4 +175,4 @@ class SocialAuthRedirectView(APIView):
             CLIENT_ID = settings.FORTYTWO_CLIENT_ID
             REDIRECT_URI = settings.FORTYTWO_REDIRECT_URI
             SCOPE = "public"
-            return redirect(f'https://api.intra.42.fr/oauth/authorize?client_id={CLIENT_ID}\&redirect_uri={REDIRECT_URI}&scope={SCOPE}&response_type=code')
+            return redirect(f'https://api.intra.42.fr/oauth/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&scope={SCOPE}&response_type=code')

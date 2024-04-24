@@ -11,8 +11,8 @@ urlpatterns = [
     path("sign-out", SignOutView.as_view(), name="sign-out"),
 
     path('two-fa', SignIn2Fa.as_view(), name="two-fa"),
-    re_path(r'^social/(?P<platform>(github|42|google))/redirect$', 
+    re_path(r'^social/(?P<platform>(github|42|google))/redirect$',
             SocialAuthRedirectView.as_view(), name='social-redirect'),
-    re_path(r'^social/(?P<platform>(github|42|google))/callback$', 
+    re_path(r'^social/(?P<platform>(github|42|google))/callback$',
             SocialAuthExchangeView.as_view(), name='social-callback'),
 ]

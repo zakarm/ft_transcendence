@@ -6,7 +6,9 @@ django-settings-module=ft_transcendence.settings
 disable=missing-docstring,
         import-error,
         invalid-name,
-        too-few-public-methods
+        too-few-public-methods,
+        abstract-method,
+        arguments-renamed
 
 [FORMAT]
 max-line-length=120
