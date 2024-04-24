@@ -1,9 +1,8 @@
 "use client";
-
 import styles from './style.module.css';
-import ChatAbout from '@/components/chat_about';
-import ChatFriends from '@/components/chat_friends';
-import ChatMessages from '@/components/chat_messages';
+import ChatAbout from '../../components/chat_about';
+import ChatFriends from '../../components/chat_friends';
+import ChatMessages from '../../components/chat_messages';
 
 export default function ()
 {

@@ -70,7 +70,7 @@ export default function TwoFa({ value = '', email }: QrCode) {
 
         <Modal.Body style={{ backgroundColor: '#161625' }}>
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <QRCode value={value || ''} style={{ border: '3px' }} />
+            <QRCode value={value || ''} style={{ border: '3px' }} className="border border-danger" />
           </div>
           <div className="mt-4 mb-4">
             <p className="mt-2">

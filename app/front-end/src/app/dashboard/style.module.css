@@ -23,7 +23,7 @@
 
 .card {
     border-radius: 15px;
-    height: 85%;
+    height: 100%;
 }
 
 .buttom_cards {
@@ -124,4 +124,11 @@
           height: 100%;
           border-radius: 15px;
       }
+}
+
+@media (max-width: 996px)
+{
+    .chart_grid {
+        margin-top: 20px;
+    }
 }
