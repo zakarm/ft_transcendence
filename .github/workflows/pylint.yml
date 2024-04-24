@@ -20,4 +20,5 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
+        cp app/back-end/.pylintrc .
         pylint $(git ls-files '*.py') --rcfile=.pylintrc
