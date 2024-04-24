@@ -1,4 +1,6 @@
-"""Module providing rest serializers"""
+"""
+Module providing rest serializers
+"""
 from rest_framework import serializers
 from authentication.models import User
 from game.models import Match

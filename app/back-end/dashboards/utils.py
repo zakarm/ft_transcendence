@@ -1,7 +1,9 @@
-from django.db.models import F, Q
-from datetime import datetime, timedelta
+"""
+Modules providing time utils
+"""
 from game.models import Match
-import sys 
+from datetime import datetime, timedelta
+from django.db.models import F, Q
 
 def get_total_games(obj):
     """
@@ -74,6 +76,9 @@ def get_monthly_game_stats(obj):
     return {'months': months, 'win': win_month, 'lose': lose_month}
 
 def get_total_minutes(obj):
+    """
+    Calculate the total minutes of games in past 6 months.
+    """
     current_year = datetime.now().year
     current_month = datetime.now().month
     start_date = datetime(current_year, current_month, 1) - timedelta(days=6 * 30)

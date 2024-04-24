@@ -56,4 +56,3 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Meta:
         """Class to change the behavior of your model fields"""
         db_table = 'authentication_users'
-        

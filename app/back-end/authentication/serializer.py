@@ -1,4 +1,6 @@
-"""Module providing rest serailizers"""
+"""
+Module providing rest serailizers
+"""
 import sys
 import requests
 import pyotp
@@ -8,7 +10,13 @@ from django.db import IntegrityError
 from .models import User
 
 class UsersSignUpSerializer(serializers.ModelSerializer):
+    """
+    Serializer class for UsersSignUp
+    """
     class Meta:
+        """
+        Meta class for UsersSignUp serializer
+        """
         model = User
         fields = ('email', 'password', 'first_name', 'last_name', 'username')
         extra_kwargs = {'password': {'required': True}}
@@ -21,9 +29,15 @@ class UsersSignUpSerializer(serializers.ModelSerializer):
         return user
 
 class UserSignInSerializer(serializers.Serializer):
+    """
+    Serializer class for UsersSignIn
+    """
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
     def validate(self, data):
+        """
+        Validate method for UsersSignIn serializer
+        """
         user = authenticate(email=data.get('email'), password=data.get('password'))
         if not user:
             raise serializers.ValidationError("Incorrect email or password.")
@@ -31,7 +45,8 @@ class UserSignInSerializer(serializers.Serializer):
         if user.is_2fa_enabled:
             user.two_fa_secret_key = pyotp.random_base32()
             user.save()
-            url_code = pyotp.totp.TOTP(user.two_fa_secret_key).provisioning_uri(name = user.email, issuer_name = "ft_transcendence")
+            url_code = pyotp.totp.TOTP(user.two_fa_secret_key).provisioning_uri(
+                name = user.email, issuer_name = "ft_transcendence")
             data['user'] = user
             data['url_code'] = url_code
             return data
@@ -39,9 +54,15 @@ class UserSignInSerializer(serializers.Serializer):
         return data
 
 class User2FASerializer(serializers.Serializer):
+    """
+    Serializer class for User2FA
+    """
     otp = serializers.CharField()
     email = serializers.CharField()
     def validate(self, data):
+        """
+        Validate method for User2FA serializer
+        """
         email = data.get('email')
         user = User.objects.get(email = email)
         print(user, file = sys.stderr)
@@ -54,16 +75,24 @@ class User2FASerializer(serializers.Serializer):
 
 
 class SocialAuthSerializer(serializers.Serializer):
+    """
+    Serializer class for SocialAuth
+    """
     def validate(self, data):
+        """
+        Validate method for SocialAuth serializer
+        """
         token = self.context.get('access_token')
         platform = self.context.get('platform')
         headers = {'Authorization': f'Bearer {token}'}
         if platform == 'github':
             try:
-                response = requests.get('https://api.github.com/user', headers=headers)
+                response = requests.get('https://api.github.com/user', 
+                                        headers=headers, timeout=10000)
                 response.raise_for_status()
                 user_info = response.json()
-                email_response = requests.get('https://api.github.com/user/emails', headers=headers)
+                email_response = requests.get('https://api.github.com/user/emails', 
+                                              headers=headers, timeout=10000)
                 email_response.raise_for_status()
                 email_info = email_response.json()
                 email = next((email['email'] for email in email_info if email['primary']), None)
@@ -89,8 +118,8 @@ class SocialAuthSerializer(serializers.Serializer):
                 raise serializers.ValidationError("Email already exists") from e
         elif platform == 'google':
             try :
-                response = requests.get('https://www.googleapis.com/oauth2/v1/userinfo?alt=json', headers=headers,
-                                        timeout=1000)
+                response = requests.get('https://www.googleapis.com/oauth2/v1/userinfo?alt=json', 
+                                        headers=headers,timeout=10000)
                 response.raise_for_status()
                 user_info = response.json()
                 email = user_info['email']
@@ -106,13 +135,14 @@ class SocialAuthSerializer(serializers.Serializer):
                 data['email'] = email
                 return data
             except requests.exceptions.RequestException as e:
-                    raise serializers.ValidationError("Failed to fetch user data from Google")
+                raise serializers.ValidationError("Failed to fetch user data from Google")
             except IntegrityError as e:
                 raise serializers.ValidationError("Email already exists") from e
         elif platform == "42":
             try:
                 print(headers, file=sys.stderr)
-                response = requests.get('https://api.intra.42.fr/v2/me', headers=headers, timeout=1000)
+                response = requests.get('https://api.intra.42.fr/v2/me', headers=headers, 
+                                        timeout=1000)
                 response.raise_for_status()
                 user_info = response.json()
                 email = user_info['email']
@@ -127,6 +157,6 @@ class SocialAuthSerializer(serializers.Serializer):
                 data['email'] = email
                 return data
             except requests.exceptions.RequestException as e:
-                    raise serializers.ValidationError("Failed to fetch user data from 42")
+                raise serializers.ValidationError("Failed to fetch user data from 42")
             except IntegrityError as e:
                 raise serializers.ValidationError("Email already exists") from e

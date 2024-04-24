@@ -16,7 +16,9 @@ from .serializer import (UsersSignUpSerializer,
                          SocialAuthSerializer)
 
 class SignUpView(APIView):
-    """Class for sign up"""
+    """
+    Class for sign up
+    """
     serializer_class = UsersSignUpSerializer
     def post(self, request):
         """Function post"""
@@ -33,10 +35,14 @@ class SignUpView(APIView):
         return Response(data, status=status.HTTP_201_CREATED)
 
 class SignInView(APIView):
-    """Class for sign in"""
+    """
+    Class for sign in
+    """
     serializer_class = UserSignInSerializer
     def post(self, request):
-        """Post function"""
+        """
+        Post function
+        """
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             data = serializer.validated_data
@@ -54,10 +60,14 @@ class SignInView(APIView):
         return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
 
 class SignIn2Fa(APIView):
-    """Class for two fact auth"""
+    """
+    Class for two fact auth
+    """
     serializer_class = User2FASerializer
     def post(self, request):
-        """Post function"""
+        """
+        Post function
+        """
         serializer = self.serializer_class(data = request.data)
         if serializer.is_valid():
             user = serializer.validated_data
@@ -68,9 +78,10 @@ class SignIn2Fa(APIView):
             }, status = status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
 
-
 class SignOutView(APIView):
-    """Class for sign out"""
+    """
+    Class for sign out
+    """
     def post(self, request):
         """Post function"""
         refresh_token = request.data.get('refresh')
@@ -81,10 +92,14 @@ class SignOutView(APIView):
         return Response({'message:', 'Successfully logged out'}, status=status.HTTP_200_OK)
 
 class SocialAuthExchangeView(APIView):
-    """Class for exchanging the oauth code"""
+    """
+    Class for exchanging the oauth code
+    """
     serializer_class = SocialAuthSerializer
     def get(self, request, platform):
-        """Get function"""
+        """
+        Get function
+        """
         code = request.GET.get('code')
         platform = platform.lower()
         if not code :
@@ -118,17 +133,18 @@ class SocialAuthExchangeView(APIView):
             url = "https://api.intra.42.fr/oauth/token"
         headers = {'Accept': 'application/json'}
         try:
-            response = requests.post(url, data=data, headers=headers)
+            response = requests.post(url, data=data, headers=headers, timeout=20000)
             response.raise_for_status()
         except HTTPError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         access_token = response.json().get('access_token')
-        serializer = self.serializer_class(data=request.data, context={"platform": platform, "access_token": access_token})
+        serializer = self.serializer_class(data=request.data, context={"platform": platform, 
+                                                                       "access_token": access_token})
         serializer.is_valid(raise_exception=True)
         email = serializer.validated_data.get('email')
         try:
             user = User.objects.get(email=email)
-        except User.DoesNotExist:
+        except User.objects.model.DoesNotExist:
             return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
         if user and user.is_active:
             refresh = RefreshToken.for_user(user)
@@ -139,8 +155,7 @@ class SocialAuthExchangeView(APIView):
             return response
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        
+    
 
 class SocialAuthRedirectView(APIView):
     """Class for autorize page"""
@@ -160,4 +175,4 @@ class SocialAuthRedirectView(APIView):
             CLIENT_ID = settings.FORTYTWO_CLIENT_ID
             REDIRECT_URI = settings.FORTYTWO_REDIRECT_URI
             SCOPE = "public"
-            return redirect(f'https://api.intra.42.fr/oauth/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&scope={SCOPE}&response_type=code')
+            return redirect(f'https://api.intra.42.fr/oauth/authorize?client_id={CLIENT_ID}\&redirect_uri={REDIRECT_URI}&scope={SCOPE}&response_type=code')
