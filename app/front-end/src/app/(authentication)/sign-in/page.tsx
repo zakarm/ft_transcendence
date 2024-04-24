@@ -13,6 +13,7 @@ import SocialAuth from "../../../components/socialAuth";
 import TwoFa from '../../../components/twoFa';
 import '../../global.css'
 
+
 export default function SignInPage() {
     const router = useRouter();
     const [twoFaData, setTwoFaData] = useState<{ value: string; email: string }>();
@@ -32,7 +33,7 @@ export default function SignInPage() {
             {
                 const data = await response.json();
                 console.log(data);
-                const {accessToken, refreshToken, is_2fa_enabled, email} = data;
+                const {access, refresh, is_2fa_enabled, email} = data;
                 if (is_2fa_enabled == 'True')
                 {
                     const {url_code} = data;
@@ -41,8 +42,8 @@ export default function SignInPage() {
                 else 
                 {
                     toast.success('Successfully signed in !');   
-                    Cookies.set("accessToken", accessToken)
-                    Cookies.set("refreshToken", refreshToken)
+                    Cookies.set("access", access, { path: '/' })
+                    Cookies.set("refresh", refresh, { path: '/' })
                     router.push('/dashboard')
                 }
             }

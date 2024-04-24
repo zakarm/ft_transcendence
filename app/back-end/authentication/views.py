@@ -134,8 +134,8 @@ class SocialAuthExchangeView(APIView):
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)
             response = HttpResponseRedirect(settings.FRONTEND_HOST)
-            response.set_cookie('access_token', access_token, httponly=True, samesite='Lax', secure=True)
-            response.set_cookie('refresh_token', refresh, httponly=True, samesite='Lax', secure=True)
+            response.set_cookie('access', access_token, httponly=True, samesite='Lax', secure=True)
+            response.set_cookie('refresh', refresh, httponly=True, samesite='Lax', secure=True)
             return response
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)

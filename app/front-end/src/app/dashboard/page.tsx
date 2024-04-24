@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import styles from './style.module.css'
 import Image from 'next/image';
@@ -8,21 +8,126 @@ import { FaChevronDown } from "react-icons/fa";
 import GameHistoryCard from '../../components/table';
 import ButtonValo from '../../components/button'
 import { Line } from 'react-chartjs-2';
-import Chart from 'chart.js/auto';
+import { Chart } from 'chart.js/auto';
+import Cookies from 'js-cookie';
+import { useState, useEffect } from 'react';
+import { ChartOptions, ChartData } from 'chart.js';
+import { LineController } from 'chart.js/auto';
+import { useRouter } from 'next/navigation'
 import { CategoryScale, 
     LinearScale, 
     Title, 
     Legend, 
-    Tooltip, 
-    LineController, 
+    Tooltip,
     PointElement, 
     LineElement } from 'chart.js';
 
+interface TotalMinutes {
+    months: string[];
+    minutes_months: number[];
+}
+
+interface Matches {
+    match_id: number;
+    score_user_one: number;
+    score_user_two: number;
+    match_start: string;
+    match_end: string;
+    tackle_user_one: number;
+    tackle_user_two: number;
+    user_one: number;
+    user_two: number;
+}
+
+interface UserData {
+    username: string;
+    email: string;
+    first_name: string | null;
+    last_name: string | null;
+    matches_as_user_one: Matches[];
+    matches_as_user_two: Matches[];
+    total_minutes: TotalMinutes;
+}
+
+interface GameData {
+    player: string;
+    score: number;
+    date: string;
+    result: 'WIN' | 'LOSS';
+  }
 
 export default function Dashboard() {
-    Chart.register(CategoryScale, LinearScale, Title, Legend, Tooltip, LineController, PointElement, LineElement);
+    const [dashboardData, setDashboardData] = useState<UserData | null>(null);
+    const router = useRouter();
+    const gameData: GameData[] = [];
+    useEffect(() => {
+        const fetchData = async () => 
+        {
+            const access = Cookies.get('access');
+
+            if (access) {
+                try {
+                const response = await fetch('http://localhost:8000/api/dashboard', {
+                    headers: { Authorization: `Bearer ${access}` },
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setDashboardData(data);
+                } else if (response.status === 401) {
+                    console.log('Unauthorized');
+                } else {
+                    console.error('An unexpected error happened:', response.status);
+                }
+                } catch (error) {
+                console.error('An unexpected error happened:', error);
+                }
+            } else {
+                console.log('Access token is undefined or falsy');
+            }
+            };
+        fetchData();
+    }, []);
+
+    if (dashboardData) {
+        dashboardData.matches_as_user_one.forEach((match) => {
+            gameData.push({
+            player: dashboardData.username,
+            score: match.score_user_one,
+            date: match.match_start,
+            result: match.score_user_one > match.score_user_two ? 'WIN' : 'LOSS',
+            });
+        });
+
+        dashboardData.matches_as_user_two.forEach((match) => {
+            gameData.push({
+            player: dashboardData.username,
+            score: match.score_user_two,
+            date: match.match_start,
+            result: match.score_user_two > match.score_user_one ? 'WIN' : 'LOSS',
+            });
+        });
+    }
+
+    function clickButton(){
+        router.push('/game');
+    }
+
+    const chartLabels = dashboardData?.total_minutes.months || [];
+    const chartData = dashboardData?.total_minutes.minutes_months || [];
     
-    const options: Chart.ChartOptions = {
+    Chart.register(
+        CategoryScale, 
+        LinearScale, 
+        Title, 
+        Legend, 
+        Tooltip, 
+        LineController, 
+        PointElement, 
+        LineElement);
+    
+    Chart.defaults.font.family = 'Itim';
+    Chart.defaults.font.size = 14;
+    const options: ChartOptions<'line'> = {
         responsive: true,
         plugins: {
         legend: {
@@ -35,22 +140,17 @@ export default function Dashboard() {
         },
     };
     
-    const labels: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-    Chart.defaults.font.family = 'Itim';
-    const data: Chart.ChartData = {
+    const labels: string[] = chartLabels;
+    const data: ChartData<'line'>  = {
         labels,
         datasets: [
-        {
-            label: 'time',
-            data: [10, 20, 30, 40, 30, 15, 28, 25, 40, 50],
-            borderColor: 'rgb(255, 99, 132, 0)',
-            backgroundColor: 'rgb(255, 99, 132, 0.5)',
-            fill: true,
-            font: {
-            family: 'itim',
-            size: 14,
+            {
+                label: 'time',
+                data: chartData,
+                borderColor: 'rgb(255, 99, 132, 0)',
+                backgroundColor: 'rgb(255, 99, 132, 0.5)',
+                fill: true,
             },
-        },
         ],
     };
 
@@ -80,7 +180,7 @@ export default function Dashboard() {
                                         </h6>
                                     </div>
                                     <div>
-                                        <ButtonValo value="Play" />
+                                        <ButtonValo onClick={clickButton} value="Play" />
                                     </div>
                                 </div>
                             </div>
@@ -94,7 +194,7 @@ export default function Dashboard() {
                 </div>
                 <div className="col-12 mt-3">
                     <div className="row">
-                        <div className="col-12 col-md-6">
+                        <div className="col-12 col-lg-6">
                             <div className={`d-flex flex-column p-3 ${styles.card} ${styles.buttom_cards} m-1`}>
                                 <div className='row'>
                                     <div className='col-6 d-flex align-items-start justify-content-start'>
@@ -105,10 +205,10 @@ export default function Dashboard() {
                                     </div>
                                 </div>
                                 <hr style={{color: '#FFEBEB', backgroundColor: '#FFEBEB', height: 1}}/>
-                                <GameHistoryCard/>
+                                <GameHistoryCard data={gameData}/>
                             </div>
                         </div>
-                        <div className={`col-12 col-md-6 ${styles.chart_grid}`}>
+                        <div className={`col-12 col-lg-6 ${styles.chart_grid}`}>
                             <div className={`d-flex flex-column p-3 ${styles.card} ${styles.buttom_cards} m-1`}>
                                 <div className='row'>
                                     <div className='col-6 d-flex align-items-start justify-content-start'>

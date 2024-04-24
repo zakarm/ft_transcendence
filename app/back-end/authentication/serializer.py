@@ -27,7 +27,6 @@ class UserSignInSerializer(serializers.Serializer):
         user = authenticate(email=data.get('email'), password=data.get('password'))
         if not user:
             raise serializers.ValidationError("Incorrect email or password.")
-        user.is_2fa_enabled = True
         user.save()
         if user.is_2fa_enabled:
             user.two_fa_secret_key = pyotp.random_base32()
