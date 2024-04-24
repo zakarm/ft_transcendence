@@ -1,0 +1,41 @@
+.welcome {
+    position: relative;
+}
+
+.welcome_img {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.form_control{
+    font-family: 'itim';
+}
+
+.form_control:focus{
+   color:#bebebe;
+}
+
+.form_control::placeholder{
+    color: #7C7C7C;
+}
+
+.usr_container {
+    width: 100%;
+    overflow: auto;
+    padding: 15px;
+    -ms-overflow-style: none;
+    /* scrollbar-width: none;  */
+}
+
+
+.chat_container {
+    width: 100%;
+    overflow: auto;
+    -ms-overflow-style: none; 
+    scrollbar-width: none;
+}
+
+.chat_container::-webkit-scrollbar {
+    display: none;
+} 

@@ -1,10 +1,11 @@
-from rest_framework import serializers
-from .models import User
-from django.contrib.auth import authenticate
-import requests, sys
-from requests.exceptions import RequestException
-from django.db import IntegrityError, transaction
+"""Module providing rest serailizers"""
+import sys
+import requests
 import pyotp
+from rest_framework import serializers
+from django.contrib.auth import authenticate
+from django.db import IntegrityError
+from .models import User
 
 class UsersSignUpSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,7 +27,6 @@ class UserSignInSerializer(serializers.Serializer):
         user = authenticate(email=data.get('email'), password=data.get('password'))
         if not user:
             raise serializers.ValidationError("Incorrect email or password.")
-        user.is_2fa_enabled = True
         user.save()
         if user.is_2fa_enabled:
             user.two_fa_secret_key = pyotp.random_base32()
@@ -43,7 +43,6 @@ class User2FASerializer(serializers.Serializer):
     email = serializers.CharField()
     def validate(self, data):
         email = data.get('email')
-        # print(f'hello -> {email}', sys.stderr)
         user = User.objects.get(email = email)
         print(user, file = sys.stderr)
         if not user:
@@ -72,8 +71,6 @@ class SocialAuthSerializer(serializers.Serializer):
                     email = next((email['email'] for email in email_info), None)
                 if not email:
                     raise serializers.ValidationError("Email not provided by GitHub")
-                if User.objects.filter(email=email).exists():
-                    raise serializers.ValidationError("Email already exist")
                 user, created = User.objects.get_or_create(email=email)
                 if created:
                     user.email = email
@@ -87,12 +84,13 @@ class SocialAuthSerializer(serializers.Serializer):
                 data['email'] = email
                 return data
             except requests.exceptions.RequestException as e:
-                raise serializers.ValidationError("Failed to fetch user data from GitHub")
-            except IntegrityError:
-                raise serializers.ValidationError("Email already exists")
+                raise serializers.ValidationError(f"Failed to fetch user data from GitHub : {e}")
+            except IntegrityError as e:
+                raise serializers.ValidationError("Email already exists") from e
         elif platform == 'google':
             try :
-                response = requests.get('https://www.googleapis.com/oauth2/v1/userinfo?alt=json', headers=headers)
+                response = requests.get('https://www.googleapis.com/oauth2/v1/userinfo?alt=json', headers=headers,
+                                        timeout=1000)
                 response.raise_for_status()
                 user_info = response.json()
                 email = user_info['email']
@@ -109,12 +107,12 @@ class SocialAuthSerializer(serializers.Serializer):
                 return data
             except requests.exceptions.RequestException as e:
                     raise serializers.ValidationError("Failed to fetch user data from Google")
-            except IntegrityError:
-                raise serializers.ValidationError("Email already exists")
+            except IntegrityError as e:
+                raise serializers.ValidationError("Email already exists") from e
         elif platform == "42":
             try:
                 print(headers, file=sys.stderr)
-                response = requests.get('https://api.intra.42.fr/v2/me', headers=headers)
+                response = requests.get('https://api.intra.42.fr/v2/me', headers=headers, timeout=1000)
                 response.raise_for_status()
                 user_info = response.json()
                 email = user_info['email']
@@ -130,5 +128,5 @@ class SocialAuthSerializer(serializers.Serializer):
                 return data
             except requests.exceptions.RequestException as e:
                     raise serializers.ValidationError("Failed to fetch user data from 42")
-            except IntegrityError:
-                raise serializers.ValidationError("Email already exists")
+            except IntegrityError as e:
+                raise serializers.ValidationError("Email already exists") from e
