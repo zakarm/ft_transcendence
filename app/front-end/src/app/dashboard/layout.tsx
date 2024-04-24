@@ -1,13 +1,14 @@
-'use client'
+'use client';
 import MainContainer from "../../components/mainContainer";
-import React, { useState } from 'react';
+import AuthChecker from "../../components/authChecker";
+import React from 'react';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <AuthChecker>
       <MainContainer>
-        {children}
+          {children}
       </MainContainer>
-    </>
+    </AuthChecker>
   );
 }
