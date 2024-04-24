@@ -34,7 +34,7 @@ export default function TwoFa({ value = '', email }: QrCode) {
             toast.success('Successfully signed in!');
             Cookies.set('accessToken', accessToken);
             Cookies.set('refreshToken', refreshToken);
-            router.push('/');
+            router.push('/dashboard');
           } else if (response.status === 401) {
             toast.error('Invalid otp!');
           } else if (response.status === 500) {

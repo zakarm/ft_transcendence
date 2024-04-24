@@ -1,0 +1,14 @@
+
+.about_container{
+    background-color: #181B20;
+    color: #FFEBEB;
+    font-family: 'itim';
+}
+
+
+
+@media (max-width: 1200px) {
+    .chat{
+        display: none;
+    }
+}

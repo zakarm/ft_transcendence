@@ -82,6 +82,26 @@
   }
 }
 
+@media screen and (max-height: 1000px)
+{
+  .flexx
+  {
+    padding-top: 10%;
+    padding-left: 6%;
+    padding-right: 6%;
+  }
+}
+
+@media screen and (max-height: 730px)
+{
+  .flexx
+  {
+    padding-top: 6%;
+    padding-left: 6%;
+    padding-right: 6%;
+  }
+}
+
 @media screen and (max-width: 480px) 
 {
   .sign_btn

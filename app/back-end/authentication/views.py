@@ -1,24 +1,25 @@
+"""Module to imports rest functions and classes"""
+import urllib.parse
+from django.conf import settings
+from django.shortcuts import redirect
+from django.http import HttpResponseRedirect
+from requests.exceptions import HTTPError
+import requests
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializer import *
 from .models import User
-from social_django.utils import load_strategy, load_backend
-from social_core.exceptions import MissingBackend
-from django.conf import settings
-from django.shortcuts import redirect
-from requests.exceptions import HTTPError
-import requests
-import os
-import urllib.parse
-from django.http import HttpResponseRedirect
-
+from .serializer import (UsersSignUpSerializer,
+                         UserSignInSerializer,
+                         User2FASerializer,
+                         SocialAuthSerializer)
 
 class SignUpView(APIView):
+    """Class for sign up"""
     serializer_class = UsersSignUpSerializer
     def post(self, request):
+        """Function post"""
         if User.objects.filter(email=request.data['email']).exists():
             return Response({"error": "Email already exists"}, status=status.HTTP_409_CONFLICT)
         if User.objects.filter(username=request.data['username']).exists():
@@ -32,8 +33,10 @@ class SignUpView(APIView):
         return Response(data, status=status.HTTP_201_CREATED)
 
 class SignInView(APIView):
+    """Class for sign in"""
     serializer_class = UserSignInSerializer
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
+        """Post function"""
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             data = serializer.validated_data
@@ -43,16 +46,18 @@ class SignInView(APIView):
             }
             if not data['user'].is_2fa_enabled:
                 refresh = RefreshToken.for_user(data['user'])
-                response_data['refresh'] = str(refresh) 
-                response_data['access'] = str(refresh.access_token) 
+                response_data['refresh'] = str(refresh)
+                response_data['access'] = str(refresh.access_token)
             else :
-                response_data['url_code'] = str(data['url_code']) 
-            return Response(response_data, status=status.HTTP_200_OK) 
+                response_data['url_code'] = str(data['url_code'])
+            return Response(response_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
 
 class SignIn2Fa(APIView):
+    """Class for two fact auth"""
     serializer_class = User2FASerializer
     def post(self, request):
+        """Post function"""
         serializer = self.serializer_class(data = request.data)
         if serializer.is_valid():
             user = serializer.validated_data
@@ -65,7 +70,9 @@ class SignIn2Fa(APIView):
 
 
 class SignOutView(APIView):
+    """Class for sign out"""
     def post(self, request):
+        """Post function"""
         refresh_token = request.data.get('refresh')
         if refresh_token is None:
             return Response({'error': 'Refresh token is required'}, status=status.HTTP_400_BAD_REQUEST)
@@ -73,11 +80,11 @@ class SignOutView(APIView):
         token.blacklist()
         return Response({'message:', 'Successfully logged out'}, status=status.HTTP_200_OK)
 
-
-# send the access token to the front-end
 class SocialAuthExchangeView(APIView):
+    """Class for exchanging the oauth code"""
     serializer_class = SocialAuthSerializer
     def get(self, request, platform):
+        """Get function"""
         code = request.GET.get('code')
         platform = platform.lower()
         if not code :
@@ -136,7 +143,9 @@ class SocialAuthExchangeView(APIView):
         
 
 class SocialAuthRedirectView(APIView):
+    """Class for autorize page"""
     def get(self, request, platform):
+        """Get function"""
         platform = platform.lower()
         if platform == 'github':
             CLIENT_ID = settings.GITHUB_CLIENT_ID

@@ -11,11 +11,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import Link from 'next/link';
 import SocialAuth from "../../../components/socialAuth";
 import TwoFa from '../../../components/twoFa';
-
+import '../../global.css'
 
 export default function SignInPage() {
     const router = useRouter();
-    // const [qrCode, setQrCode] = useState(null);
     const [twoFaData, setTwoFaData] = useState<{ value: string; email: string }>();
 
     const signInPost = async (event: FormEvent<HTMLFormElement>) => {
@@ -33,7 +32,7 @@ export default function SignInPage() {
             {
                 const data = await response.json();
                 console.log(data);
-                const {accessToken, refreshToken, is_2fa_enabled, email} = data;
+                const {access, refresh, is_2fa_enabled, email} = data;
                 if (is_2fa_enabled == 'True')
                 {
                     const {url_code} = data;
@@ -42,9 +41,9 @@ export default function SignInPage() {
                 else 
                 {
                     toast.success('Successfully signed in !');   
-                    Cookies.set("accessToken", accessToken)
-                    Cookies.set("refreshToken", refreshToken)
-                    router.push('/')
+                    Cookies.set("access", access)
+                    Cookies.set("refresh", refresh)
+                    router.push('/dashboard')
                 }
             }
             else if (response.status === 401){
@@ -62,7 +61,7 @@ export default function SignInPage() {
         <div className='container'>
             <ToastContainer />
             {twoFaData && <TwoFa value={twoFaData.value} email={twoFaData.email} />}
-            <div className={`${styles.flexx}`}>
+            <div className={`${styles.flexx} border-danger border-3`}>
                 <div className={`${styles.main_card} shadow row`}>
                     <div className={`col-lg-6 ${styles.main_img}`} style={{position: 'relative', minHeight: '300px'}}>
                             <NextImage fill={true} src='/signimage.png' alt='Sign' className={`${styles.main_img}`} />
