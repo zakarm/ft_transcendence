@@ -1,3 +1,5 @@
+"use client";
+
 import Dropdown from 'react-bootstrap/Dropdown';
 import { IoIosSearch } from "react-icons/io";
 import { ImUserPlus } from "react-icons/im";
@@ -5,8 +7,11 @@ import styles from './styles/srightBar.module.css'
 import Splayer from "./Splayer";
 import Notification from "./Notification";
 import friends from './friends.json';
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useState } from 'react';
 import Image from 'next/image'
+import { Button, Form, InputGroup, Modal } from 'react-bootstrap';
+
+import { TiUserAdd } from "react-icons/ti";
 
 interface Props
 {
@@ -29,6 +34,9 @@ const CustomToggle = forwardRef<HTMLDivElement, CustomToggleProps>(
 CustomToggle.displayName = 'CustomToggle';
 
 export default function SrightBar({toggleShow} : Props) {
+
+    const [friendModal, setFriendModal] = useState<boolean>(false);
+
     const friendsData = friends.sort((usr1, usr2) => {
         if (usr1.connected && !usr2.connected) {
             return -1;
@@ -44,6 +52,18 @@ export default function SrightBar({toggleShow} : Props) {
     .map((user, index) => 
         <Splayer key={index} nickname={user.nickname} id={user.id} image={user.image_url} isConnected={user.connected}/>
     );
+
+    const [searchTerm, setSearchTerm] = React.useState<string>('');
+    const [searchedFriends, setSearchedFriends] = React.useState<{nickname: string, image_url: string, connected: boolean}[]>([]);
+    const handle_search = () => {
+        if (searchTerm === '')
+            setSearchedFriends([]);
+        else
+        {
+            const foundFriends = friends.filter(friend => friend.nickname.startsWith(searchTerm));
+            setSearchedFriends(foundFriends);
+        }
+    }
     return (
             <div className="d-flex flex-column vh-100 py-2">
                 <div className="pb-1" style={{width: '91%'}}>
@@ -77,9 +97,46 @@ export default function SrightBar({toggleShow} : Props) {
                     {friendsData}
                 </div>
                 <div className="flex-grow-3 row-inline d-flex justify-content-center text-center" style={{width: '91%'}}>
-                    <div className={`col-6 ${styles.search_inpt} my-1 p-2 mx-2 text-center`} style={{cursor: "pointer"}}>
+                    <div className={`col-6 ${styles.search_inpt1} my-1 p-2 mx-2 text-center`} style={{cursor: "pointer"}} onClick={() => setFriendModal(true)}>
                             <ImUserPlus color="#FFEBEB"/>
                     </div>
+                    <Modal contentClassName={`${styles.friend_modal}`} show={friendModal} aria-labelledby="add_friend" centered>
+                        <Modal.Header className='d-flex flex-column'>
+                          <Modal.Title>
+                            <span style={{color:'#FFEBEB', fontFamily: 'itim'}}><ImUserPlus color="#FFEBEB"/> Add Friend</span>
+                          </Modal.Title>
+                          <InputGroup className="mb-3" >
+                            <InputGroup.Text id="basic-addon1" style={{backgroundColor: '#2C3143'}}><IoIosSearch color='#FFEBEB'/></InputGroup.Text>
+                            <Form.Control
+                                className={`${styles.form_control}`}
+                                placeholder="Username"
+                                aria-label="Username"
+                                aria-describedby="basic-addon1"
+                                style={{backgroundColor: '#2C3143'}}
+                                value={searchTerm}
+                                onChange={(e) => {setSearchTerm(e.target.value)}}
+                            />
+                            <Button className='border' variant="dark" id="button-addon2" onClick={handle_search}>
+                              Search..
+                            </Button>
+                          </InputGroup>
+                        </Modal.Header>
+                        <Modal.Body style={{height: '300px', overflow: 'auto'}}>
+                            {
+                                searchedFriends.map((user, index) => 
+                                    (
+                                        <div key={index} className='row d-flex flex-row d-flex align-items-center justify-content-between px-3 py-1 m-2' style={{ borderRadius: '25px', backgroundColor: '#161625' }}>
+                                            <div className='col-3 text-start'><Splayer nickname={user.nickname} id={1} image={user.image_url} isConnected={user.connected} /></div>
+                                            <div className='col-9 text-end'><Button variant="dark">Invite <TiUserAdd color="#FFEBEB" /></Button></div>
+                                        </div>
+                                    )
+                                )
+                            }
+                        </Modal.Body>
+                        <Modal.Footer>
+                                <div className={`${styles.edit_btn} col-md-3 col-sm-5 valo-font text-center m-2 px-2`} onClick={() => {setFriendModal(false)}}><button onClick={() => {setFriendModal(false)}}>Close</button></div>
+                        </Modal.Footer>
+                    </Modal>
                 </div>
             </div>
     );

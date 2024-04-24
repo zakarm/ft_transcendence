@@ -27,7 +27,7 @@ export default function Player({ nickname, id, image, isConnected }: PlayerProps
                 }}
               />
         </div>
-        <div className="p-2">
+        <div className="">
           <h5 className={`${styles.hold}`}>{nickname}</h5>
         </div>
       </div>
