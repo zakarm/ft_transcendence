@@ -13,6 +13,7 @@ import SocialAuth from "../../../components/socialAuth";
 import TwoFa from '../../../components/twoFa';
 import '../../global.css'
 
+
 export default function SignInPage() {
     const router = useRouter();
     const [twoFaData, setTwoFaData] = useState<{ value: string; email: string }>();
@@ -41,8 +42,8 @@ export default function SignInPage() {
                 else 
                 {
                     toast.success('Successfully signed in !');   
-                    Cookies.set("access", access)
-                    Cookies.set("refresh", refresh)
+                    Cookies.set("access", access, { path: '/' })
+                    Cookies.set("refresh", refresh, { path: '/' })
                     router.push('/dashboard')
                 }
             }

@@ -29,7 +29,7 @@ class MainDashboardSerializer(serializers.ModelSerializer):
         return serializer.data
 
     def get_matches_as_user_two(self, obj):
-        matches = Match.objects.filter(user_one=obj)[:10]
+        matches = Match.objects.filter(user_two=obj)[:10]
         serializer = MatchSerializer(matches, many=True)
         return serializer.data
     

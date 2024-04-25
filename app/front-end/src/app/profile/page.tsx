@@ -11,8 +11,7 @@ import {    CategoryScale,
             LinearScale, 
             Title, 
             Legend, 
-            Tooltip, 
-            LineController, 
+            Tooltip,
             PointElement, 
             LineElement 
         } from 'chart.js';
@@ -31,6 +30,8 @@ import { ImUsers } from "react-icons/im";
 import { SiRepublicofgamers } from "react-icons/si";
 import { BsFillChatLeftQuoteFill } from "react-icons/bs";
 import { MdRoundaboutRight } from "react-icons/md";
+import { ChartOptions, ChartData } from 'chart.js';
+import { LineController } from 'chart.js/auto';
 
 export default function ()
 {
@@ -62,7 +63,8 @@ export default function ()
 
     Chart.register(CategoryScale, LinearScale, Title, Legend, Tooltip, LineController, PointElement, LineElement);
     Chart.defaults.font.family = 'Itim';
-    const data: Chart.ChartData = {
+    Chart.defaults.font.size = 14;
+    const data: ChartData<'line'> = {
       labels: profile.summary.months,
       datasets: [
         {
@@ -70,10 +72,6 @@ export default function ()
             data: profile.summary.win,
             borderColor: 'rgba(116,206,151, 0.5)',
             backgroundColor: 'green',
-            font: {
-            family: 'itim',
-            size: 14,
-            },
             fill: false,
             tension: 0.1,
         },
@@ -82,16 +80,12 @@ export default function ()
             data: profile.summary.loss,
             borderColor: 'rgba(181,55,49, 0.5)',
             backgroundColor: 'red',
-            font: {
-            family: 'itim',
-            size: 14,
-            },
             fill: false,
             tension: 0.1,
         }
       ]
     };
-    const options: Chart.ChartOptions = {
+    const options: ChartOptions<'line'> = {
         responsive: true,
         plugins: {
           legend: {

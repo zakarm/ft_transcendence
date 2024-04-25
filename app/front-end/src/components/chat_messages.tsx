@@ -1,4 +1,4 @@
-
+"use client";
 import styles from './styles/chat_messages.module.css';
 import { InputGroup } from 'react-bootstrap';
 import Image from 'next/image';

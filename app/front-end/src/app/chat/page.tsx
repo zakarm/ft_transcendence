@@ -1,5 +1,4 @@
 "use client";
-
 import styles from './style.module.css';
 import ChatAbout from '@/components/chat_about';
 import ChatFriendsResp from '@/components/chat_friend_resp';

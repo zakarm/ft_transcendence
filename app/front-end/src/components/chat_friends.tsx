@@ -1,12 +1,11 @@
-
+"use client";
 import styles from './styles/chat_friends.module.css';
 import Image from 'next/image';
 import { InputGroup } from 'react-bootstrap';
-import UserChat from '@/components/user_chat';
+import UserChat from './user_chat';
 import friends from '@/components/friends.json';
 import Form from 'react-bootstrap/Form';
-import User from '@/components/user';
-
+import User from './user';
 import { CiSearch } from "react-icons/ci";
 
 interface Props{

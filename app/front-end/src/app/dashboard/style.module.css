@@ -23,6 +23,10 @@
 
 .card {
     border-radius: 15px;
+<<<<<<< HEAD
+=======
+    height: 100%;
+>>>>>>> 8f93d643e161cb735f2123c0b7c055a373c1dabc
 }
 
 .buttom_cards {
@@ -132,9 +136,18 @@
       }
 }
 
+<<<<<<< HEAD
 @media (max-width: 992px)
 {
     .imageContainer{
         height: 350px;
     }
 }
+=======
+@media (max-width: 996px)
+{
+    .chart_grid {
+        margin-top: 20px;
+    }
+}
+>>>>>>> 8f93d643e161cb735f2123c0b7c055a373c1dabc
