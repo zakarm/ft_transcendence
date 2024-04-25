@@ -6,7 +6,7 @@ def get_total_games(obj):
     user_matches_as_one = Match.objects.filter(user_one=obj)
     user_matches_as_two = Match.objects.filter(user_two=obj)
     return user_matches_as_one.count() + user_matches_as_two.count()
-    
+
 def get_win_games(obj):
     win_matches_as_one = Match.objects.filter(user_one =
                                               obj).filter(score_user_one__gt =
