@@ -38,14 +38,14 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cp app/back-end/requirements.txt .
+          cd app/back-end
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Run migrations
         run: |
           cd app/back-end
-          python makemigrations
+          python manage.py makemigrations
           python manage.py migrate
         env:
           DATABASE_URL: "postgres://postgres:postgres@localhost:5432/db_member"
