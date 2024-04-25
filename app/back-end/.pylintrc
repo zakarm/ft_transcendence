@@ -9,8 +9,10 @@ disable=missing-docstring,
         too-few-public-methods,
         abstract-method,
         arguments-renamed,
-        too-many-locals
-        too-many-branches
+        too-many-locals,
+        too-many-branches,
+        too-many-statements,
+        import-outside-toplevel
 
 [FORMAT]
 max-line-length=120

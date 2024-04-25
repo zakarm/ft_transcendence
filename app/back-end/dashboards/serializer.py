@@ -31,10 +31,10 @@ class MainDashboardSerializer(serializers.ModelSerializer):
         matches = Match.objects.filter(user_two=obj)[:10]
         serializer = MatchSerializer(matches, many=True)
         return serializer.data
-    
+
     def get_total_minutes(self, obj):
         return get_total_minutes(obj)
-    
+
 class ProfileSerializer(serializers.ModelSerializer):
     total_games = serializers.SerializerMethodField()
     win_games = serializers.SerializerMethodField()
