@@ -27,7 +27,7 @@ jobs:
 
       - name: Build and run tests
         run: |
-          make build
+          docker-compose
           docker-compose run --rm back-end python manage.py test
 
       - name: Tear down
