@@ -21,11 +21,11 @@ jobs:
         run: docker-compose --version
 
       - name: Start services
-        run: docker-compose up -d
+        run: docker-compose -f docker-compose.yml up -d
 
       - name: Run tests
-        run: docker-compose exec back-end python manage.py test
+        run: docker-compose -f docker-compose.yml exec back-end python manage.py test
 
       - name: Tear down
         if: ${{ always() }}
-        run: docker-compose down
+        run: docker-compose -f docker-compose.yml down
