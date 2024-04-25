@@ -8,11 +8,13 @@ import SrightBar from "./srightBar";
 import Togglebar from './toggleBar';
 import styles from './styles/mainContainer.module.css'
 import Image from 'next/image'
+import InviteFriend from "./inviteFriend";
 
 
 export default function MainContainer({ children }: { children: React.ReactNode }) {
-  const [show, setShow] = useState(false);
-  const [showSide, setShowSide] = useState(false);
+  const [show, setShow] = useState<boolean>(false);
+  const [showSide, setShowSide] = useState<boolean>(false);
+  const [friendModal, setFriendModal] = useState<boolean>(false);
   const handleClose = () => setShow(false);
   const toggleShow = () => setShow((s) => !s);
   const handleToggle = () => setShowSide(false);
@@ -47,12 +49,13 @@ export default function MainContainer({ children }: { children: React.ReactNode 
               <div className='col-1 vh-100 d-flex justify-content-end align-items-center text-center' style={{backgroundColor: '#000000'}}>
                 <div className={`${styles.drag_class} pt-3 pb-3`} style={{backgroundColor: '#161625', borderRadius: '15px 0 0 15px', cursor: 'pointer'}} onClick={toggleShow}>
                   <FaAngleLeft  color="#FFEBEB" size='1.2em'/>
-                  <RightBar show={show} setShow={setShow} handleClose={handleClose} toggleShow={toggleShow}/>
+                  <RightBar setfriendModal={() => setFriendModal(true)} show={show} setShow={setShow} handleClose={handleClose} toggleShow={toggleShow}/>
                 </div>
               </div>
               <div className='col-11'>
-                <SrightBar toggleShow={toggleShow}/>
+                <SrightBar setfriendModal={() => setFriendModal(true)} toggleShow={toggleShow}/>
               </div>
+              <InviteFriend show={friendModal} close={() => setFriendModal(false)}/>
             </div>
           </div>
       </div>

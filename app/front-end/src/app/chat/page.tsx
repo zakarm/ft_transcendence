@@ -50,7 +50,10 @@ export default function ()
             <div className={`col-xl-5 col-md-6 p-0 m-0 ${styles.chat}`}>
               <ChatMessages />
               <Modal contentClassName={`${styles.chat_modal}`} show={show} fullscreen="md-down" onHide={() => setShow(false)} animation>
-                <ChatMessages />
+                <Modal.Header closeButton closeVariant='white'>
+
+                </Modal.Header>
+                <ChatMessages/>
               </Modal>
               <Offcanvas className={`${styles.canvas}`} show={showAbout} onHide={handleClose} backdrop={false}>
                 <Offcanvas.Body className={`p-0 m-0`}>
