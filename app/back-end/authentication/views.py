@@ -16,12 +16,8 @@ from .serializer import (UsersSignUpSerializer,
                          SocialAuthSerializer)
 
 class SignUpView(APIView):
-    """
-    Class for sign up
-    """
     serializer_class = UsersSignUpSerializer
     def post(self, request):
-        """Function post"""
         if User.objects.filter(email=request.data['email']).exists():
             return Response({"error": "Email already exists"}, status=status.HTTP_409_CONFLICT)
         if User.objects.filter(username=request.data['username']).exists():
@@ -35,14 +31,8 @@ class SignUpView(APIView):
         return Response(data, status=status.HTTP_201_CREATED)
 
 class SignInView(APIView):
-    """
-    Class for sign in
-    """
     serializer_class = UserSignInSerializer
     def post(self, request):
-        """
-        Post function
-        """
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             data = serializer.validated_data
@@ -60,9 +50,6 @@ class SignInView(APIView):
         return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
 
 class SignIn2Fa(APIView):
-    """
-    Class for two fact auth
-    """
     serializer_class = User2FASerializer
     def post(self, request):
         """
@@ -79,9 +66,6 @@ class SignIn2Fa(APIView):
         return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
 
 class SignOutView(APIView):
-    """
-    Class for sign out
-    """
     def post(self, request):
         """Post function"""
         refresh_token = request.data.get('refresh')
@@ -92,14 +76,8 @@ class SignOutView(APIView):
         return Response({'message:', 'Successfully logged out'}, status=status.HTTP_200_OK)
 
 class SocialAuthExchangeView(APIView):
-    """
-    Class for exchanging the oauth code
-    """
     serializer_class = SocialAuthSerializer
     def get(self, request, platform):
-        """
-        Get function
-        """
         code = request.GET.get('code')
         platform = platform.lower()
         if not code :
@@ -158,9 +136,7 @@ class SocialAuthExchangeView(APIView):
 
 
 class SocialAuthRedirectView(APIView):
-    """Class for autorize page"""
     def get(self, request, platform):
-        """Get function"""
         platform = platform.lower()
         if platform == 'github':
             CLIENT_ID = settings.GITHUB_CLIENT_ID

@@ -1,6 +1,3 @@
-"""
-Module providing rest serailizers
-"""
 import sys
 import requests
 import pyotp
@@ -10,13 +7,7 @@ from django.db import IntegrityError
 from .models import User
 
 class UsersSignUpSerializer(serializers.ModelSerializer):
-    """
-    Serializer class for UsersSignUp
-    """
     class Meta:
-        """
-        Meta class for UsersSignUp serializer
-        """
         model = User
         fields = ('email', 'password', 'first_name', 'last_name', 'username')
         extra_kwargs = {'password': {'required': True}}
@@ -29,15 +20,9 @@ class UsersSignUpSerializer(serializers.ModelSerializer):
         return user
 
 class UserSignInSerializer(serializers.Serializer):
-    """
-    Serializer class for UsersSignIn
-    """
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
     def validate(self, data):
-        """
-        Validate method for UsersSignIn serializer
-        """
         user = authenticate(email=data.get('email'), password=data.get('password'))
         if not user:
             raise serializers.ValidationError("Incorrect email or password.")
@@ -54,15 +39,9 @@ class UserSignInSerializer(serializers.Serializer):
         return data
 
 class User2FASerializer(serializers.Serializer):
-    """
-    Serializer class for User2FA
-    """
     otp = serializers.CharField()
     email = serializers.CharField()
     def validate(self, data):
-        """
-        Validate method for User2FA serializer
-        """
         email = data.get('email')
         user = User.objects.get(email = email)
         print(user, file = sys.stderr)
@@ -75,9 +54,6 @@ class User2FASerializer(serializers.Serializer):
 
 
 class SocialAuthSerializer(serializers.Serializer):
-    """
-    Serializer class for SocialAuth
-    """
     def validate(self, data):
         """
         Validate method for SocialAuth serializer
