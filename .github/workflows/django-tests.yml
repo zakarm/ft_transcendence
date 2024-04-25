@@ -1,0 +1,54 @@
+# .github/workflows/django-tests.yml
+
+name: Django Tests
+
+# on:
+#   push:
+#     branches: [main]
+#   pull_request:
+#     branches: [main]
+
+on: [push]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: db_member
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run migrations
+        run: |
+          python makemigrations
+          python manage.py migrate
+        env:
+          DATABASE_URL: "postgres://postgres:postgres@localhost:5432/db_member"
+
+      - name: Run tests
+        run: python manage.py test
+        env:
+          DATABASE_URL: "postgres://postgres:postgres@localhost:5432/db_member"

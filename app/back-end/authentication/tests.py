@@ -13,6 +13,19 @@ class SignInTest(TestCase):
                                     {'email': 'zakariaemrabet48@gmail.com',
                                     'password': 'admin'}, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('tokens', response.data)
-        self.assertIn('access', response.data['tokens'])
-        self.assertIn('refresh', response.data['tokens'])
+        self.assertIn('access', response.data)
+        self.assertIn('refresh', response.data)
+        self.assertIn('email', response.data)
+        self.assertIn('is_2fa_enabled', response.data)
+
+class SignUpTest(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+
+    def test_signup(self):
+        response = self.client.post('/api/sign-up',
+                                    {'email': 'zakariaemrabet48@gmail.com',
+                                     'username': 'testuser',
+                                    'password': 'admin'}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertIn('email', response.data)

@@ -126,10 +126,10 @@ class SocialAuthExchangeView(APIView):
             return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
         if user and user.is_active:
             refresh = RefreshToken.for_user(user)
-            access_token = str(refresh.access_token)
+            access_token = refresh.access_token
             response = HttpResponseRedirect(settings.FRONTEND_HOST)
-            response.set_cookie('access', access_token, httponly=True, samesite='Lax', secure=True)
-            response.set_cookie('refresh', refresh, httponly=True, samesite='Lax', secure=True)
+            response.set_cookie('access', access_token)
+            response.set_cookie('refresh', refresh)
             return response
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
