@@ -176,14 +176,7 @@ export default function Dashboard() {
                                             and improve their skills. From casual matches to intense
                                             tournaments, we've got everything you need to serve up some
                                             excitement!
-<<<<<<< HEAD
                                         </span>
-=======
-                                        </h6>
-                                    </div>
-                                    <div>
-                                        <ButtonValo onClick={clickButton} value="Play" />
->>>>>>> 8f93d643e161cb735f2123c0b7c055a373c1dabc
                                     </div>
                                     <ButtonValo value="Play" />
                                 </div>
@@ -197,7 +190,6 @@ export default function Dashboard() {
                             </div>
                         </div>
                     </div>
-<<<<<<< HEAD
                 {/* </div> */}
                 <div className="flex-grow-1 ">
                     <div className="row m-0 h-100 d-flex justify-content-center">
@@ -211,24 +203,10 @@ export default function Dashboard() {
                                         <div className='col-6 d-flex align-items-end justify-content-end'>
                                             <p className={`itim-font ${styles.all_down}`}>ALL <FaChevronDown color='#FFEBEB'/></p>
                                         </div>
-=======
-                </div>
-                <div className="col-12 mt-3">
-                    <div className="row">
-                        <div className="col-12 col-lg-6">
-                            <div className={`d-flex flex-column p-3 ${styles.card} ${styles.buttom_cards} m-1`}>
-                                <div className='row'>
-                                    <div className='col-6 d-flex align-items-start justify-content-start'>
-                                    <p className={`itim-font ${styles.med_titles}`}><FaHistory color='#FFEBEB'/> GAME HISTORY</p>
-                                    </div>
-                                    <div className='col-6 d-flex align-items-end justify-content-end'>
-                                        <p className={`itim-font ${styles.all_down}`}>ALL <FaChevronDown color='#FFEBEB'/></p>
->>>>>>> 8f93d643e161cb735f2123c0b7c055a373c1dabc
                                     </div>
                                     <hr style={{color: '#FFEBEB', backgroundColor: '#FFEBEB', height: 1}}/>
                                     <GameHistoryCard/>
                                 </div>
-<<<<<<< HEAD
                             </div>
                         </div>
                         <div className={`col-12 col-lg-6 ${styles.chart_grid} `}>
@@ -241,17 +219,6 @@ export default function Dashboard() {
                                         <div className='col-6 d-flex align-items-end justify-content-end'>
                                             <p className={`itim-font ${styles.all_down}`}>ALL <FaChevronDown color='#FFEBEB'/></p>
                                         </div>
-=======
-                                <hr style={{color: '#FFEBEB', backgroundColor: '#FFEBEB', height: 1}}/>
-                                <GameHistoryCard data={gameData}/>
-                            </div>
-                        </div>
-                        <div className={`col-12 col-lg-6 ${styles.chart_grid}`}>
-                            <div className={`d-flex flex-column p-3 ${styles.card} ${styles.buttom_cards} m-1`}>
-                                <div className='row'>
-                                    <div className='col-6 d-flex align-items-start justify-content-start'>
-                                        <p className={`itim-font ${styles.med_titles}`}><BiStats color='#FFEBEB'/> MY GAME STATS</p>
->>>>>>> 8f93d643e161cb735f2123c0b7c055a373c1dabc
                                     </div>
                                     <hr style={{color: '#FFEBEB', backgroundColor: '#FFEBEB'}}/>
                                     <div className='col p-0 m-0'>
