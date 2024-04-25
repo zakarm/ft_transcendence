@@ -12,8 +12,11 @@ class Achievements(models.Model):
 
 class Friendship(models.Model):
     freindship_id = models.AutoField(primary_key=True)
-    user_from = models.ForeignKey('Users', models.DO_NOTHING, db_column='user_from')
-    user_to = models.ForeignKey('Users', models.DO_NOTHING, db_column='user_to', related_name='friendship_user_to_set')
+    user_from = models.ForeignKey('Users', models.DO_NOTHING,
+                                  db_column='user_from')
+    user_to = models.ForeignKey('Users', models.DO_NOTHING,
+                                db_column='user_to',
+                                related_name='friendship_user_to_set')
     is_accepted = models.BooleanField()
     class Meta:
         managed = False
@@ -23,7 +26,9 @@ class Friendship(models.Model):
 class Matches(models.Model):
     match_id = models.AutoField(primary_key=True)
     user_one = models.ForeignKey('Users', models.DO_NOTHING, db_column='user_one')
-    user_two = models.ForeignKey('Users', models.DO_NOTHING, db_column='user_two', related_name='matches_user_two_set')
+    user_two = models.ForeignKey('Users', models.DO_NOTHING,
+                                 db_column='user_two',
+                                 related_name='matches_user_two_set')
     score_user_one = models.IntegerField()
     score_user_two = models.IntegerField()
     match_start = models.DateField()
@@ -37,8 +42,11 @@ class Matches(models.Model):
 
 
 class Messages(models.Model):
-    user_one = models.OneToOneField('Users', models.DO_NOTHING, db_column='user_one', primary_key=True)  # The composite primary key (user_one, user_two) found, that is not supported. The first column is selected.
-    user_two = models.ForeignKey('Users', models.DO_NOTHING, db_column='user_two', related_name='messages_user_two_set')
+    user_one = models.OneToOneField('Users', models.DO_NOTHING,
+                                    db_column='user_one', primary_key=True)
+    user_two = models.ForeignKey('Users', models.DO_NOTHING,
+                                 db_column='user_two',
+                                 related_name='messages_user_two_set')
     message_content = models.CharField(max_length=512)
     message_date = models.DateField()
     message_direction = models.CharField(max_length=20)
@@ -48,34 +56,10 @@ class Messages(models.Model):
         db_table = 'Messages'
         unique_together = (('user_one', 'user_two'),)
 
-
-class Tournaments(models.Model):
-    tournament_id = models.AutoField(primary_key=True)
-    tournament_name = models.CharField(max_length=30)
-    tournament_start = models.DateField()
-    tournament_end = models.DateField()
-
-    class Meta:
-        managed = False
-        db_table = 'Tournaments'
-
-
-class Tournamentsmatches(models.Model):
-    tournament = models.OneToOneField(Tournaments, models.DO_NOTHING, primary_key=True)  # The composite primary key (tournament_id, match_id) found, that is not supported. The first column is selected.
-    match = models.ForeignKey(Matches, models.DO_NOTHING)
-    tournament_round = models.CharField(max_length=30)
-
-    class Meta:
-        managed = False
-        db_table = 'TournamentsMatches'
-        unique_together = (('tournament', 'match'),)
-
-
 class Userachievements(models.Model):
-    user = models.OneToOneField('Users', models.DO_NOTHING, primary_key=True)  # The composite primary key (user_id, achivement_id) found, that is not supported. The first column is selected.
+    user = models.OneToOneField('Users', models.DO_NOTHING, primary_key=True)
     achivement = models.ForeignKey(Achievements, models.DO_NOTHING)
     achive_date = models.DateField()
-
     class Meta:
         managed = False
         db_table = 'UserAchievements'

@@ -1,8 +1,9 @@
+# from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+# from rest_framework_simplejwt.tokens import UntypedToken
+# from urllib.parse import parse_qs
+import sys
+import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-from rest_framework_simplejwt.tokens import UntypedToken
-from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
-import json, sys 
-from urllib.parse import parse_qs
 
 class AsyncConsumer(AsyncWebsocketConsumer):
     async def connect(self):
