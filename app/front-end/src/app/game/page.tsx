@@ -1,8 +1,11 @@
+import ChooseOpponent from "./(choose-opponent)/chooseOpponent";
+
 export default function()
 {
     return (
         <>
-            <h1>game</h1>
+            <ChooseOpponent></ChooseOpponent>
+            {/* <h1>game</h1> */}
         </>
     );
 }
