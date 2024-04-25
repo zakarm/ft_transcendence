@@ -1,5 +1,3 @@
-# .github/workflows/django-tests.yml
-
 name: Django Tests
 
 # on:
@@ -14,43 +12,19 @@ jobs:
   tests:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:13
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: db_member
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.9
 
-      - name: Install dependencies
+      - name: Set up Docker Compose
         run: |
-          cd app/back-end
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install docker
+          pip install docker-compose
 
-      - name: Run migrations
+      - name: Build and run tests
         run: |
-          cd app/back-end
-          python manage.py makemigrations
-          python manage.py migrate
-        env:
-          DATABASE_URL: "postgres://postgres:postgres@localhost:5432/db_member"
+          docker-compose build
+          docker-compose run --rm back-end python manage.py test
 
-      - name: Run tests
-        run: python manage.py test
-        env:
-          DATABASE_URL: "postgres://postgres:postgres@localhost:5432/db_member"
+      - name: Tear down
+        if: ${{ always() }}
+        run: docker-compose down
