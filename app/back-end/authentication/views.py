@@ -16,10 +16,8 @@ from .serializer import (UsersSignUpSerializer,
                          SocialAuthSerializer)
 
 class SignUpView(APIView):
-    """Class for sign up"""
     serializer_class = UsersSignUpSerializer
     def post(self, request):
-        """Function post"""
         if User.objects.filter(email=request.data['email']).exists():
             return Response({"error": "Email already exists"}, status=status.HTTP_409_CONFLICT)
         if User.objects.filter(username=request.data['username']).exists():
@@ -33,10 +31,8 @@ class SignUpView(APIView):
         return Response(data, status=status.HTTP_201_CREATED)
 
 class SignInView(APIView):
-    """Class for sign in"""
     serializer_class = UserSignInSerializer
     def post(self, request):
-        """Post function"""
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             data = serializer.validated_data
@@ -54,10 +50,11 @@ class SignInView(APIView):
         return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
 
 class SignIn2Fa(APIView):
-    """Class for two fact auth"""
     serializer_class = User2FASerializer
     def post(self, request):
-        """Post function"""
+        """
+        Post function
+        """
         serializer = self.serializer_class(data = request.data)
         if serializer.is_valid():
             user = serializer.validated_data
@@ -68,9 +65,7 @@ class SignIn2Fa(APIView):
             }, status = status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
 
-
 class SignOutView(APIView):
-    """Class for sign out"""
     def post(self, request):
         """Post function"""
         refresh_token = request.data.get('refresh')
@@ -81,10 +76,8 @@ class SignOutView(APIView):
         return Response({'message:', 'Successfully logged out'}, status=status.HTTP_200_OK)
 
 class SocialAuthExchangeView(APIView):
-    """Class for exchanging the oauth code"""
     serializer_class = SocialAuthSerializer
     def get(self, request, platform):
-        """Get function"""
         code = request.GET.get('code')
         platform = platform.lower()
         if not code :
@@ -118,46 +111,60 @@ class SocialAuthExchangeView(APIView):
             url = "https://api.intra.42.fr/oauth/token"
         headers = {'Accept': 'application/json'}
         try:
-            response = requests.post(url, data=data, headers=headers)
+            response = requests.post(url, data=data, headers=headers, timeout=20000)
             response.raise_for_status()
         except HTTPError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         access_token = response.json().get('access_token')
-        serializer = self.serializer_class(data=request.data, context={"platform": platform, "access_token": access_token})
+        serializer = self.serializer_class(data=request.data, context={"platform": platform,
+                                                                       "access_token": access_token})
         serializer.is_valid(raise_exception=True)
         email = serializer.validated_data.get('email')
         try:
             user = User.objects.get(email=email)
-        except User.DoesNotExist:
+        except User.objects.model.DoesNotExist:
             return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
         if user and user.is_active:
             refresh = RefreshToken.for_user(user)
-            access_token = str(refresh.access_token)
+            access_token = refresh.access_token
             response = HttpResponseRedirect(settings.FRONTEND_HOST)
-            response.set_cookie('access', access_token, httponly=True, samesite='Lax', secure=True)
-            response.set_cookie('refresh', refresh, httponly=True, samesite='Lax', secure=True)
+            response.set_cookie('access', access_token)
+            response.set_cookie('refresh', refresh)
             return response
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        
+
 
 class SocialAuthRedirectView(APIView):
-    """Class for autorize page"""
     def get(self, request, platform):
-        """Get function"""
         platform = platform.lower()
         if platform == 'github':
             CLIENT_ID = settings.GITHUB_CLIENT_ID
             REDIRECT_URI = settings.GITHUB_REDIRECT_URI
-            return redirect(f'https://github.com/login/oauth/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&scope=user:email')
+            url = (
+                f'https://github.com/login/oauth/authorize?client_id={CLIENT_ID}'
+                f'&redirect_uri={REDIRECT_URI}&scope=user:email'
+            )
+            return redirect(url)
         elif platform == 'google':
             CLIENT_ID = settings.GOOGLE_CLIENT_ID
             REDIRECT_URI = settings.GOOGLE_REDIRECT_URI
-            SCOPE = "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email"
-            return redirect(f'https://accounts.google.com/o/oauth2/v2/auth?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&scope={urllib.parse.quote(SCOPE)}&response_type=code')
+            SCOPE = (
+                "https://www.googleapis.com/auth/userinfo.profile"
+                " https://www.googleapis.com/auth/userinfo.email"
+            )
+            url = (
+                f'https://accounts.google.com/o/oauth2/v2/auth?client_id={CLIENT_ID}'
+                f'&redirect_uri={REDIRECT_URI}&scope={urllib.parse.quote(SCOPE)}&response_type=code'
+            )
+            return redirect(url)
         elif platform == '42':
             CLIENT_ID = settings.FORTYTWO_CLIENT_ID
             REDIRECT_URI = settings.FORTYTWO_REDIRECT_URI
             SCOPE = "public"
-            return redirect(f'https://api.intra.42.fr/oauth/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&scope={SCOPE}&response_type=code')
+            url = (
+                f'https://api.intra.42.fr/oauth/authorize?client_id={CLIENT_ID}'
+                f'&redirect_uri={REDIRECT_URI}&scope={SCOPE}&response_type=code'
+            )
+            return redirect(url)
+        return None
