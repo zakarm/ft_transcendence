@@ -3,8 +3,6 @@ name: Django Tests
 # on:
 #   push:
 #     branches: [main]
-#   pull_request:
-#     branches: [main]
 
 on: [push]
 
@@ -18,17 +16,15 @@ jobs:
         with:
           version: v2.1.0
           legacy: true
-      - run: docker-compose --version
 
-      - name: Set up Docker Compose
-        run: |
-          pip install docker
-          pip install docker-compose
+      - name: Check Docker Compose version
+        run: docker-compose --version
 
-      - name: Build and run tests
-        run: |
-          docker-compose
-          docker-compose run --rm back-end python manage.py test
+      - name: Start services
+        run: docker-compose up -d
+
+      - name: Run tests
+        run: docker-compose exec back-end python manage.py test
 
       - name: Tear down
         if: ${{ always() }}
