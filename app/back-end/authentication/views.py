@@ -141,14 +141,30 @@ class SocialAuthRedirectView(APIView):
         if platform == 'github':
             CLIENT_ID = settings.GITHUB_CLIENT_ID
             REDIRECT_URI = settings.GITHUB_REDIRECT_URI
-            return redirect(f'https://github.com/login/oauth/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&scope=user:email')
+            url = (
+                f'https://github.com/login/oauth/authorize?client_id={CLIENT_ID}'
+                f'&redirect_uri={REDIRECT_URI}&scope=user:email'
+            )
+            return redirect(url)
         elif platform == 'google':
             CLIENT_ID = settings.GOOGLE_CLIENT_ID
             REDIRECT_URI = settings.GOOGLE_REDIRECT_URI
-            SCOPE = "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email"
-            return redirect(f'https://accounts.google.com/o/oauth2/v2/auth?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&scope={urllib.parse.quote(SCOPE)}&response_type=code')
+            SCOPE = (
+                "https://www.googleapis.com/auth/userinfo.profile"
+                " https://www.googleapis.com/auth/userinfo.email"
+            )
+            url = (
+                f'https://accounts.google.com/o/oauth2/v2/auth?client_id={CLIENT_ID}'
+                f'&redirect_uri={REDIRECT_URI}&scope={urllib.parse.quote(SCOPE)}&response_type=code'
+            )
+            return redirect(url)
         elif platform == '42':
             CLIENT_ID = settings.FORTYTWO_CLIENT_ID
             REDIRECT_URI = settings.FORTYTWO_REDIRECT_URI
             SCOPE = "public"
-            return redirect(f'https://api.intra.42.fr/oauth/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&scope={SCOPE}&response_type=code')
+            url = (
+                f'https://api.intra.42.fr/oauth/authorize?client_id={CLIENT_ID}'
+                f'&redirect_uri={REDIRECT_URI}&scope={SCOPE}&response_type=code'
+            )
+            return redirect(url)
+        return None

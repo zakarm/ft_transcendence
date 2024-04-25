@@ -136,3 +136,5 @@ class SocialAuthSerializer(serializers.Serializer):
                 raise serializers.ValidationError("Failed to fetch user data from 42")
             except IntegrityError as e:
                 raise serializers.ValidationError("Email already exists") from e
+        else :
+            return None

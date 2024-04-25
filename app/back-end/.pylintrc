@@ -8,7 +8,9 @@ disable=missing-docstring,
         invalid-name,
         too-few-public-methods,
         abstract-method,
-        arguments-renamed
+        arguments-renamed,
+        too-many-locals
+        too-many-branches
 
 [FORMAT]
 max-line-length=120
