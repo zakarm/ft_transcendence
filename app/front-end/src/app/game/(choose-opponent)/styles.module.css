@@ -1,0 +1,40 @@
+h1.cards {
+    font-size: clamp(1rem, 0.8182rem + 0.5818vw, 3rem);
+    color : var(--clr-red);
+    border-top: var(--clr--white);
+    background-color: var(--clr-ldark);
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+}
+
+.wrapper {
+    gap : 20px 5%;
+    overflow: auto;
+}
+
+div.option {
+    min-width: 100px;
+    cursor: pointer; 
+}
+
+div.option:hover {
+    scale: 1.09;
+}
+
+img.cards {
+    background-color: var(--clr-ldark);
+    border-top-right-radius: 25px;
+    border-top-left-radius: 25px;
+    height: clamp(100px, 45vw - 2vw, 600px);
+}
+
+@media (max-width : 776px) {
+    h1.cards {
+        border-radius: 10px;
+    }
+
+    img.cards {
+        min-width: 100px;
+        height: 250px;
+    }
+}

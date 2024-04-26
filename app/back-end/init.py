@@ -1,4 +1,4 @@
-#This script is not for django, it is a custom script to check if the database is available and 
+#This script is not for django, it is a custom script to check if the database is available and
 #then run the migrations and start the server [Kolchi moujtahid, m3ndnach m3a lkousala]
 
 import socket
@@ -24,11 +24,11 @@ def ping_postgres():
             dbname=POSTGRES_DB
         )
         conn.close()
-        logging.info(f"Connection to {POSTGRES_HOST} successful")
+        logging.info("Connection to %s successful", POSTGRES_HOST)
         time.sleep(3)
         return True
     except psycopg2.OperationalError:
-        logging.info(f"Connection to {POSTGRES_HOST} failed")
+        logging.info("Connection to %s failed", POSTGRES_HOST)
         return False
 
 
@@ -40,7 +40,7 @@ def database_connection():
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 s.settimeout(1)
                 s.connect((POSTGRES_HOST, int(POSTGRES_PORT)))
-                logging.info(f"{POSTGRES_HOST} container is available")
+                logging.info("%s container is available", POSTGRES_HOST)
                 while not ping_postgres():
                     time.sleep(1)
                 break
@@ -52,18 +52,18 @@ def database_connection():
 def migrate_and_run_server():
     logging.info("Applying migrations...")
     make_migrations_cmd = "python manage.py makemigrations authentication"
-    subprocess.run(make_migrations_cmd.split())
+    subprocess.run(make_migrations_cmd.split(), check=True)
     make_migrations_cmd = "python manage.py makemigrations game"
-    subprocess.run(make_migrations_cmd.split())
+    subprocess.run(make_migrations_cmd.split(), check=True)
     make_migrations_cmd = "python manage.py makemigrations dashboards"
-    subprocess.run(make_migrations_cmd.split())
+    subprocess.run(make_migrations_cmd.split(), check=True)
     migrate_cmd = "python manage.py migrate"
-    subprocess.run(migrate_cmd.split())
+    subprocess.run(migrate_cmd.split(), check=True)
     time.sleep(3)
     create_superuser()
     logging.info("Starting server...")
     server_cmd = "python manage.py runserver 0.0.0.0:8000"
-    subprocess.run(server_cmd.split())
+    subprocess.run(server_cmd.split(), check=True)
 
 def create_superuser():
     conn = psycopg2.connect(
@@ -88,7 +88,8 @@ def create_superuser():
             '--noinput',
             '--email', email,
         ]
-        subprocess.run(create_superuser_cmd, input=f'{password}\n{password}\n', text=True, check=True)
+        subprocess.run(create_superuser_cmd, input=f'{password}\n{password}\n',
+                       text=True, check=True)
     else:
         logging.info("Superuser already exists in the database")
     cursor.close()

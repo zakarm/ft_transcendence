@@ -45,6 +45,33 @@
     box-sizing: border-box;
     opacity: 1;
   }
+
+  .edit_btn{
+    border-radius: 25px;
+    background-color: #FF4755;
+    cursor: pointer;
+}
+
+.edit_btn button{
+    border: none;
+    background-color: transparent;
+}
+
+.friend_modal{
+  background-color: #2C3143;
+}
+
+.form_control{
+  font-family: 'itim';
+}
+
+.form_control:focus{
+ color:#bebebe;
+}
+
+.form_control::placeholder{
+  color: #7C7C7C;
+}
   
   @media (min-width: 1600px)
   {

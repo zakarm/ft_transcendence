@@ -72,6 +72,16 @@
   }
 }
 
+@media screen and (max-height: 730px)
+{
+  .flexx
+  {
+    padding-top: 6%;
+    padding-left: 6%;
+    padding-right: 6%;
+  }
+}
+
 @media screen and (min-width: 1400px) and (min-height: 700px)
 {
   .flexx

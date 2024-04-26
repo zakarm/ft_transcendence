@@ -1,0 +1,21 @@
+.spinnerContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.darkBackground {
+    background-color: #161625;
+    color: #fff;
+}
+
+.valo-font {
+    font-family: 'Valo', sans-serif;
+    font-size: 1.2rem;
+}
+
+.loadingMessage {
+    margin-top: 1rem;
+}

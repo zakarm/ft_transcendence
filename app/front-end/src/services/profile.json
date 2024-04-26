@@ -1,0 +1,21 @@
+{
+    "nickname": "!Snake_007",
+    "fullname": "Othman Nouakchi",
+    "country": "Morocco",
+    "region": "Casablanca",
+    "total_games": 637,
+    "win": 75,
+    "lose": 25,
+    "about": {
+        "intro": "Hey there! I'm Snake07, a dedicated ping pong gamer. From lightning-fast reflexes to strategic plays, I'm all about dominating the virtual table. Join me as we smash our way to victory, one pixel at a time!",
+        "quote": "Game on! 🎮 Play hard, level up! 💪",
+        "level": 7.63,
+        "rank": 30,
+        "score": 10550
+    },
+    "summary": {
+        "months": ["January", "February", "March", "April", "May", "June", "July"],
+        "win": [10, 20, 30, 40, 30, 15, 28],
+        "loss": [30, 20, 10, 40, 5, 15, 35]
+    }
+}
