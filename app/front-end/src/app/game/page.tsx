@@ -1,10 +1,14 @@
 import ChooseOpponent from "./(choose-opponent)/chooseOpponent";
+import TournamentForm from "./(tournament-form)/tournament-form";
 
 export default function()
 {
     return (
         <>
-            <ChooseOpponent></ChooseOpponent>
+        <div className="container-fluid border border-warning p-0 m-0 vh-100 justify-content-center">
+            {/* <ChooseOpponent></ChooseOpponent> */}
+            <TournamentForm></TournamentForm>
+        </div>
         </>
     );
 }
