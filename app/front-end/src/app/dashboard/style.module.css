@@ -23,7 +23,10 @@
 
 .card {
     border-radius: 15px;
-    height: 85%;
+<<<<<<< HEAD
+=======
+    height: 100%;
+>>>>>>> 8f93d643e161cb735f2123c0b7c055a373c1dabc
 }
 
 .buttom_cards {
@@ -46,24 +49,31 @@
 
 .med_titles {
     color: #FFEBEB;
-    font-size: medium;
-    width: 100%;
 }
 .small_title {
     color: #FF4755;
 }
 
 .imageContainer {
+    /* height: 350px; */
+    position: relative;
+}
+
+.ping_img{
+    position: absolute;
+    right: 0;
+    bottom: 1px;
     height: 350px;
+    width: 350px;
 }
   
-.imageContainer > img {
+/* .imageContainer > img {
     position: absolute;
     right: 0;
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
-}
+} */
 
 .page_body {
     overflow: auto;
@@ -113,15 +123,22 @@
         cursor: pointer;
         height: 64px;
     }
-    .imageContainer > img {
+    /* .imageContainer > img {
         position: static;
         margin: 0 auto;
-      }
+      } */
       .chart_grid {
           margin-top: 20px;
       }
       .card {
-          height: 100%;
+          /* height: 100%; */
           border-radius: 15px;
       }
+}
+
+@media (max-width: 992px)
+{
+    .imageContainer{
+        height: 350px;
+    }
 }

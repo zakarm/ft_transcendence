@@ -13,7 +13,7 @@
     },
     {
         "id": 9876,
-        "nickname": "ValorantPlayer2",
+        "nickname": "ValorantPlayer1",
         "image_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468",
         "connected": true
     },
@@ -81,6 +81,96 @@
         "id": 8765,
         "nickname": "LeaguePlayer7",
         "image_url": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Annie_0.jpg",
+        "connected": true
+    },
+    {
+        "id": 5432,
+        "nickname": "ValorantPlayer8",
+        "image_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468",
+        "connected": true
+    },
+    {
+        "id": 5432,
+        "nickname": "ValorantPlayer8",
+        "image_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468",
+        "connected": true
+    },
+    {
+        "id": 5432,
+        "nickname": "ValorantPlayer8",
+        "image_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468",
+        "connected": true
+    },
+    {
+        "id": 5432,
+        "nickname": "ValorantPlayer8",
+        "image_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468",
+        "connected": true
+    },
+    {
+        "id": 5432,
+        "nickname": "ValorantPlayer8",
+        "image_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468",
+        "connected": true
+    },
+    {
+        "id": 5432,
+        "nickname": "ValorantPlayer8",
+        "image_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468",
+        "connected": true
+    },
+    {
+        "id": 5432,
+        "nickname": "ValorantPlayer8",
+        "image_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468",
+        "connected": true
+    },
+    {
+        "id": 5432,
+        "nickname": "ValorantPlayer8",
+        "image_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468",
+        "connected": true
+    },
+    {
+        "id": 5432,
+        "nickname": "ValorantPlayer8",
+        "image_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468",
+        "connected": true
+    },
+    {
+        "id": 5432,
+        "nickname": "ValorantPlayer8",
+        "image_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468",
+        "connected": true
+    },
+    {
+        "id": 5432,
+        "nickname": "ValorantPlayer8",
+        "image_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468",
+        "connected": true
+    },
+    {
+        "id": 5432,
+        "nickname": "ValorantPlayer8",
+        "image_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468",
+        "connected": true
+    },
+    {
+        "id": 5432,
+        "nickname": "ValorantPlayer8",
+        "image_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468",
+        "connected": true
+    },
+    {
+        "id": 5432,
+        "nickname": "ValorantPlayer8",
+        "image_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468",
+        "connected": true
+    },
+    {
+        "id": 5432,
+        "nickname": "ValorantPlayer8",
+        "image_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468",
         "connected": true
     },
     {

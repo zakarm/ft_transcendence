@@ -7,7 +7,7 @@ import Player from "./Player";
 import Notification from "./Notification";
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import friends from './friends.json';
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useState } from 'react';
 import styles from './styles/rightBar.module.css';
 import Image from 'next/image';
 
@@ -18,6 +18,7 @@ interface Props
     setShow: (show: boolean) => void;
     handleClose: () => void;
     toggleShow: () => void;
+    setfriendModal: () => void;
 }
 
 interface CustomToggleProps {
@@ -42,9 +43,32 @@ const CustomToggle = forwardRef<HTMLDivElement, CustomToggleProps>(
 
 CustomToggle.displayName = 'CustomToggle';
 
-export default function RightBar({setShow, show, handleClose, toggleShow} : Props) {
+export default function RightBar({setShow, show, handleClose, toggleShow, setfriendModal} : Props) {
 
-    const friendsData = friends
+    // const friendsData = friends
+    // .sort((usr1: Friend, usr2: Friend) => {
+    //   if (usr1.connected && !usr2.connected) {
+    //     return -1;
+    //   }
+    //   if (!usr1.connected && usr2.connected) {
+    //     return 1;
+    //   }
+    //   return usr1.id - usr2.id;
+    // })
+    // .map((user: Friend, index: number) => (
+    //   <Player
+    //     key={index}
+    //     nickname={user.nickname}
+    //     id={user.id}
+    //     image={user.image_url}
+    //     isConnected={user.connected}
+    //   />
+    // ));
+
+    const [searchTerm, setSearchTerm] = useState<string>('');
+
+    const filteredFriends = friends
+    .filter((friend: Friend) => friend.nickname.toLowerCase().startsWith(searchTerm.toLowerCase()))
     .sort((usr1: Friend, usr2: Friend) => {
       if (usr1.connected && !usr2.connected) {
         return -1;
@@ -63,6 +87,11 @@ export default function RightBar({setShow, show, handleClose, toggleShow} : Prop
         isConnected={user.connected}
       />
     ));
+
+    const searchOnlineFriends = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // console.log(e.target.value);
+        setSearchTerm(e.target.value);
+    }
     
     return (
         <Offcanvas className={`${styles.offcanvas} border-0`}  show={show} onHide={handleClose} placement='end' scroll={true} backdrop={false} >
@@ -111,16 +140,16 @@ export default function RightBar({setShow, show, handleClose, toggleShow} : Prop
                                                  <IoIosSearch className={`${styles.ico}`} color="#FFEBEB"/>
                                              </div>
                                              <div className="col-md-2 p-2">
-                                                 <input className={`${styles.place} ${styles.data}`} type="text" placeholder="Find a player ..." style={{backgroundColor: '#2C3143', border: 0}}/>
+                                                 <input className={`${styles.place} ${styles.data}`} type="text" placeholder="Find a player ..."  onChange={(e) => searchOnlineFriends(e)} style={{backgroundColor: '#2C3143', border: 0}}/>
                                              </div>
                                          </div>
                                     </div>
                                 </div>
                                 <div className="p-3 mb-2 flex-grow-1" style={{ overflowY: 'auto' }}>
-                                    {friendsData}
+                                    {filteredFriends}
                                 </div>
                                 <div className="flex-grow-3">
-                                    <div className={`row ${styles.search_inpt2} p-2 mb-2 m-1 text-center`} style={{cursor: "pointer"}}>
+                                    <div className={`row ${styles.search_inpt2} p-2 mb-2 m-1 text-center`} style={{cursor: "pointer"}} onClick={setfriendModal}>
                                         <div className={`col-xl-8 col-6 ${styles.place}`}>
                                             <div style={{fontFamily: 'intim', color: '#FFEBEB'}}>add friend</div>
                                         </div>

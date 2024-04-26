@@ -7,7 +7,7 @@ services:
         build: 
             context: ./app/back-end
             dockerfile: Dockerfile
-        restart: always
+        restart: on-failure
         depends_on:
             - data-base
         ports:
@@ -26,7 +26,7 @@ services:
         build: 
             context: ./app/front-end
             dockerfile: Dockerfile
-        restart: always
+        restart: on-failure
         depends_on:
             - back-end
         ports:
@@ -47,7 +47,7 @@ services:
         build: 
             context: ./app/data-base
             dockerfile: Dockerfile
-        restart: always
+        restart: on-failure
         ports:
             - "5432:5432"
         env_file:

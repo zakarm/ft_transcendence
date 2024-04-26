@@ -1,15 +1,19 @@
-
+"use client";
 import styles from './styles/chat_friends.module.css';
 import Image from 'next/image';
 import { InputGroup } from 'react-bootstrap';
-import UserChat from '@/components/user_chat';
+import UserChat from './user_chat';
 import friends from '@/components/friends.json';
 import Form from 'react-bootstrap/Form';
-import User from '@/components/user';
-
+import User from './user';
 import { CiSearch } from "react-icons/ci";
 
-export default function ChatFriends() {
+interface Props{
+    setShow: React.Dispatch<React.SetStateAction<boolean>>;
+    setAbout: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function ChatFriends( {setShow , setAbout}: Props ) {
 
     const friendsData = friends.sort((usr1, usr2) => {
         if (usr1.connected && !usr2.connected) {
@@ -26,6 +30,8 @@ export default function ChatFriends() {
     .map((user, index) => 
         <User key={index} src={user.image_url} isConnected={user.connected}/>
     );
+
+    const handleShow = () => setAbout(true);
 
     return (
         <>
@@ -48,20 +54,23 @@ export default function ChatFriends() {
                   <div className={`${styles.usr_container} d-flex overflow-auto`}>
                       {friendsData}
                   </div>
-                  <hr className="m-3" style={{color: '#FFEBEB', borderWidth: '2px'}}/>
+                  <hr className="mt-1" style={{color: '#FFEBEB', borderWidth: '2px'}}/>
               </div>
               <div className={`${styles.chat_container} p-2 flex-grow-1`}>
-                      <UserChat />
-                      <UserChat />
-                      <UserChat />
-                      <UserChat />
-                      <UserChat />
-                      <UserChat />
-                      <UserChat />
-                      <UserChat />
-                      <UserChat />
-                      <UserChat />
-                      <UserChat />
+                      <UserChat setShow={setShow} handleShow={handleShow}/>
+                      <UserChat setShow={setShow} handleShow={handleShow}/>
+                      <UserChat setShow={setShow} handleShow={handleShow}/>
+                      <UserChat setShow={setShow} handleShow={handleShow}/>
+                      <UserChat setShow={setShow} handleShow={handleShow}/>
+                      <UserChat setShow={setShow} handleShow={handleShow}/>
+                      <UserChat setShow={setShow} handleShow={handleShow}/>
+                      <UserChat setShow={setShow} handleShow={handleShow}/>
+                      <UserChat setShow={setShow} handleShow={handleShow}/>
+                      <UserChat setShow={setShow} handleShow={handleShow}/>
+                      <UserChat setShow={setShow} handleShow={handleShow}/>
+                      <UserChat setShow={setShow} handleShow={handleShow}/>
+                      <UserChat setShow={setShow} handleShow={handleShow}/>
+                      <UserChat setShow={setShow} handleShow={handleShow}/>
               </div>
             </div>
         </>

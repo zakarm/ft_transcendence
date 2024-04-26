@@ -1,3 +1,5 @@
+
+
 import Dropdown from 'react-bootstrap/Dropdown';
 import { IoIosSearch } from "react-icons/io";
 import { ImUserPlus } from "react-icons/im";
@@ -8,9 +10,11 @@ import friends from './friends.json';
 import React, { forwardRef } from 'react';
 import Image from 'next/image'
 
+
 interface Props
 {
     toggleShow: () => void;
+    setfriendModal: () => void;
 }
 
 interface CustomToggleProps {
@@ -28,7 +32,8 @@ const CustomToggle = forwardRef<HTMLDivElement, CustomToggleProps>(
 
 CustomToggle.displayName = 'CustomToggle';
 
-export default function SrightBar({toggleShow} : Props) {
+export default function SrightBar({toggleShow, setfriendModal} : Props) {
+
     const friendsData = friends.sort((usr1, usr2) => {
         if (usr1.connected && !usr2.connected) {
             return -1;
@@ -44,6 +49,8 @@ export default function SrightBar({toggleShow} : Props) {
     .map((user, index) => 
         <Splayer key={index} nickname={user.nickname} id={user.id} image={user.image_url} isConnected={user.connected}/>
     );
+
+
     return (
             <div className="d-flex flex-column vh-100 py-2">
                 <div className="pb-1" style={{width: '91%'}}>
@@ -77,7 +84,7 @@ export default function SrightBar({toggleShow} : Props) {
                     {friendsData}
                 </div>
                 <div className="flex-grow-3 row-inline d-flex justify-content-center text-center" style={{width: '91%'}}>
-                    <div className={`col-6 ${styles.search_inpt} my-1 p-2 mx-2 text-center`} style={{cursor: "pointer"}}>
+                    <div className={`col-6 ${styles.search_inpt1} my-1 p-2 mx-2 text-center`} style={{cursor: "pointer"}} onClick={setfriendModal}>
                             <ImUserPlus color="#FFEBEB"/>
                     </div>
                 </div>

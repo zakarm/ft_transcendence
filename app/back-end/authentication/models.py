@@ -1,10 +1,7 @@
-"""Module providing the data from the database mounted to models"""
 from django.db import models
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser, BaseUserManager
 
 class UserManager(BaseUserManager):
-    """Class representing a User Manager"""
-
     def create_user(self, email, password=None, **extra_fields):
         """Function create a User"""
         if not email:
@@ -16,7 +13,6 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
-        """Function create a Superuser"""
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         if extra_fields.get('is_staff') is not True:
@@ -24,10 +20,8 @@ class UserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
         return self.create_user(email, password, **extra_fields)
-       
 
 class User(AbstractBaseUser, PermissionsMixin):
-    """Class representing a User"""
     username = models.CharField(max_length=150)
     email = models.EmailField(max_length=254, unique=True)
     password = models.CharField(max_length=128)
@@ -54,6 +48,4 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
     USERNAME_FIELD = 'email'
     class Meta:
-        """Class to change the behavior of your model fields"""
         db_table = 'authentication_users'
-        
