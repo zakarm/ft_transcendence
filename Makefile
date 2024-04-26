@@ -17,6 +17,9 @@ GREEN := $(shell tput -Txterm setaf 2)
 YELLOW := $(shell tput -Txterm setaf 3)
 RESET := $(shell tput -Txterm sgr0)
 
+create-volume :
+	mkdir -p /Users/${USER}/Desktop/data
+
 # Define targets
 .PHONY: help build up down restart logs
 
@@ -26,11 +29,11 @@ help: ## Show this help message
 	@echo "Targets:"
 	@egrep '^(.+)\:\ ##\ (.+)' $(MAKEFILE_LIST) | column -t -c 2 -s ':#'
 
-build: ## Build Docker images
+build: create-volume ## Build Docker images
 	@echo "$(GREEN)Building Docker images...$(RESET)"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) $(DOCKER_COMPOSE_FLAGS) build --no-cache
 
-up: ## Start Docker containers
+up: create-volume ## Start Docker containers
 	@echo "$(GREEN)Starting Docker containers...$(RESET)"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) $(DOCKER_COMPOSE_FLAGS) up -d
 
