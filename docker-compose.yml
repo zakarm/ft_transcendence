@@ -3,10 +3,11 @@ version: '3.8'
 services:
     back-end:
         container_name: back-end
+        image: back-end
         build: 
-            context: ./back-end
+            context: ./app/back-end
             dockerfile: Dockerfile
-        restart: always
+        restart: on-failure
         depends_on:
             - data-base
         ports:
@@ -14,30 +15,39 @@ services:
         env_file:
             - .env
         volumes:
+            - ./app/back-end:/back-end
             - v_data-base:/var/lib/postgresql/data
         networks:
             - ft_transcendence
 
     front-end:
         container_name: front-end
+        image: front-end
         build: 
-            context: ./front-end
+            context: ./app/front-end
             dockerfile: Dockerfile
+        restart: on-failure
         depends_on:
             - back-end
         ports:
             - "3000:3000"
         env_file:
             - .env
+        volumes:
+            - ./app/front-end:/front-end
+            - /front-end/node_modules
+            - /front-end/.next
+
         networks:
             - ft_transcendence
     
     data-base:
         container_name: data-base
+        image: data-base
         build: 
-            context: ./data-base
+            context: ./app/data-base
             dockerfile: Dockerfile
-        restart: always
+        restart: on-failure
         ports:
             - "5432:5432"
         env_file:
@@ -54,7 +64,8 @@ volumes:
         driver_opts:
             type: none
             o: bind
-            device: /Users/zmrabet/Desktop/data
+            device: /Users/${USER}/Desktop/data
+
 networks:
     ft_transcendence:
         name: ft_transcendence

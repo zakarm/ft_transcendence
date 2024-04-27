@@ -1,0 +1,156 @@
+
+.holder{
+    background-color: #2C3143;
+    border-radius: 15px;
+  }
+  
+  .notification1 {
+      color: #FFEBEB;
+      text-decoration: none;
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+    }
+    
+  .notification1 .badge1 {
+    position: absolute;
+    top: 55px;
+    left: 55px;
+    border-radius: 25px;
+    background: #FF4755;
+    color: #FFEBEB;
+    font-size: 0.7em;
+    padding: 2px;
+  }
+  
+  .img_class1{
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    overflow: hidden; /* Hide overflowing parts of the image */
+    border: 1px solid #27B299;
+  }
+  
+  .search_inpt1{
+    background-color: #2C3143;
+    border: 0;
+    border-radius: 15px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  
+  .search_inpt1:hover{
+    border: 1px solid #FFEBEB;
+    box-shadow: #383838 0 0px 20px 0;
+    box-sizing: border-box;
+    opacity: 1;
+  }
+
+  .edit_btn{
+    border-radius: 25px;
+    background-color: #FF4755;
+    cursor: pointer;
+}
+
+.edit_btn button{
+    border: none;
+    background-color: transparent;
+}
+
+.friend_modal{
+  background-color: #2C3143;
+}
+
+.form_control{
+  font-family: 'itim';
+}
+
+.form_control:focus{
+ color:#bebebe;
+}
+
+.form_control::placeholder{
+  color: #7C7C7C;
+}
+  
+  @media (min-width: 1600px)
+  {
+    .img_class1{
+      width: 75px;
+      height: 75px;
+    }
+    .usr h5 {
+      font-size: large;
+    }
+  }
+  
+  @media (min-width: 1200px) and (max-width: 1599px) {
+    .img_class1{
+      width: 55px;
+      height: 55px;
+    }
+  
+    .usr h5 {
+      font-size: small;
+    }
+  
+    .notification1 .badge1 {
+      position: absolute;
+      top: 40px;
+      left: 40px;
+      border-radius: 25px;
+      background: #FF4755;
+      color: #FFEBEB;
+      font-size: 0.5em;
+      padding: 2px;
+    }
+  }
+  
+  @media (min-width: 992px) and (max-width: 1199px) {
+    .img_class1{
+      width: 35px;
+      height: 35px;
+    }
+  
+    .usr h5 {
+      font-size: x-small;
+    }
+  
+    .notification1 .badge1 {
+      position: absolute;
+      top: 25px;
+      left: 25px;
+      border-radius: 25px;
+      background: #FF4755;
+      color: #FFEBEB;
+      font-size: 0.4em;
+      padding: 2px;
+    }
+  }
+  
+  @media (min-width: 768px) and (max-width: 991px) {
+    .img_class1{
+      width: 25px;
+      height: 25px;
+    }
+  
+    .usr h5 {
+      font-size: xx-small;
+    }
+  
+    .notification1 .badge1 {
+      position: absolute;
+      top: 17px;
+      left: 17px;
+      border-radius: 25px;
+      background: #FF4755;
+      color: #FFEBEB;
+      font-size: 0.3em;
+      padding: 2px;
+    }
+  }
+  
+  
+  
+  
+  

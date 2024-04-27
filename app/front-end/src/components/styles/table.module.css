@@ -1,0 +1,52 @@
+.table {
+  border-spacing: 0px 0.8rem !important;
+  border-collapse: separate !important;
+}
+
+.player_info {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.player_info img {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+  border-radius: 50%;
+}
+
+.titles {
+  background-color: #161625 !important;
+  color: #FFEBEB !important;
+  border: none;
+}
+
+.game_row {
+  border-radius: 25px !important;
+  color: #FFEBEB !important;
+  background-color: transparent !important;
+
+}
+
+.left_col {
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+}
+
+.right_col {
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+}
+
+.game_main_col{
+  margin: 50px !important;
+  padding: 50px !important;
+}
+
+.game_col 
+{
+  border: none;
+  background-color: #1B1E2C !important;
+  color : #FFEBEB !important;
+}

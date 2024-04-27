@@ -1,0 +1,6 @@
+authentication/migrations
+authentication/__pycache__
+ft_transcendence/migrations
+ft_transcendence/__pycache__
+game/__pycache__
+game/migrations

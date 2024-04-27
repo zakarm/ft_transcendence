@@ -1,3 +1,17 @@
-back-end/.venv
-back-end/venv
-back-end/db.sqlite3
+app/back-end/.venv
+app/back-end/venv
+app/back-end/db.sqlite3
+app/back-end/models.py
+app/back-end/__pycache__
+app/back-end/migrations
+app/back-end/authentication/__pycache__
+app/back-end/authentication/migrations
+app/back-end/ft_transcendence/__pycache__
+app/back-end/game/__pycache__
+app/back-end/game/migrations
+app/back-end/dashboards/migrations
+app/back-end/dashboards/__pycache__
+app/front-end/node_modules
+app/front-end/.next
+.venv
+# .env

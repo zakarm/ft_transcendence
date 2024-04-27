@@ -1,0 +1,57 @@
+.usr_class:hover{
+    border: 1px solid #FFEBEB;
+    background-color: #2C3143;
+    border-radius: 15px;
+  }
+
+.img_usr_class{
+  width: 65px;
+  height: 65px;
+  border-radius: 25px;
+}
+
+.opt_class:hover{
+  cursor: pointer;
+}
+
+@media (max-height: 500px)
+{
+  .img_usr_class{
+    width: 30px;
+    height: 30px;
+  }
+
+  .usr_class h5{
+    font-size: small;
+  }
+
+  .usr_class h6{
+    font-size: small;
+  }
+
+  .opt_class{
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 500px)
+{
+  .img_usr_class{
+    width: 30px;
+    height: 30px;
+  }
+
+  .usr_class h5{
+    font-size: small;
+  }
+
+  .usr_class h6{
+    font-size: small;
+  }
+
+  .opt_class{
+    width: 20px;
+    height: 20px;
+  }
+}
