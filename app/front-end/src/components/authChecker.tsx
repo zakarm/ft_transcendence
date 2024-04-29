@@ -14,7 +14,7 @@ const AuthChecker = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         const authentication = async () => {
             const access = Cookies.get('access');
-			console.log(access)
+			// console.log(access)
             if (access) {
                 const response = await fetch('http://localhost:8000/api/verify', {
                     method: 'POST',

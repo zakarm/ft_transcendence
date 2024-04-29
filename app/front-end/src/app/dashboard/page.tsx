@@ -166,7 +166,7 @@ export default function Dashboard() {
                                 </div>
                                 <div className={`row`}>
                                     <div className={`col-12 col-md-8`}>
-                                        <h1 className={`${styles.titles} valo-font`}>THE ULTIMATE PING-PONG GAME</h1>
+                                        <h1 className={`${styles.titles} valo-font`}>THE ULTIMATE PING-PONG GAME.</h1>
                                     </div>
                                 </div>
                                 <div className={`row`}>

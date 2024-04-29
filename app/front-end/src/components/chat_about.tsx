@@ -14,6 +14,10 @@ interface Props{
 
 export default function ChatAbout({handleClose}: Props)
 {
+    Chart.register(
+        RadarController
+    );
+
     const data: ChartData<'radar'> = {
         labels: [
             'Win',

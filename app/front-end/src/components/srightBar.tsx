@@ -9,6 +9,7 @@ import Notification from "./Notification";
 import friends from './friends.json';
 import React, { forwardRef } from 'react';
 import Image from 'next/image'
+import { useRouter } from 'next/navigation';
 
 
 interface Props
@@ -50,6 +51,7 @@ export default function SrightBar({toggleShow, setfriendModal} : Props) {
         <Splayer key={index} nickname={user.nickname} id={user.id} image={user.image_url} isConnected={user.connected}/>
     );
 
+    const router = useRouter();
 
     return (
             <div className="d-flex flex-column vh-100 py-2">
@@ -58,8 +60,8 @@ export default function SrightBar({toggleShow, setfriendModal} : Props) {
                                 <div className={`${styles.holder} text-center p-2`}>
                                     <div className={`col-inline ${styles.notification1}`}>
                                        <Dropdown>
+                                            <Image className={`${styles.img_class1}`} width={60} height={60} src="/char3.png" alt='Profile' onClick={() => router.push('/profile/1')}/>
                                            <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
-                                                <Image className={`${styles.img_class1}`} width={60} height={60} src="/char3.png" alt='Profile'/>
                                                 <span className={`${styles.badge1}`}>3</span>
                                            </Dropdown.Toggle>
                                            <Dropdown.Menu className="drop-class">
@@ -80,7 +82,7 @@ export default function SrightBar({toggleShow, setfriendModal} : Props) {
                             </div>
                          </div>
                 </div>
-                <div className=" mb-2 flex-grow-1 text-center" style={{ overflowY: 'auto', width: '91%' }}>
+                <div className=" my-2 flex-grow-1 text-center" style={{ overflowY: 'auto', width: '91%' }}>
                     {friendsData}
                 </div>
                 <div className="flex-grow-3 row-inline d-flex justify-content-center text-center" style={{width: '91%'}}>
