@@ -156,7 +156,7 @@ export default function Dashboard() {
 
     return (
         <div className={`container-fluid ${styles.page_body} vh-100`}>
-            <div className="row m-0">
+            <div className="row m-0 mt-5">
                 <div className="col-12 mt-5">
                     <div className={`row ${styles.card} m-1`}>
                         <div className='col-12 col-md-6'>

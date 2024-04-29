@@ -5,7 +5,7 @@ import sys
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 
-class AsyncConsumer(AsyncWebsocketConsumer):
+class GameConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         # query_string = parse_qs(self.scope['query_string'].decode())
         # token = query_string.get('token')
