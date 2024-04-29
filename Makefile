@@ -17,9 +17,6 @@ GREEN := $(shell tput -Txterm setaf 2)
 YELLOW := $(shell tput -Txterm setaf 3)
 RESET := $(shell tput -Txterm sgr0)
 
-create-volume :
-	mkdir -p /Users/${USER}/Desktop/data
-
 # Define targets
 .PHONY: help build up down restart logs
 
@@ -29,11 +26,19 @@ help: ## Show this help message
 	@echo "Targets:"
 	@egrep '^(.+)\:\ ##\ (.+)' $(MAKEFILE_LIST) | column -t -c 2 -s ':#'
 
-build: create-volume ## Build Docker images
+create-data-dir: ## Create the data directory
+	@echo "$(GREEN)Creating data directory $(DATA_DIR)...$(RESET)"
+	mkdir -p $(DATA_DIR)
+
+remove-data-dir: ## Remove the data directory
+	@echo "$(YELLOW)Removing data directory $(DATA_DIR)...$(RESET)"
+	rm -rf $(DATA_DIR)
+
+build: create-data-dir ## Build Docker images
 	@echo "$(GREEN)Building Docker images...$(RESET)"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) $(DOCKER_COMPOSE_FLAGS) build --no-cache
 
-up: create-volume ## Start Docker containers
+up: create-data-dir ## Start Docker containers
 	@echo "$(GREEN)Starting Docker containers...$(RESET)"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) $(DOCKER_COMPOSE_FLAGS) up -d
 
@@ -49,14 +54,6 @@ logs: ## View logs from Docker containers
 
 version: ## Show the current version
 	@echo "$(GREEN)Current version: $(VERSION)$(RESET)"
-
-remove-data-dir: ## Remove the data directory
-	@echo "$(YELLOW)Removing data directory $(DATA_DIR)...$(RESET)"
-	rm -rf $(DATA_DIR)
-
-create-data-dir: ## Create the data directory
-	@echo "$(GREEN)Creating data directory $(DATA_DIR)...$(RESET)"
-	mkdir -p $(DATA_DIR)
 
 remove-volumes: ## Remove Docker volumes
 	@echo "$(YELLOW)Removing Docker volumes...$(RESET)"

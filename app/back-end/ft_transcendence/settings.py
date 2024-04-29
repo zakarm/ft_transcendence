@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
     'channels',
+    'djangochannelsrestframework'
 ]
 
 MIDDLEWARE = [
@@ -215,7 +216,7 @@ CORS_ALLOW_METHODS = [
     'PUT',
 ]
 
-ASGI_APPLICATION = 'game.routing.application'
+ASGI_APPLICATION = 'ft_transcendence.asgi.application'
 
 
 CHANNEL_LAYERS = {
