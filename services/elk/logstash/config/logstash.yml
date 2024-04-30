@@ -1,0 +1,9 @@
+http.host: "logstash"
+http.port: 9600
+xpack.monitoring.enabled: false
+# xpack.monitoring.elasticsearch.hosts: ["https://elasticsearch:9200"]
+# xpack.monitoring.elasticsearch.username: "elastic"
+# xpack.monitoring.elasticsearch.password: "${ELASTIC_PASSWORD}"
+# xpack.monitoring.elasticsearch.ssl.certificate_authority: /usr/share/logstash/certs/ca/ca.crt
+# xpack.monitoring.elasticsearch.ssl.certificate: "/usr/share/logstash/certs/logstash/logstash.crt"
+# xpack.monitoring.elasticsearch.ssl.key: "/usr/share/logstash/certs/logstash/logstash.key"

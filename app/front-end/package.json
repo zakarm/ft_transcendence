@@ -13,6 +13,7 @@
     "@types/react-bootstrap": "^0.32.36",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
+    "chart.js": "^4.4.2",
     "flowbite-react": "^0.7.5",
     "gsap": "^3.12.5",
     "jquery": "^3.7.1",

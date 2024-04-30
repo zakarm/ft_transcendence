@@ -14,7 +14,7 @@ interface Props{
 
 export default function ChatAbout({handleClose}: Props)
 {
-    const data = Chart.ChartData = {
+    const data: ChartData<'radar'> = {
         labels: [
             'Win',
             'Loss',
