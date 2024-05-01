@@ -35,9 +35,9 @@ class ProfileIdView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, id):
+    def get(self, request, username):
         try:
-            user = User.objects.get(id=id)
+            user = User.objects.get(username=username)
             serializer_data = ProfileSerializer(instance=user)
             return Response(serializer_data.data)
         except User.objects.model.DoesNotExist:
