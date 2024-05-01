@@ -11,6 +11,7 @@ import Image from 'next/image'
 import InviteFriend from "./inviteFriend";
 
 
+
 export default function MainContainer({ children }: { children: React.ReactNode }) {
   const [show, setShow] = useState<boolean>(false);
   const [showSide, setShowSide] = useState<boolean>(false);

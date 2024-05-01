@@ -2,6 +2,8 @@
 
 import styles from './styles/inviteFriend.module.css';
 import React, { useState } from 'react';
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
 import { InputGroup, Modal, Form, Button } from 'react-bootstrap';
 import friends from './friends.json';
 import Splayer from "./Splayer";
@@ -32,7 +34,7 @@ export default function InviteFriend( {show, close}: Props) {
     return (
         <>
             <Modal contentClassName={`${styles.friend_modal}`} show={show} aria-labelledby="add_friend" centered>
-                <Modal.Header className='d-flex flex-column'>
+                {/* <Modal.Header className='d-flex flex-column'>
                   <Modal.Title>
                     <span style={{color:'#FFEBEB', fontFamily: 'itim'}}><ImUserPlus color="#FFEBEB"/> Add Friend</span>
                   </Modal.Title>
@@ -51,9 +53,28 @@ export default function InviteFriend( {show, close}: Props) {
                       Search..
                     </Button>
                   </InputGroup>
-                </Modal.Header>
+                </Modal.Header> */}
                 <Modal.Body style={{height: '200px', overflow: 'auto'}}>
-                    {
+                    <Tabs
+                      defaultActiveKey="profile"
+                      id="justify-tab-example"
+                      className="mb-3"
+                      justify
+                    >
+                      <Tab eventKey="home" title="Home">
+                        Tab content for Home
+                      </Tab>
+                      <Tab eventKey="profile" title="Profile">
+                        Tab content for Profile
+                      </Tab>
+                      <Tab eventKey="longer-tab" title="Loooonger Tab">
+                        Tab content for Loooonger Tab
+                      </Tab>
+                      <Tab eventKey="contact" title="Contact" disabled>
+                        Tab content for Contact
+                      </Tab>
+                    </Tabs>
+                    {/* {
                         searchedFriends.map((user, index) => 
                             (
                                 <div key={index} className='row d-flex flex-row d-flex align-items-center justify-content-between px-3 py-1 m-2' style={{ borderRadius: '25px', backgroundColor: '#161625' }}>
@@ -62,7 +83,7 @@ export default function InviteFriend( {show, close}: Props) {
                                 </div>
                             )
                         )
-                    }
+                    } */}
                 </Modal.Body>
                 <Modal.Footer>
                         <div className={`${styles.edit_btn} col-md-3 col-sm-5 valo-font text-center m-2 px-2`} onClick={close}><button onClick={close}>Close</button></div>
