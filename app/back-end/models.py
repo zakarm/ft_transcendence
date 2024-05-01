@@ -8,18 +8,6 @@ class Achievements(models.Model):
         managed = False
         db_table = 'Achievements'
 
-class Friendship(models.Model):
-    freindship_id = models.AutoField(primary_key=True)
-    user_from = models.ForeignKey('Users', models.DO_NOTHING,
-                                  db_column='user_from')
-    user_to = models.ForeignKey('Users', models.DO_NOTHING,
-                                db_column='user_to',
-                                related_name='friendship_user_to_set')
-    is_accepted = models.BooleanField()
-    class Meta:
-        managed = False
-        db_table = 'Friendship'
-
 class Messages(models.Model):
     user_one = models.OneToOneField('Users', models.DO_NOTHING,
                                     db_column='user_one', primary_key=True)

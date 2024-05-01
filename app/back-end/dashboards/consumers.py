@@ -1,15 +1,12 @@
 # dashboards/consumers.py
-from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
-from rest_framework_simplejwt.tokens import UntypedToken
-from urllib.parse import parse_qs
+import sys
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
-import sys
 
 class UserStatusConsumer(AsyncWebsocketConsumer):
     async def connect(self,):
         self.accept()
-    
+
     async def disconnect(self, close_code):
         pass
 
