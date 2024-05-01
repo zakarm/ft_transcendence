@@ -69,22 +69,20 @@ class ProfileSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email')
+        fields = ('id', 'username')
     
 class FriendshipSerializer(serializers.ModelSerializer):
-    user_one = serializers.SerializerMethodField()
-    user_two = serializers.SerializerMethodField()
+    user = serializers.SerializerMethodField()
     class Meta:
         model = Friendship
-        fields = ('freindship_id', 'user_one', 'user_two', 'is_accepted')
+        fields = ('user', 'is_accepted')
     
-    def get_user_one(self, obj):
-        user_data = User.objects.get(id = obj.user_from.id)
-        serializer = UserSerializer(user_data)
-        return serializer.data
-    
-    def get_user_two(self, obj):
-        user_data = User.objects.get(id = obj.user_to.id)
+    def get_user(self, obj):
+        if obj.user_from.id == self.context['id']:
+            user_data = User.objects.get(id=obj.user_to.id)
+        else:
+            user_data = User.objects.get(id=obj.user_from.id)
+
         serializer = UserSerializer(user_data)
         return serializer.data
 
@@ -92,13 +90,9 @@ class FriendsSerializer(serializers.ModelSerializer):
     friends = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'friends')
+        fields = ('id', 'username', 'friends')
     
     def get_friends(self, obj):
-        friends_data = Friendship.objects.filter(Q(user_from = obj, is_accepted = True)|
-                                                 Q(user_to= obj, is_accepted = True))
-        serializer_accepted = FriendshipSerializer(friends_data, many=True)
-        friends_data = Friendship.objects.filter(Q(user_from = obj, is_accepted = False)|
-                                                 Q(user_to= obj, is_accepted = False))
-        serializer_pedding = FriendshipSerializer(friends_data, many=True)
-        return serializer_accepted.data +  serializer_pedding.data
+        friends_data = Friendship.objects.filter(Q(user_from = obj)| Q(user_to= obj))
+        serializer = FriendshipSerializer(friends_data, many=True, context = {'id': obj.id})
+        return serializer.data
