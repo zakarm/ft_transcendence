@@ -97,5 +97,8 @@ class FriendsSerializer(serializers.ModelSerializer):
     def get_friends(self, obj):
         friends_data = Friendship.objects.filter(Q(user_from = obj, is_accepted = True)|
                                                  Q(user_to= obj, is_accepted = True))
-        serializer = FriendshipSerializer(friends_data, many=True)
-        return serializer.data
+        serializer_accepted = FriendshipSerializer(friends_data, many=True)
+        friends_data = Friendship.objects.filter(Q(user_from = obj, is_accepted = False)|
+                                                 Q(user_to= obj, is_accepted = False))
+        serializer_pedding = FriendshipSerializer(friends_data, many=True)
+        return serializer_accepted.data +  serializer_pedding.data

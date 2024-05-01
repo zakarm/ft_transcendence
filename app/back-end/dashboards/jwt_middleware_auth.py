@@ -2,7 +2,6 @@ from channels.db import database_sync_to_async
 from django.contrib.auth import get_user_model
 from channels.middleware import BaseMiddleware
 from django.contrib.auth.models import AnonymousUser
-from channels.auth import AuthMiddlewareStack
 from jwt import decode
 from django.conf import settings
 
@@ -20,7 +19,7 @@ def get_user(validated_token):
 class JwtAthenticationMiddleware(BaseMiddleware):
     def __init__(self, inner):
         self.inner = inner
-    
+
     async def __call__(self, scope, receive, send):
         headers = dict(scope['headers'])
         if b'authorization' in headers:
