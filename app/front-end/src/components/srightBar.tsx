@@ -60,7 +60,7 @@ export default function SrightBar({toggleShow, setfriendModal} : Props) {
                                 <div className={`${styles.holder} text-center p-2`}>
                                     <div className={`col-inline ${styles.notification1}`}>
                                        <Dropdown>
-                                            <Image className={`${styles.img_class1}`} width={60} height={60} src="/char3.png" alt='Profile' onClick={() => router.push('/profile/1')}/>
+                                            <Image className={`${styles.img_class1}`} width={60} height={60} src="/char3.png" alt='Profile' onClick={() => router.push('/profile')}/>
                                            <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
                                                 <span className={`${styles.badge1}`}>3</span>
                                            </Dropdown.Toggle>

@@ -1,6 +1,6 @@
 "use client";
 
-import styles from './style.module.css';
+import styles from '../style.module.css';
 import Image from 'next/image';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import Form from 'react-bootstrap/Form';
@@ -59,7 +59,7 @@ interface MonthlyStats {
     summary: MonthlyStats;
   }
 
-export default function ({ params }: { params: { id: string } })
+export default function ({ params }: { params: { username: string } })
 {
     const [profile, setProfile] = useState<ProfileData | null>(null);
 
@@ -68,7 +68,7 @@ export default function ({ params }: { params: { id: string } })
         if (access)
         {
             try {
-                const res = await fetch('http://localhost:8000/api/profile' , {
+                const res = await fetch(`http://localhost:8000/api/profile${params ? '/' + params.username : ''}` , {
                     headers: { Authorization: `Bearer ${access}` },
                 });
         
