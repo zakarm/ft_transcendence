@@ -18,15 +18,19 @@
     border : none;
 }
 
+.inputTitle {
+    color : var(--clr--grey);
+}
+
 .inputHolder {
     width : 450px;
 }
 
 .slider {
     -webkit-appearance: none;
-    width: 100%;
+    width: 95%;
     height: 15px;
-    border-radius: 5px;  
+    border-radius: 25px;  
     background: var(--clr--grey);
     outline: none;
     -webkit-transition: .2s;
@@ -50,7 +54,14 @@
     background: var(--clr-red);
     cursor: pointer;
   }
-
+  
+  .imageFile {
+    width : 450px;
+    color : var(--clr-ldark);
+    display: inline-block;
+    padding: 12px 12px;
+    cursor: pointer;
+  }
 
  .create_button {
     border : none;
@@ -59,13 +70,22 @@
     color : #111111;
     font-size: clamp(0.9rem, -0.268rem + 2.6144vw, 1.6rem);
   }
+
+  .create_button:hover {
+    scale : 1.1;
+  }
+
+  .input:hover {
+    scale : 1.01;
+  }
+  
 @media only screen and (max-width: 1400px) {
     
     .formTitle {
         font-size: 1rem;
     }
     
-    .inputHolder {
+    .inputHolder, .imageFile {
         width : 350px;
     }
 
@@ -80,7 +100,7 @@
         font-size: 1rem;
     }
     
-    .inputHolder {
+    .inputHolder, .imageFile {
         width : 250px;
     }
 
@@ -95,7 +115,7 @@
         font-size: 0.6rem;
     }
     
-    .inputHolder {
+    .inputHolder, .imageFile {
         width : 150px;
     }
 
