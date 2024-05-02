@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from authentication.models import User
 from game.models import Match
+from .models import Friendship
+from django.db.models import F, Q
 from .utils import (get_total_games,
                     get_win_games,
                     get_lose_games,
@@ -63,3 +65,34 @@ class ProfileSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         return data
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username')
+
+class FriendshipSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+    class Meta:
+        model = Friendship
+        fields = ('user', 'is_accepted')
+    
+    def get_user(self, obj):
+        if obj.user_from.id == self.context['id']:
+            user_data = User.objects.get(id=obj.user_to.id)
+        else:
+            user_data = User.objects.get(id=obj.user_from.id)
+
+        serializer = UserSerializer(user_data)
+        return serializer.data
+
+class FriendsSerializer(serializers.ModelSerializer):
+    friends = serializers.SerializerMethodField()
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'friends')
+    
+    def get_friends(self, obj):
+        friends_data = Friendship.objects.filter(Q(user_from = obj)| Q(user_to= obj))
+        serializer = FriendshipSerializer(friends_data, many=True, context = {'id': obj.id})
+        return serializer.data
