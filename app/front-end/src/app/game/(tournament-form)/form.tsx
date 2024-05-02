@@ -13,22 +13,31 @@ interface Props{
     inputId ?:string;
     labelText ?:string,
     labelClass ?: string,
+    inputLength ?: string,
     handleChange ?: (e : ChangeEvent<HTMLInputElement>, i : number) => void
 }
+interface InputValuesProps {
+    [key: string]: string;
+}
 
-class   SubmitButton extends Component {
+interface SubmitButtonProps {
+    props: string[];
+}
+
+class   SubmitButton extends Component<SubmitButtonProps> {
     
-    inputValues : {} = {
-        "username" : "",
+    inputValues : InputValuesProps = {
+        "username" : "", //
         "tournament_name" : "",
-        "start_date" : "",
-        "start_time" : "",
-        "tournament_image" : "",
+        "tournament_start" : "",
+        "start_time" : "", //
+        "tournament_image" : "", //
         "game_difficulty" : "1"
     };
 
-    constructor(props) {
+    constructor(props : SubmitButtonProps) {
         super(props);
+        this.inputValues["game_difficulty"] = "1";
         this.handleSubmit = this.handleSubmit.bind(this);
         this.update = this.update.bind(this);
     }
@@ -36,7 +45,8 @@ class   SubmitButton extends Component {
     update() {
         let   i : number = 0;
         for (let [key, value] of Object.entries(this.inputValues)) {
-            this.inputValues[key] = this.props.props[i];
+            if (this.props.props[i] && this.props.props[i] !== '')
+                this.inputValues[key] = this.props.props[i];
             i++;
         }
     }
@@ -59,7 +69,7 @@ class   SubmitButton extends Component {
             // }
 
             let data =  await response.json()
-            console.log(data);
+            // console.log(data);
         } catch (error) {
             // console.error('Error : ', error);
         }
@@ -91,6 +101,7 @@ function    GetInput(
         inputId="",
         labelText="",
         handleChange,
+        inputLength="",
         labelClass=""
     }: Props) {
 
@@ -108,6 +119,7 @@ function    GetInput(
                     placeholder={placeholder}
                     className={`${styles.input} ${inputClassName} ps-4`}
                     id={inputId}
+                    maxLength={inputLength}
                     onChange={handleChange}
                 />
             </div>
@@ -117,6 +129,13 @@ function    GetInput(
 }
 
 function    GetImageInput({handleChange} : Props) {
+    const [val, setVal] = useState<string>("");
+
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setVal(e.target.value);
+        handleChange(e, 4);
+        // console.log(val)
+    };
     return (
         <>
         <div className={`p-2 mt-2 row justify-content-center`}>
@@ -124,18 +143,19 @@ function    GetImageInput({handleChange} : Props) {
                 className={`col-9 ${styles.inputTitle} itim-font mb-2 p-0`}
                 htmlFor="imageInput">Tournament Image
             </label>
-            <label
-                className={`col-9 itim-font text-end ${styles.input} ${styles.imageFile}`}
-                htmlFor="imageInput">.jpg
-            </label>
-            
             <div className={`${styles.inputHolder} row justify-content-center p-0 m-2`}>
+                <label
+                    className={`col-9 itim-font text-end d-flex justify-content-between ${styles.input} ${styles.imageFile}`}
+                    htmlFor="imageInput">
+                        <div className={`${styles.imageText} text-nowrap ms-2`}>{val.split('\\').pop()}</div>
+                        <div><img src="imageUpload.png" height="15px"/></div>
+                </label>
                 <input
                     type="file"
                     placeholder="upload an image"
                     className={`imageInput`}
                     id="imageInput"
-                    onChange={handleChange}
+                    onChange={handleInputChange}
                 />
             </div>
         </div>
@@ -177,35 +197,34 @@ function CreateTournament() {
 
     return (
         <>
-        <form className={`${styles.formWrapper} row justify-content-center p-0 m-0 mt-2`}>
+        <form className={`${styles.formWrapper} row justify-content-center p-0 m-0`}>
 
             <fieldset className={`row justify-content-center p-0 m-0`}>
                     <div className="row">
                         <div className="col text-center p-4 mt-2">
-                            <legend className={`valo-font text-nowrap ${styles.formTitle}`}>CREATE TOURNAMENT</legend>
+                            <legend className={`valo-font text ${styles.formTitle}`}>CREATE TOURNAMENT</legend>
                         </div>
                     </div>
                     <div className="row justify-content-center">
 
                     <GetInput
                         className="p-2 mt-2 row justify-content-center"
-                        inputClassName=""
                         inputType="text"
                         inputId="Username"
                         labelText="Username"
+                        inputLength="20"
                         handleChange={(e : ChangeEvent<HTMLInputElement>) => changeValue(e, 0)}>
                     </GetInput>
                     <GetInput
                         className="p-2 mt-2 row justify-content-center"
-                        inputClassName=""
                         inputType="text"
                         inputId="Tournament_name"
                         labelText="Tournament name"
+                        inputLength="30"
                         handleChange={(e : ChangeEvent<HTMLInputElement>) => changeValue(e, 1)}>
                     </GetInput>
                     <GetInput
                         className="p-2 mt-2 row justify-content-center"
-                        inputClassName=""
                         inputType="date"
                         inputId="start_date"
                         labelText="Start date"
@@ -213,7 +232,6 @@ function CreateTournament() {
                     </GetInput>
                     <GetInput
                         className="p-2 mt-2 row justify-content-center"
-                        inputClassName=""
                         inputType="time"
                         inputId="start_time"
                         labelText="Start time"
