@@ -11,7 +11,6 @@ import os
 import django
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
-from dashboards.jwt_middleware_auth import JwtAthenticationMiddleware
 from dashboards import routing as dashboard_routing
 from game import routing as game_routing
 
@@ -20,12 +19,11 @@ django.setup()
 
 application = ProtocolTypeRouter({
     'http': get_asgi_application(),
-    'websocket': JwtAthenticationMiddleware(
+    'websocket': 
             URLRouter
             (
                 dashboard_routing.websocket_urlpatterns
                 +
                 game_routing.websocket_urlpatterns
             )
-        )
 })

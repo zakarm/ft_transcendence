@@ -20,3 +20,5 @@ daphne
 requests-mock
 channels
 faker
+asgi_redis
+channels_redis
