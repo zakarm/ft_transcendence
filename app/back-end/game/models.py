@@ -13,7 +13,7 @@ class Match(models.Model):
     tackle_user_one = models.IntegerField()
     tackle_user_two = models.IntegerField()
     class Meta:
-        db_table = 'Match'
+        db_table = 'Matches'
 
 
 class Tournaments(models.Model):
