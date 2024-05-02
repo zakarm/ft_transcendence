@@ -27,7 +27,7 @@
 }
 
 .slider {
-    -webkit-appearance: none;
+    appearance: none;
     width: 95%;
     height: 15px;
     border-radius: 25px;  
@@ -80,7 +80,7 @@
   }
   
 @media only screen and (max-width: 1400px) {
-    
+
     .formTitle {
         font-size: 1rem;
     }
@@ -95,11 +95,11 @@
 }
 
 @media only screen and (max-width: 776px) {
-    
+
     .formTitle {
         font-size: 1rem;
     }
-    
+
     .inputHolder, .imageFile {
         width : 250px;
     }
