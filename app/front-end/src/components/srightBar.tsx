@@ -36,32 +36,6 @@ CustomToggle.displayName = 'CustomToggle';
 
 export default function SrightBar({toggleShow, setfriendModal} : Props) {
 
-    const fetchFriendsData =async () => {
-        const access = Cookies.get('access');
-        if (access)
-        {
-            try {
-                const res = await fetch('http://localhost:8000/api/friends', {
-                    headers: { Authorization: `Bearer ${access}` },
-                });
-
-                if (!res.ok)
-                    throw new Error('Failed to fetch data');
-
-                const data = await res.json();
-                console.log(data);
-            } catch (error) {
-                console.error('Error fetching data: ', error);
-            }
-        }
-        else
-            console.log('Access token is undefined or falsy');
-    }
-
-    useEffect(() => {
-        fetchFriendsData();
-    }, []);
-
     const friendsData = friends.sort((usr1, usr2) => {
         if (usr1.connected && !usr2.connected) {
             return -1;
