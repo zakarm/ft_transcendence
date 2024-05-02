@@ -19,3 +19,4 @@ asgiref
 daphne
 requests-mock
 channels
+faker
