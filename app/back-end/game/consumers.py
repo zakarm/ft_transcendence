@@ -23,21 +23,10 @@ def get_user(user_id):
         return AnonymousUser()
 
 
-async def validate_token(token):
-    try:
-        UntypedToken(token)
-        decode_data = decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-        return decode_data["user_id"]
-    except Exception as e:
-        print(f"Token is invalid: {e}", file=sys.stderr)
-        return None
-
-
 class GameConsumer(AsyncWebsocketConsumer):
     Rooms_index = 0
     rooms = {}
-
-    def get_room(self):
+    async def get_room(self):
         return self.rooms[self.room_name]
 
     # -----------------------> 1. broadcast_message <-----------------------
@@ -45,60 +34,61 @@ class GameConsumer(AsyncWebsocketConsumer):
         try:
             print(f"Broadcasting message: {message}", file=sys.stderr)
             await self.channel_layer.group_send(
-                self.room_name, {"type": "bmessage", "message": message}
+                self.room_name, {"type": "message", "message": message}
             )
         except Exception as e:
             print(f"An error occurred in broadcast_message: {e}")
 
-    async def bmessage(self, event):
+    async def message(self, event):
         try:
             print(f"Received message: {event['message']}", file=sys.stderr)
             message = event["message"]
             await self.send(text_data=json.dumps({"message": message}))
         except Exception as e:
-            print(f"An error occurred in bmessage: {e}")
+            print(f"An error occurred in message: {e}")
 
-    # -----------------------> 2. broadcast_message <-----------------------
+    # -----------------------> 2. connect <-----------------------
 
     async def connect(self):
         try:
-            query_string = parse_qs(self.scope["query_string"].decode())
-            token = query_string.get("token")
-            if not token:
-                await self.close()
-            else:
-                user_id = await validate_token(token[0])
-                if user_id is None:
-                    await self.close()
-                else:
-                    await self.accept()
-                    print("-" * 50, file=sys.stderr)
-                    self.scope["user"] = await get_user(user_id=user_id)
-                    print(f"->User: {self.scope['user']}", file=sys.stderr)
-                    self.room_name, self.room = await self.find_or_create_room(
-                        self.scope["user"]
-                    )
-                    print(f"->Room: {self.room_name}", file=sys.stderr)
-                    await self.channel_layer.group_add(
-                        self.room_name, self.channel_name
-                    )
-                    index = self.room.get_user_index(self.scope["user"])
+            print(f"-" * 50, file=sys.stderr)
+            print("Connecting...", file=sys.stderr)
+            print(f"User: {self.scope['user']}", file=sys.stderr)
+            print(f"user_id: {self.scope['user'].id}", file=sys.stderr)
+            print(
+                f"is_authenticated: {self.scope['user'].is_authenticated}",
+                file=sys.stderr,
+            )
+            print(f"-" * 50, file=sys.stderr)
+            if self.scope["user"].is_authenticated:
+                await self.accept()
+                self.user = await get_user(user_id=self.scope["user"].id)
+                self.room_name, self.room = await self.find_or_create_room(self.user)
+                await self.channel_layer.group_add(self.room_name, self.channel_name)
+                index = self.room.get_user_index(self.user)
+                message = (
+                    f"index: {index}, User: {self.user} , Room_name: {self.room_name}"
+                )
+                await self.send(text_data=json.dumps({"message": message}))
+                print(f"-" * 50, file=sys.stderr)
+                if self.room.is_ready():
+                    self.room.start_game()
                     user1, user2 = self.room.get_original_users()
-                    message = (
-                        f"index:{index}, User1:->[ {user1} ]<-, User2:->[{user2}]<-"
+                    await self.broadcast_message(
+                        f"message: Game started,user1: {user1}, user2: {user2}"
                     )
-                    await self.send(text_data=json.dumps({"message": message}))
-                    if self.room.is_ready():
-                        self.room.start_game()
-                        print(f"Room {self.room_name} is full", file=sys.stderr)
-                        await self.broadcast_message("Game started")
+            else:
+                await self.close()
+
         except Exception as e:
             print(f"An error occurred in connect: {e}")
 
+    # -----------------------> 3. disconnect <-----------------------
     async def disconnect(self, close_code):
         # await self.channel_layer.group_discard(self.room_name, self.channel_name)
         pass
 
+    # -----------------------> 4. receive <-----------------------
     async def receive(self, text_data):
         print(f"Received message: {text_data}", file=sys.stderr)
         try:
@@ -109,6 +99,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         await self.send(text_data=json.dumps({"message": message}))
 
+    # -----------------------> 5. find_or_create_room <-----------------------
     async def find_or_create_room(self, user_id):
         for room_name, room in self.rooms.items():
             if room.get_game_state() == True and room.is_user_joined(user_id):
