@@ -8,6 +8,7 @@ from django.contrib.auth.models import AnonymousUser
 from channels.db import database_sync_to_async
 from authentication.models import User
 from django.db.models import F
+
 @database_sync_to_async
 def get_user(user_id):
     try:

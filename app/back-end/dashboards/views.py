@@ -4,7 +4,8 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .serializer import (MainDashboardSerializer,
                          ProfileSerializer,
-                         FriendsSerializer)
+                         FriendsSerializer,
+                         UserSerializer)
 from .models import Friendship
 from authentication.models import User
 from rest_framework import status
@@ -51,6 +52,18 @@ class FriendsView(APIView):
         user = request.user
         serializer = FriendsSerializer(instance=user)
         return Response(serializer.data)
+
+class UserSearchView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    serializer_class = UserSerializer
+    def post(self, request):
+        user = request.data['username_search']
+        queryset = User.objects.filter(username__startswith=user)
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
+
 
 # class RemoveFriendshipView(APIView):
 #     authentication_classes = [JWTAuthentication]

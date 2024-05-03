@@ -45,7 +45,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     quote = models.CharField(max_length = 100, blank = True, null = True)
     intro = models.CharField(max_length = 100, blank = True, null = True)
 
-
     objects = UserManager()
     USERNAME_FIELD = 'email'
     class Meta:
