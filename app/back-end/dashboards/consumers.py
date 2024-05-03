@@ -36,29 +36,54 @@ def update_user_offline(user_id):
 
 class UserStatusConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        await update_user_online(self.scope['user'].id)
-        await self.accept()
+        if self.scope["user"].is_authenticated:
+            self.user = await get_user(self.scope["user"].id)
+            await update_user_online(self.scope['user'].id)
+            await self.accept()
+            await  self.channel_layer.group_add("connected_users", self.channel_name)
+            await self.channel_layer.group_send(
+                "connected_users",
+                {
+                    "type": "user_connected",
+                    "id": self.user.id,
+                    "user": self.user.username,
+                    "image_url": self.user.image_url
+                }
+            )
+        else:
+            await self.close()
 
     async def disconnect(self, close_code):
         await update_user_offline(self.scope['user'].id)
+        await self.channel_layer.group_send(
+            "connected_users",
+            {
+                "type": "user_disconnected",
+                "id": self.user.id,
+                "user": self.user.username,
+            },
+        )
+        await self.channel_layer.group_discard("connected_users", self.channel_name)
+    
+    
+    async def user_connected(self, event):
+        await self.send(text_data=json.dumps({
+            "type": "user_connected",
+            "id": event["id"],
+            "user": event["user"],
+            "image_url": event["image_url"]
+        }))
+
+    async def user_disconnected(self, event):
+        await self.send(text_data=json.dumps({
+            "type": "user_disconnected",
+            "id": event["id"],
+            "user": event["user"]
+        }))
 
     async def receive(self, text_data):
         user = self.scope['user']
         if user:
-            try:
-                text_data_json = json.loads(text_data)
-                if text_data_json.get("action") == "get_friends":
-                    data = await get_friends(user.id)
-                    await self.send(text_data=json.dumps({
-                        "friends": data
-                    }))
-                else:
-                    await self.send(text_data=json.dumps({
-                        "error": "Invalid action"
-                    }))
-            except json.JSONDecodeError:
-                await self.send(text_data=json.dumps({
-                    "error": "Invalid JSON data"
-                }))
+            pass
         else:
             await self.close()
