@@ -23,6 +23,9 @@ class RoomObject:
         self.index = 1
         self.score = {"user1": 0, "user2": 0}
 
+    def set_game_state(self, state):
+        self.game_state = state
+
     def start_game(self):
         self.game_started = True
 
@@ -245,9 +248,6 @@ class RoomObject:
 
     def is_empty(self):
         return not self.users
-
-    def start_game(self):
-        self.game_started = True
 
     def is_started(self):
         return self.game_started
