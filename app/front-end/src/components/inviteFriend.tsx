@@ -205,15 +205,15 @@ export default function InviteFriend( {show, close}: Props) {
                           </InputGroup>
                         </Modal.Header>
                         <Modal.Body style={{height: '200px', overflow: 'auto'}}>
-                          {
-                              searchedFriends.map((user, index) => 
-                                  (
-                                      <div key={index} className='row d-flex flex-row d-flex align-items-center justify-content-between px-3 py-1 m-2' style={{ borderRadius: '25px', backgroundColor: '#161625' }}>
-                                          <div className='col-3 text-start'><Splayer nickname={user.nickname} id={1} image={user.image_url} isConnected={user.connected} /></div>
-                                          <div className='col-9 text-end'><Button variant="dark">Unblock <CgUnblock color="#FFEBEB" /></Button></div>
-                                      </div>
-                                  )
-                              )
+                          { searchedFriends &&
+                            searchedFriends.map((user, index) =>
+                                (
+                                    <div key={index} className='row d-flex flex-row d-flex align-items-center justify-content-between px-3 py-1 m-2' style={{ borderRadius: '25px', backgroundColor: '#161625' }}>
+                                        <div className='col-3 text-start'><Splayer nickname={user.user.username} id={1} image={'/char3.png'} isConnected={false} /></div>
+                                        <div className='col-9 text-end'><Button variant="dark">Unblock <CgUnblock color="#FFEBEB" /></Button></div>
+                                    </div>
+                                )
+                            )
                           }
                         </Modal.Body>
                       </Tab>
