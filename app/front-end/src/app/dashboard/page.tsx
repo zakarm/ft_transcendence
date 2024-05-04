@@ -82,7 +82,7 @@ export default function Dashboard() {
                 console.error('An unexpected error happened:', error);
                 }
             } else {
-                console.log('Access token is undefined or falsy');
+                console.log('Access token is undefined or false');
             }
             };
         fetchData();

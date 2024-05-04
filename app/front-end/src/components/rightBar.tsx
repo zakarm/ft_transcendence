@@ -6,15 +6,14 @@ import { ImUserPlus } from "react-icons/im";
 import Player from "./Player";
 import Notification from "./Notification";
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import friends from './friends.json';
-import React, { forwardRef, useState, useEffect } from 'react';
+import React, { forwardRef, useState } from 'react';
 import styles from './styles/rightBar.module.css';
 import Image from 'next/image';
 import Cookies from 'js-cookie';
 
-
 interface Props
 {
+    friends_data: any;
     show?: boolean;
     setShow: (show: boolean) => void;
     handleClose: () => void;
@@ -29,7 +28,7 @@ interface CustomToggleProps {
 
 interface Friend {
 	id: number;
-	nickname: string;
+	username: string;
 	image_url: string;
 	connected: boolean;
 }
@@ -44,46 +43,14 @@ const CustomToggle = forwardRef<HTMLDivElement, CustomToggleProps>(
 
 CustomToggle.displayName = 'CustomToggle';
 
-export default function RightBar({setShow, show, handleClose, toggleShow, setfriendModal} : Props) {
+export default function RightBar({friends_data, setShow, show, handleClose, toggleShow, setfriendModal} : Props) {
 
-    // Zikos Socket
-
-    // ma3reftch 3lach useeffect katexecute joj mrat tanchouf blanha
-    useEffect(() => 
-    {
-        // logic limchit bih howa les pages kamlin aykon fih right bar donc une fois katrandra had right ye3ni 
-        // mktrendra chi haja fiha rghitbar tankono 3arfin bli rah t autentifia 
-        // hna une fois kthel right bar rah 3ndi fbase de donne connected 
-        const access = Cookies.get('access')
-        // had socket anrdoha gloabal using use context 
-        const socket = new WebSocket(`ws://localhost:8000/ws/user-status?token=${access}`);
-
-        socket.onopen = () => {
-            console.log('WebSocket connection opened [Rijal]');
-        };
-
-        socket.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            console.log("DATA TYPE :" + data.type);
-            switch (data.type) {
-                //in this case khaso ytzad fright bar
-                case 'user_connected':
-                    console.log("id :" + data.id + " | user :" + data.user + " | image :" + data.image_url);
-                    break;
-
-                //in this case khaso yt7yad fright bar
-                case 'user_disconnected':
-                    console.log("id :" + data.id + " | user :" + data.user);
-                    break;
-            }
-        };
-    }, []);
 
     // Othman Logic
     const [searchTerm, setSearchTerm] = useState<string>('');
-
-    const filteredFriends = friends
-    .filter((friend: Friend) => friend.nickname.toLowerCase().startsWith(searchTerm.toLowerCase()))
+    console.log(friends_data)
+    const filteredFriends = friends_data
+    .filter((friend: Friend) => friend.username.toLowerCase().startsWith(searchTerm.toLowerCase()))
     .sort((usr1: Friend, usr2: Friend) => {
       if (usr1.connected && !usr2.connected) {
         return -1;
@@ -96,7 +63,7 @@ export default function RightBar({setShow, show, handleClose, toggleShow, setfri
     .map((user: Friend, index: number) => (
       <Player
         key={index}
-        nickname={user.nickname}
+        nickname={user.username}
         id={user.id}
         image={user.image_url}
         isConnected={user.connected}

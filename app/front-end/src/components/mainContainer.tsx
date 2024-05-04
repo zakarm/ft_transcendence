@@ -1,7 +1,7 @@
 'use client'
 import { FaAngleLeft } from "react-icons/fa";
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import SideBar from "./sideBar";
 import RightBar from './rightBar';
 import SrightBar from "./srightBar";
@@ -9,7 +9,15 @@ import Togglebar from './toggleBar';
 import styles from './styles/mainContainer.module.css'
 import Image from 'next/image'
 import InviteFriend from "./inviteFriend";
+import { WebSocketContext } from "./webSocket";
 
+
+interface Friend {
+	id: number;
+	username: string;
+	image_url: string;
+	connected: boolean;
+}
 
 export default function MainContainer({ children }: { children: React.ReactNode }) {
   const [show, setShow] = useState<boolean>(false);
@@ -19,6 +27,29 @@ export default function MainContainer({ children }: { children: React.ReactNode 
   const toggleShow = () => setShow((s) => !s);
   const handleToggle = () => setShowSide(false);
   const showToggle = () => setShowSide(true);
+  const { socket } = useContext(WebSocketContext) || {};
+  const [friendsfetched, setFriendsFetched] = useState<Friend[]>([]);
+
+  useEffect(() => {
+      if (socket) {
+          socket.onmessage = (event) => {
+              const data = JSON.parse(event.data);
+              console.log("DATA TYPE :" + data.type);
+              switch (data.type) {
+              case 'user_connected':
+                  console.log("id :" + data.id + " | user :" + data.user + " | image :" + data.image_url);
+                  setFriendsFetched((prevData) => [...prevData, { id: data.id, username: data.user, image_url: data.image_url, connected: true }]);
+                  break;
+
+              case 'user_disconnected':
+                  console.log("id :" + data.id + " | user :" + data.user);
+                  setFriendsFetched((prevData) => prevData.filter((friend) => friend.id !== data.id));
+                  break;
+              }
+          };
+      }
+  }, [socket]);
+
   return (
       <div className="container-fluid p-0 vh-100" style={{backgroundColor: '#000000', overflow: 'hidden'}}>
       <div className="row">
@@ -49,11 +80,11 @@ export default function MainContainer({ children }: { children: React.ReactNode 
               <div className='col-1 vh-100 d-flex justify-content-end align-items-center text-center' style={{backgroundColor: '#000000'}}>
                 <div className={`${styles.drag_class} pt-3 pb-3`} style={{backgroundColor: '#161625', borderRadius: '15px 0 0 15px', cursor: 'pointer'}} onClick={toggleShow}>
                   <FaAngleLeft  color="#FFEBEB" size='1.2em'/>
-                  <RightBar setfriendModal={() => setFriendModal(true)} show={show} setShow={setShow} handleClose={handleClose} toggleShow={toggleShow}/>
+                  <RightBar friends_data={friendsfetched} setfriendModal={() => setFriendModal(true)} show={show} setShow={setShow} handleClose={handleClose} toggleShow={toggleShow}/>
                 </div>
               </div>
               <div className='col-11'>
-                <SrightBar setfriendModal={() => setFriendModal(true)} toggleShow={toggleShow}/>
+                <SrightBar friends_data={friendsfetched} setfriendModal={() => setFriendModal(true)} toggleShow={toggleShow}/>
               </div>
               <InviteFriend show={friendModal} close={() => setFriendModal(false)}/>
             </div>

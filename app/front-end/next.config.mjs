@@ -2,14 +2,14 @@
 const nextConfig = {
     // productionBrowserSourceMaps: false, // Disable source maps in development
     // optimizeFonts: false, // Disable font optimization
-    minify: true,
+    // minify: true,
     images: {
         domains: ['cdn.cloudflare.steamstatic.com', 'ddragon.leagueoflegends.com'],
     },
-    eslint: 
-    {
+    eslint: {
         ignoreDuringBuilds: true,
     },
+    reactStrictMode: false,
 };
 
 export default nextConfig;
