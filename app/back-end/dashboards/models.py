@@ -7,5 +7,7 @@ class Friendship(models.Model):
     user_to = models.ForeignKey('authentication.User', models.DO_NOTHING,
                                 db_column='user_to', related_name = "user_to_set")
     is_accepted = models.BooleanField(default=False)
+    u_one_is_blocked_u_two = models.BooleanField(default=False)
+    u_two_is_blocked_u_one = models.BooleanField(default=False)
     class Meta:
         db_table = 'Friendship'

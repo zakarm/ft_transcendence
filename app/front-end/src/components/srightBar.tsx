@@ -6,15 +6,21 @@ import { ImUserPlus } from "react-icons/im";
 import styles from './styles/srightBar.module.css'
 import Splayer from "./Splayer";
 import Notification from "./Notification";
-import friends from './friends.json';
-import React, { forwardRef, useEffect } from 'react';
+import React, { forwardRef } from 'react';
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 
+interface Friend {
+	id: number;
+	username: string;
+	image_url: string;
+	connected: boolean;
+}
 
 interface Props
 {
+    friends_data : any;
     toggleShow: () => void;
     setfriendModal: () => void;
 }
@@ -34,9 +40,10 @@ const CustomToggle = forwardRef<HTMLDivElement, CustomToggleProps>(
 
 CustomToggle.displayName = 'CustomToggle';
 
-export default function SrightBar({toggleShow, setfriendModal} : Props) {
+export default function SrightBar({toggleShow, setfriendModal, friends_data} : Props) {
 
-    const friendsData = friends.sort((usr1, usr2) => {
+    console.log(friends_data);
+    const data = friends_data.sort((usr1: any, usr2: any) => {
         if (usr1.connected && !usr2.connected) {
             return -1;
         }
@@ -48,8 +55,8 @@ export default function SrightBar({toggleShow, setfriendModal} : Props) {
         return usr1.id - usr2.id;
     })
     // .slice(0, 5)
-    .map((user, index) => 
-        <Splayer key={index} nickname={user.nickname} id={user.id} image={user.image_url} isConnected={user.connected}/>
+    .map((user: Friend, index: number) => 
+        <Splayer key={index} nickname={user.username} id={user.id} image={user.image_url} isConnected={user.connected}/>
     );
 
     const router = useRouter();
@@ -83,8 +90,8 @@ export default function SrightBar({toggleShow, setfriendModal} : Props) {
                             </div>
                          </div>
                 </div>
-                <div className=" my-2 flex-grow-1 text-center" style={{ overflowY: 'auto', width: '91%' }}>
-                    {friendsData}
+                <div className=" mb-2 flex-grow-1 text-center" style={{ overflowY: 'auto', width: '91%' }}>
+                    {data}
                 </div>
                 <div className="flex-grow-3 row-inline d-flex justify-content-center text-center" style={{width: '91%'}}>
                     <div className={`col-6 ${styles.search_inpt1} my-1 p-2 mx-2 text-center`} style={{cursor: "pointer"}} onClick={setfriendModal}>

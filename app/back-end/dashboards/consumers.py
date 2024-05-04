@@ -1,48 +1,89 @@
 import sys
-from channels.generic.websocket import AsyncWebsocketConsumer
 import json
-from django.contrib.auth.models import AnonymousUser
+from channels.generic.websocket import AsyncWebsocketConsumer
 from rest_framework_simplejwt.tokens import AccessToken
+from .serializer import FriendsSerializer
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AnonymousUser
+from channels.db import database_sync_to_async
+from authentication.models import User
+from django.db.models import F
+
+@database_sync_to_async
+def get_user(user_id):
+    try:
+        return User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return AnonymousUser()
+
+@database_sync_to_async
+def get_friends(user_id):
+    return FriendsSerializer(instance=User.objects.get(id=user_id)).data
+
+@database_sync_to_async
+def update_user_online(user_id):
+    try:
+        User.objects.filter(id=user_id).update(is_online = F('is_online') + 1)
+    except User.DoesNotExist:
+        pass
+
+@database_sync_to_async
+def update_user_offline(user_id):
+    try:
+        User.objects.filter(id=user_id).update(is_online = F('is_online') - 1)
+    except User.DoesNotExist:
+        pass
 
 class UserStatusConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        # Get the user and authentication data from the scope
-        user = self.scope["user"]
-        auth_headers = self.scope.get("headers", [])
-        auth_header = None
-        for header in auth_headers:
-            if header[0].decode() == "authorization":
-                auth_header = header[1].decode()
-                break
-
-        if user.is_authenticated:
-            # User is authenticated
-            print(f"Authenticated user: {user.username}", file=sys.stderr)
-            self.accept()
-        elif auth_header:
-            # Try to authenticate the user with the provided token
-            try:
-                token = auth_header.split(" ")[1]
-                access_token = AccessToken(token)
-                user = access_token.payload["user_id"]
-                print(f"Authenticated user: {user}", file=sys.stderr)
-                self.accept()
-            except Exception as e:
-                print(f"Authentication error: {e}", file=sys.stderr)
-                self.close()
+        if self.scope["user"].is_authenticated:
+            self.user = await get_user(self.scope["user"].id)
+            await update_user_online(self.scope['user'].id)
+            await self.accept()
+            await  self.channel_layer.group_add("connected_users", self.channel_name)
+            await self.channel_layer.group_send(
+                "connected_users",
+                {
+                    "type": "user_connected",
+                    "id": self.user.id,
+                    "user": self.user.username,
+                    "image_url": self.user.image_url
+                }
+            )
         else:
-            # Anonymous user
-            print("Anonymous user", file=sys.stderr)
-            self.accept()
+            await self.close()
 
     async def disconnect(self, close_code):
-        pass
+        await update_user_offline(self.scope['user'].id)
+        await self.channel_layer.group_send(
+            "connected_users",
+            {
+                "type": "user_disconnected",
+                "id": self.user.id,
+                "user": self.user.username,
+            },
+        )
+        await self.channel_layer.group_discard("connected_users", self.channel_name)
+    
+    
+    async def user_connected(self, event):
+        await self.send(text_data=json.dumps({
+            "type": "user_connected",
+            "id": event["id"],
+            "user": event["user"],
+            "image_url": event["image_url"]
+        }))
+
+    async def user_disconnected(self, event):
+        await self.send(text_data=json.dumps({
+            "type": "user_disconnected",
+            "id": event["id"],
+            "user": event["user"]
+        }))
 
     async def receive(self, text_data):
-        print(f"Received message: {text_data}", file=sys.stderr)
-        try:
-            text_data_json = json.loads(text_data)
-            message = text_data_json['message']
-        except json.JSONDecodeError:
-            message = text_data
-        await self.send(text_data=json.dumps({'message': message}))
+        user = self.scope['user']
+        if user:
+            pass
+        else:
+            await self.close()

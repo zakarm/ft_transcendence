@@ -6,14 +6,14 @@ import { ImUserPlus } from "react-icons/im";
 import Player from "./Player";
 import Notification from "./Notification";
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import friends from './friends.json';
 import React, { forwardRef, useState } from 'react';
 import styles from './styles/rightBar.module.css';
 import Image from 'next/image';
-
+import Cookies from 'js-cookie';
 
 interface Props
 {
+    friends_data: any;
     show?: boolean;
     setShow: (show: boolean) => void;
     handleClose: () => void;
@@ -28,7 +28,7 @@ interface CustomToggleProps {
 
 interface Friend {
 	id: number;
-	nickname: string;
+	username: string;
 	image_url: string;
 	connected: boolean;
 }
@@ -43,32 +43,14 @@ const CustomToggle = forwardRef<HTMLDivElement, CustomToggleProps>(
 
 CustomToggle.displayName = 'CustomToggle';
 
-export default function RightBar({setShow, show, handleClose, toggleShow, setfriendModal} : Props) {
+export default function RightBar({friends_data, setShow, show, handleClose, toggleShow, setfriendModal} : Props) {
 
-    // const friendsData = friends
-    // .sort((usr1: Friend, usr2: Friend) => {
-    //   if (usr1.connected && !usr2.connected) {
-    //     return -1;
-    //   }
-    //   if (!usr1.connected && usr2.connected) {
-    //     return 1;
-    //   }
-    //   return usr1.id - usr2.id;
-    // })
-    // .map((user: Friend, index: number) => (
-    //   <Player
-    //     key={index}
-    //     nickname={user.nickname}
-    //     id={user.id}
-    //     image={user.image_url}
-    //     isConnected={user.connected}
-    //   />
-    // ));
 
+    // Othman Logic
     const [searchTerm, setSearchTerm] = useState<string>('');
-
-    const filteredFriends = friends
-    .filter((friend: Friend) => friend.nickname.toLowerCase().startsWith(searchTerm.toLowerCase()))
+    console.log(friends_data)
+    const filteredFriends = friends_data
+    .filter((friend: Friend) => friend.username.toLowerCase().startsWith(searchTerm.toLowerCase()))
     .sort((usr1: Friend, usr2: Friend) => {
       if (usr1.connected && !usr2.connected) {
         return -1;
@@ -81,7 +63,7 @@ export default function RightBar({setShow, show, handleClose, toggleShow, setfri
     .map((user: Friend, index: number) => (
       <Player
         key={index}
-        nickname={user.nickname}
+        nickname={user.username}
         id={user.id}
         image={user.image_url}
         isConnected={user.connected}
