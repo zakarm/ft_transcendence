@@ -22,24 +22,20 @@ interface Props{
 interface User {
   id: number;
   username: string;
+  image_url: string;
 }
 
-interface Friend {
+interface Friend_ {
   user: User;
   is_accepted: boolean;
-}
-
-interface UserData {
-  user: User;
-  friends: Friend[];
 }
 
 export default function InviteFriend( {show, close}: Props) {
 
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [searchedPendingFriends, setsearchedPendingFriends] = useState<Friend[]>([]);
-  const [searchedFriends, setsearchedFriends] = useState<Friend[]>([]);
-  const [users, setUsers] = useState<UserData | null>(null);
+  const [searchedPendingFriends, setsearchedPendingFriends] = useState<Friend_[]>([]);
+  const [searchedFriends, setsearchedFriends] = useState<Friend_[]>([]);
+  const [users, setUsers] = useState<Friend_[]>([]);
 
   const fetchUsersData = async () => {
     const access = Cookies.get('access');
@@ -53,13 +49,60 @@ export default function InviteFriend( {show, close}: Props) {
             if (!res.ok)
               throw new Error('Failed to fetch data');
 
-            setUsers(await res.json());
+            const data = await res.json();
+            const transData = data.friends.map((friend: Friend_) => ({
+              user: {
+                id: friend.user.id,
+                username: friend.user.username,
+                image_url: friend.user.image_url,
+              },
+              is_accepted: friend.is_accepted,
+            }));
+
+            setUsers(transData);
           } catch (error) {
               console.error('Error fetching data: ', error);
           }
         }
         else
           console.log('Access token is undefined or falsy');
+  }
+
+  const fetchSearchUser = async () => {
+    const access = Cookies.get('access');
+    if (access)
+    {
+      try {
+
+        const res = await fetch('http://localhost:8000/api/user-search', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${access}`
+          },
+          body: JSON.stringify({ username_search: searchTerm })
+        });
+
+        if (!res.ok)
+          throw new Error('Failed to fetch data');
+
+        const data = await res.json();
+        const transData = data.map((user: User) => ({
+          user: {
+            id: user.id,
+            username: user.username,
+            image_url: user.image_url,
+          },
+          is_accepted: false,
+        }));
+        setsearchedFriends(transData);
+        
+      } catch (error) {
+          console.error('Error fetching data: ', error);
+      }
+    }
+    else
+      console.log('Access token is undefined or falsy');
   }
 
   useEffect(() => {
@@ -70,8 +113,8 @@ export default function InviteFriend( {show, close}: Props) {
   useEffect(() => {
     if (users)
     {
-      setsearchedFriends(users.friends.filter(friend => friend.is_accepted));
-      setsearchedPendingFriends(users.friends.filter(friend => !friend.is_accepted));
+      setsearchedFriends(users.filter(friend => friend.is_accepted));
+      setsearchedPendingFriends(users.filter(friend => !friend.is_accepted));
     }
   }, [users])
 
@@ -79,13 +122,16 @@ export default function InviteFriend( {show, close}: Props) {
     const handle_search = () => {
       if (users)
       {
-        const foundFriends = users.friends.filter(friend => friend.is_accepted);
+        const foundFriends = users.filter(friend => friend.is_accepted);
         if (searchTerm === '')
           setsearchedFriends(foundFriends);
         else
         {
-            // const foundFriends = foundFriends.filter(friend => friend.user.username.toLowerCase().startsWith(searchTerm.toLowerCase()));
-            setsearchedFriends(foundFriends.filter(friend => friend.user.username.toLowerCase().startsWith(searchTerm.toLowerCase())));
+          const data = foundFriends.filter(friend => friend.user.username.toLowerCase().startsWith(searchTerm.toLowerCase()));
+          if (data.length !== 0)
+            setsearchedFriends(data);
+          else
+            fetchSearchUser();
         }
       }
     }
@@ -93,13 +139,13 @@ export default function InviteFriend( {show, close}: Props) {
     const handle_pending_search = () => {
       if (users)
       {
-        const foundPendingFriends = users.friends.filter(friend => !friend.is_accepted);
+        const foundPendingFriends = users.filter(friend => !friend.is_accepted);
         if (searchTerm === '')
           setsearchedPendingFriends(foundPendingFriends);
         else
         {
-            const foundFriends = foundPendingFriends.filter(friend => friend.user.username.toLowerCase().startsWith(searchTerm.toLowerCase()));
-            setsearchedPendingFriends(foundFriends);
+          const foundFriends = foundPendingFriends.filter(friend => friend.user.username.toLowerCase().startsWith(searchTerm.toLowerCase()));
+          setsearchedPendingFriends(foundFriends);
         }
       }
     }
@@ -138,11 +184,18 @@ export default function InviteFriend( {show, close}: Props) {
                         </Modal.Header>
                         <Modal.Body style={{height: '200px', overflow: 'auto'}}>
                           { searchedFriends &&
-                            searchedFriends.map((user, index) =>
+                            searchedFriends.map((friend, index) =>
                                 (
                                     <div key={index} className='row d-flex flex-row d-flex align-items-center justify-content-between px-3 py-1 m-2' style={{ borderRadius: '25px', backgroundColor: '#161625' }}>
-                                        <div className='col-3 text-start'><Splayer nickname={user.user.username} id={1} image={'/char3.png'} isConnected={false} /></div>
-                                        <div className='col-9 text-end'><Button variant="dark">Remove <IoIosRemoveCircle color="#FFEBEB" /></Button></div>
+                                        <div className='col-3 text-start'><Splayer nickname={friend.user.username} id={1} image={'/char3.png'} isConnected={false} /></div>
+                                        {
+                                          friend.is_accepted ? (
+                                            <div className='col-9 text-end'><Button variant="dark">Remove <IoIosRemoveCircle color="#FFEBEB" /></Button></div>
+                                          ) : (
+                                            <div className='col-9 text-end'><Button variant="dark">Invite <TiUserAdd color="#FFEBEB" /></Button></div>
+                                          )
+                                        }
+                                        
                                     </div>
                                 )
                             )
@@ -172,10 +225,10 @@ export default function InviteFriend( {show, close}: Props) {
                         </Modal.Header>
                         <Modal.Body style={{height: '200px', overflow: 'auto'}}>
                           { searchedPendingFriends &&
-                            searchedPendingFriends.map((user, index) =>
+                            searchedPendingFriends.map((friend, index) =>
                                 (
                                     <div key={index} className='row d-flex flex-row d-flex align-items-center justify-content-between px-3 py-1 m-2' style={{ borderRadius: '25px', backgroundColor: '#161625' }}>
-                                        <div className='col-3 text-start'><Splayer nickname={user.user.username} id={1} image={'/char3.png'} isConnected={false} /></div>
+                                        <div className='col-3 text-start'><Splayer nickname={friend.user.username} id={1} image={'/char3.png'} isConnected={false} /></div>
                                         <div className='col-9 text-end'><Button variant="dark">Accept <IoMdCheckmarkCircle color="#FFEBEB" /></Button></div>
                                     </div>
                                 )
@@ -199,17 +252,17 @@ export default function InviteFriend( {show, close}: Props) {
                                 value={searchTerm}
                                 onChange={(e) => {setSearchTerm(e.target.value)}}
                             />
-                            <Button className='border' variant="dark" id="button-addon2" onClick={handle_search}>
+                            <Button className='border' variant="dark" id="button-addon2" onClick={() => alert()}>
                               Search..
                             </Button>
                           </InputGroup>
                         </Modal.Header>
                         <Modal.Body style={{height: '200px', overflow: 'auto'}}>
                           { searchedFriends &&
-                            searchedFriends.map((user, index) =>
+                            searchedFriends.map((friend, index) =>
                                 (
                                     <div key={index} className='row d-flex flex-row d-flex align-items-center justify-content-between px-3 py-1 m-2' style={{ borderRadius: '25px', backgroundColor: '#161625' }}>
-                                        <div className='col-3 text-start'><Splayer nickname={user.user.username} id={1} image={'/char3.png'} isConnected={false} /></div>
+                                        <div className='col-3 text-start'><Splayer nickname={friend.user.username} id={1} image={'/char3.png'} isConnected={false} /></div>
                                         <div className='col-9 text-end'><Button variant="dark">Unblock <CgUnblock color="#FFEBEB" /></Button></div>
                                     </div>
                                 )
