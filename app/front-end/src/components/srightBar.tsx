@@ -40,7 +40,6 @@ CustomToggle.displayName = 'CustomToggle';
 
 export default function SrightBar({toggleShow, setfriendModal, friends_data} : Props) {
 
-    console.log(friends_data);
     const data = friends_data.sort((usr1: any, usr2: any) => {
         if (usr1.connected && !usr2.connected) {
             return -1;

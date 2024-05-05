@@ -3,7 +3,9 @@ from .views import (MainDashboardView,
                     ProfileView,
                     ProfileIdView,
                     FriendsView,
-                    UserSearchView
+                    UserSearchView,
+                    RemoveFriendshipView,
+                    AcceptFriendshipView
                    )
 
 urlpatterns = [
@@ -12,5 +14,6 @@ urlpatterns = [
    path('profile/<str:username>', ProfileIdView.as_view(), name='profile_with_id'),
    path('friends', FriendsView.as_view(), name='friends'),
    path('user-search', UserSearchView.as_view(), name='user-search'),
-   # path('friends-remove', RemoveFriendshipView.as_view(), name="friends-remove")
+   path('friends-remove', RemoveFriendshipView.as_view(), name="friends-remove"),
+   path('friends-accept', AcceptFriendshipView.as_view(), name="friends-accept"),
 ]

@@ -65,27 +65,48 @@ class UserSearchView(APIView):
         return Response(serializer.data)
 
 
-# class RemoveFriendshipView(APIView):
-#     authentication_classes = [JWTAuthentication]
-#     permission_classes = [IsAuthenticated]
+class RemoveFriendshipView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
-#     def post(self, request):
-#         user_from = request.user
-#         username = request.data.get('username')
+    def post(self, request):
+        user_from = request.user
+        username = request.data.get('username')
 
-#         try:
-#             user_remove = User.objects.get(username=username)
-#         except User.DoesNotExist:
-#             return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            user_remove = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
 
-#         try:
-#             friendship = Friendship.objects.get(Q(user_from=user_from, user_to=user_remove)|
-#                                                 Q(user_from=user_remove, user_to=user_from))
-#             friendship.delete()
-#             return Response({'success': 'Friendship removed'}, status=status.HTTP_200_OK)
-#         except Friendship.DoesNotExist:
-#             return Response({'error': 'Friendship does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            friendship = Friendship.objects.get(Q(user_from=user_from, user_to=user_remove)|
+                                                Q(user_from=user_remove, user_to=user_from))
+            friendship.delete()
+            return Response({'success': 'Friendship removed'}, status=status.HTTP_200_OK)
+        except Friendship.DoesNotExist:
+            return Response({'error': 'Friendship does not exist'}, status=status.HTTP_400_BAD_REQUEST)
 
+class AcceptFriendshipView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user_from = request.user
+        username = request.data.get('username')
+
+        try:
+            user_remove = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            friendship = Friendship.objects.get(Q(user_from=user_from, user_to=user_remove)|
+                                                Q(user_from=user_remove, user_to=user_from))
+            friendship.is_accepted = True;
+            friendship.save()
+            return Response({'success': 'Friendship accepted'}, status=status.HTTP_200_OK)
+        except Friendship.DoesNotExist:
+            return Response({'error': 'Friendship does not accepted'}, status=status.HTTP_400_BAD_REQUEST)
 
 # class AddFriendshipView(APIView):
 #     authentication_classes = [JWTAuthentication]
