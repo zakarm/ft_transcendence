@@ -130,7 +130,7 @@ class AddFriendshipView(APIView):
         try:
 
             friendship = Friendship.objects.create(user_from=user_from, user_to=user_add, 
-                                                   is_accepted = True)
+                                                   is_accepted = False)
             friendship.save()
             return Response({'success': 'Friendship Added'}, status=status.HTTP_200_OK)
         except Friendship.DoesNotExist:
