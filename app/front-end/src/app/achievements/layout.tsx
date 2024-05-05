@@ -2,7 +2,7 @@ import MainContainer from "../../components/mainContainer";
 import AuthChecker from "../../components/authChecker"
 import React from 'react'
 
-export default function    AchivementsLayout({children} : React.ReactNode)
+export default function    AchivementsLayout({children} : {children: React.ReactNode})
 {
     return (
         <AuthChecker>

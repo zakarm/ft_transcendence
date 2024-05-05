@@ -21,14 +21,14 @@ function    AchivementsProgressBar() {
         <>
             <div className="col-12 d-flex">
                 <div
-                    class={`${styles.progress} progress`}
+                    className={`${styles.progress} progress`}
                     role="progressbar"
                     aria-label="Animated striped example"
-                    aria-valuenow="75"
-                    aria-valuemin="0"
-                    aria-valuemax="100">
+                    aria-valuenow={75}
+                    aria-valuemin={0}
+                    aria-valuemax={100}>
                         <div
-                            class={`${styles.progress_bar} itim-font progress-bar`}>44%
+                            className={`${styles.progress_bar} itim-font progress-bar`}>44%
                         </div>
                 </div>
                 <span className="valo-font ms-2 p-0">100%</span>
