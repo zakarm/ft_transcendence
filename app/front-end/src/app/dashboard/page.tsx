@@ -67,19 +67,19 @@ export default function Dashboard() {
 
             if (access) {
                 try {
-                const response = await fetch('http://localhost:8000/api/dashboard', {
-                    headers: { Authorization: `Bearer ${access}` },
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    setDashboardData(data);
-                } else if (response.status === 401) {
-                    console.log('Unauthorized');
-                } else {
-                    console.error('An unexpected error happened:', response.status);
-                }
+                    const response = await fetch('http://localhost:8000/api/dashboard', {
+                        headers: { Authorization: `Bearer ${access}` },
+                    });
+                    if (response.ok) {
+                        const data = await response.json();
+                        setDashboardData(data);
+                    } else if (response.status === 401) {
+                        console.log('Unauthorized');
+                    } else {
+                        console.error('An unexpected error happened:', response.status);
+                    }
                 } catch (error) {
-                console.error('An unexpected error happened:', error);
+                    console.error('An unexpected error happened:', error);
                 }
             } else {
                 console.log('Access token is undefined or false');
