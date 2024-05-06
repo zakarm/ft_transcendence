@@ -80,7 +80,7 @@ volumes:
         driver_opts:
             type: none
             o: bind
-            device: /Users/${USER}/Desktop/data
+            device: ${HOME}/Desktop/data
 
 networks:
     ft_transcendence:
