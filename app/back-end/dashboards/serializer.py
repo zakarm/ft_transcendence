@@ -69,7 +69,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username')
+        fields = ('id', 'username', 'image_url', 'is_online')
 
 class FriendshipSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
@@ -90,7 +90,7 @@ class FriendsSerializer(serializers.ModelSerializer):
     friends = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ('id', 'username', 'friends')
+        fields = ('id', 'username', 'image_url', 'friends')
     
     def get_friends(self, obj):
         friends_data = Friendship.objects.filter(Q(user_from = obj)| Q(user_to= obj))
