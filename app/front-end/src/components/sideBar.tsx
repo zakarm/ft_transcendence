@@ -24,7 +24,7 @@ export default function SideBar() {
   });
 
   useEffect(() => {
-    const pathUrls = ["/dashboard", "/game", "/chat", "/achievement", "/settings"];
+    const pathUrls = ["/dashboard", "/game", "/chat", "/achievements", "/settings"];
     const index = pathUrls.indexOf(pathname);
     setActiveIcon(index);
     gsap.to(`.icon_${index}`, { rotation: "45" });
@@ -49,7 +49,7 @@ export default function SideBar() {
             <Link className="" href="/chat">
              	<IoChatbubble className={`${styles.side_icon} icon_2`} color={activeIcon === 2 ? '#FF4755' : '#FFEBEB'}/>
             </Link>
-            <Link className="" href="/achievement">
+            <Link className="" href="/achievements">
             	<FaTrophy className={`${styles.side_icon} icon_3`} color={activeIcon === 3 ? '#FF4755' : '#FFEBEB'}/>
             </Link>
             <Link className="" href="/settings">

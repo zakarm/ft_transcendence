@@ -9,11 +9,18 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import React, { forwardRef, useState } from 'react';
 import styles from './styles/rightBar.module.css';
 import Image from 'next/image';
-import Cookies from 'js-cookie';
+
+interface User {
+    id: number;
+    username: string;
+    image_url: string;
+	is_online: number;
+}
 
 interface Props
 {
     friends_data: any;
+    userdata: User;
     show?: boolean;
     setShow: (show: boolean) => void;
     handleClose: () => void;
@@ -43,12 +50,9 @@ const CustomToggle = forwardRef<HTMLDivElement, CustomToggleProps>(
 
 CustomToggle.displayName = 'CustomToggle';
 
-export default function RightBar({friends_data, setShow, show, handleClose, toggleShow, setfriendModal} : Props) {
+export default function RightBar({userdata, friends_data, setShow, show, handleClose, toggleShow, setfriendModal} : Props) {
 
-
-    // Othman Logic
     const [searchTerm, setSearchTerm] = useState<string>('');
-    console.log(friends_data)
     const filteredFriends = friends_data
     .filter((friend: Friend) => friend.username.toLowerCase().startsWith(searchTerm.toLowerCase()))
     .sort((usr1: Friend, usr2: Friend) => {
@@ -71,7 +75,6 @@ export default function RightBar({friends_data, setShow, show, handleClose, togg
     ));
 
     const searchOnlineFriends = (e: React.ChangeEvent<HTMLInputElement>) => {
-        // console.log(e.target.value);
         setSearchTerm(e.target.value);
     }
     
@@ -113,8 +116,8 @@ export default function RightBar({friends_data, setShow, show, handleClose, togg
                                                  <Image className={`${styles.img_class}`} width={60} height={60} src="/char3.png" alt='Profile'/>
                                              </div>
                                              <div className={`col ${styles.profile} mt-2`}>
-                                                 <h3 className="valo-font">!SNAKE_007</h3>
-                                                 <h4 style={{fontFamily: 'intim', color: '#FFEBEB'}}>#7777</h4>
+                                                 <h3 className="valo-font">{userdata && userdata.username}</h3>
+                                                 <h4 style={{fontFamily: 'intim', color: '#FFEBEB'}}>#{userdata && userdata.id}</h4>
                                              </div>
                                          </div>
                                          <div className={`col ${styles.search_inpt} p-2 d-flex align-items-center`}>
@@ -133,7 +136,7 @@ export default function RightBar({friends_data, setShow, show, handleClose, togg
                                 <div className="flex-grow-3">
                                     <div className={`row ${styles.search_inpt2} p-2 mb-2 m-1 text-center`} style={{cursor: "pointer"}} onClick={setfriendModal}>
                                         <div className={`col-xl-8 col-6 ${styles.place}`}>
-                                            <div style={{fontFamily: 'intim', color: '#FFEBEB'}}>add friend</div>
+                                            <div style={{fontFamily: 'intim', color: '#FFEBEB'}}>Add Friend</div>
                                         </div>
                                         <div className="col-xl-4 col-6">
                                             <ImUserPlus className={`${styles.ico}`} color="#FFEBEB" size='2em'/>
