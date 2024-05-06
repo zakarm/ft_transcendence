@@ -95,7 +95,7 @@ function    RenderBadges({ content } : { content: { title: string; subTitle: str
 
 function    Achievements() {
     
-    const [achievements, setAchievements] = useState<Record<string, number>>({});
+    const [achievements, setAchievements] = useState<Record<string, boolean>>({});
     const   access = Cookies.get('access');
 
     useEffect(() => {
@@ -150,7 +150,7 @@ function    Achievements() {
     );
 }
 
-export default function() {
+function AchievementsPage() {
     return (
         <div className={`${styles.wrapper} container-fluid vh-100`}>
             <div className="row p-0 m-0 mt-5">
@@ -172,3 +172,5 @@ export default function() {
         </div>
     );
 }
+
+export default AchievementsPage;
