@@ -71,7 +71,7 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
             "type": "user_status",
             "id": event["id"],
             "user": event["user"],
-            "image_url": event["image_url"],
+            # "image_url": event["image_url"],
             "is_online": event["is_online"]
         }))
 

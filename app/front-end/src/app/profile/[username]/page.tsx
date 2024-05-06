@@ -272,7 +272,7 @@ export default function ({ params }: { params: { username: string } })
                                         </InputGroup>
                                         <InputGroup hasValidation className='mb-3'>
                                             <InputGroup.Text style={{backgroundColor: '#2C3143'}}><MdRoundaboutRight color='#FFEBEB'/></InputGroup.Text>
-                                            <Form.Control className={`${styles.form_control}`} required as="textarea" placeholder='Intro' aria-label='Intro' defaultValue={parag} style={{backgroundColor: '#2C3143'}}/>
+                                            <Form.Control className={`${styles.form_control}`} required type="textarea" placeholder='Intro' aria-label='Intro' defaultValue={parag} style={{backgroundColor: '#2C3143'}}/>
                                             <Form.Control.Feedback type="invalid">
                                               Please talk about yourslef.
                                             </Form.Control.Feedback>
