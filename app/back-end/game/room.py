@@ -3,7 +3,9 @@ class RoomObject:
     def __init__(self):
         # game state
         self.game_started = False
-        self.index = 1
+        self.game_ended = False
+        self.reconect = False
+        self.room_is_full = False
 
         # ball
         self.ball_radius = 0.1
@@ -20,21 +22,34 @@ class RoomObject:
         self.paddle2_position = {"x": 4.8, "z": 0}
 
         # users
+        self.reconect_user = ""
         self.Original_users = {
             "user1": {"joined": 0, "user_id": "", "index": 1, "channel_name": ""},
             "user2": {"joined": 0, "user_id": "", "index": 2, "channel_name": ""},
         }
         self.score = {"user1": 0, "user2": 0}
 
+    # distructor
+    def __del__(self):
+        print("Room deleted")
     # ------------------------> game <------------------------
+
     def start_game(self):
         self.game_started = True
 
     def end_game(self):
         self.game_started = False
+        self.reconect = False
+        self.game_ended = True
 
     def is_started(self):
         return self.game_started
+
+    def is_ended(self):
+        return self.game_ended
+
+    def is_reconecting(self):
+        return self.reconect
     # ------------------------> user <------------------------
     def get_winner(self):
         if self.score["user1"] == 7:
@@ -92,22 +107,32 @@ class RoomObject:
             self.Original_users["user2"]["channel_name"] = channel_name
             self.Original_users["user2"]["user_id"] = user_id
             self.Original_users["user2"]["joined"] = 1
+            self.room_is_full = True
 
     def reconecting_user(self, channel_name, user_id):
         if self.Original_users["user1"]["user_id"] == user_id:
             self.Original_users["user1"]["channel_name"] = channel_name
         elif self.Original_users["user2"]["user_id"] == user_id:
             self.Original_users["user2"]["channel_name"] = channel_name
+        self.reconect = False
 
-    # def remove_user(self, user_id):
-    #     if self.Original_users["user1"]["user_id"] == user_id:
-    #         self.Original_users["user1"]["joined"] = 0
-    #         self.Original_users["user1"]["user_id"] = ""
-    #         self.Original_users["user1"]["channel_name"] = ""
-    #     elif self.Original_users["user2"]["user_id"] == user_id:
-    #         self.Original_users["user2"]["joined"] = 0
-    #         self.Original_users["user2"]["user_id"] = ""
-    #         self.Original_users["user2"]["channel_name"] = ""
+    def set_reconect(self,user_id):
+        if self.game_ended == False:
+            self.reconect_user = user_id
+            self.reconect = True
+
+    def get_online_user(self):
+        # check if the both users are online
+        if self.Original_users["user1"]["user_id"] == self.reconect_user:
+            return self.Original_users["user2"]["user_id"]
+        if self.Original_users["user2"]["user_id"] == self.reconect_user:
+            return self.Original_users["user1"]["user_id"]
+
+    def make_user_winner(self, user_id):
+        if self.Original_users["user1"]["user_id"] == user_id:
+            self.score["user1"] = 7
+        elif self.Original_users["user2"]["user_id"] == user_id:
+            self.score["user2"] = 7
 
     # ------------------------> ball <------------------------
     def set_ball_position(self, x, z):
