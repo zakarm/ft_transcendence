@@ -1,5 +1,9 @@
+'use client'
+
 import React from 'react'
+import { useEffect, useState, useContext, createContext } from 'react'
 import styles from './styles.module.css'
+import Cookies from 'js-cookie'
 
 declare global {
     namespace JSX {
@@ -16,7 +20,7 @@ interface   Props {
     achieved ?: boolean;
 }
 
-function    AchivementsProgressBar() {
+function    AchievementsProgressBar() {
     return (
         <>
             <div className="col-12 d-flex">
@@ -37,7 +41,7 @@ function    AchivementsProgressBar() {
     );
 }
 
-function    AchivementBadge({title, subTitle, imageURL, achieved} : Props) {
+function    AchivementCard({title, subTitle, imageURL, achieved} : Props) {
     return (
         <>
             <div className={`${styles.card_container} ${achieved ? styles.achived : styles.not_achived} row p-0 m-1 align-items-center justify-content-between`}>
@@ -67,90 +71,81 @@ function    AchivementBadge({title, subTitle, imageURL, achieved} : Props) {
     )
 }
 
-function    Achivements() {
+function    RenderBadges({ content } : { content: { title: string; subTitle: string; imageURL: string; achieved: any; }[]; }) {
+    return (
+        <div className="row p-0 m-1">
+            {content.map(({title, subTitle, imageURL, achieved}) => {
+                return(
+                <div
+                    className="col-12 col-md-6 col-xxl-4 d-flex d-flex justify-content-center justify-content-md-start"
+                    key={title}>
+                    <AchivementCard
+                        title={title}
+                        subTitle={subTitle}
+                        imageURL={imageURL}
+                        achieved={achieved}>
+                    </AchivementCard>
+                </div>
+            );
+        })}
+        </div>
+    );
+}
+
+
+function    Achievements() {
+    
+    const [achievements, setAchievements] = useState<Record<string, number>>({});
+    const   access = Cookies.get('access');
+
+    useEffect(() => {
+        const   getAchievements = async () => {
+            try {
+                const response = await fetch('', {
+                    method : "GET",
+                    headers : { Authorization : `Bearer ${access}`}
+                });
+                
+                // const data = await response.json();
+                setAchievements({
+                    challenger: true,
+                    rivalry: true,
+                    legend: false,
+                    early: false,
+                    triple: true,
+                    front: false,
+                    speedy: false,
+                    last: true,
+                    king: true
+                });
+            }
+            catch (error) {
+                console.log('An unexpected error happened:', error)
+            }
+        }
+        getAchievements();
+    }, [])
+
+    const   badgeContent = [
+        // MATCH achievements
+        {title : "AI CHALLENGER", subTitle : "Defeat the AI bot at the highest difficulty level", imageURL : "achiv_ai1.png", achieved : achievements['challenger']},
+        {title : "ROBO-RIVALRY", subTitle : "Engage in a match against the AI bot lasting longer than 20 minutes and win", imageURL : "achiv_ai2.png", achieved : achievements['rivalry']},
+        {title : "I'M A LEGEND", subTitle : "Defeat the AI bot with a score of 11-0", imageURL : "achiv_ai3.png", achieved : achievements['legend']},
+        // TOURNAMENT achievements
+        { title: "EARLY BIRD", subTitle: "Win a match within the first three minutes", imageURL: "achiv_tourn1.png", achieved: achievements['early'] },
+        { title: "TRIPLE THREAT", subTitle: "Score a hat-trick (three consecutive points) at least twice in a match", imageURL: "achiv_tourn2.png", achieved: achievements['triple'] },
+        { title: "FRONTRUNNER", subTitle: "Reach the finals of the tournament", imageURL: "achiv_tourn3.png", achieved: achievements['front'] },
+        // MATCH GAME achievements
+        { title: "SPEEDY VICTORY", subTitle: "Win a game with a score of 11-0 within three minutes", imageURL: "achiv_match1.png", achieved: achievements['speedy'] },
+        { title: "LAST-MINUTE COMEBACK", subTitle: "Win a game after being down by five points", imageURL: "achiv_match2.png", achieved: achievements['last'] },
+        { title: "TABLE KING/QUEEN", subTitle: "Win ten games in a row without losing", imageURL: "achiv_match3.png", achieved: achievements['king'] },
+    ]
+
     return (
         <>
-        {/* AI BOT */}
-        <div className="row p-0 m-1">
-            <div className="col-12 col-md-6 col-xxl-4 d-flex d-flex justify-content-center justify-content-md-start">
-                <AchivementBadge
-                    title="AI CHALLENGER"
-                    subTitle="Defeat the AI bot at the highest difficulty level"
-                    imageURL="achiv_ai1.png"
-                    achieved={true}>
-                </AchivementBadge>
-            </div>
-            <div className="col-12 col-md-6 col-xxl-4 d-flex d-flex justify-content-center justify-content-md-start">
-                <AchivementBadge
-                    title="ROBO-RIVALRY"
-                    subTitle="Engage in a match against the AI bot lasting longer than 20 minutes and win"
-                    imageURL="achiv_ai2.png"
-                    achieved={true}>
-                </AchivementBadge>
-            </div>
-            <div className="col-12 col-md-6 col-xxl-4 d-flex d-flex justify-content-center justify-content-md-start">
-                <AchivementBadge
-                    title="I'M A LEGEND"
-                    subTitle="Defeat the AI bot with a score of 11-0"
-                    imageURL="achiv_ai3.png"
-                    achieved={false}>
-                </AchivementBadge>
-            </div>
-        </div>
-        {/* TOURNAMENT */}
-        <div className="row p-0 m-1">
-            <div className="col-12 col-md-6 col-xxl-4 d-flex d-flex justify-content-center justify-content-md-start">
-                <AchivementBadge
-                    title="EARLY BIRD"
-                    subTitle="Win a match within the first three minutes"
-                    imageURL="achiv_tourn1.png"
-                    achieved={false}>
-                </AchivementBadge>
-            </div>
-            <div className="col-12 col-md-6 col-xxl-4 d-flex d-flex justify-content-center justify-content-md-start">
-                <AchivementBadge
-                    title="TRIPLE THREAT"
-                    subTitle="Score a hat-trick (three consecutive points) at least twice in a match"
-                    imageURL="achiv_tourn2.png"
-                    achieved={true}>
-                </AchivementBadge>
-            </div>
-            <div className="col-12 col-md-6 col-xxl-4 d-flex d-flex justify-content-center justify-content-md-start">
-                <AchivementBadge
-                    title="FRONTRUNNER"
-                    subTitle="Reach the finals of the tournament"
-                    imageURL="achiv_tourn3.png"
-                    achieved={false}>
-                </AchivementBadge>
-            </div>
-        </div>
-        {/* MATCH GAME */}
-        <div className="row p-0 m-1">
-            <div className="col-12 col-md-6 col-xxl-4 d-flex d-flex justify-content-center justify-content-md-start">
-                <AchivementBadge
-                    title="SPEEDY VICTORY"
-                    subTitle="Win a game with a score of 11-0 within three minutes"
-                    imageURL="achiv_match1.png"
-                    achieved={false}>
-                </AchivementBadge>
-            </div>
-            <div className="col-12 col-md-6 col-xxl-4 d-flex d-flex justify-content-center justify-content-md-start">
-                <AchivementBadge
-                    title="LAST-MINUTE COMEBACK"
-                    subTitle="Win a game after being down by five points"
-                    imageURL="achiv_match2.png"
-                    achieved={false}>
-                </AchivementBadge>
-            </div>
-            <div className="col-12 col-md-6 col-xxl-4 d-flex d-flex justify-content-center justify-content-md-start">
-                <AchivementBadge
-                    title="FRONTRUNNER"
-                    subTitle="Reach the finals of the tournament"
-                    imageURL="achiv_match3.png"
-                    achieved={true}>
-                </AchivementBadge>
-            </div>
-        </div>
+            <RenderBadges content={badgeContent.slice(0, 3)} />
+            <RenderBadges content={badgeContent.slice(3, 6)} />
+            <RenderBadges content={badgeContent.slice(6, 9)} />
         </>
     );
 }
@@ -164,7 +159,7 @@ export default function() {
                 </div>
             </div>
             <div className="row p-0 m-0 my-3">
-                <AchivementsProgressBar></AchivementsProgressBar>
+                <AchievementsProgressBar></AchievementsProgressBar>
             </div>
             <div className="row p-0 m-1">
                 <div className="col">
@@ -172,7 +167,7 @@ export default function() {
                 </div>
             </div>
             <div className="row p-0 m-0 h-75 align-items-center justify-content-start">
-                <Achivements></Achivements>
+                <Achievements></Achievements>
             </div>
         </div>
     );
