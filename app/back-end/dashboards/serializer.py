@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from authentication.models import User
 from game.models import Match
-from .models import Friendship
+from .models import Friendship, Notification
 from django.db.models import F, Q
 from .utils import (get_total_games,
                     get_win_games,
@@ -129,7 +129,6 @@ class BlockedFriendshipSerializer(serializers.ModelSerializer):
     def get_is_user_from(self, obj):
         return obj.user_from.id == self.context['id']
 
-    
 class BlockedFriendsSerializer(serializers.ModelSerializer):
     friends = serializers.SerializerMethodField()
     class Meta:
@@ -138,5 +137,23 @@ class BlockedFriendsSerializer(serializers.ModelSerializer):
     
     def get_friends(self, obj):
         friends_data = Friendship.objects.filter(Q(user_from = obj)| Q(user_to= obj))
-        serializer = BlockedFriendshipSerializer(friends_data, many=True, context = {'id': obj.id})
+        serializer = BlockedFriendshipSerializer(friends_data, many=True,
+                                                 context = {'id': obj.id})
+        return serializer.data
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = ('notification_id', 'image_url', 'message_url', 'title', 'link')
+
+class NotificationUserSerializer(serializers.ModelSerializer):
+    notifications = serializers.SerializerMethodField()
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'notifications')
+
+    def get_notifications(self, obj):
+        notifications_data = Notification.objects.filter(user = obj)
+        serializer = NotificationSerializer(notifications_data, many = True)
         return serializer.data

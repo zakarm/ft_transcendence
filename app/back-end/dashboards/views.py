@@ -6,7 +6,8 @@ from .serializer import (MainDashboardSerializer,
                          ProfileSerializer,
                          FriendsSerializer,
                          UserSerializer,
-                         BlockedFriendsSerializer)
+                         BlockedFriendsSerializer,
+                         NotificationUserSerializer)
 from .models import Friendship
 from authentication.models import User
 from rest_framework import status
@@ -207,4 +208,13 @@ class BlockedFriendsView(APIView):
     def get(self, request):
         user = request.user
         serializer = BlockedFriendsSerializer(instance=user)
+        return Response(serializer.data)
+
+class NotificationsView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        serializer = NotificationUserSerializer(instance=user)
         return Response(serializer.data)

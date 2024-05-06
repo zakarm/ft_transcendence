@@ -27,6 +27,19 @@ interface User {
 	is_online: number;
 }
 
+interface UserNotification {
+	id: number;
+	username: string;
+}
+
+interface Notification{
+	notification_id: number;
+	image_url: string;
+	message_url: string;
+	title: string;
+	link: string;
+}
+
 interface Friend {
     user: User;
     is_accepted: boolean;
@@ -50,6 +63,7 @@ export default function MainContainer({ children }: { children: React.ReactNode 
 
 	const { socket, isLoading } = useGlobalContext();
 	const [friendsfetched, setFriendsFetched] = useState<FriendSocket[]>([]);
+	const [notificationFetch, setNotificationFetch] = useState<Notification[]>([]);
 	const [userData, setuserData] = useState<User>({
 		id: 0,
 		username: '',
@@ -91,6 +105,7 @@ export default function MainContainer({ children }: { children: React.ReactNode 
 					});
 					if (response.ok){
 						const data = await response.json();
+						console.log(data);
 						const transformedData = data.friends
 						.filter((friend: Friend) => friend.is_accepted == true)
 						.map((friend: Friend) => ({
@@ -113,8 +128,39 @@ export default function MainContainer({ children }: { children: React.ReactNode 
 				}
 			}
 		}
-
 		fetchRightBarData();
+		const fetchNotifications = async () => 
+		{
+			const access = Cookies.get('access');
+			if (access){
+				try {
+					const response = await fetch('http://localhost:8000/api/notifications',{
+						headers: { Authorization: `Bearer ${access}`}
+					});
+					if (response.ok){
+						const data = await response.json();
+						console.log(data);
+						const notificationFetch = data.notifications
+						.map((notification: Notification) => ({
+							notification_id: notification.notification_id,
+							message_url: notification.message_url,
+							image_url: notification.image_url,
+							title: notification.title,
+							link: notification.link
+						}));
+						setNotificationFetch(notificationFetch);
+					} else if (response.status === 401) {
+						console.log('Unauthorized');
+					} else {
+						console.error('An unexpected error happened:', response.status);
+					}
+				}
+				catch (error){
+					console.error('An unexpected error happened:', error);
+				}
+			}
+		}
+		fetchNotifications();
 	}, []);
 
 	return (
@@ -147,11 +193,11 @@ export default function MainContainer({ children }: { children: React.ReactNode 
 						<div className='col-1 vh-100 d-flex justify-content-end align-items-center text-center' style={{backgroundColor: '#000000'}}>
 							<div className={`${styles.drag_class} pt-3 pb-3`} style={{backgroundColor: '#161625', borderRadius: '15px 0 0 15px', cursor: 'pointer'}} onClick={toggleShow}>
 								<FaAngleLeft  color="#FFEBEB" size='1.2em'/>
-								<RightBar userdata={userData} friends_data={friendsfetched} setfriendModal={() => setFriendModal(true)} show={show} setShow={setShow} handleClose={handleClose} toggleShow={toggleShow}/>
+								<RightBar notifications_data={notificationFetch} userdata={userData} friends_data={friendsfetched} setfriendModal={() => setFriendModal(true)} show={show} setShow={setShow} handleClose={handleClose} toggleShow={toggleShow}/>
 							</div>
 						</div>
 						<div className='col-11'>
-							<SrightBar friends_data={friendsfetched} setfriendModal={() => setFriendModal(true)} toggleShow={toggleShow}/>
+							<SrightBar notifications_data={notificationFetch} userdata={userData} friends_data={friendsfetched} setfriendModal={() => setFriendModal(true)} toggleShow={toggleShow}/>
 						</div>
 						<InviteFriend show={friendModal} close={() => setFriendModal(false)}/>
 					</div>

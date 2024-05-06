@@ -11,3 +11,15 @@ class Friendship(models.Model):
     u_two_is_blocked_u_one = models.BooleanField(default=False)
     class Meta:
         db_table = 'Friendship'
+
+class Notification(models.Model):
+    notification_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey('authentication.User', models.DO_NOTHING,
+                                  db_column='user')
+    image_url = models.CharField(max_length=200, blank=True)
+    message_url = models.CharField(max_length=200, blank=True)
+    title = models.CharField(max_length=50, blank=True)
+    link = models.CharField(max_length=200, blank=True)
+
+    class Meta:
+        db_table = 'Notification'
