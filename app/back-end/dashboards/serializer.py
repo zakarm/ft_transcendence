@@ -73,9 +73,10 @@ class UserSerializer(serializers.ModelSerializer):
 
 class FriendshipSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
+    is_user_from = serializers.SerializerMethodField()
     class Meta:
         model = Friendship
-        fields = ('user', 'is_accepted')
+        fields = ('user', 'is_accepted', 'is_user_from')
     
     def get_user(self, obj):
         if obj.user_from.id == self.context['id']:
@@ -86,7 +87,41 @@ class FriendshipSerializer(serializers.ModelSerializer):
         serializer = UserSerializer(user_data)
         return serializer.data
 
+    def get_is_user_from(self, obj):
+        return obj.user_from.id == self.context['id']
+
 class FriendsSerializer(serializers.ModelSerializer):
+    friends = serializers.SerializerMethodField()
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'image_url', 'friends')
+    
+    def get_friends(self, obj):
+        friends_data = Friendship.objects.filter(Q(user_from = obj)| Q(user_to= obj))
+        serializer = FriendshipSerializer(friends_data, many=True, context = {'id': obj.id})
+        return serializer.data
+
+
+# class FriendshipSerializer(serializers.ModelSerializer):
+#     user = serializers.SerializerMethodField()
+#     class Meta:
+#         model = Friendship
+#         fields = ('user', 'is_accepted')
+    
+#     def get_user(self, obj):
+#         if obj.user_from.id == self.context['id']:
+#             user_data = User.objects.get(id=obj.user_to.id)
+#         else:
+#             user_data = User.objects.get(id=obj.user_from.id)
+
+#         serializer = UserSerializer(user_data)
+#         return serializer.data
+    
+    # def get_blocked(self, obj):
+    #     if obj.user_from.id == self.context['id']:
+    #         Friendship.objects.filter
+    
+class BlockedFriendsSerializer(serializers.ModelSerializer):
     friends = serializers.SerializerMethodField()
     class Meta:
         model = User
