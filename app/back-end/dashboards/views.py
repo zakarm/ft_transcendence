@@ -198,3 +198,4 @@ class UnblockFriendshipView(APIView):
             return self.unblock_friend(friendship, user_from)
         except Friendship.DoesNotExist:
             return Response({'error': 'Friendship does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+
