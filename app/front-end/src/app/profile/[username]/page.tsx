@@ -203,11 +203,11 @@ export default function ({ params }: { params: { username: string } })
                                     </div>
                                     <div className='col d-flex flex-column justify-content-end '>
                                         <h4 style={{borderLeft: '1px solid #61627C', borderRight: '1px solid #61627C'}}>Win</h4>
-                                        <span style={{borderLeft: '1px solid #61627C', borderRight: '1px solid #61627C'}}>{profile.win_games}%</span>
+                                        <span style={{borderLeft: '1px solid #61627C', borderRight: '1px solid #61627C'}}>{((profile.win_games / profile.total_games) * 100).toFixed(1)}%</span>
                                     </div>
                                     <div className='col d-flex flex-column justify-content-end '>
                                         <h4>Lose</h4>
-                                        <span>{profile.lose_games}%</span>
+                                        <span>{((profile.lose_games / profile.total_games) * 100).toFixed(1)}%</span>
                                     </div>
                                 </div>
                             </div>
@@ -225,7 +225,7 @@ export default function ({ params }: { params: { username: string } })
                                 {profile.intro}
                             </p>
                             <h2 className='text-center' style={{color: '#ACACAC', fontFamily: 'itim'}}>{profile.quote}</h2>
-                            <ProgressBar className={`${styles.progres_bar} my-5`} now={(profile?.level ?? 0) * 10} label={`${profile.level}`} striped variant="danger" animated/>
+                            <ProgressBar className={`${styles.progres_bar} my-5`} now={(profile?.level ?? 0) * 10} label={`${profile.level} %`} striped variant="danger" animated/>
                             <hr className=" my-2 mx-2" style={{color: '#61627C', borderWidth: '2px'}}/>
                             <span style={{color: '#61627C', fontFamily: 'itim'}}>Rank</span>
                             <div className='d-flex flex-row my-4'>
@@ -272,7 +272,7 @@ export default function ({ params }: { params: { username: string } })
                                         </InputGroup>
                                         <InputGroup hasValidation className='mb-3'>
                                             <InputGroup.Text style={{backgroundColor: '#2C3143'}}><MdRoundaboutRight color='#FFEBEB'/></InputGroup.Text>
-                                            <Form.Control className={`${styles.form_control}`} required as="textarea" placeholder='Intro' aria-label='Intro' defaultValue={parag} style={{backgroundColor: '#2C3143'}}/>
+                                            <Form.Control className={`${styles.form_control}`} required type="textarea" placeholder='Intro' aria-label='Intro' defaultValue={parag} style={{backgroundColor: '#2C3143'}}/>
                                             <Form.Control.Feedback type="invalid">
                                               Please talk about yourslef.
                                             </Form.Control.Feedback>
