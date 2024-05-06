@@ -41,12 +41,13 @@ for _ in range(50):
     is_superuser = faker.boolean()
     is_2fa_enabled = faker.boolean()
     is_email_verified = faker.boolean()
+    is_online = 0
 
     insert_query = """
-        INSERT INTO authentication_users (username, email, password, first_name, last_name, image_url, cover_url, location, is_staff, is_active, date_joined, is_superuser, last_login, is_2fa_enabled, is_email_verified)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+        INSERT INTO authentication_users (username, email, password, first_name, last_name, image_url, cover_url, location, is_staff, is_active, date_joined, is_superuser, last_login, is_2fa_enabled, is_email_verified, is_online)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
     """
-    cursor.execute(insert_query, (username, email, password, first_name, last_name, image_url, cover_url, location, is_staff, is_active, date_joined, is_superuser, last_login, is_2fa_enabled, is_email_verified))
+    cursor.execute(insert_query, (username, email, password, first_name, last_name, image_url, cover_url, location, is_staff, is_active, date_joined, is_superuser, last_login, is_2fa_enabled, is_email_verified, is_online))
 
 # Generate fake matches
 cursor.execute("SELECT id FROM authentication_users;")
@@ -90,12 +91,14 @@ if result:
 
 for user_from_id, user_to_id in zip(users[::2], users[1::2]):
     is_accepted = faker.boolean()
+    u_one_is_blocked_u_two = faker.boolean()
+    u_two_is_blocked_u_one = faker.boolean()
 
     insert_query = """
-        INSERT INTO "Friendship" (user_from, user_to, is_accepted)
-        VALUES (%s, %s, %s);
+        INSERT INTO "Friendship" (user_from, user_to, is_accepted, u_one_is_blocked_u_two, u_two_is_blocked_u_one)
+        VALUES (%s, %s, %s, %s, %s);
     """
-    cursor.execute(insert_query, (user_from_id, user_to_id, is_accepted))
+    cursor.execute(insert_query, (user_from_id, user_to_id, is_accepted, u_one_is_blocked_u_two, u_two_is_blocked_u_one))
 
 # Commit the changes and close the connection
 conn.commit()
