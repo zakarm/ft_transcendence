@@ -1,6 +1,6 @@
 "use client";
 
-import styles from './style.module.css';
+import styles from '../style.module.css';
 import Image from 'next/image';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import Form from 'react-bootstrap/Form';
@@ -59,7 +59,7 @@ interface MonthlyStats {
     summary: MonthlyStats;
   }
 
-export default function ()
+export default function ({ params }: { params: { username: string } })
 {
     const [profile, setProfile] = useState<ProfileData | null>(null);
 
@@ -68,7 +68,7 @@ export default function ()
         if (access)
         {
             try {
-                const res = await fetch(`http://localhost:8000/api/profile` , {
+                const res = await fetch(`http://localhost:8000/api/profile${params ? '/' + params.username : ''}` , {
                     headers: { Authorization: `Bearer ${access}` },
                 });
         
@@ -203,11 +203,11 @@ export default function ()
                                     </div>
                                     <div className='col d-flex flex-column justify-content-end '>
                                         <h4 style={{borderLeft: '1px solid #61627C', borderRight: '1px solid #61627C'}}>Win</h4>
-                                        <span style={{borderLeft: '1px solid #61627C', borderRight: '1px solid #61627C'}}>{((profile.win_games / profile.total_games) * 100).toFixed(2)}%</span>
+                                        <span style={{borderLeft: '1px solid #61627C', borderRight: '1px solid #61627C'}}>{profile.win_games}%</span>
                                     </div>
                                     <div className='col d-flex flex-column justify-content-end '>
                                         <h4>Lose</h4>
-                                        <span>{((profile.lose_games / profile.total_games) * 100).toFixed(2)}%</span>
+                                        <span>{profile.lose_games}%</span>
                                     </div>
                                 </div>
                             </div>

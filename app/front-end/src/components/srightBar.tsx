@@ -8,6 +8,8 @@ import Splayer from "./Splayer";
 import Notification from "./Notification";
 import React, { forwardRef } from 'react';
 import Image from 'next/image'
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 interface Friend {
 	id: number;
@@ -40,7 +42,6 @@ CustomToggle.displayName = 'CustomToggle';
 
 export default function SrightBar({toggleShow, setfriendModal, friends_data} : Props) {
 
-    console.log(friends_data);
     const data = friends_data.sort((usr1: any, usr2: any) => {
         if (usr1.connected && !usr2.connected) {
             return -1;
@@ -57,6 +58,7 @@ export default function SrightBar({toggleShow, setfriendModal, friends_data} : P
         <Splayer key={index} nickname={user.username} id={user.id} image={user.image_url} isConnected={user.connected}/>
     );
 
+    const router = useRouter();
 
     return (
             <div className="d-flex flex-column vh-100 py-2">
@@ -65,8 +67,8 @@ export default function SrightBar({toggleShow, setfriendModal, friends_data} : P
                                 <div className={`${styles.holder} text-center p-2`}>
                                     <div className={`col-inline ${styles.notification1}`}>
                                        <Dropdown>
+                                            <Image className={`${styles.img_class1}`} width={60} height={60} src="/char3.png" alt='Profile' onClick={() => router.push('/profile')}/>
                                            <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
-                                                <Image className={`${styles.img_class1}`} width={60} height={60} src="/char3.png" alt='Profile'/>
                                                 <span className={`${styles.badge1}`}>3</span>
                                            </Dropdown.Toggle>
                                            <Dropdown.Menu className="drop-class">

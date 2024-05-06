@@ -40,14 +40,14 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
             self.user = await get_user(self.scope["user"].id)
             await update_user_online(self.scope['user'].id)
             await self.accept()
-            await  self.channel_layer.group_add("connected_users", self.channel_name)
+            await  self.channel_layer.group_add("users", self.channel_name)
             await self.channel_layer.group_send(
-                "connected_users",
+                "users",
                 {
-                    "type": "user_connected",
+                    "type": "user_status",
                     "id": self.user.id,
                     "user": self.user.username,
-                    "image_url": self.user.image_url
+                    "is_online": True,
                 }
             )
         else:
@@ -56,29 +56,23 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         await update_user_offline(self.scope['user'].id)
         await self.channel_layer.group_send(
-            "connected_users",
+            "users",
             {
-                "type": "user_disconnected",
+                "type": "user_status",
                 "id": self.user.id,
                 "user": self.user.username,
+                "is_online": False,
             },
         )
-        await self.channel_layer.group_discard("connected_users", self.channel_name)
-    
-    
-    async def user_connected(self, event):
+        await self.channel_layer.group_discard(f"users", self.channel_name)
+
+    async def user_status(self, event):
         await self.send(text_data=json.dumps({
-            "type": "user_connected",
+            "type": "user_status",
             "id": event["id"],
             "user": event["user"],
-            "image_url": event["image_url"]
-        }))
-
-    async def user_disconnected(self, event):
-        await self.send(text_data=json.dumps({
-            "type": "user_disconnected",
-            "id": event["id"],
-            "user": event["user"]
+            "image_url": event["image_url"],
+            "is_online": event["is_online"]
         }))
 
     async def receive(self, text_data):
