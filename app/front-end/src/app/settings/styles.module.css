@@ -1,0 +1,171 @@
+/* --clr-red: #FF4755;
+--clr-ldark : #161625;
+--clr--white: #FFEBEB;
+--clr-dark: #111111;
+--clr--green : #27B299;
+--clr--grey : #2C3143; */
+
+
+
+/******** Form ********/
+
+.form_container {
+    box-shadow:  0px 0px 20px 0px var(--clr-red);
+    border: 2px solid var(--clr-red);
+    border-radius: 25px;
+    width : 96%;
+    min-width: 300px;
+    background-color: var(--clr-ldark);
+    height: 900px;
+    transition: box-shadow 0.4s ease-in-out;
+}
+
+.wrapper {
+    overflow: auto;
+}
+
+.form_container:hover {
+    box-shadow:  0px 0px 30px 0px var(--clr-red);
+}
+/******** inputs ********/
+
+.inputTitle {
+    font-size: clamp(1.3rem, -0.268rem + 2.6144vw, 1.6rem);
+    color : var(--clr--grey);
+}
+
+.inputHolder {
+    font-size: clamp(1rem, -0.268rem + 2.6144vw, 1.2rem);
+    color : var(--clr-ldark);
+    width : 100%;
+}
+
+.input {
+    width : 90%;
+    outline: none;
+    color: var(--clr--lgrey);
+    /* color: var(--clr--white); */
+    background-color: var(--clr--grey);
+    height: 70px;
+    border-radius: 25px;
+    border : none;
+}
+
+.input:focus {
+    color: var(--clr--white);
+}
+
+.input:hover {
+    scale : 1.01;
+}
+
+
+/******** Image ********/
+
+.image_container {
+    position : relative;
+    transition: transform 0.4s ease-in-out;
+}
+
+.profilePic {
+    border-radius: 50%;
+    width: 300px;
+    height: 300px;
+}
+
+.camera {
+    position : absolute;
+    top : 75%;
+    right: 1%;
+}
+
+.image_container:hover {
+    transform : scale(1.1);
+    cursor : pointer;
+}
+
+
+/******** button ********/
+.create_button {
+    height: 100px;
+    border : none;
+    border-radius : 25px;
+    background-color : var(--clr-red);
+    color : var(--clr--white);
+    min-width: 180px;
+    max-width: 800px;
+    font-size: clamp(1.2rem, -0.268rem + 2.6144vw, 3rem);
+    box-shadow:  0px 50px 300px 10px var(--clr-red),
+                0px 30px 100px 30px var(--clr-dark);
+    transition: box-shadow 0.6s ease-in-out, transform 0.6s ease-in-out;
+  }
+
+  .create_button:hover {
+    transform : scale(1.1);
+    box-shadow: 0px 10px 100px 1px var(--clr-red);
+  }
+
+@media only screen and (max-width: 1400px) {
+
+    .formTitle {
+        font-size: 1rem;
+    }
+
+    .inputHolder {
+        width : 350px;
+    }
+
+    .profilePic {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .input {
+        height: 50px;
+    }
+    .form_container {
+        height: auto;
+    }
+}
+
+@media only screen and (max-width: 776px) {
+
+    .create_button {
+        height: 70px;
+    }
+    .formTitle {
+        font-size: 1rem;
+    }
+
+    .inputHolder {
+        width : 250px;
+    }
+
+    /* .profilePic {
+        border-radius: 50%;
+        width: 200px;
+        height: 200px;
+    } */
+    .form_container {
+        width: 80%;
+    }
+}
+
+@media only screen and (max-width: 360px) {
+    
+    .formTitle {
+        font-size: 1rem;
+    }
+    
+    .inputHolder {
+        width : 200px;
+    }
+
+    .profilePic {
+        width: 100px;
+        height: 100px;
+    }
+    .camera {
+        height: 20px;
+    }
+}
