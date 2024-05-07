@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'rest_framework',
     'rest_framework_simplejwt',
     'authentication.apps.AuthenticationConfig',
@@ -44,7 +45,6 @@ INSTALLED_APPS = [
     'game.apps.GameConfig',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'daphne',
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',

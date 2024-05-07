@@ -8,11 +8,14 @@ from .serializer import (MainDashboardSerializer,
                          UserSerializer,
                          BlockedFriendsSerializer,
                          NotificationUserSerializer)
-from .models import Friendship
+from .models import Friendship, Notification
 from authentication.models import User
 from rest_framework import status
 import sys
 from django.db.models import F, Q
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+
  
 class MainDashboardView(APIView):
     authentication_classes = [JWTAuthentication]
@@ -134,6 +137,21 @@ class AddFriendshipView(APIView):
             friendship = Friendship.objects.create(user_from=user_from, user_to=user_add, 
                                                    is_accepted = False)
             friendship.save()
+
+            notification = Notification.objects.create(user=user_add,
+                                                       title='New friend !',
+                                                       message=f"{user_from.username} sent you a friend request.")
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                f"room_{user_add.id}",
+                {
+                    "type": "send_notification",
+                    "message": notification.message,
+                    "user": notification.user,
+                    "title": notification.title,
+                },
+            )
+
             return Response({'success': 'Friendship Added'}, status=status.HTTP_200_OK)
         except Friendship.DoesNotExist:
             return Response({'error': 'Friendship does not exist'}, status=status.HTTP_400_BAD_REQUEST)
