@@ -45,7 +45,7 @@ function    AchivementCard({title, subTitle, imageURL, achieved} : Props) {
     return (
         <>
             <div className={`${styles.card_container} ${achieved ? styles.achived : styles.not_achived} row p-0 m-1 align-items-center justify-content-between`}>
-                <div className={`row ${styles.test} align-items-center m-0 p-0`}>
+                <div className={`row ${styles.cardHolder} align-items-center m-0 p-0`}>
 
                     <div className={`${styles.right_subcard} col-8 p-3 m-0 `}>
                         <div className="row p-0 m-0"> 
@@ -73,11 +73,11 @@ function    AchivementCard({title, subTitle, imageURL, achieved} : Props) {
 
 function    RenderBadges({ content } : { content: { title: string; subTitle: string; imageURL: string; achieved: any; }[]; }) {
     return (
-        <div className="row p-0 m-1">
+        <div className={`${styles.achi_container} row p-1 m-1`}>
             {content.map(({title, subTitle, imageURL, achieved}) => {
                 return(
                 <div
-                    className="col-12 col-md-6 col-xxl-4 d-flex d-flex justify-content-center justify-content-md-start"
+                    className="col-12 col-md-6 col-xxl-4 d-flex justify-content-center justify-content-md-start"
                     key={title}>
                     <AchivementCard
                         title={title}
@@ -143,9 +143,7 @@ function    Achievements() {
 
     return (
         <>
-            <RenderBadges content={badgeContent.slice(0, 3)} />
-            <RenderBadges content={badgeContent.slice(3, 6)} />
-            <RenderBadges content={badgeContent.slice(6, 9)} />
+            <RenderBadges content={badgeContent} />
         </>
     );
 }
@@ -153,20 +151,20 @@ function    Achievements() {
 function AchievementsPage() {
     return (
         <div className={`${styles.wrapper} container-fluid vh-100`}>
-            <div className="row p-0 m-0 mt-5">
+            <div className="row p-0 m-0 mt-4">
                 <div className="col">
                     <h1 className="valo-font col-6">ACHIEVEMENTS</h1>
                 </div>
             </div>
-            <div className="row p-0 m-0 my-3">
+            <div className="row p-0 m-0 mt-4">
                 <AchievementsProgressBar></AchievementsProgressBar>
             </div>
-            <div className="row p-0 m-1">
+            <div className="row p-0 mt-4">
                 <div className="col">
                     <h2>NavBar</h2>
                 </div>
             </div>
-            <div className="row p-0 m-0 h-75 align-items-center justify-content-start">
+            <div className={` row p-1 mt-4 h-75`}>
                 <Achievements></Achievements>
             </div>
         </div>
