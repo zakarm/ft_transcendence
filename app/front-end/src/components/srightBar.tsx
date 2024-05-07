@@ -6,11 +6,10 @@ import { ImUserPlus } from "react-icons/im";
 import styles from './styles/srightBar.module.css'
 import Splayer from "./Splayer";
 import Notification from "./Notification";
-import React, { forwardRef, useEffect } from 'react';
+import React, { forwardRef } from 'react';
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
-import { cookies } from 'next/headers';
+import { ToastContainer } from 'react-toastify';
 
 interface Friend {
 	id: number;
