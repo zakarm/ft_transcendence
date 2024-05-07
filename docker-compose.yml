@@ -7,7 +7,7 @@ services:
         build: 
             context: ./app/back-end
             dockerfile: Dockerfile
-        restart: on-failure
+        restart: always
         depends_on:
             - data-base
         ports:
@@ -26,7 +26,7 @@ services:
         build: 
             context: ./app/front-end
             dockerfile: Dockerfile
-        restart: on-failure
+        restart: always
         depends_on:
             - back-end
         ports:
@@ -47,7 +47,7 @@ services:
         build: 
             context: ./app/data-base
             dockerfile: Dockerfile
-        restart: on-failure
+        restart: always
         ports:
             - "5432:5432"
         env_file:
@@ -80,7 +80,7 @@ volumes:
         driver_opts:
             type: none
             o: bind
-            device: /Users/${USER}/Desktop/data
+            device: ${HOME}/Desktop/data
 
 networks:
     ft_transcendence:

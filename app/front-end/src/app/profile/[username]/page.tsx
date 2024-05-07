@@ -1,6 +1,6 @@
 "use client";
 
-import styles from './style.module.css';
+import styles from '../style.module.css';
 import Image from 'next/image';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import Form from 'react-bootstrap/Form';
@@ -59,7 +59,7 @@ interface MonthlyStats {
     summary: MonthlyStats;
   }
 
-export default function ()
+export default function ({ params }: { params: { username: string } })
 {
     const [profile, setProfile] = useState<ProfileData | null>(null);
 
@@ -68,7 +68,7 @@ export default function ()
         if (access)
         {
             try {
-                const res = await fetch(`http://localhost:8000/api/profile` , {
+                const res = await fetch(`http://localhost:8000/api/profile${params ? '/' + params.username : ''}` , {
                     headers: { Authorization: `Bearer ${access}` },
                 });
         
@@ -225,7 +225,7 @@ export default function ()
                                 {profile.intro}
                             </p>
                             <h2 className='text-center' style={{color: '#ACACAC', fontFamily: 'itim'}}>{profile.quote}</h2>
-                            <ProgressBar className={`${styles.progres_bar} my-5`} now={(profile?.level ?? 0) * 10} label={`${profile.level}`} striped variant="danger" animated/>
+                            <ProgressBar className={`${styles.progres_bar} my-5`} now={(profile?.level ?? 0) * 10} label={`${profile.level} %`} striped variant="danger" animated/>
                             <hr className=" my-2 mx-2" style={{color: '#61627C', borderWidth: '2px'}}/>
                             <span style={{color: '#61627C', fontFamily: 'itim'}}>Rank</span>
                             <div className='d-flex flex-row my-4'>

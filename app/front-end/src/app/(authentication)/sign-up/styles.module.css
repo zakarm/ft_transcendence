@@ -5,9 +5,7 @@
     background-color: #161625;
     border-radius: 15px;
 }
-.inputWithMargin {
-  margin-right: 20px !important; 
-}
+
 .auth_btn
 {
     background-color: transparent;
@@ -62,26 +60,6 @@
   padding-right: 13%;
 }
 
-@media screen and (max-height: 1000px)
-{
-  .flexx
-  {
-    padding-top: 10%;
-    padding-left: 6%;
-    padding-right: 6%;
-  }
-}
-
-@media screen and (max-height: 730px)
-{
-  .flexx
-  {
-    padding-top: 6%;
-    padding-left: 6%;
-    padding-right: 6%;
-  }
-}
-
 @media screen and (min-width: 1400px) and (min-height: 700px)
 {
   .flexx
@@ -96,7 +74,47 @@
 {
   .flexx
   {
-    padding-top: 19%;
+    padding-top: 17%;
+    padding-left: 6%;
+    padding-right: 6%;
+  }
+}
+
+@media screen and (max-height: 1000px)
+{
+  .flexx
+  {
+    padding-top: 10%;
+    padding-left: 6%;
+    padding-right: 6%;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .main_img {
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+  }
+  .forml {
+    width: 80% !important;
+  }
+}
+
+@media screen and (max-width: 792px) {
+  .main_img {
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+  }
+  .forml {
+    width: 90% !important;
+  }
+}
+
+@media screen and (max-height: 730px)
+{
+  .flexx
+  {
+    padding-top: 6%;
     padding-left: 6%;
     padding-right: 6%;
   }
@@ -104,6 +122,7 @@
 
 @media screen and (max-width: 480px) 
 {
+  
   .sign_btn
   {
       background-color: #FF4755;
@@ -117,5 +136,13 @@
   .main_img
   {
     display: none;
+  }
+}
+
+@media screen and (max-width : 576px) {
+  .auth_btn
+  {
+    font-size: 0.8em;
+    width: 30%;
   }
 }

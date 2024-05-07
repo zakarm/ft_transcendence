@@ -23,3 +23,19 @@
     border: none;
     background-color: transparent;
 }
+
+.tabs{
+  color: #FFEBEB;
+}
+
+.tabs_friend:hover{
+  color: #27B299;
+}
+
+.tabs_pending:hover{
+  color: #6d6f76;
+}
+
+.tabs_blocked:hover{
+  color: #FF4755;
+}
