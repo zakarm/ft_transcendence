@@ -31,12 +31,14 @@ interface Friend_ {
   user: User;
   is_accepted: boolean;
   is_user_from: boolean;
+  blocked: boolean
 }
 
 export default function InviteFriend( {show, close}: Props) {
 
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [searchedPendingFriends, setsearchedPendingFriends] = useState<Friend_[]>([]);
+  const [searchedBlockedFriends, setsearchedBlockedFriends] = useState<Friend_[]>([]);
   const [searchedFriends, setsearchedFriends] = useState<Friend_[]>([]);
   const [users, setUsers] = useState<Friend_[]>([]);
   const [selectedTab, setSelectedTab] = useState<string | undefined>("friends");
@@ -62,6 +64,7 @@ export default function InviteFriend( {show, close}: Props) {
               },
               is_accepted: friend.is_accepted,
               is_user_from: friend.is_user_from,
+              blocked: friend.blocked
             }));
 
             setUsers(transData);
@@ -154,7 +157,6 @@ export default function InviteFriend( {show, close}: Props) {
                 return item;
               });
               setsearchedFriends(updatedUsers);
-              // update();
               toast.success(message);
             }
           }
@@ -176,8 +178,9 @@ export default function InviteFriend( {show, close}: Props) {
 
   const update = () => {
     fetchUsersData();
-    setsearchedFriends(users.filter(friend => (friend.is_accepted || friend.is_user_from)));
-    setsearchedPendingFriends(users.filter(friend => !friend.is_accepted && !friend.is_user_from));
+    setsearchedFriends(users.filter(friend => ((friend.is_accepted || friend.is_user_from) && !friend.blocked)));
+    setsearchedPendingFriends(users.filter(friend => !friend.is_accepted && !friend.is_user_from && !friend.blocked));
+    setsearchedBlockedFriends(users.filter(user => user.blocked));
   }
 
   useEffect(() => {
@@ -351,8 +354,8 @@ export default function InviteFriend( {show, close}: Props) {
                       </InputGroup>
                     </Modal.Header>
                     <Modal.Body style={{height: '200px', overflow: 'auto'}}>
-                      { searchedFriends &&
-                        searchedFriends.map((friend, index) =>
+                      { searchedBlockedFriends &&
+                        searchedBlockedFriends.map((friend, index) =>
                             (
                                 <div key={index} className='row d-flex flex-row d-flex align-items-center justify-content-between px-3 py-1 m-2' style={{ borderRadius: '25px', backgroundColor: '#161625' }}>
                                     <div className='col-3 text-start'><Splayer nickname={friend.user.username} id={1} image={friend.user.image_url} isConnected={false} /></div>
