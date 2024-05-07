@@ -38,6 +38,7 @@ export default function InviteFriend( {show, close}: Props) {
   const [searchedPendingFriends, setsearchedPendingFriends] = useState<Friend_[]>([]);
   const [searchedFriends, setsearchedFriends] = useState<Friend_[]>([]);
   const [users, setUsers] = useState<Friend_[]>([]);
+  const [selectedTab, setSelectedTab] = useState<string | undefined>("friends");
 
   const fetchUsersData = async () => {
     const access = Cookies.get('access');
@@ -97,7 +98,7 @@ export default function InviteFriend( {show, close}: Props) {
             image_url: user.image_url,
           },
           is_accepted: false,
-          is_user_from: false
+          is_user_from: true
         }));
         setsearchedFriends(transData);
         
@@ -133,7 +134,10 @@ export default function InviteFriend( {show, close}: Props) {
           if (api === 'friends-remove' || api === 'friends-add')
             setsearchedFriends(searchedFriends.filter(friend => friend.user.username !== username));
           else if (api === 'friends-accept')
+          {
+            users.filter(friend => friend.user.username === username)[0].is_accepted = true;
             setsearchedPendingFriends(searchedPendingFriends.filter(friend => friend.user.username !== username));
+          }
           toast.success(`${username} ${message}.`);
         }
         
@@ -145,17 +149,22 @@ export default function InviteFriend( {show, close}: Props) {
       console.log('Access token is undefined or falsy');
   }
 
+  const update = (key: string | null) => {
+    setsearchedFriends(users.filter(friend => friend.is_accepted));
+    setsearchedPendingFriends(users.filter(friend => !friend.is_accepted && !friend.is_user_from));
+    if (key === null)
+      return;
+    setSelectedTab(key);
+  }
+
   useEffect(() => {
     if (show)
       fetchUsersData();
   }, [show]);
 
   useEffect(() => {
-    if (users)
-    {
-      setsearchedFriends(users.filter(friend => friend.is_accepted));
-      setsearchedPendingFriends(users.filter(friend => !friend.is_accepted && friend.is_user_from));
-    }
+    if (users && selectedTab)
+      update(selectedTab);
   }, [users])
 
     
@@ -195,11 +204,13 @@ export default function InviteFriend( {show, close}: Props) {
             <Modal contentClassName={`${styles.friend_modal}`} show={show} aria-labelledby="add_friend" centered>
                     <Tabs
                       defaultActiveKey="friends"
+                      activeKey={selectedTab}
                       id="justify-tab-example"
                       className="mb-3"
                       justify
                       transition={true}
                       style={{fontFamily: 'itim'}}
+                      onSelect={(key: string | null) => update(key)}
                     >
                       <Tab eventKey="friends" title="Friends" tabClassName={`${styles.tabs} ${styles.tabs_friend}`}>
                         <Modal.Header className='d-flex flex-column'>
@@ -230,9 +241,9 @@ export default function InviteFriend( {show, close}: Props) {
                                         <div className='col-3 text-start'><Splayer nickname={friend.user.username} id={1} image={'/char3.png'} isConnected={false} /></div>
                                         {
                                           friend.is_accepted ? (
-                                            <div className='col-9 text-end' onClick={() => fetchUser('friends-remove', 'removed from friends', friend.user.username)}><Button variant="dark" onClick={() => fetchUser('friends-remove', 'removed from friends', friend.user.username)}>Remove <IoIosRemoveCircle color="#FFEBEB" /></Button></div>
+                                            <div className='col-9 text-end' ><Button variant="dark" onClick={() => fetchUser('friends-remove', 'removed from friends', friend.user.username)}>Remove <IoIosRemoveCircle color="#FFEBEB" /></Button></div>
                                           ) : (
-                                            <div className='col-9 text-end' onClick={() => fetchUser('friends-add', 'added to friends',friend.user.username)}><Button variant="dark" onClick={() => fetchUser('friends-add', 'added to friends',friend.user.username)}>Invite <TiUserAdd color="#FFEBEB" /></Button></div>
+                                            <div className='col-9 text-end' ><Button variant="dark" onClick={() => fetchUser('friends-add', 'added to friends',friend.user.username)}>Invite <TiUserAdd color="#FFEBEB" /></Button></div>
                                           )
                                         }
                                         
@@ -269,7 +280,7 @@ export default function InviteFriend( {show, close}: Props) {
                                 (
                                     <div key={index} className='row d-flex flex-row d-flex align-items-center justify-content-between px-3 py-1 m-2' style={{ borderRadius: '25px', backgroundColor: '#161625' }}>
                                         <div className='col-3 text-start'><Splayer nickname={friend.user.username} id={1} image={'/char3.png'} isConnected={false} /></div>
-                                        <div className='col-9 text-end' onClick={() => fetchUser('friends-accept', 'added to friends',friend.user.username)}><Button variant="dark" onClick={() => fetchUser('friends-accept', 'added to friends',friend.user.username)}>Accept <IoMdCheckmarkCircle color="#FFEBEB" /></Button></div>
+                                        <div className='col-9 text-end'><Button variant="dark" onClick={() => fetchUser('friends-accept', 'added to friends',friend.user.username)}>Accept <IoMdCheckmarkCircle color="#FFEBEB" /></Button></div>
                                     </div>
                                 )
                             )
@@ -303,7 +314,7 @@ export default function InviteFriend( {show, close}: Props) {
                                 (
                                     <div key={index} className='row d-flex flex-row d-flex align-items-center justify-content-between px-3 py-1 m-2' style={{ borderRadius: '25px', backgroundColor: '#161625' }}>
                                         <div className='col-3 text-start'><Splayer nickname={friend.user.username} id={1} image={'/char3.png'} isConnected={false} /></div>
-                                        <div className='col-9 text-end' onClick={() => fetchUser('friends-unblock', 'unblocked',friend.user.username)}><Button variant="dark" onClick={() => fetchUser('friends-unblock', 'unblocked',friend.user.username)}>Unblock <CgUnblock color="#FFEBEB" /></Button></div>
+                                        <div className='col-9 text-end' ><Button variant="dark" onClick={() => fetchUser('friends-unblock', 'unblocked',friend.user.username)}>Unblock <CgUnblock color="#FFEBEB" /></Button></div>
                                     </div>
                                 )
                             )
