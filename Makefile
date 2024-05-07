@@ -46,7 +46,7 @@ down: ## Stop and remove Docker containers
 	@echo "$(YELLOW)Stopping and removing Docker containers...$(RESET)"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) $(DOCKER_COMPOSE_FLAGS) down
 
-restart: down up ## Restart Docker containers
+restart: down build up ## Restart Docker containers
 
 logs: ## View logs from Docker containers
 	@echo "$(GREEN)Viewing logs from Docker containers...$(RESET)"

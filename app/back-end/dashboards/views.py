@@ -138,20 +138,6 @@ class AddFriendshipView(APIView):
                                                    is_accepted = False)
             friendship.save()
 
-            notification = Notification.objects.create(user=user_add,
-                                                       title='New friend !',
-                                                       message=f"{user_from.username} sent you a friend request.")
-            channel_layer = get_channel_layer()
-            async_to_sync(channel_layer.group_send)(
-                f"room_{user_add.id}",
-                {
-                    "type": "send_notification",
-                    "message": notification.message,
-                    "user": notification.user,
-                    "title": notification.title,
-                },
-            )
-
             return Response({'success': 'Friendship Added'}, status=status.HTTP_200_OK)
         except Friendship.DoesNotExist:
             return Response({'error': 'Friendship does not exist'}, status=status.HTTP_400_BAD_REQUEST)
