@@ -39,7 +39,7 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
             self.user = await get_user(self.scope["user"].id)
             await update_user_online(self.scope['user'].id)
             await self.accept()
-            self.group_name = 'room_'+str(self.user.id)
+            self.group_name = f'room_{self.scope["user"].id}'
             await self.channel_layer.group_add(
                 self.group_name,
                 self.channel_name
@@ -49,6 +49,7 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         await update_user_offline(self.scope['user'].id)
+        self.group_name = f'room_{self.scope["user"].id}'
         await self.channel_layer.group_discard(
             self.group_name,
             self.channel_name
@@ -59,5 +60,6 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
             'type': 'notification',
             'message': event['message'],
             'title': event['title'],
-            'user': event['user']
+            'user': event['user'],
+            'image_url': event['image_url']
         }))

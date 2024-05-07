@@ -145,7 +145,7 @@ class BlockedFriendsSerializer(serializers.ModelSerializer):
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
-        fields = ('notification_id', 'image_url', 'message_url', 'title', 'link')
+        fields = ('notification_id', 'image_url', 'message', 'title', 'link')
 
 class NotificationUserSerializer(serializers.ModelSerializer):
     notifications = serializers.SerializerMethodField()
