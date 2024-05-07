@@ -5,7 +5,9 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from .serializer import (MainDashboardSerializer,
                          ProfileSerializer,
                          FriendsSerializer,
-                         UserSerializer)
+                         UserSerializer,
+                         BlockedFriendsSerializer,
+                         NotificationUserSerializer)
 from .models import Friendship
 from authentication.models import User
 from rest_framework import status
@@ -199,3 +201,20 @@ class UnblockFriendshipView(APIView):
         except Friendship.DoesNotExist:
             return Response({'error': 'Friendship does not exist'}, status=status.HTTP_400_BAD_REQUEST)
 
+class BlockedFriendsView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        serializer = BlockedFriendsSerializer(instance=user)
+        return Response(serializer.data)
+
+class NotificationsView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        serializer = NotificationUserSerializer(instance=user)
+        return Response(serializer.data)

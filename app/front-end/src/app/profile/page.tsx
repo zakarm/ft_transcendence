@@ -203,11 +203,11 @@ export default function ()
                                     </div>
                                     <div className='col d-flex flex-column justify-content-end '>
                                         <h4 style={{borderLeft: '1px solid #61627C', borderRight: '1px solid #61627C'}}>Win</h4>
-                                        <span style={{borderLeft: '1px solid #61627C', borderRight: '1px solid #61627C'}}>{((profile.win_games / profile.total_games) * 100).toFixed(2)}%</span>
+                                        <span style={{borderLeft: '1px solid #61627C', borderRight: '1px solid #61627C'}}>{((profile.win_games / profile.total_games) * 100).toFixed(1)}%</span>
                                     </div>
                                     <div className='col d-flex flex-column justify-content-end '>
                                         <h4>Lose</h4>
-                                        <span>{((profile.lose_games / profile.total_games) * 100).toFixed(2)}%</span>
+                                        <span>{((profile.lose_games / profile.total_games) * 100).toFixed(1)}%</span>
                                     </div>
                                 </div>
                             </div>

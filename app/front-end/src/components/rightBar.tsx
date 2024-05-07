@@ -20,6 +20,7 @@ interface User {
 interface Props
 {
     friends_data: any;
+    notifications_data: any;
     userdata: User;
     show?: boolean;
     setShow: (show: boolean) => void;
@@ -31,6 +32,14 @@ interface Props
 interface CustomToggleProps {
     children: React.ReactNode;
     onClick: () => void;
+}
+
+interface Notification{
+	notification_id: number;
+	image_url: string;
+	message_url: string;
+	title: string;
+	link: string;
 }
 
 interface Friend {
@@ -50,7 +59,7 @@ const CustomToggle = forwardRef<HTMLDivElement, CustomToggleProps>(
 
 CustomToggle.displayName = 'CustomToggle';
 
-export default function RightBar({userdata, friends_data, setShow, show, handleClose, toggleShow, setfriendModal} : Props) {
+export default function RightBar({notifications_data, userdata, friends_data, setShow, show, handleClose, toggleShow, setfriendModal} : Props) {
 
     const [searchTerm, setSearchTerm] = useState<string>('');
     const filteredFriends = friends_data
@@ -103,17 +112,18 @@ export default function RightBar({userdata, friends_data, setShow, show, handleC
                                                   </div>
                                                 </Dropdown.Toggle>
                                                 <Dropdown.Menu className={`${styles.drop_class}`}>
-                                                  <Dropdown.Item eventKey="1"><Notification /></Dropdown.Item>
-                                                  <hr className="dropdown-divider" />
-                                                  <Dropdown.Item eventKey="2"><Notification /></Dropdown.Item>
-                                                  <hr className="dropdown-divider" />
-                                                  <Dropdown.Item eventKey="3"><Notification /></Dropdown.Item>
+                                                {notifications_data && 
+                                                    notifications_data.map((key: Notification, index: number) => 
+                                                        <Dropdown.Item eventKey={index}><Notification notification={key}/></Dropdown.Item>
+                                                        // <hr className="dropdown-divider" />
+                                                    )
+                                                }
                                                 </Dropdown.Menu>
                                             </Dropdown>
                                          </div>
                                          <div className="row d-flex flex-column text-center">
                                              <div className="col">
-                                                 <Image className={`${styles.img_class}`} width={60} height={60} src="/char3.png" alt='Profile'/>
+                                                 <Image className={`${styles.img_class}`} width={60} height={60} src={userdata && userdata.image_url} alt='Profile'/>
                                              </div>
                                              <div className={`col ${styles.profile} mt-2`}>
                                                  <h3 className="valo-font">{userdata && userdata.username}</h3>

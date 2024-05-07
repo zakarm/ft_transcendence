@@ -10,7 +10,7 @@ MAJOR ?=
 MINOR ?= 
 PATCH ?= 
 VERSION := $(MAJOR).$(MINOR).$(PATCH)
-DATA_DIR := /Users/${USER}/Desktop/data
+DATA_DIR := ${HOME}/Desktop/data
 
 # Define colors
 GREEN := $(shell tput -Txterm setaf 2)
