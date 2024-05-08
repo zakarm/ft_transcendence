@@ -8,7 +8,7 @@ from .utils import (get_total_games,
                     get_lose_games,
                     get_monthly_game_stats,
                     get_total_minutes)
-
+import sys
 class MatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Match
@@ -80,6 +80,8 @@ class FriendshipSerializer(serializers.ModelSerializer):
         fields = ('user', 'is_accepted', 'blocked', 'is_user_from')
     
     def get_user(self, obj):
+        print(obj.user_from.id, file=sys.stderr)
+        print(self.context['id'], file=sys.stderr)
         if obj.user_from.id == self.context['id']:
             user_data = User.objects.get(id=obj.user_to.id)
         else:
@@ -105,9 +107,11 @@ class FriendsSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'image_url', 'friends')
     
     def get_friends(self, obj):
-        friends_data = Friendship.objects.filter(Q(user_from = obj)| Q(user_to= obj) |
-                                                 Q(u_one_is_blocked_u_two = False)|
+        friends_data = Friendship.objects.filter((Q(user_from = obj)| Q(user_to= obj)) &
+                                                 Q(u_one_is_blocked_u_two = False) &
                                                  Q(u_two_is_blocked_u_one = False))
+        
+        print(friends_data, file = sys.stderr)
         serializer = FriendshipSerializer(friends_data, many=True, context = {'id': obj.id})
         return serializer.data
 
