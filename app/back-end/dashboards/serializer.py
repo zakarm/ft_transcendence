@@ -74,9 +74,10 @@ class UserSerializer(serializers.ModelSerializer):
 class FriendshipSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     is_user_from = serializers.SerializerMethodField()
+    blocked = serializers.SerializerMethodField()
     class Meta:
         model = Friendship
-        fields = ('user', 'is_accepted', 'is_user_from')
+        fields = ('user', 'is_accepted', 'blocked', 'is_user_from')
     
     def get_user(self, obj):
         if obj.user_from.id == self.context['id']:
@@ -86,6 +87,13 @@ class FriendshipSerializer(serializers.ModelSerializer):
 
         serializer = UserSerializer(user_data)
         return serializer.data
+    
+    def get_blocked(self, obj):
+        if obj.user_from.id == self.context['id']:
+            blocked = obj.u_one_is_blocked_u_two
+        else:
+            blocked = obj.u_two_is_blocked_u_one
+        return blocked
 
     def get_is_user_from(self, obj):
         return obj.user_from.id == self.context['id']
