@@ -105,7 +105,9 @@ class FriendsSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'image_url', 'friends')
     
     def get_friends(self, obj):
-        friends_data = Friendship.objects.filter(Q(user_from = obj)| Q(user_to= obj))
+        friends_data = Friendship.objects.filter(Q(user_from = obj)| Q(user_to= obj) |
+                                                 Q(u_one_is_blocked_u_two = False)|
+                                                 Q(u_two_is_blocked_u_one = False))
         serializer = FriendshipSerializer(friends_data, many=True, context = {'id': obj.id})
         return serializer.data
 
