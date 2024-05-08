@@ -31,7 +31,7 @@ interface Friend_ {
   user: User;
   is_accepted: boolean;
   is_user_from: boolean;
-  blocked: boolean
+  blocked: boolean;
 }
 
 export default function InviteFriend( {show, close}: Props) {
@@ -102,7 +102,8 @@ export default function InviteFriend( {show, close}: Props) {
             image_url: user.image_url,
           },
           is_accepted: false,
-          is_user_from: false
+          is_user_from: false,
+          blocked: false
         }));
         setsearchedFriends(transData);
         
