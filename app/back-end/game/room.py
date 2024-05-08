@@ -1,4 +1,3 @@
-
 class RoomObject:
     def __init__(self):
         # game state
@@ -32,6 +31,7 @@ class RoomObject:
     # distructor
     def __del__(self):
         print("Room deleted")
+
     # ------------------------> game <------------------------
 
     def start_game(self):
@@ -50,16 +50,23 @@ class RoomObject:
 
     def is_reconecting(self):
         return self.reconect
+
     # ------------------------> user <------------------------
     def get_winner(self):
         if self.score["user1"] == 7:
-            return self.Original_users["user1"]["user_id"] , self.Original_users["user2"]["user_id"]
+            return (
+                self.Original_users["user1"]["user_id"],
+                self.Original_users["user2"]["user_id"],
+            )
         elif self.score["user2"] == 7:
-            return self.Original_users["user2"]["user_id"] , self.Original_users["user1"]["user_id"]
+            return (
+                self.Original_users["user2"]["user_id"],
+                self.Original_users["user1"]["user_id"],
+            )
         return None
 
     def is_winner(self):
-        if(self.score["user1"] == 7 or self.score["user2"] == 7):
+        if self.score["user1"] == 7 or self.score["user2"] == 7:
             return True
         return False
 
@@ -116,7 +123,7 @@ class RoomObject:
             self.Original_users["user2"]["channel_name"] = channel_name
         self.reconect = False
 
-    def set_reconect(self,user_id):
+    def set_reconect(self, user_id):
         if self.game_ended == False:
             self.reconect_user = user_id
             self.reconect = True

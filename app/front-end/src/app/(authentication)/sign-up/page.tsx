@@ -67,7 +67,7 @@ export default function SignUp()
                                     VAL-PONG
                                 </h1>
                             </div>
-                            <form className={`form-group mt-3 mb-3 w-75`} onSubmit={signUpPost}>
+                            <form className={`form-group mt-3 mb-3 w-75 ${styles.forml}`} onSubmit={signUpPost}>
                                 <div className="row form-row">
                                     <div className='col-xs-6 w-50'>
                                         <input className={`form-control ${styles.input_class} p-3 mb-3 border-0`} type='text' autoComplete="off" placeholder='First Name' name="first_name" required/>

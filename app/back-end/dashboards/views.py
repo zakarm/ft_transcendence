@@ -8,11 +8,15 @@ from .serializer import (MainDashboardSerializer,
                          UserSerializer,
                          BlockedFriendsSerializer,
                          NotificationUserSerializer)
-from .models import Friendship
+from .models import Friendship, Notification
 from authentication.models import User
 from rest_framework import status
 import sys
 from django.db.models import F, Q
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+from django.contrib.auth.models import AnonymousUser
+
  
 class MainDashboardView(APIView):
     authentication_classes = [JWTAuthentication]
@@ -134,9 +138,36 @@ class AddFriendshipView(APIView):
             friendship = Friendship.objects.create(user_from=user_from, user_to=user_add, 
                                                    is_accepted = False)
             friendship.save()
+
+            notification = Notification.objects.create(user=user_add,
+                                                       title='New friend !',
+                                                       message=f"{user_from.username} sent you a friend request.",
+                                                       image_url="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Aatrox_0.jpg")
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                f"room_{user_add.id}",
+                {
+                    "type": "send_notification",
+                    "notification_id": notification.notification_id,
+                    "message": notification.message,
+                    "user": serialize_user(user_from),
+                    "title": notification.title,
+                    "image_url": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Aatrox_0.jpg"
+                },
+            )
+
             return Response({'success': 'Friendship Added'}, status=status.HTTP_200_OK)
         except Friendship.DoesNotExist:
             return Response({'error': 'Friendship does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+
+def serialize_user(user):
+    if isinstance(user, AnonymousUser):
+        return None
+    return {
+        'id': user.id,
+        'username': user.username,
+        'image_url': user.image_url,
+    }
 
 class BlockFriendshipView(APIView):
     authentication_classes = [JWTAuthentication]
@@ -168,7 +199,6 @@ class BlockFriendshipView(APIView):
             return self.block_friend(friendship, user_from)
         except Friendship.DoesNotExist:
             return Response({'error': 'Friendship does not exist'}, status=status.HTTP_400_BAD_REQUEST)
-
 
 class UnblockFriendshipView(APIView):
     authentication_classes = [JWTAuthentication]

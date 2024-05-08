@@ -6,9 +6,9 @@ SHELL := /bin/bash
 DOCKER_COMPOSE := docker-compose
 DOCKER_COMPOSE_FILE := docker-compose.yml
 DOCKER_COMPOSE_FLAGS := --env-file .env
-MAJOR ?= 3
-MINOR ?= 8
-PATCH ?= 0
+MAJOR ?= 
+MINOR ?= 
+PATCH ?= 
 VERSION := $(MAJOR).$(MINOR).$(PATCH)
 DATA_DIR := ${HOME}/Desktop/data
 

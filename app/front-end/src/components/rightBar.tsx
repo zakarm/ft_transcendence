@@ -19,6 +19,7 @@ interface User {
 
 interface Props
 {
+    webSocketNotifications: any;
     friends_data: any;
     notifications_data: any;
     userdata: User;
@@ -37,7 +38,7 @@ interface CustomToggleProps {
 interface Notification{
 	notification_id: number;
 	image_url: string;
-	message_url: string;
+	message: string;
 	title: string;
 	link: string;
 }
@@ -59,7 +60,7 @@ const CustomToggle = forwardRef<HTMLDivElement, CustomToggleProps>(
 
 CustomToggle.displayName = 'CustomToggle';
 
-export default function RightBar({notifications_data, userdata, friends_data, setShow, show, handleClose, toggleShow, setfriendModal} : Props) {
+export default function RightBar({webSocketNotifications, notifications_data, userdata, friends_data, setShow, show, handleClose, toggleShow, setfriendModal} : Props) {
 
     const [searchTerm, setSearchTerm] = useState<string>('');
     const filteredFriends = friends_data
@@ -112,9 +113,12 @@ export default function RightBar({notifications_data, userdata, friends_data, se
                                                   </div>
                                                 </Dropdown.Toggle>
                                                 <Dropdown.Menu className={`${styles.drop_class}`}>
+                                                {webSocketNotifications.map((key: Notification, index:number) => (
+                                                    <Dropdown.Item key={index} eventKey={index}><Notification notification={key} /></Dropdown.Item>
+                                                ))}
                                                 {notifications_data && 
                                                     notifications_data.map((key: Notification, index: number) => 
-                                                        <Dropdown.Item eventKey={index}><Notification notification={key}/></Dropdown.Item>
+                                                        <Dropdown.Item key={index} eventKey={index}><Notification notification={key}/></Dropdown.Item>
                                                         // <hr className="dropdown-divider" />
                                                     )
                                                 }

@@ -1,4 +1,3 @@
-"""Module to imports rest functions and classes"""
 import urllib.parse
 from django.conf import settings
 from django.shortcuts import redirect
