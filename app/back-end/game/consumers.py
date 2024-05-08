@@ -153,8 +153,20 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         try:
             text_data_json = json.loads(text_data)
-            message = text_data_json["message"]
-            print(f"Received message: {message}")
+            action = text_data_json.get("action")
+            room = get_room(self.room_name)
+            if action:
+                if action == "paddle_move":
+                    paddle = text_data_json["paddle"]
+                    speed = text_data_json["speed"]
+                    room.set_paddle_speed(paddle, speed)
+                elif action == "paddle_stop":
+                    paddle = text_data_json["paddle"]
+                    room.set_paddle_speed(paddle, 0)
+                else:
+                    print(f"Invalid action received: {action}", file=sys.stderr)
+            else:
+                print(f"Received message has no 'action' attribute", file=sys.stderr)
         except Exception as e:
             print(f"An error occurred in receive: {e}", file=sys.stderr)
 
