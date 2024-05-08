@@ -70,10 +70,18 @@ const RemoteMatchGame: React.FC = () => {
           <PlayerCard {...players[1]} />
         </>
       )}
-      {gameState === "load_game" ||
-        (gameState === "start_game" && webSocket && (
-          <PongGame webSocket={webSocket} connectionInfo={connectionInfo} />
-        ))}
+      {(gameState === "load_game" || gameState === "start_game") &&
+        webSocket && (
+          <>
+            {gameState === "load_game" && (
+              <>
+                <div className="blurred-background"></div>
+                <div className="search-text">Loading...</div>
+              </>
+            )}
+            <PongGame webSocket={webSocket} connectionInfo={connectionInfo} />
+          </>
+        )}
     </div>
   );
 };
