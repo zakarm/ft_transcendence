@@ -116,11 +116,21 @@ class GameConsumer(AsyncWebsocketConsumer):
                 self.room_name, self.room = await self.find_or_create_room(self.user)
                 await self.channel_layer.group_add(self.room_name, self.channel_name)
                 index = self.room.get_user_index(self.user)
-                message = f"action: connection_ack, index: {index}, User: {self.user}, Room_name: {self.room_name}"
+                message = {
+                    "action": "connection_ack",
+                    "index": index,
+                    "User": self.user.username,
+                    "Room_name": self.room_name,
+                }
                 await self.message({"message": message})
                 if self.room.is_ready():
                     user1, user2 = self.room.get_original_users()
-                    message = f"action: opponents, user1: {user1}, user2: {user2}"
+                    # check the users ?//???????
+                    message = {
+                        "action": "opponents",
+                        "user1": "user1",
+                        "user2": "user2",
+                    }
                     await self.broadcast_message(message)
                     if self.room.is_started() == False:
                         asyncio.ensure_future(self.start_game())
@@ -152,54 +162,92 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def start_game(self):
         try:
             await asyncio.sleep(5)
-            await self.broadcast_message(f"action: load_game")
+            await self.broadcast_message({"action": "load_game"})
             await asyncio.sleep(5)
-            await self.broadcast_message(f"action: start_game")
+            await self.broadcast_message({"action": "start_game"})
             await self.init_pos()
             room = get_room(self.room_name)
             while True:
                 if room.is_reconecting():
-                    message = f"action: reconecting, score: user1: {room.getScores()['user1']}, user2: {room.getScores()['user2']}"
+                    message = {
+                        "action": "reconnecting",
+                        "score": {
+                            "user1": room.getScores()["user1"],
+                            "user2": room.getScores()["user2"],
+                        },
+                    }
                     await self.broadcast_message(message)
                     i = 0
                     while room.is_reconecting():
                         await asyncio.sleep(1)
-                        message = f"action: reconecting"
+                        message = {"action": "reconnecting"}
                         await self.broadcast_message(message)
                         if (i := i + 1) > 10:
                             room.end_game()
                             room.make_user_winner(room.get_online_user())
                             # delete_room(self.room_name)
-                            message = f"action: end_game, winner: {room.get_winner()[0]}, loser: {room.get_winner()[1]}"
+                            message = {
+                                "action": "end_game",
+                                "winner": room.get_winner()[0],
+                                "loser": room.get_winner()[1],
+                            }
                             await self.broadcast_message(message)
                             return
                 room.ball_update()
                 room.ball_intersect()
                 room.paddle_update()
                 if room.is_paddle_move(1):
-                    message = f"action: paddle_update, paddle: 1, paddle_position_z : {room.paddle1_position['z']}"
+                    message = {
+                        "action": "paddle_update",
+                        "paddle": 1,
+                        "paddle_position_z": room.paddle1_position["z"],
+                    }
                     await self.broadcast_message(message)
                 if room.is_paddle_move(2):
-                    message = f"action: paddle_update, paddle: 2, paddle_position_z : {room.paddle2_position['z']}"
+                    message = {
+                        "action": "paddle_update",
+                        "paddle": 2,
+                        "paddle_position_z": room.paddle2_position["z"],
+                    }
                     await self.broadcast_message(message)
                 if room.is_out_of_bounds():
                     room.update_score()
-                    message = f"action: score, user1score: {room.getScores()['user1']}, user2score: {room.getScores()['user2']}"
+                    message = {
+                        "action": "score",
+                        "user1score": room.getScores()["user1"],
+                        "user2score": room.getScores()["user2"],
+                    }
                     await self.broadcast_message(message)
                     if room.is_winner():
                         room.end_game()
                         winner, loser = room.get_winner()
                         # delete_room(self.room_name)
-                        message = f"action: end_game, winner: {winner}, loser: {loser}"
+                        message = {
+                            "action": "end_game",
+                            "winner": winner,
+                            "loser": loser,
+                        }
                         await self.broadcast_message(message)
                         break
                     room.paddle_reset()
                     ball_pos_z, ball_velo_x, ball_velo_z = await self.reset()
-                    message = f"action: reset, ball_position_x: {0}, ball_position_z: {ball_pos_z}, ball_velocity_x: {ball_velo_x}, ball_velocity_z: {ball_velo_z}"
+                    message = {
+                        "action": "reset",
+                        "ball_position_x": 0,
+                        "ball_position_z": ball_pos_z,
+                        "ball_velocity_x": ball_velo_x,
+                        "ball_velocity_z": ball_velo_z,
+                    }
                     await self.broadcast_message(message)
                 else:
                     ball_position, ball_velocity = room.get_updated_ball()
-                    message = f"action: update,  ball_position_x: {ball_position['x']}, ball_position_z: {ball_position['z']}, ball_velocity_x: {ball_velocity['velocity_x']}, ball_velocity_z: {ball_velocity['velocity_x']}"
+                    message = {
+                        "action": "update",
+                        "ball_position_x": ball_position["x"],
+                        "ball_position_z": ball_position["z"],
+                        "ball_velocity_x": ball_velocity["velocity_x"],
+                        "ball_velocity_z": ball_velocity["velocity_z"],
+                    }
                     await self.broadcast_message(message)
                 await asyncio.sleep(1 / 60)
         except Exception as e:
@@ -243,18 +291,18 @@ class GameConsumer(AsyncWebsocketConsumer):
                 if not room.is_ended():
                     if room.is_ready() and room.is_user_joined(user_id):
                         room.reconecting_user(self.channel_name, user_id)
-                        await self.message({"message": "action: reconected"})
+                        await self.message({"message": {"action": "reconected"}})
                         return room_name, room
                     elif not room.is_ready() and not room.is_user_joined(user_id):
                         room.add_user(self.channel_name, user_id)
-                        await self.message({"message": "action : joined"})
+                        await self.message({"message": {"action": "joined"}})
                         return room_name, room
             increment_room_index()
             new_room = RoomObject()
             new_room_name = f"room_{get_room_index()}"
             add_room(new_room_name, new_room)
             new_room.add_user(self.channel_name, user_id)
-            await self.message({"message": "action: created + joined"})
+            await self.message({"message": {"action": "created"}})
             return new_room_name, new_room
         except Exception as e:
             print(f"An error occurred in find_or_create_room: {e}", file=sys.stderr)
