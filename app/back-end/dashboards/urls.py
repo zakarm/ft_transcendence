@@ -6,7 +6,11 @@ from .views import (MainDashboardView,
                     UserSearchView,
                     RemoveFriendshipView,
                     AcceptFriendshipView,
-                    AddFriendshipView
+                    AddFriendshipView,
+                    BlockFriendshipView,
+                    UnblockFriendshipView,
+                    BlockedFriendsView,
+                    NotificationsView
                    )
 
 urlpatterns = [
@@ -18,4 +22,8 @@ urlpatterns = [
    path('friends-remove', RemoveFriendshipView.as_view(), name="friends-remove"),
    path('friends-accept', AcceptFriendshipView.as_view(), name="friends-accept"),
    path('friends-add', AddFriendshipView.as_view(), name="friends-add"),
+   path('friends-block', BlockFriendshipView.as_view(), name="friends-block"),
+   path('friends-unblock', UnblockFriendshipView.as_view(), name="friends-unblock"),
+   path('blocked-friends', BlockedFriendsView.as_view(), name="friends-unblock"),
+   path('notifications', NotificationsView.as_view(), name="notifications"),
 ]

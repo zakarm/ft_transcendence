@@ -5,7 +5,9 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from .serializer import (MainDashboardSerializer,
                          ProfileSerializer,
                          FriendsSerializer,
-                         UserSerializer)
+                         UserSerializer,
+                         BlockedFriendsSerializer,
+                         NotificationUserSerializer)
 from .models import Friendship
 from authentication.models import User
 from rest_framework import status
@@ -135,3 +137,84 @@ class AddFriendshipView(APIView):
             return Response({'success': 'Friendship Added'}, status=status.HTTP_200_OK)
         except Friendship.DoesNotExist:
             return Response({'error': 'Friendship does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+
+class BlockFriendshipView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def block_friend(self, friendship, user_from):
+        if friendship.user_from == user_from:
+            block_flag = 'u_one_is_blocked_u_two'
+        else:
+            block_flag = 'u_two_is_blocked_u_one'
+
+        if getattr(friendship, block_flag):
+            return Response({'error': 'Friend already blocked'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            setattr(friendship, block_flag, True)
+            friendship.save()
+            return Response({'success': 'Friend blocked'}, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        user_from = request.user
+        username = request.data.get('username')
+        try:
+            user_accept = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            friendship = Friendship.objects.get(Q(user_from=user_from, user_to=user_accept)|
+                                                Q(user_from=user_accept, user_to=user_from))
+            return self.block_friend(friendship, user_from)
+        except Friendship.DoesNotExist:
+            return Response({'error': 'Friendship does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UnblockFriendshipView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def unblock_friend(self, friendship, user_from):
+        if friendship.user_from == user_from:
+            block_flag = 'u_one_is_blocked_u_two'
+        else:
+            block_flag = 'u_two_is_blocked_u_one'
+        
+        if not getattr(friendship, block_flag):
+            return Response({'error': 'Friend is not blocked'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            setattr(friendship, block_flag, False)
+            friendship.save()
+            return Response({'success': 'Friend unblocked'}, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        user_from = request.user
+        username = request.data.get('username')
+        try:
+            user_accept = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            friendship = Friendship.objects.get(Q(user_from=user_from, user_to=user_accept)|
+                                                Q(user_from=user_accept, user_to=user_from))
+            return self.unblock_friend(friendship, user_from)
+        except Friendship.DoesNotExist:
+            return Response({'error': 'Friendship does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+
+class BlockedFriendsView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        serializer = BlockedFriendsSerializer(instance=user)
+        return Response(serializer.data)
+
+class NotificationsView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        serializer = NotificationUserSerializer(instance=user)
+        return Response(serializer.data)

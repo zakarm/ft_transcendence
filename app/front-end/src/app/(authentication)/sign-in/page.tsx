@@ -32,7 +32,7 @@ export default function SignInPage() {
             if (response.ok)
             {
                 const data = await response.json();
-                console.log(data);
+                // console.log(data);
                 const {access, refresh, is_2fa_enabled, email} = data;
                 if (is_2fa_enabled == 'True')
                 {

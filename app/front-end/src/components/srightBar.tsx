@@ -6,8 +6,11 @@ import { ImUserPlus } from "react-icons/im";
 import styles from './styles/srightBar.module.css'
 import Splayer from "./Splayer";
 import Notification from "./Notification";
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useEffect } from 'react';
 import Image from 'next/image'
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
+import { cookies } from 'next/headers';
 
 interface Friend {
 	id: number;
@@ -16,8 +19,25 @@ interface Friend {
 	connected: boolean;
 }
 
+interface User {
+    id: number;
+    username: string;
+    image_url: string;
+	is_online: number;
+}
+
+interface Notification{
+	notification_id: number;
+	image_url: string;
+	message_url: string;
+	title: string;
+	link: string;
+}
+
 interface Props
 {
+    notifications_data: any;
+    userdata: User;
     friends_data : any;
     toggleShow: () => void;
     setfriendModal: () => void;
@@ -38,24 +58,22 @@ const CustomToggle = forwardRef<HTMLDivElement, CustomToggleProps>(
 
 CustomToggle.displayName = 'CustomToggle';
 
-export default function SrightBar({toggleShow, setfriendModal, friends_data} : Props) {
+export default function SrightBar({notifications_data, userdata, toggleShow, setfriendModal, friends_data} : Props) {
 
     const data = friends_data.sort((usr1: any, usr2: any) => {
         if (usr1.connected && !usr2.connected) {
             return -1;
         }
-          // Sort disconnected users second
         if (!usr1.connected && usr2.connected) {
             return 1;
         }
-          // Sort by ID if isConnected flag is the same
         return usr1.id - usr2.id;
     })
-    // .slice(0, 5)
     .map((user: Friend, index: number) => 
         <Splayer key={index} nickname={user.username} id={user.id} image={user.image_url} isConnected={user.connected}/>
     );
 
+    const router = useRouter();
 
     return (
             <div className="d-flex flex-column vh-100 py-2">
@@ -64,14 +82,16 @@ export default function SrightBar({toggleShow, setfriendModal, friends_data} : P
                                 <div className={`${styles.holder} text-center p-2`}>
                                     <div className={`col-inline ${styles.notification1}`}>
                                        <Dropdown>
+                                            <Image className={`${styles.img_class1}`} width={60} height={60} src={userdata.image_url} alt='Profile' onClick={() => router.push('/profile')}/>
                                            <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
-                                                <Image className={`${styles.img_class1}`} width={60} height={60} src="/char3.png" alt='Profile'/>
                                                 <span className={`${styles.badge1}`}>3</span>
                                            </Dropdown.Toggle>
                                            <Dropdown.Menu className="drop-class">
-                                             <Dropdown.Item eventKey="1"><Notification /></Dropdown.Item>
-                                             <Dropdown.Item eventKey="2"><Notification /></Dropdown.Item>
-                                             <Dropdown.Item eventKey="3"><Notification /></Dropdown.Item>
+                                            {notifications_data && 
+                                                notifications_data.map((key: Notification, index: number) => 
+                                                    <Dropdown.Item eventKey={index}><Notification notification={key} /></Dropdown.Item>
+                                                )
+                                            }
                                            </Dropdown.Menu>
                                        </Dropdown>
                                     </div>

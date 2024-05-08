@@ -34,7 +34,7 @@ const Togglebar: React.FC<Props> = ({ handleToggle }) => {
           <IoChatbubbles className={`${styles.s_icon} ${styles.icon_2}`} color={activeIcon === 2 ? '#FF4755' : '#FFEBEB'} />
           <h3 className='px-4'>CHAT</h3>
         </Link>
-        <Link className={`${styles.title} ${styles.link} valo-font d-flex flex-row align-items-center justify-content-start p-2`} href="/achievement" onClick={() => handleLinkClick(3)}>
+        <Link className={`${styles.title} ${styles.link} valo-font d-flex flex-row align-items-center justify-content-start p-2`} href="/achievements" onClick={() => handleLinkClick(3)}>
           <GiTrophy className={`${styles.s_icon} ${styles.icon_3}`} color={activeIcon === 3 ? '#FF4755' : '#FFEBEB'} />
           <h3 className='px-4'>ACHIEVEMENT</h3>
         </Link>
