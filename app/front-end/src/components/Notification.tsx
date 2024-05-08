@@ -5,7 +5,7 @@ interface Notif
 {
   notification_id: number;
 	image_url: string;
-	message_url: string;
+	message: string;
 	title: string;
 	link: string;
 }
@@ -23,7 +23,7 @@ function Notification({notification}: Props) {
             <strong className="me-auto">{notification.title}</strong>
             <small>11 mins ago</small>
           </Toast.Header>
-          <Toast.Body>{notification.message_url}</Toast.Body>
+          <Toast.Body>{notification.message}</Toast.Body>
         </Toast>
     )
 }

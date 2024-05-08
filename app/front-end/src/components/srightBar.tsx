@@ -6,11 +6,12 @@ import { ImUserPlus } from "react-icons/im";
 import styles from './styles/srightBar.module.css'
 import Splayer from "./Splayer";
 import Notification from "./Notification";
-import React, { forwardRef, useEffect } from 'react';
+import React, { forwardRef, useState, useEffect } from 'react';
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
-import { cookies } from 'next/headers';
+import { ToastContainer } from 'react-toastify';
+import {useGlobalContext} from './webSocket'
+import Spinner from 'react-bootstrap/Spinner'
 
 interface Friend {
 	id: number;
@@ -29,19 +30,28 @@ interface User {
 interface Notification{
 	notification_id: number;
 	image_url: string;
-	message_url: string;
+	message: string;
 	title: string;
 	link: string;
 }
 
 interface Props
 {
+    webSocketNotifications: any;
     notifications_data: any;
     userdata: User;
     friends_data : any;
     toggleShow: () => void;
     setfriendModal: () => void;
 }
+
+interface NotificationWebSocket {
+    notification_id: number;
+    message: string;
+    title: string;
+    user: number;
+    image_url: string;
+  }  
 
 interface CustomToggleProps {
     children: React.ReactNode;
@@ -58,7 +68,7 @@ const CustomToggle = forwardRef<HTMLDivElement, CustomToggleProps>(
 
 CustomToggle.displayName = 'CustomToggle';
 
-export default function SrightBar({notifications_data, userdata, toggleShow, setfriendModal, friends_data} : Props) {
+export default function SrightBar({webSocketNotifications, notifications_data, userdata, toggleShow, setfriendModal, friends_data} : Props) {
 
     const data = friends_data.sort((usr1: any, usr2: any) => {
         if (usr1.connected && !usr2.connected) {
@@ -87,9 +97,12 @@ export default function SrightBar({notifications_data, userdata, toggleShow, set
                                                 <span className={`${styles.badge1}`}>3</span>
                                            </Dropdown.Toggle>
                                            <Dropdown.Menu className="drop-class">
+                                           {webSocketNotifications.map((key: Notification, index:number) => (
+                                                    <Dropdown.Item key={index} eventKey={index}><Notification notification={key} /></Dropdown.Item>
+                                            ))}
                                             {notifications_data && 
                                                 notifications_data.map((key: Notification, index: number) => 
-                                                    <Dropdown.Item eventKey={index}><Notification notification={key} /></Dropdown.Item>
+                                                    <Dropdown.Item key={index} eventKey={index}><Notification notification={key} /></Dropdown.Item>
                                                 )
                                             }
                                            </Dropdown.Menu>
