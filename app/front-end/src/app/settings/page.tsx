@@ -10,14 +10,14 @@ function SettingsPage()
 
                 <div className="row p-0 m-0 mt-5">
                     <div className="col">
-                        <h1 className="valo-font">settings</h1>
+                        <h1 className="valo-font">SETTINGS</h1>
                     </div>
                 </div>
 
                 <main className={`${styles.main_container} row p-0 m-0 my-5 justify-content-center align-items-center`}>
                     <form className={`row ${styles.form_container}`}>
 
-                        <fieldset className={`row p-0 m-0 my-3 `}>
+                        <fieldset className={`row p-0 m-0 mt-5 `}>
                             <h2 className="col-4 mt-2 col-xl-2 valorax-font">Account</h2>
                             <h2 className="col-4 mt-2 col-xl-2 valorax-font">Security</h2>
                             <h2 className="col-4 mt-2 col-xl-2 valorax-font">Game</h2>

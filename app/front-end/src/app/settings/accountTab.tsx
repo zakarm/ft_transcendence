@@ -128,9 +128,10 @@ function    AccountTab() {
 
                 <CountriesAndCities
                     className="p-0 m-0 my-4 row justify-content-center"
-                    country=""
+                    country="Morocco"
                     labelText='City'
-                    id="countries">
+                    id="countries"
+                    currentCity="DougaCity">
                 </CountriesAndCities>
                 </div>
             </fieldset>
