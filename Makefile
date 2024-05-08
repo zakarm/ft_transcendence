@@ -70,6 +70,9 @@ clean: clean-all ## Remove build artifacts and temporary files
 	rm -rf ./app/back-end/__pycache__
 	find . -type f -name '*.pyc' -delete
 	find . -type d -name '__pycache__' -delete
+	rm -rf ./app/back-end/authentication/migrations
+	rm -rf ./app/back-end/game/migrations
+	rm -rf ./app/back-end/dashboards/migrations
 
 .PHONY: update-version
 update-version: ## Update the version number
