@@ -20,22 +20,22 @@ interface PlayerCardProps {
   name: string;
   imageUrl: string;
   stats: PlayerStats;
-  index: number;
+	index: number;
 }
 
 const PlayerCard: React.FC<PlayerCardProps> = ({
-  name,
-  imageUrl,
-  stats,
-  index,
-}) => {
-  const data = [
-    { subject: "Adaptation", A: stats.adaptation },
-    { subject: "Agility", A: stats.agility },
-    { subject: "Win Streaks", A: stats.winStreaks },
-    { subject: "Endurance", A: stats.endurance },
-    { subject: "Ranking", A: stats.eliteTierRanking },
-  ];
+	name,
+	imageUrl,
+	stats,
+	index,
+}: PlayerCardProps) => {
+	const data = [
+		{ subject: "Adaptation", A: stats.adaptation },
+		{ subject: "Agility", A: stats.agility },
+		{ subject: "Win Streaks", A: stats.winStreaks },
+		{ subject: "Endurance", A: stats.endurance },
+		{ subject: "Ranking", A: stats.eliteTierRanking },
+	];
 
 
   return (

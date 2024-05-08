@@ -6,8 +6,15 @@ import { useEffect, useState } from "react";
 interface ConnectionInfo {
   index: number;
   roomName: string;
+  user: string;
+  user_image: string;
+  username: string;
   user1: string;
+  user1_image: string;
+  username1: string;
   user2: string;
+  user2_image: string;
+  username2: string;
 }
 
 // Define the hook function with TypeScript
@@ -17,8 +24,15 @@ const useWebSocket = (url: string) => {
   const [connectionInfo, setConnectionInfo] = useState<ConnectionInfo>({
     index: 0,
     roomName: "",
+    user: "",
+    user_image: "",
+    username: "",
     user1: "",
+    user1_image: "",
+    username1: "",
     user2: "",
+    user2_image: "",
+    username2: "",
   });
 
   useEffect(() => {
@@ -35,21 +49,35 @@ const useWebSocket = (url: string) => {
         setGameState("lobby");
       }
 
-		if (data.message.action === "connection_ack") {
-      setConnectionInfo((prev: any) => ({
-        ...prev,
-        index: data.message.index,
-        roomName: data.message.Room_name,
-        user1: data.message.User,
-      }));
-    }
+      if (data.message.action === "connection_ack") {
+        setConnectionInfo((prev: any) => ({
+          ...prev,
+          index: data.message.index,
+          roomName: data.message.Room_name,
+          user: data.message.User,
+          user_image: data.message.image_url,
+          username: data.message.username,
+        }));
+        console.log("-> Connection Acknowledged", {
+          index: data.message.index,
+          roomName: data.message.Room_name,
+          user: data.message.User,
+          user_image: data.message.image_url,
+          username: data.message.username,
+        });
+      }
 
       if (data.message.action === "opponents") {
         setGameState("opponentFound");
         setConnectionInfo((prev: any) => ({
           ...prev,
-          user2: data.message.User2,
+          user1: data.message.user1,
+          user2: data.message.user2,
         }));
+        console.log("-> opponents", {
+          user1: data.message.user1,
+          user2: data.message.user2,
+        });
       }
 
       if (data.message.action === "load_game") {
@@ -59,8 +87,16 @@ const useWebSocket = (url: string) => {
       if (data.message.action === "start_game") {
         setGameState("start_game");
       }
-      if (data.message.action === "reconected") {
+      if (data.message.action === "reconnected") {
         setGameState("start_game");
+      }
+      if (data.message.action === "reconnecting") {
+        setGameState("reconnecting");
+      }
+      if (data.message.action === "end_game") {
+        if (data.message.status === "winner") setGameState("winner");
+        else setGameState("loser");
+        console.log(data.message);
       }
     };
 

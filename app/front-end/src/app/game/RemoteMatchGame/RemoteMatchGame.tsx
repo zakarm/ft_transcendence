@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import "./RemoteMatchGame.css";
 import PlayerCard from "@/components/PlayerCard/PlayerCard";
 import PongGame from "@/components/PongGame/PongGame";
+import Link from "next/link";
 
 const RemoteMatchGame: React.FC = () => {
   const access = Cookies.get("access");
@@ -70,13 +71,47 @@ const RemoteMatchGame: React.FC = () => {
           <PlayerCard {...players[1]} />
         </>
       )}
-      {(gameState === "load_game" || gameState === "start_game") &&
+      {(gameState === "load_game" ||
+        gameState === "start_game" ||
+        gameState === "winner" ||
+        gameState === "loser" ||
+        gameState === "reconnecting") &&
         webSocket && (
           <>
             {gameState === "load_game" && (
               <>
                 <div className="blurred-background"></div>
-                <div className="search-text">Loading...</div>
+                <div className="search-text">LOADING...</div>
+              </>
+            )}
+            {gameState === "winner" && (
+              <>
+                <div className="blurred-background"></div>
+                <div className="search-text winner-text">WINNER</div>
+                <Link href="/game">
+                  <button className="play-again-button">PLAY AGAIN</button>
+                </Link>
+                <Link href="/">
+                  <button className="back-to-home">BACK TO HOME</button>
+                </Link>
+              </>
+            )}
+            {gameState === "loser" && (
+              <>
+                <div className="blurred-background"></div>
+                <div className="search-text loser-text">LOSER</div>
+                <Link href="/game">
+                  <button className="play-again-button">PLAY AGAIN</button>
+                </Link>
+                <Link href="/dashboard">
+                  <button className="back-to-home">BACK TO HOME</button>
+                </Link>
+              </>
+            )}
+            {gameState === "reconnecting" && (
+              <>
+                <div className="blurred-background"></div>
+                <div className="search-text">RECONNECTING...</div>
               </>
             )}
             <PongGame webSocket={webSocket} connectionInfo={connectionInfo} />

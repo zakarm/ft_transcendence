@@ -30,7 +30,6 @@ const PongGame: React.FC<Props> = ({ webSocket, connectionInfo }: Props) => {
   const [user2score, setUser2Score] = useState<number>(0);
   const yoruImage = "/yoru.jpeg";
   const omenImage = "/omen.jpeg";
-  console.log("PongGame.tsx: ", connectionInfo);
 
   useEffect(() => {
     function updateDimensions() {
