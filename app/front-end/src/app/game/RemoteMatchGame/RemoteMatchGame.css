@@ -131,7 +131,7 @@
 }
 
 @media screen and (max-width: 1000px) {
-  .search-text {
+  .search-text,.play-again-button,.back-to-home {
     transform: scale(0.5) translate(-100%, -100%);
   }
   .Lobby_container {

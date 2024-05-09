@@ -139,7 +139,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 await self.accept()
                 self.user = await get_user(user_id=self.scope["user"].id)
                 self.room_name, self.room = await self.find_or_create_room(
-                    self.user.email
+                    self.user
                 )
                 await self.channel_layer.group_add(self.room_name, self.channel_name)
                 index = self.room.get_user_index(self.user.email)
@@ -154,12 +154,18 @@ class GameConsumer(AsyncWebsocketConsumer):
                 # print(f"User {self.user.username} {self.user.email} {self.user.image_url}", file=sys.stderr)
                 await self.message({"message": message})
                 if self.room.is_ready():
-                    user1, user2 = self.room.get_original_users()
+                    user1, user1_data, user2, user2_data = (
+                        self.room.get_original_users()
+                    )
                     # check the users ?//???????
                     message = {
                         "action": "opponents",
                         "user1": user1,
+                        "user1_image_url": user1_data["user_img"],
+                        "user1_username": user1_data["username"],
                         "user2": user2,
+                        "user2_image_url": user2_data["user_img"],
+                        "user2_username": user2_data["username"],
                     }
                     await self.broadcast_message(message)
                     if self.room.is_started() == False:
@@ -310,24 +316,24 @@ class GameConsumer(AsyncWebsocketConsumer):
             print(f"An error occurred in reset: {e}", file=sys.stderr)
 
     # -----------------------> 5. find_or_create_room <-----------------------
-    async def find_or_create_room(self, user_id):
+    async def find_or_create_room(self, user):
         try:
             rooms_items = get_rooms_items()
             for room_name, room in rooms_items:
                 if not room.is_ended():
-                    if room.is_ready() and room.is_user_joined(user_id):
-                        room.reconecting_user(self.channel_name, user_id)
+                    if room.is_ready() and room.is_user_joined(user.email):
+                        room.reconecting_user(self.channel_name, user.email)
                         await self.message({"message": {"action": "reconnected"}})
                         return room_name, room
-                    elif not room.is_ready() and not room.is_user_joined(user_id):
-                        room.add_user(self.channel_name, user_id)
+                    elif not room.is_ready() and not room.is_user_joined(user.email):
+                        room.add_user(self.channel_name, user.email, user)
                         await self.message({"message": {"action": "joined"}})
                         return room_name, room
             increment_room_index()
             new_room = RoomObject()
             new_room_name = f"room_{get_room_index()}"
             add_room(new_room_name, new_room)
-            new_room.add_user(self.channel_name, user_id)
+            new_room.add_user(self.channel_name, user.email, user)
             await self.message({"message": {"action": "created"}})
             return new_room_name, new_room
         except Exception as e:

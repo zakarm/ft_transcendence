@@ -46,7 +46,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
         index === 1 ? "left" : index === 2 ? "right" : ""
       }`}
     >
-      <img src={`/${imageUrl}`} alt={name} />
+      <img src={`${imageUrl}`} alt={name} />
       <div className="chart">
         <h2 className="name">{name}</h2>
         <RadarChart outerRadius={60} width={250} height={250} data={data}>
