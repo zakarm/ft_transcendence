@@ -43,8 +43,7 @@
 .input {
     /* width : 90%; */
     outline: none;
-    color: var(--clr--lgrey);
-    /* color: var(--clr--white); */
+    color: #706f71;
     background-color: var(--clr--grey);
     height: 70px;
     border-radius: 25px;

@@ -1,66 +1,110 @@
-// import data from './countries.min.json'
 import styles from './styles.module.css'
-// import useEffect from ''
+import { ChangeEvent, useEffect, useState, useContext } from 'react'
+import { FormContext } from './page'
+
 const data : {[country : string] : string[]} = require('./countries.min.json')
 
 interface Props {
     className ?: string;
-    labelText ?: string;
-    country ?: string;
+    labelText1 ?: string;
+    labelText2 ?: string;
     id ?: string;
-    currentCountry ?: string;
-    currentCity ?: string;
+    renderCountries ?: boolean;
 }
 
 function    CountriesAndCities(
     {
         className="",
-        labelText="",
-        country="",
+        labelText1="",
+        labelText2="",
         id="",
-        currentCountry="Choose a country",
-        currentCity="--"
     } : Props) {
-
-    const countryOptions = Object.keys(data).map((country, i : number) => (
-        <option key={country} value={country}>{country}</option>
-    ));
     
-    let   citiesOptions : string[]= [];
-    if (country !== "") {
-        citiesOptions = data[country] || [];
-        citiesOptions = citiesOptions.map((city, i : number) => {
-            return <option key={city} value={city}>{city}</option>
-        });
-    }
+    const   {accountValues, setValues} = useContext(FormContext);
+
+    const   [selectedCountry, setselectedCountry] = useState<string>(accountValues['country']);
+    const   [selectedCity, setSelectedCity] = useState<string>(accountValues['city']);
+
+    const   [citiesOptions, setCitiesOptions] = useState<string[]>([])
+    const   [countryOptions, setcountryOptions] = useState<string[]>([])
+
+    useEffect(() => {
+
+        let countryOption : string[] = Object.keys(data).map((country) => (
+            <option key={country} value={country}>{country}</option>
+        ));
+        setcountryOptions(countryOption)
+
+    }, []);
+
+    let cities : string[] = [];
+    useEffect(() => {
+        if (selectedCountry && data[selectedCountry]) {
+
+            cities = data[selectedCountry].filter((value, index) => (
+                data[selectedCountry].indexOf(value) === index
+                ));
+            
+            setCitiesOptions(cities.map((city: string) => (
+                <option key={city} value={city}>{city}</option>
+            )));
+        } else {
+            setCitiesOptions(<option key="--" value="--">--</option>)
+        }
+    }, [selectedCountry]);
     return (
-        // <div key={id}>
+        <>
             <div className={`${className} flex-wrap flex-xl-nowrap`}>
                 <label
                     className={`col-8 col-sm-3  itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle}`} 
                     htmlFor={id}>
-                    {labelText}
+                    {labelText1}
                 </label>
                 <div className={`col-6 ${styles.inputHolder} row justify-content-center p-0 m-1`}>
-                {country === "" ?
-                    <select className={`itim-font ${styles.input} ps-4`} name="countries" id={id}>
-                            <option className={`itim-font`} value={currentCountry}>
-                               {currentCountry}
-                            </option> 
-                        
-                        {countryOptions}
-                    </select>
-                :
-                <select className={`itim-font ${styles.input} ps-4`} name="countries" id={id}>
-                    <option className={`itim-font`} value={currentCity}>
-                        {currentCity}
-                    </option>
-                    {citiesOptions}
-                </select>
-                }
+                        <select
+                            className={`itim-font ${styles.input} ps-4`}
+                            name="countries"
+                            id={id}
+                            onChange={ (e: ChangeEvent<HTMLInputElement>) => { setselectedCountry(e.target.value) } }>
+                            <option
+                                className={`itim-font ${styles.input}`}
+                                hidden
+                                value={ selectedCountry }>
+                                    { selectedCountry || "Choose a country"}
+                            </option>
+                            
+                            { countryOptions }
+
+                        </select>
                 </div>
             </div>
-        // </div>
+            <div className={`${className} flex-wrap flex-xl-nowrap`}>
+                <label
+                    className={`col-8 col-sm-3  itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle}`} 
+                    htmlFor={id}>
+                    {labelText2}
+                </label>
+                <div className={`col-6 ${styles.inputHolder} row justify-content-center p-0 m-1`}>
+
+                    <select 
+                        className={`itim-font ${styles.input} ps-4`}
+                        name="countries"
+                        id={id}
+                        onChange={ (e : ChangeEvent<HTMLInputElement>) => { setSelectedCity(e.target.value) } }>
+                        <option
+                            className={`itim-font`}
+                            hidden
+                            value={ selectedCity }>
+                                { selectedCity  || "--"}
+                        </option>
+
+                        { citiesOptions }
+
+                        
+                    </select>
+                </div>
+            </div>
+        </>
     );
 }
 

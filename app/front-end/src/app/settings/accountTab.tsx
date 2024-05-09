@@ -1,6 +1,7 @@
 import styles from './styles.module.css'
 import CountriesAndCities from './countriesAndCities'
-import { ChangeEvent } from 'react'
+import { ChangeEvent, useContext } from 'react'
+import { FormContext } from './page'
 
 interface Props{
     inputType ?: string;
@@ -12,7 +13,7 @@ interface Props{
     labelClass ?: string;
     inputLength ?: number;
     index ?: number;
-    handleChange ?: (e : ChangeEvent<HTMLInputElement>, i : number) => void;
+    setValues ?: (e : ChangeEvent<HTMLInputElement>) => void;
 }
 
 function    GetInput(
@@ -23,11 +24,12 @@ function    GetInput(
         placeholder="",
         inputId="",
         labelText="",
-        handleChange,
         inputLength,
         index=0,
         labelClass=""
     }: Props) {
+
+    const   {accountValues, setValues} = useContext(FormContext);
 
         return (
             <div className={`${className} flex-wrap flex-xxl-nowrap `}>
@@ -43,7 +45,8 @@ function    GetInput(
                         className={`${styles.input} ${inputClassName} ps-4`}
                         id={inputId}
                         maxLength={inputLength}
-                        // onChange={(e) => {if (handleChange) {handleChange(e, index)}}}
+                        autoComplete="off"
+                        // onChange={(e : ChangeEvent<HTMLInputElement>) => {setValues(accountValues)}}
                     />
                 </div>
             </div>
@@ -52,13 +55,15 @@ function    GetInput(
 
 function    GenerateInputFields() {
     
+    const   {accountValues, setValues} = useContext(FormContext);
+
     const   inputProps = [
         {
             className : "p-0 m-0 mt-4 row justify-content-center itim-font",
             inputType : "text",
             inputId: "first_name",
             labelText: "First Name",
-            placeholder : "Your First Name",
+            placeholder : accountValues["first_name"],
             inputLength : 20
         },
         {
@@ -66,7 +71,7 @@ function    GenerateInputFields() {
             inputType : "text",
             inputId: "last_name",
             labelText: "Last Name",
-            placeholder : "Your Last Name",
+            placeholder : accountValues["last_name"],
             inputLength : 20
         },
         {
@@ -74,44 +79,58 @@ function    GenerateInputFields() {
             inputType : "text",
             inputId: "nickname",
             labelText: "Nickname",
-            placeholder : "Your Nickname",
+            placeholder : accountValues["nickname"],
             inputLength : 20
         }
     ]
 
     return (
-
-        <div>
+        <>
             {
                 inputProps.map(({className, inputType, inputId, labelText, placeholder, inputLength} : Props) => {
                     return (  
+                        <div key={inputId}>
                             <GetInput
                                 className={className}
                                 inputType={inputType}
                                 inputId={inputId}
                                 labelText={labelText}
                                 placeholder={placeholder}
-                                inputLength={inputLength}
-                                >
+                                inputLength={inputLength}>
                             </GetInput>
+                        </div>
                     )
                 })
             }
-        </div>
+                <CountriesAndCities
+                    className="p-0 m-0 mt-4 row justify-content-center"
+                    labelText1='Country'
+                    labelText2='City'
+                    id="countries">
+                </CountriesAndCities>
+
+                {/* <CountriesAndCities
+                    className="p-0 m-0 my-4 row justify-content-center"
+                    labelText='City'
+                    id="cities"
+                    renderCountries={false}>
+                </CountriesAndCities> */}
+
+        </>
     );
 }
 
 function    AccountTab() {
     return (
         <>
+
             <fieldset className="col-12 col-xxl-6 p-0 m-0 d-flex justify-content-center align-items-center">
                 <div className={`${styles.image_container}`}>
                     <label htmlFor="file_input" className={`${styles.image_container}`}>
                         <img src="profile.jpeg" alt="" className={`${styles.profilePic}`}/>
                         <img src="camera.png" alt="" className={`${styles.camera}`}/>
                     </label>
-                    <input type="file" className="d-none" id="file_input">
-                    </input>
+                    <input type="file" className="d-none" id="file_input" />
                 </div>
             </fieldset>
             <fieldset className="col-12 col-xxl-6 p-0 m-0 d-flex justify-content-center align-items-center">
@@ -119,20 +138,7 @@ function    AccountTab() {
 
                 <GenerateInputFields/>
 
-                <CountriesAndCities
-                    className="p-0 m-0 mt-4 row justify-content-center"
-                    country=""
-                    labelText='Country'
-                    id="countries">
-                </CountriesAndCities>
 
-                <CountriesAndCities
-                    className="p-0 m-0 my-4 row justify-content-center"
-                    country="Morocco"
-                    labelText='City'
-                    id="countries"
-                    currentCity="DougaCity">
-                </CountriesAndCities>
                 </div>
             </fieldset>
         </>
