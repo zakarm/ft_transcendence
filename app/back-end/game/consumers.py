@@ -223,7 +223,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                             await self.send_winner_message(winner)
                             # delete_room(self.room_name)
                             return
-                    # await self.broadcast_message({"action": "start_game"})
+                    await self.broadcast_message({"action": "start_game"})
                 room.ball_update()
                 room.ball_intersect()
                 room.paddle_update()
