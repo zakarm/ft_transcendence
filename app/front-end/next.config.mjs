@@ -4,11 +4,12 @@ const nextConfig = {
   // optimizeFonts: false, // Disable font optimization
   // minify: true,
   images: {
-    domains: [
-      "cdn.cloudflare.steamstatic.com",
-      "ddragon.leagueoflegends.com",
-      "lh3.googleusercontent.com",
-      "cdn.intra.42.fr",
+    remotePatterns: [
+      { hostname: "cdn.cloudflare.steamstatic.com" },
+      { hostname: "ddragon.leagueoflegends.com" },
+      { hostname: "lh3.googleusercontent.com" },
+      { hostname: "cdn.intra.42.fr" },
+      { hostname: "avatars.githubusercontent.com" },
     ],
   },
   eslint: {
