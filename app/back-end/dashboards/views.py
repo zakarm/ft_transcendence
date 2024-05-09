@@ -7,7 +7,8 @@ from .serializer import (MainDashboardSerializer,
                          FriendsSerializer,
                          UserSerializer,
                          BlockedFriendsSerializer,
-                         NotificationUserSerializer)
+                         NotificationUserSerializer,
+                         GameHistorySerializer)
 from .models import Friendship, Notification
 from authentication.models import User
 from rest_framework import status
@@ -248,3 +249,17 @@ class NotificationsView(APIView):
         user = request.user
         serializer = NotificationUserSerializer(instance=user)
         return Response(serializer.data)
+
+class GameHistoryReportView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    serializer_class = GameHistorySerializer
+    def post(self, request):
+        user = request.user
+        period = request.data.get("period")
+        context = {"period": period}
+        serializer = self.serializer_class(instance=user, context=context)
+        return Response(serializer.data)
+
+

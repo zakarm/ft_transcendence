@@ -8,6 +8,8 @@ from .utils import (get_total_games,
                     get_lose_games,
                     get_monthly_game_stats,
                     get_total_minutes)
+from django.utils import timezone
+from .reports import (get_minutes_per_day)
 
 class MatchSerializer(serializers.ModelSerializer):
     class Meta:
@@ -157,3 +159,44 @@ class NotificationUserSerializer(serializers.ModelSerializer):
         notifications_data = Notification.objects.filter(user = obj)
         serializer = NotificationSerializer(notifications_data, many = True)
         return serializer.data
+
+class GameHistorySerializer(serializers.ModelSerializer):
+    matches_as_user_one = serializers.SerializerMethodField()
+    matches_as_user_two = serializers.SerializerMethodField()
+    minutes_per_day = serializers.SerializerMethodField()
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'first_name', 'last_name', 'image_url',
+                  'matches_as_user_one', 'matches_as_user_two',
+                  'minutes_per_day')
+
+    def get_matches_as_user_one(self, obj):
+        period = self.context['period']
+        if period == 'day':
+            matches = Match.objects.filter(Q(user_one=obj) & 
+                                           Q(match_start__day=timezone.now().day))
+        elif period == 'month':
+            matches = Match.objects.filter(Q(user_one=obj) & 
+                                           Q(match_start__day=timezone.now().month))
+        elif period == "year":
+            matches = Match.objects.filter(Q(user_one=obj) & 
+                                           Q(match_start__year=timezone.now().year))
+        serializer = MatchSerializer(matches, many=True)
+        return serializer.data
+
+    def get_matches_as_user_two(self, obj):
+        period = self.context['period']
+        if period == 'day':
+            matches = Match.objects.filter(Q(user_two=obj) & 
+                                           Q(match_start__day=timezone.now().day))
+        elif period == 'month':
+            matches = Match.objects.filter(Q(user_two=obj) & 
+                                           Q(match_start__day=timezone.now().month))
+        elif period == "year":
+            matches = Match.objects.filter(Q(user_two=obj) & 
+                                           Q(match_start__year=timezone.now().year))
+        serializer = MatchSerializer(matches, many=True)
+        return serializer.data
+
+    def get_minutes_per_day(self, obj):
+        return get_minutes_per_day(obj, period=self.context['period'])

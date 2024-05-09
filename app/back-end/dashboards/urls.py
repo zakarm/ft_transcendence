@@ -10,7 +10,8 @@ from .views import (MainDashboardView,
                     BlockFriendshipView,
                     UnblockFriendshipView,
                     BlockedFriendsView,
-                    NotificationsView
+                    NotificationsView,
+                    GameHistoryReportView
                    )
 
 urlpatterns = [
@@ -26,4 +27,5 @@ urlpatterns = [
    path('friends-unblock', UnblockFriendshipView.as_view(), name="friends-unblock"),
    path('blocked-friends', BlockedFriendsView.as_view(), name="friends-unblock"),
    path('notifications', NotificationsView.as_view(), name="notifications"),
+   path('game-stats-report', GameHistoryReportView.as_view(), name="game-stats-report")
 ]
