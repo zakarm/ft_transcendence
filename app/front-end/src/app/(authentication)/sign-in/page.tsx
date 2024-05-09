@@ -32,7 +32,7 @@ export default function SignInPage() {
             if (response.ok)
             {
                 const data = await response.json();
-                console.log(data);
+                // console.log(data);
                 const {access, refresh, is_2fa_enabled, email} = data;
                 if (is_2fa_enabled == 'True')
                 {
@@ -74,7 +74,7 @@ export default function SignInPage() {
                                     VAL-PONG
                                 </h1>
                             </div>
-                            <form className={`form-group mt-3 mb-3 w-75`} onSubmit={signInPost}>
+                            <form className={`form-group mt-3 mb-3 w-75 ${styles.forml}`} onSubmit={signInPost}>
                                 <div className='mb-3'>
                                     <input className={`form-control ${styles.input_class} p-3 mb-3 border-0`} type='email' autoComplete="off" placeholder='Email' name="email" required/>
                                 </div>

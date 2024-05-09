@@ -3,11 +3,11 @@ version: '3.8'
 services:
     back-end:
         container_name: back-end
-        image: back-end
+        image: back-end:42
         build: 
             context: ./app/back-end
             dockerfile: Dockerfile
-        restart: on-failure
+        restart: always
         depends_on:
             - data-base
         ports:
@@ -22,11 +22,11 @@ services:
 
     front-end:
         container_name: front-end
-        image: front-end
+        image: front-end:42
         build: 
             context: ./app/front-end
             dockerfile: Dockerfile
-        restart: on-failure
+        restart: always
         depends_on:
             - back-end
         ports:
@@ -43,17 +43,33 @@ services:
     
     data-base:
         container_name: data-base
-        image: data-base
+        image: data-base:42
         build: 
             context: ./app/data-base
             dockerfile: Dockerfile
-        restart: on-failure
+        restart: always
         ports:
             - "5432:5432"
         env_file:
             - .env
         volumes:
             - v_data-base:/var/lib/postgresql/data
+        networks:
+            - ft_transcendence
+    
+    redis:
+        container_name: redis
+        image: redis:42
+        build: 
+            context: ./services/redis
+            dockerfile: Dockerfile
+        restart: on-failure
+        depends_on:
+            - back-end
+        ports:
+            - "6379:6379"
+        env_file:
+            - .env
         networks:
             - ft_transcendence
 
@@ -64,7 +80,7 @@ volumes:
         driver_opts:
             type: none
             o: bind
-            device: /Users/${USER}/Desktop/data
+            device: ${HOME}/Desktop/data
 
 networks:
     ft_transcendence:

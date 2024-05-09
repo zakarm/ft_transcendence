@@ -6,14 +6,23 @@ import { ImUserPlus } from "react-icons/im";
 import Player from "./Player";
 import Notification from "./Notification";
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import friends from './friends.json';
 import React, { forwardRef, useState } from 'react';
 import styles from './styles/rightBar.module.css';
 import Image from 'next/image';
 
+interface User {
+    id: number;
+    username: string;
+    image_url: string;
+	is_online: number;
+}
 
 interface Props
 {
+    webSocketNotifications: any;
+    friends_data: any;
+    notifications_data: any;
+    userdata: User;
     show?: boolean;
     setShow: (show: boolean) => void;
     handleClose: () => void;
@@ -26,9 +35,17 @@ interface CustomToggleProps {
     onClick: () => void;
 }
 
+interface Notification{
+	notification_id: number;
+	image_url: string;
+	message: string;
+	title: string;
+	link: string;
+}
+
 interface Friend {
 	id: number;
-	nickname: string;
+	username: string;
 	image_url: string;
 	connected: boolean;
 }
@@ -43,32 +60,11 @@ const CustomToggle = forwardRef<HTMLDivElement, CustomToggleProps>(
 
 CustomToggle.displayName = 'CustomToggle';
 
-export default function RightBar({setShow, show, handleClose, toggleShow, setfriendModal} : Props) {
-
-    // const friendsData = friends
-    // .sort((usr1: Friend, usr2: Friend) => {
-    //   if (usr1.connected && !usr2.connected) {
-    //     return -1;
-    //   }
-    //   if (!usr1.connected && usr2.connected) {
-    //     return 1;
-    //   }
-    //   return usr1.id - usr2.id;
-    // })
-    // .map((user: Friend, index: number) => (
-    //   <Player
-    //     key={index}
-    //     nickname={user.nickname}
-    //     id={user.id}
-    //     image={user.image_url}
-    //     isConnected={user.connected}
-    //   />
-    // ));
+export default function RightBar({webSocketNotifications, notifications_data, userdata, friends_data, setShow, show, handleClose, toggleShow, setfriendModal} : Props) {
 
     const [searchTerm, setSearchTerm] = useState<string>('');
-
-    const filteredFriends = friends
-    .filter((friend: Friend) => friend.nickname.toLowerCase().startsWith(searchTerm.toLowerCase()))
+    const filteredFriends = friends_data
+    .filter((friend: Friend) => friend.username.toLowerCase().startsWith(searchTerm.toLowerCase()))
     .sort((usr1: Friend, usr2: Friend) => {
       if (usr1.connected && !usr2.connected) {
         return -1;
@@ -81,7 +77,7 @@ export default function RightBar({setShow, show, handleClose, toggleShow, setfri
     .map((user: Friend, index: number) => (
       <Player
         key={index}
-        nickname={user.nickname}
+        nickname={user.username}
         id={user.id}
         image={user.image_url}
         isConnected={user.connected}
@@ -89,7 +85,6 @@ export default function RightBar({setShow, show, handleClose, toggleShow, setfri
     ));
 
     const searchOnlineFriends = (e: React.ChangeEvent<HTMLInputElement>) => {
-        // console.log(e.target.value);
         setSearchTerm(e.target.value);
     }
     
@@ -118,21 +113,25 @@ export default function RightBar({setShow, show, handleClose, toggleShow, setfri
                                                   </div>
                                                 </Dropdown.Toggle>
                                                 <Dropdown.Menu className={`${styles.drop_class}`}>
-                                                  <Dropdown.Item eventKey="1"><Notification /></Dropdown.Item>
-                                                  <hr className="dropdown-divider" />
-                                                  <Dropdown.Item eventKey="2"><Notification /></Dropdown.Item>
-                                                  <hr className="dropdown-divider" />
-                                                  <Dropdown.Item eventKey="3"><Notification /></Dropdown.Item>
+                                                {webSocketNotifications.map((key: Notification, index:number) => (
+                                                    <Dropdown.Item key={index} eventKey={index}><Notification notification={key} /></Dropdown.Item>
+                                                ))}
+                                                {notifications_data && 
+                                                    notifications_data.map((key: Notification, index: number) => 
+                                                        <Dropdown.Item key={index} eventKey={index}><Notification notification={key}/></Dropdown.Item>
+                                                        // <hr className="dropdown-divider" />
+                                                    )
+                                                }
                                                 </Dropdown.Menu>
                                             </Dropdown>
                                          </div>
                                          <div className="row d-flex flex-column text-center">
                                              <div className="col">
-                                                 <Image className={`${styles.img_class}`} width={60} height={60} src="/char3.png" alt='Profile'/>
+                                                 <Image className={`${styles.img_class}`} width={60} height={60} src={userdata && userdata.image_url} alt='Profile'/>
                                              </div>
                                              <div className={`col ${styles.profile} mt-2`}>
-                                                 <h3 className="valo-font">!SNAKE_007</h3>
-                                                 <h4 style={{fontFamily: 'intim', color: '#FFEBEB'}}>#7777</h4>
+                                                 <h3 className="valo-font">{userdata && userdata.username}</h3>
+                                                 <h4 style={{fontFamily: 'intim', color: '#FFEBEB'}}>#{userdata && userdata.id}</h4>
                                              </div>
                                          </div>
                                          <div className={`col ${styles.search_inpt} p-2 d-flex align-items-center`}>
@@ -151,7 +150,7 @@ export default function RightBar({setShow, show, handleClose, toggleShow, setfri
                                 <div className="flex-grow-3">
                                     <div className={`row ${styles.search_inpt2} p-2 mb-2 m-1 text-center`} style={{cursor: "pointer"}} onClick={setfriendModal}>
                                         <div className={`col-xl-8 col-6 ${styles.place}`}>
-                                            <div style={{fontFamily: 'intim', color: '#FFEBEB'}}>add friend</div>
+                                            <div style={{fontFamily: 'intim', color: '#FFEBEB'}}>Add Friend</div>
                                         </div>
                                         <div className="col-xl-4 col-6">
                                             <ImUserPlus className={`${styles.ico}`} color="#FFEBEB" size='2em'/>

@@ -6,16 +6,52 @@ import { ImUserPlus } from "react-icons/im";
 import styles from './styles/srightBar.module.css'
 import Splayer from "./Splayer";
 import Notification from "./Notification";
-import friends from './friends.json';
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useState, useEffect } from 'react';
 import Image from 'next/image'
+import { useRouter } from 'next/navigation';
+import { ToastContainer } from 'react-toastify';
+import {useGlobalContext} from './webSocket'
+import Spinner from 'react-bootstrap/Spinner'
 
+interface Friend {
+	id: number;
+	username: string;
+	image_url: string;
+	connected: boolean;
+}
+
+interface User {
+    id: number;
+    username: string;
+    image_url: string;
+	is_online: number;
+}
+
+interface Notification{
+	notification_id: number;
+	image_url: string;
+	message: string;
+	title: string;
+	link: string;
+}
 
 interface Props
 {
+    webSocketNotifications: any;
+    notifications_data: any;
+    userdata: User;
+    friends_data : any;
     toggleShow: () => void;
     setfriendModal: () => void;
 }
+
+interface NotificationWebSocket {
+    notification_id: number;
+    message: string;
+    title: string;
+    user: number;
+    image_url: string;
+  }  
 
 interface CustomToggleProps {
     children: React.ReactNode;
@@ -32,24 +68,22 @@ const CustomToggle = forwardRef<HTMLDivElement, CustomToggleProps>(
 
 CustomToggle.displayName = 'CustomToggle';
 
-export default function SrightBar({toggleShow, setfriendModal} : Props) {
+export default function SrightBar({webSocketNotifications, notifications_data, userdata, toggleShow, setfriendModal, friends_data} : Props) {
 
-    const friendsData = friends.sort((usr1, usr2) => {
+    const data = friends_data.sort((usr1: any, usr2: any) => {
         if (usr1.connected && !usr2.connected) {
             return -1;
         }
-          // Sort disconnected users second
         if (!usr1.connected && usr2.connected) {
             return 1;
         }
-          // Sort by ID if isConnected flag is the same
         return usr1.id - usr2.id;
     })
-    // .slice(0, 5)
-    .map((user, index) => 
-        <Splayer key={index} nickname={user.nickname} id={user.id} image={user.image_url} isConnected={user.connected}/>
+    .map((user: Friend, index: number) => 
+        <Splayer key={index} nickname={user.username} id={user.id} image={user.image_url} isConnected={user.connected}/>
     );
 
+    const router = useRouter();
 
     return (
             <div className="d-flex flex-column vh-100 py-2">
@@ -58,14 +92,19 @@ export default function SrightBar({toggleShow, setfriendModal} : Props) {
                                 <div className={`${styles.holder} text-center p-2`}>
                                     <div className={`col-inline ${styles.notification1}`}>
                                        <Dropdown>
+                                            <Image className={`${styles.img_class1}`} width={60} height={60} src={userdata.image_url} alt='Profile' onClick={() => router.push('/profile')}/>
                                            <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
-                                                <Image className={`${styles.img_class1}`} width={60} height={60} src="/char3.png" alt='Profile'/>
                                                 <span className={`${styles.badge1}`}>3</span>
                                            </Dropdown.Toggle>
                                            <Dropdown.Menu className="drop-class">
-                                             <Dropdown.Item eventKey="1"><Notification /></Dropdown.Item>
-                                             <Dropdown.Item eventKey="2"><Notification /></Dropdown.Item>
-                                             <Dropdown.Item eventKey="3"><Notification /></Dropdown.Item>
+                                           {webSocketNotifications.map((key: Notification, index:number) => (
+                                                    <Dropdown.Item key={index} eventKey={index}><Notification notification={key} /></Dropdown.Item>
+                                            ))}
+                                            {notifications_data && 
+                                                notifications_data.map((key: Notification, index: number) => 
+                                                    <Dropdown.Item key={index} eventKey={index}><Notification notification={key} /></Dropdown.Item>
+                                                )
+                                            }
                                            </Dropdown.Menu>
                                        </Dropdown>
                                     </div>
@@ -81,7 +120,7 @@ export default function SrightBar({toggleShow, setfriendModal} : Props) {
                          </div>
                 </div>
                 <div className=" mb-2 flex-grow-1 text-center" style={{ overflowY: 'auto', width: '91%' }}>
-                    {friendsData}
+                    {data}
                 </div>
                 <div className="flex-grow-3 row-inline d-flex justify-content-center text-center" style={{width: '91%'}}>
                     <div className={`col-6 ${styles.search_inpt1} my-1 p-2 mx-2 text-center`} style={{cursor: "pointer"}} onClick={setfriendModal}>

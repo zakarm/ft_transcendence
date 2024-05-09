@@ -6,19 +6,16 @@ SHELL := /bin/bash
 DOCKER_COMPOSE := docker-compose
 DOCKER_COMPOSE_FILE := docker-compose.yml
 DOCKER_COMPOSE_FLAGS := --env-file .env
-MAJOR ?= 3
-MINOR ?= 8
-PATCH ?= 0
+MAJOR ?= 
+MINOR ?= 
+PATCH ?= 
 VERSION := $(MAJOR).$(MINOR).$(PATCH)
-DATA_DIR := /Users/${USER}/Desktop/data
+DATA_DIR := ${HOME}/Desktop/data
 
 # Define colors
 GREEN := $(shell tput -Txterm setaf 2)
 YELLOW := $(shell tput -Txterm setaf 3)
 RESET := $(shell tput -Txterm sgr0)
-
-create-volume :
-	mkdir -p /Users/${USER}/Desktop/data
 
 # Define targets
 .PHONY: help build up down restart logs
@@ -29,11 +26,19 @@ help: ## Show this help message
 	@echo "Targets:"
 	@egrep '^(.+)\:\ ##\ (.+)' $(MAKEFILE_LIST) | column -t -c 2 -s ':#'
 
-build: create-volume ## Build Docker images
+create-data-dir: ## Create the data directory
+	@echo "$(GREEN)Creating data directory $(DATA_DIR)...$(RESET)"
+	mkdir -p $(DATA_DIR)
+
+remove-data-dir: ## Remove the data directory
+	@echo "$(YELLOW)Removing data directory $(DATA_DIR)...$(RESET)"
+	rm -rf $(DATA_DIR)
+
+build: create-data-dir ## Build Docker images
 	@echo "$(GREEN)Building Docker images...$(RESET)"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) $(DOCKER_COMPOSE_FLAGS) build --no-cache
 
-up: create-volume ## Start Docker containers
+up: create-data-dir ## Start Docker containers
 	@echo "$(GREEN)Starting Docker containers...$(RESET)"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) $(DOCKER_COMPOSE_FLAGS) up -d
 
@@ -41,7 +46,7 @@ down: ## Stop and remove Docker containers
 	@echo "$(YELLOW)Stopping and removing Docker containers...$(RESET)"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) $(DOCKER_COMPOSE_FLAGS) down
 
-restart: down up ## Restart Docker containers
+restart: down build up ## Restart Docker containers
 
 logs: ## View logs from Docker containers
 	@echo "$(GREEN)Viewing logs from Docker containers...$(RESET)"
@@ -49,14 +54,6 @@ logs: ## View logs from Docker containers
 
 version: ## Show the current version
 	@echo "$(GREEN)Current version: $(VERSION)$(RESET)"
-
-remove-data-dir: ## Remove the data directory
-	@echo "$(YELLOW)Removing data directory $(DATA_DIR)...$(RESET)"
-	rm -rf $(DATA_DIR)
-
-create-data-dir: ## Create the data directory
-	@echo "$(GREEN)Creating data directory $(DATA_DIR)...$(RESET)"
-	mkdir -p $(DATA_DIR)
 
 remove-volumes: ## Remove Docker volumes
 	@echo "$(YELLOW)Removing Docker volumes...$(RESET)"
@@ -73,6 +70,9 @@ clean: clean-all ## Remove build artifacts and temporary files
 	rm -rf ./app/back-end/__pycache__
 	find . -type f -name '*.pyc' -delete
 	find . -type d -name '__pycache__' -delete
+	rm -rf ./app/back-end/authentication/migrations
+	rm -rf ./app/back-end/game/migrations
+	rm -rf ./app/back-end/dashboards/migrations
 
 .PHONY: update-version
 update-version: ## Update the version number

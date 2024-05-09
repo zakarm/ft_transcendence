@@ -11,7 +11,7 @@ disable=missing-docstring,
         arguments-renamed,
         too-many-locals,
         too-many-branches,
-        too-many-statements,
+        too-many-statements,x
         import-outside-toplevel,
         arguments-differ,
         no-else-return

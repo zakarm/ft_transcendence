@@ -1,15 +1,29 @@
 import Toast from 'react-bootstrap/Toast';
 import Image from 'next/image';
 
-function Notification() {
+interface Notif
+{
+  notification_id: number;
+	image_url: string;
+	message: string;
+	title: string;
+	link: string;
+}
+
+interface Props 
+{
+  notification: Notif;
+}
+
+function Notification({notification}: Props) {
     return(
         <Toast>
           <Toast.Header>
-            <Image src="/char3.png" width={30} height={30} className="rounded me-2" alt="" style={{height: '30px', width: '30px'}}/>
-            <strong className="me-auto">Bootstrap</strong>
+            <Image src={notification.image_url} width={30} height={30} className="rounded me-2" alt="" style={{height: '30px', width: '30px'}}/>
+            <strong className="me-auto">{notification.title}</strong>
             <small>11 mins ago</small>
           </Toast.Header>
-          <Toast.Body>Hello, world! This is a toast message.</Toast.Body>
+          <Toast.Body>{notification.message}</Toast.Body>
         </Toast>
     )
 }
