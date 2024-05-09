@@ -211,7 +211,7 @@ export default function InviteFriend( {show, close}: Props) {
           blocked: friend.blocked
         }));
 
-        setsearchedBlockedFriends(transData.filter(friend => friend.blocked));
+        setsearchedBlockedFriends(transData.filter((friend: Friend_) => friend.blocked));
 
       } catch (error) {
         console.error(error);
@@ -228,9 +228,9 @@ export default function InviteFriend( {show, close}: Props) {
     fetchBlockedUsers();
   }
 
-  useEffect(() => {
-    update();
-  }, [users, searchedFriends, searchedPendingFriends, searchedBlockedFriends])
+  // useEffect(() => {
+  //   update();
+  // }, [users, searchedFriends, searchedPendingFriends, searchedBlockedFriends])
 
   useEffect(() => {
     if (show)

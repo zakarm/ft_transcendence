@@ -100,6 +100,9 @@ export default function MainContainer({ children }: { children: React.ReactNode 
         };
     }, [socket]);
 	useEffect(() =>{
+		// console.log('test');
+		// if (friendModal)
+		// 	return;
 		const fetchRightBarData = async () => 
 		{
 			const access = Cookies.get('access');
@@ -110,7 +113,7 @@ export default function MainContainer({ children }: { children: React.ReactNode 
 					});
 					if (response.ok){
 						const data = await response.json();
-						console.log(data);
+						console.log('yess', data);
 						const transformedData = data.friends
 						.filter((friend: Friend) => friend.is_accepted == true)
 						.map((friend: Friend) => ({
@@ -144,7 +147,7 @@ export default function MainContainer({ children }: { children: React.ReactNode 
 					});
 					if (response.ok){
 						const data = await response.json();
-						console.log(data);
+						console.log('nooo', data);
 						const notificationFetch = data.notifications
 						.map((notification: Notification) => ({
 							notification_id: notification.notification_id,
@@ -166,7 +169,7 @@ export default function MainContainer({ children }: { children: React.ReactNode 
 			}
 		}
 		fetchNotifications();
-	}, []);
+	}, [friendModal]);
 
 	return (
 		<div className="container-fluid p-0 vh-100" style={{backgroundColor: '#000000', overflow: 'hidden'}}>
@@ -194,7 +197,7 @@ export default function MainContainer({ children }: { children: React.ReactNode 
 					{children}
 				</div>
 				<div className="rightbar col-md-1 d-none d-sm-none d-md-block p-0" style={{backgroundColor: '#161625'}}>
-					<div className='row-fluid d-flex flex-row align-items-center p-0 vh-100'>
+					{/* <div className='row-fluid d-flex flex-row align-items-center p-0 vh-100'>
 						<div className='col-1 vh-100 d-flex justify-content-end align-items-center text-center' style={{backgroundColor: '#000000'}}>
 							<div className={`${styles.drag_class} pt-3 pb-3`} style={{backgroundColor: '#161625', borderRadius: '15px 0 0 15px', cursor: 'pointer'}} onClick={toggleShow}>
 								<FaAngleLeft  color="#FFEBEB" size='1.2em'/>
@@ -205,7 +208,7 @@ export default function MainContainer({ children }: { children: React.ReactNode 
 							<SrightBar webSocketNotifications={webSocketNotifications} notifications_data={notificationFetch} userdata={userData} friends_data={friendsfetched} setfriendModal={() => setFriendModal(true)} toggleShow={toggleShow}/>
 						</div>
 						<InviteFriend show={friendModal} close={() => setFriendModal(false)}/>
-					</div>
+					</div> */}
 				</div>
 			</div>
 		</div>
