@@ -1,7 +1,7 @@
-import styles from './styles.module.css'
-import CountriesAndCities from './countriesAndCities'
+import styles from '../styles.module.css'
+import CountriesAndCities from '../countries-cities/countriesAndCities'
 import { ChangeEvent, useContext } from 'react'
-import { FormContext } from './page'
+import { FormContext } from '../page'
 
 interface Props{
     inputType ?: string;

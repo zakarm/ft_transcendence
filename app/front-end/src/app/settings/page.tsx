@@ -1,7 +1,7 @@
 'use client'
 
 import styles from './styles.module.css'
-import AccountTab from './accountTab'
+import AccountTab from './account-tab/accountTab'
 import { ChangeEvent, createContext, useState } from 'react'
 
 interface AccountTabProps {
