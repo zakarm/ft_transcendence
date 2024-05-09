@@ -15,6 +15,7 @@ import { ImUserPlus , ImUserMinus , ImUsers } from "react-icons/im";
 import { CgUnblock } from "react-icons/cg";
 import { ToastContainer, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { cookies } from 'next/headers';
 
 interface Props{
     show: boolean;
@@ -116,7 +117,6 @@ export default function InviteFriend( {show, close}: Props) {
   }
 
   const fetchUser = async (api: string, message: string, user_data: Friend_) => {
-    console.log(user_data);
     const access = Cookies.get('access');
     if (access)
     {
@@ -147,28 +147,33 @@ export default function InviteFriend( {show, close}: Props) {
             if (api === 'friends-remove')
             {
               setsearchedFriends(searchedFriends.filter(friend => friend.user.username !== user_data.user.username));
-              toast.warning(message);
             }
             else
             {
-              console.log('=>' , searchedFriends);
               const updatedUsers = searchedFriends.map(item => {
                 if (item.user.username === user_data.user.username)
                     return {...item, is_user_from: true};
                 return item;
               });
               setsearchedFriends(updatedUsers);
-              toast.success(message);
             }
           }
           else if (api === 'friends-accept')
           {
             users.filter(friend => friend.user.username === user_data.user.username)[0].is_accepted = true;
             setsearchedPendingFriends(searchedPendingFriends.filter(friend => friend.user.username !== user_data.user.username));
-            toast.success(message);
           }
+          else if (api === 'friends-unblock')
+          {
+            const unblockedUser = searchedBlockedFriends.at(searchedFriends.findIndex(user => user.user.username === user_data.user.username));
+            if (unblockedUser)
+            {
+              setsearchedFriends([...searchedFriends, unblockedUser]);
+              setsearchedBlockedFriends(searchedBlockedFriends.filter(user => user.user.username !== user_data.user.username));
+            }
+          }
+          toast.success(message);
         }
-        
       } catch (error) {
           console.error('Error fetching data: ', error);
       }
@@ -177,22 +182,64 @@ export default function InviteFriend( {show, close}: Props) {
       console.log('Access token is undefined or falsy');
   }
 
+  const fetchBlockedUsers =  async () => {
+    const access = Cookies.get('access');
+    if (access)
+    {
+      try {
+        const res = await fetch('http://localhost:8000/api/blocked-friends', {
+              headers: { Authorization: `Bearer ${access}` },
+            });
+
+        if (!res.ok)
+        {
+          if (res.status === 400)
+            return toast.error('Action not allowed');
+          else
+            throw new Error('Failed to fetch data');
+        }
+
+        const data = await res.json();
+        const transData = data.friends.map((friend: Friend_) => ({
+          user: {
+            id: friend.user.id,
+            username: friend.user.username,
+            image_url: friend.user.image_url,
+          },
+          is_accepted: friend.is_accepted,
+          is_user_from: friend.is_user_from,
+          blocked: friend.blocked
+        }));
+
+        setsearchedBlockedFriends(transData.filter(friend => friend.blocked));
+
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    else
+      console.log('');
+  }
+
   const update = () => {
     fetchUsersData();
-    setsearchedFriends(users.filter(friend => ((friend.is_accepted || friend.is_user_from) && !friend.blocked)));
-    setsearchedPendingFriends(users.filter(friend => !friend.is_accepted && !friend.is_user_from && !friend.blocked));
-    setsearchedBlockedFriends(users.filter(user => user.blocked));
+    setsearchedFriends(users.filter(friend => ((friend.is_accepted || friend.is_user_from))));
+    setsearchedPendingFriends(users.filter(friend => !friend.is_accepted && !friend.is_user_from));
+    fetchBlockedUsers();
   }
 
   useEffect(() => {
-    console.log("->" , users);
-    if (show)
-      update();
-  }, [show, selectedTab]);
+    update();
+  }, [users, searchedFriends, searchedPendingFriends, searchedBlockedFriends])
 
   useEffect(() => {
-    console.log(searchedFriends);
-  }, [searchedFriends])
+    if (show)
+      update();
+  }, [show]);
+
+  useEffect(() => {
+      update();
+  }, [selectedTab]);
 
   const handle_search = () => {
     if (users)
