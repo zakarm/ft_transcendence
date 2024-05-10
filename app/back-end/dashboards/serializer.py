@@ -10,6 +10,7 @@ from .utils import (get_total_games,
                     get_total_minutes)
 from django.utils import timezone
 from .reports import (get_minutes_per_day)
+import sys
 
 class MatchSerializer(serializers.ModelSerializer):
     class Meta:
@@ -80,10 +81,8 @@ class FriendshipSerializer(serializers.ModelSerializer):
     class Meta:
         model = Friendship
         fields = ('user', 'is_accepted', 'blocked', 'is_user_from')
-    
+
     def get_user(self, obj):
-        print(obj.user_from.id, file=sys.stderr)
-        print(self.context['id'], file=sys.stderr)
         if obj.user_from.id == self.context['id']:
             user_data = User.objects.get(id=obj.user_to.id)
         else:
@@ -91,7 +90,7 @@ class FriendshipSerializer(serializers.ModelSerializer):
 
         serializer = UserSerializer(user_data)
         return serializer.data
-    
+
     def get_blocked(self, obj):
         if obj.user_from.id == self.context['id']:
             blocked = obj.u_one_is_blocked_u_two
@@ -107,13 +106,11 @@ class FriendsSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'image_url', 'friends')
-    
+
     def get_friends(self, obj):
         friends_data = Friendship.objects.filter((Q(user_from = obj)| Q(user_to= obj)) &
                                                  Q(u_one_is_blocked_u_two = False) &
                                                  Q(u_two_is_blocked_u_one = False))
-        
-        print(friends_data, file = sys.stderr)
         serializer = FriendshipSerializer(friends_data, many=True, context = {'id': obj.id})
         return serializer.data
 
@@ -125,7 +122,7 @@ class BlockedFriendshipSerializer(serializers.ModelSerializer):
     class Meta:
         model = Friendship
         fields = ('user', 'is_accepted', 'blocked', 'is_user_from')
-    
+
     def get_user(self, obj):
         if obj.user_from.id == self.context['id']:
             user_data = User.objects.get(id=obj.user_to.id)
@@ -134,14 +131,14 @@ class BlockedFriendshipSerializer(serializers.ModelSerializer):
 
         serializer = UserSerializer(user_data)
         return serializer.data
-    
+
     def get_blocked(self, obj):
         if obj.user_from.id == self.context['id']:
             blocked = obj.u_one_is_blocked_u_two
         else:
             blocked = obj.u_two_is_blocked_u_one
         return blocked
-    
+
     def get_is_user_from(self, obj):
         return obj.user_from.id == self.context['id']
 
@@ -150,7 +147,7 @@ class BlockedFriendsSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'image_url', 'friends')
-    
+
     def get_friends(self, obj):
         friends_data = Friendship.objects.filter(Q(user_from = obj)| Q(user_to= obj))
         serializer = BlockedFriendshipSerializer(friends_data, many=True,
@@ -187,13 +184,13 @@ class GameHistorySerializer(serializers.ModelSerializer):
     def get_matches_as_user_one(self, obj):
         period = self.context['period']
         if period == 'day':
-            matches = Match.objects.filter(Q(user_one=obj) & 
+            matches = Match.objects.filter(Q(user_one=obj) &
                                            Q(match_start__day=timezone.now().day))
         elif period == 'month':
-            matches = Match.objects.filter(Q(user_one=obj) & 
+            matches = Match.objects.filter(Q(user_one=obj) &
                                            Q(match_start__day=timezone.now().month))
         elif period == "year":
-            matches = Match.objects.filter(Q(user_one=obj) & 
+            matches = Match.objects.filter(Q(user_one=obj) &
                                            Q(match_start__year=timezone.now().year))
         serializer = MatchSerializer(matches, many=True)
         return serializer.data
@@ -201,13 +198,13 @@ class GameHistorySerializer(serializers.ModelSerializer):
     def get_matches_as_user_two(self, obj):
         period = self.context['period']
         if period == 'day':
-            matches = Match.objects.filter(Q(user_two=obj) & 
+            matches = Match.objects.filter(Q(user_two=obj) &
                                            Q(match_start__day=timezone.now().day))
         elif period == 'month':
-            matches = Match.objects.filter(Q(user_two=obj) & 
+            matches = Match.objects.filter(Q(user_two=obj) &
                                            Q(match_start__day=timezone.now().month))
         elif period == "year":
-            matches = Match.objects.filter(Q(user_two=obj) & 
+            matches = Match.objects.filter(Q(user_two=obj) &
                                            Q(match_start__year=timezone.now().year))
         serializer = MatchSerializer(matches, many=True)
         return serializer.data

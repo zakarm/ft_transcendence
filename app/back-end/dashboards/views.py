@@ -261,5 +261,3 @@ class GameHistoryReportView(APIView):
         context = {"period": period}
         serializer = self.serializer_class(instance=user, context=context)
         return Response(serializer.data)
-
-

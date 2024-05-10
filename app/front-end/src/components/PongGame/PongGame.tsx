@@ -15,12 +15,29 @@ interface ConnectionInfo {
   roomName: string;
 }
 
+interface Player {
+  name: string;
+  imageUrl: string;
+  stats: {
+    adaptation: number;
+    agility: number;
+    winStreaks: number;
+    endurance: number;
+    eliteTierRanking: number;
+  };
+  index: number;
+}
 interface Props {
   webSocket: WebSocket;
   connectionInfo: ConnectionInfo;
+  players: Player[];
 }
 
-const PongGame: React.FC<Props> = ({ webSocket, connectionInfo }: Props) => {
+const PongGame: React.FC<Props> = ({
+  webSocket,
+  connectionInfo,
+  players,
+}: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({
     width: 0,
@@ -259,16 +276,16 @@ const PongGame: React.FC<Props> = ({ webSocket, connectionInfo }: Props) => {
     <div className="Pong_Game_container">
       <div className="board">
         <BoardItem
-          championName="YORU"
+          championName={players[0].name}
           hashtag="#TheHacker007"
           score={user1score}
-          imageSrc={yoruImage}
+          imageSrc={players[0].imageUrl}
         />
         <BoardItem
-          championName="OMEN"
+          championName={players[1].name}
           hashtag="#TheHacker007"
           score={user2score}
-          imageSrc={omenImage}
+          imageSrc={players[1].imageUrl}
         />
       </div>
       <div className="canvas_div" ref={containerRef} />

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "types": ["three"], // Ensure three is listed here
+    "types": ["three"],
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -8,7 +8,7 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "node", // Changed from "bundler" to "node"
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
@@ -21,7 +21,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "three": ["./node_modules/three/src/Three"] // Make sure this path matches your node_modules structure
+      "three": ["./node_modules/three/src/Three"]
     }
   },
   "include": [

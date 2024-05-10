@@ -23,8 +23,20 @@ class RoomObject:
         # users
         self.reconect_user = ""
         self.Original_users = {
-            "user1": {"joined": 0, "user_id": "", "index": 1, "channel_name": ""},
-            "user2": {"joined": 0, "user_id": "", "index": 2, "channel_name": ""},
+            "user1": {
+                "joined": 0,
+                "user_id": "",
+                "user_data": {"user_img": "", "username": ""},
+                "index": 1,
+                "channel_name": "",
+            },
+            "user2": {
+                "joined": 0,
+                "user_id": "",
+                "user_data": {"user_img": "", "username": ""},
+                "index": 2,
+                "channel_name": "",
+            },
         }
         self.score = {"user1": 0, "user2": 0}
 
@@ -94,7 +106,9 @@ class RoomObject:
     def get_original_users(self):
         return (
             self.Original_users["user1"]["user_id"],
+            self.Original_users["user1"]["user_data"],
             self.Original_users["user2"]["user_id"],
+            self.Original_users["user2"]["user_data"],
         )
 
     def is_user_joined(self, user_id):
@@ -105,14 +119,22 @@ class RoomObject:
             return True
         return False
 
-    def add_user(self, channel_name, user_id):
+    def add_user(self, channel_name, user_id, user_data):
         if self.Original_users["user1"]["joined"] == 0:
             self.Original_users["user1"]["channel_name"] = channel_name
             self.Original_users["user1"]["user_id"] = user_id
+            self.Original_users["user1"]["user_data"] = {
+                "user_img": user_data.image_url,
+                "username": user_data.username,
+            }
             self.Original_users["user1"]["joined"] = 1
         elif self.Original_users["user2"]["joined"] == 0:
             self.Original_users["user2"]["channel_name"] = channel_name
             self.Original_users["user2"]["user_id"] = user_id
+            self.Original_users["user2"]["user_data"] = {
+                "user_img": user_data.image_url,
+                "username": user_data.username,
+            }
             self.Original_users["user2"]["joined"] = 1
             self.room_is_full = True
 

@@ -1,11 +1,24 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Web_Socket from "../../../components/webSoket/WebSocket";
 import Cookies from "js-cookie";
 import "./RemoteMatchGame.css";
 import PlayerCard from "@/components/PlayerCard/PlayerCard";
 import PongGame from "@/components/PongGame/PongGame";
 import Link from "next/link";
+
+interface Player {
+  name: string;
+  imageUrl: string;
+  stats: {
+    adaptation: number;
+    agility: number;
+    winStreaks: number;
+    endurance: number;
+    eliteTierRanking: number;
+  };
+  index: number;
+}
 
 const RemoteMatchGame: React.FC = () => {
   const access = Cookies.get("access");
@@ -14,23 +27,50 @@ const RemoteMatchGame: React.FC = () => {
     `ws://localhost:8000/ws/data/?token=${access}`
   );
 
-  const fakePlayer = {
-    name: "YORU",
+  const [MyProfile, setMyProfile] = useState<Player>({
+    name: "username",
     imageUrl: "yoru.jpeg",
     stats: {
-      adaptation: 80,
-      agility: 60,
-      winStreaks: 70,
-      endurance: 90,
-      eliteTierRanking: 75,
+      adaptation: 0,
+      agility: 0,
+      winStreaks: 0,
+      endurance: 0,
+      eliteTierRanking: 5,
     },
     index: 0,
-  };
+  });
 
-  const players = [
+  const [opponents, setOpponents] = useState<Player[]>([
     {
-      name: "YORU",
+      name: "username",
       imageUrl: "yoru.jpeg",
+      stats: {
+        adaptation: 0,
+        agility: 0,
+        winStreaks: 0,
+        endurance: 0,
+        eliteTierRanking: 0,
+      },
+      index: 0,
+    },
+    {
+      name: "username",
+      imageUrl: "yoru.jpeg",
+      stats: {
+        adaptation: 0,
+        agility: 0,
+        winStreaks: 0,
+        endurance: 0,
+        eliteTierRanking: 0,
+      },
+      index: 0,
+    },
+  ]);
+
+  useEffect(() => {
+    setMyProfile({
+      name: connectionInfo.username,
+      imageUrl: connectionInfo.user_image,
       stats: {
         adaptation: 80,
         agility: 60,
@@ -38,27 +78,41 @@ const RemoteMatchGame: React.FC = () => {
         endurance: 90,
         eliteTierRanking: 75,
       },
-      index: 1,
-    },
-    {
-      name: "OMEN",
-      imageUrl: "omen.jpeg",
-      stats: {
-        adaptation: 60,
-        agility: 90,
-        winStreaks: 85,
-        endurance: 70,
-        eliteTierRanking: 80,
+      index: 0,
+    });
+    setOpponents([
+      {
+        name: connectionInfo.username1,
+        imageUrl: connectionInfo.user1_image,
+        stats: {
+          adaptation: 80,
+          agility: 60,
+          winStreaks: 70,
+          endurance: 90,
+          eliteTierRanking: 75,
+        },
+        index: 1,
       },
-      index: 2,
-    },
-  ];
+      {
+        name: connectionInfo.username2,
+        imageUrl: connectionInfo.user2_image,
+        stats: {
+          adaptation: 80,
+          agility: 60,
+          winStreaks: 70,
+          endurance: 90,
+          eliteTierRanking: 75,
+        },
+        index: 2,
+      },
+    ]);
+  }, [connectionInfo]);
 
   return (
     <div className="Lobby_container">
       {gameState === "lobby" && (
         <>
-          <PlayerCard {...fakePlayer} />
+          <PlayerCard {...MyProfile} />
           <div className="blurred-background"></div>
           <div className="search-text">SEARCHING...</div>
         </>
@@ -66,9 +120,9 @@ const RemoteMatchGame: React.FC = () => {
 
       {gameState === "opponentFound" && (
         <>
-          <PlayerCard {...players[0]} />
+          <PlayerCard {...opponents[0]} />
           <h1 className="vs_key">VS</h1>
-          <PlayerCard {...players[1]} />
+          <PlayerCard {...opponents[1]} />
         </>
       )}
       {(gameState === "load_game" ||
@@ -114,7 +168,7 @@ const RemoteMatchGame: React.FC = () => {
                 <div className="search-text">RECONNECTING...</div>
               </>
             )}
-            <PongGame webSocket={webSocket} connectionInfo={connectionInfo} />
+				  <PongGame webSocket={webSocket} connectionInfo={connectionInfo} players={opponents} />
           </>
         )}
     </div>
