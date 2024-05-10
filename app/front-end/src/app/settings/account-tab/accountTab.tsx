@@ -2,56 +2,7 @@ import styles from '../styles.module.css'
 import CountriesAndCities from '../countries-cities/countriesAndCities'
 import { ChangeEvent, useContext } from 'react'
 import { FormContext } from '../page'
-
-interface Props{
-    inputType ?: string;
-    placeholder ?: string;
-    className ?: string;
-    inputClassName ?: string;
-    inputId ?:string;
-    labelText ?:string;
-    labelClass ?: string;
-    inputLength ?: number;
-    index ?: number;
-    setValues ?: (e : ChangeEvent<HTMLInputElement>) => void;
-}
-
-function    GetInput(
-    {
-        className="col",
-        inputClassName="",
-        inputType="text",
-        placeholder="",
-        inputId="",
-        labelText="",
-        inputLength,
-        index=0,
-        labelClass=""
-    }: Props) {
-
-    const   { updateField } = useContext(FormContext);
-
-        return (
-            <div className={`${className} flex-wrap flex-xxl-nowrap `}>
-                <label
-                    className={`col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`} 
-                    htmlFor={inputId}>
-                    {labelText}
-                </label>
-                <div className={`col-6 ${styles.inputHolder} row justify-content-center p-0 m-1 `}>
-                    <input
-                        type={inputType}
-                        placeholder={placeholder}
-                        className={`${styles.input} ${inputClassName} ps-4`}
-                        id={inputId}
-                        maxLength={inputLength}
-                        autoComplete="off"
-                        onChange={(e : ChangeEvent<HTMLInputElement>) => {updateField(inputId, e.target.value)}}
-                    />
-                </div>
-            </div>
-        );
-}
+import { GetInput, Props } from '../components/input'
 
 function    GenerateInputFields() {
     
@@ -145,3 +96,4 @@ function    AccountTab() {
 }
 
 export default AccountTab;
+export { GetInput }

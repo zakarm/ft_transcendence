@@ -109,7 +109,7 @@ function    CountriesAndCities(
                     htmlFor={id}>
                     {labelText2}
                 </label>
-                <div className={`col-6 ${styles.inputHolder} row justify-content-center p-0 m-1`}>
+                <div className={`col-6 ${styles.inputHolder} row justify-content-center p-0 mb-4`}>
 
                     <select 
                         className={`itim-font ${styles.input} ps-4`}

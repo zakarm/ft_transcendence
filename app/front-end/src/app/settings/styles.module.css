@@ -41,12 +41,13 @@
 }
 
 .input {
-    /* width : 90%; */
+    width : 100%;
     outline: none;
     color: #706f71;
     background-color: var(--clr--grey);
     height: 70px;
     border-radius: 25px;
+    accent-color: red;
     border : none;
 }
 
@@ -58,13 +59,22 @@
     scale : 1.01;
 }
 
+
 /* select option */
 
-.select {
-    /* width: 90%; */
+.tab_container {
+    height: 10%;
+}
+
+.content_container {
+    height: 80%;
 }
 
 /******** Image ********/
+
+.qr_image {
+    filter: blur(1.5rem);
+}
 
 .image_container {
     position : relative;
@@ -77,6 +87,12 @@
     height: 300px;
 }
 
+.qr_code {
+    border-radius: 25px;
+    width: 300px;
+    height: 300px;
+}
+
 .camera {
     position : absolute;
     top : 75%;
@@ -84,7 +100,7 @@
 }
 
 .image_container:hover {
-    transform : scale(1.1);
+    transform : scale(1.03);
     cursor : pointer;
 }
 
@@ -120,6 +136,11 @@
     }
 
     .profilePic {
+        width: 200px;
+        height: 200px;
+    }
+
+    .qr_code {
         width: 200px;
         height: 200px;
     }
@@ -172,6 +193,12 @@
         width: 100px;
         height: 100px;
     }
+
+    .qr_code {
+        width: 100px;
+        height: 100px;
+    }
+
     .camera {
         height: 20px;
     }

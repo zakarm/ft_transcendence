@@ -2,6 +2,7 @@
 
 import styles from './styles.module.css'
 import AccountTab from './account-tab/accountTab'
+import SecurityTab from './security-tab/security'
 import { ChangeEvent, createContext, useState, useEffect, useRef, useLayoutEffect } from 'react'
 import Cookies from 'js-cookie'
 
@@ -28,8 +29,12 @@ async function    getInitialData({setValuesToPost, setAccountValues}) {
                 "last_name" : "HobaHoba",
                 "nickname" : "saba",
                 "country" : "Morocco",
-                "city" : "Khouribga",
+                "city" : "",
                 "image" : "C:/ste7/nte7",
+                "password" : "",
+                "repeat_password" : "",
+                "is_two_fact" : false,
+                "two_fact_secret" : ""
             }
         )
         setAccountValues(
@@ -38,8 +43,12 @@ async function    getInitialData({setValuesToPost, setAccountValues}) {
                 "last_name" : "HobaHoba",
                 "nickname" : "saba",
                 "country" : "Morocco",
-                "city" : "Khouribga",
+                "city" : "",
                 "image" : "C:/ste7/nte7",
+                "password" : "",
+                "repeat_password" : "",
+                "is_two_fact" : false,
+                "two_fact_secret" : ""
             }
         )
     } catch(error) {
@@ -47,7 +56,7 @@ async function    getInitialData({setValuesToPost, setAccountValues}) {
     }
 }
 
-    /* Submits the form */
+/* Submits the form */
 const   postFormData = async ({valuesToPost, isChanged}) => {
     try {
 
@@ -78,13 +87,16 @@ function    SettingsPage()
 {
     const   [valuesToPost, setValuesToPost] =  useState<AccountTabProps>({})
     const   [accountValues, setAccountValues] = useState<AccountTabProps>({});
+    const   [tab, setTab] = useState<string>("account");
     const   isChanged : boolean = useRef<boolean>(false);
+
     /* Updates a specific field of the input */
     const   updateField = (key : string, value : string) => {
         const   newValues = { ...accountValues };
         newValues[key] = value;
         setAccountValues(newValues);
     }
+
     /* Compares values in  [accountValues, valuesToPost] */    
     const   checkDifferences = () => {
         const   compareDictValues = (d1: { [key: string]: string }, d2 : { [key: string]: string }) => {
@@ -116,7 +128,7 @@ function    SettingsPage()
     }
     
     /*  Gets Initial Values From Backend */
-    useLayoutEffect(() => {
+    useEffect(() => {
         getInitialData({setValuesToPost, setAccountValues});
     }, []);
 
@@ -136,16 +148,22 @@ function    SettingsPage()
                 </section>
 
                 <main className={`${styles.main_container} row p-0 m-0 my-5 justify-content-center align-items-center`}>
-                    <form className={`row ${styles.form_container}`}>
+                    <form className={`row ${styles.form_container} p-0 m-0 justify-content-center align-items-center`}>
 
-                        <fieldset className={`row p-0 m-0 my-5`}>
-                            <h2 className="col-4 mt-2 col-xl-2 itim-font">Account</h2>
-                            <h2 className="col-4 mt-2 col-xl-2 itim-font">Security</h2>
-                            <h2 className="col-4 mt-2 col-xl-2 itim-font">Game</h2>
+                        <fieldset className={`${styles.tab_container} row p-0 m-0`}>
+                            <div className="col m-2 p-2 d-flex flex-row flex-nowrap">
+                                <h2 className="col-4 m-1 col-xl-2 itim-font" onClick={(e : ChangeEvent<HTMLInputElement>) => setTab("account")}>Account</h2>
+                                <h2 className="col-4 m-1 col-xl-2 itim-font" onClick={(e : ChangeEvent<HTMLInputElement>) => setTab("security")}>Security</h2>
+                                <h2 className="col-4 m-1 col-xl-2 itim-font" onClick={(e : ChangeEvent<HTMLInputElement>) => setTab("game")}>Game</h2>
+                            </div>
                         </fieldset>
                     <FormContext.Provider value={{accountValues, valuesToPost, updateField}}>
-                        <div className="row p-0 m-0">
-                            <AccountTab/>
+                        <div className={`${styles.content_container} row  p-0 m-0  justify-content-center align-items-center`}>
+                            {
+                                tab === "account" &&  <AccountTab/>
+                                ||
+                                tab === "security" &&  <SecurityTab/>
+                            }
                         </div>
                     </FormContext.Provider>
 
