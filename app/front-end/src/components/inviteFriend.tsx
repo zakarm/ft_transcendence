@@ -144,7 +144,6 @@ export default function InviteFriend( {show, close}: Props) {
         {
           if (api === 'friends-unblock')
           {
-              console.log('test');
             const unblockedUser = searchedBlockedFriends.at(searchedFriends.findIndex(user => user.user.username === user_data.user.username));
             if (unblockedUser)
             {
@@ -152,9 +151,9 @@ export default function InviteFriend( {show, close}: Props) {
               setsearchedBlockedFriends(searchedBlockedFriends.filter(user => user.user.username !== user_data.user.username));
             }
           }
-          if (api === 'friends-remove' || api === 'friends-add' || 'friends-block')
+          if (api === 'friends-remove' || api === 'friends-add' || api === 'friends-block')
           {
-            if (api === 'friends-remove' || 'friends-block')
+            if (api === 'friends-remove' || api === 'friends-block')
             {
               setUsers(users.filter(user => user.user.username !== user_data.user.username));
               setsearchedFriends(searchedFriends.filter(friend => friend.user.username !== user_data.user.username));

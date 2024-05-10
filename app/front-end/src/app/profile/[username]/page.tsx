@@ -59,9 +59,23 @@ interface MonthlyStats {
     summary: MonthlyStats;
   }
 
+  interface User {
+    id: number;
+    username: string;
+    image_url: string;
+  }
+  
+  interface Friend_ {
+    user: User;
+    is_accepted: boolean;
+    is_user_from: boolean;
+    blocked: boolean;
+  }
+
 export default function ({ params }: { params: { username: string } })
 {
     const [profile, setProfile] = useState<ProfileData | null>(null);
+    const [user, setUser] = useState<Friend_ | null>(null);
 
     const fetchProfileData = async () => {
         const access = Cookies.get('access');
@@ -76,7 +90,6 @@ export default function ({ params }: { params: { username: string } })
                     throw new Error('Failed to fetch data');
     
                 const data = await res.json();
-                console.log(data);
                 setProfile(data);
             } catch (error) {
                 console.error('Error fetching data: ', error);
@@ -86,8 +99,42 @@ export default function ({ params }: { params: { username: string } })
             console.log('Access token is undefined or falsy');
     }
 
+    const fetchUser = async () => {
+        const access = Cookies.get('access');
+        if (access)
+        {
+            try {
+                const res = await fetch('http://localhost:8000/api/friends', {
+                    headers: { Authorization: `Bearer ${access}` },
+                });
+                
+                if (!res.ok)
+                throw new Error('Failed to fetch data');
+            
+            const data = await res.json();
+            const transData = data.friends.filter((user: Friend_) => user.user.username === profile.username).map((friend: Friend_) => ({
+              user: {
+                  id: friend.user.id,
+                  username: friend.user.username,
+                  image_url: friend.user.image_url,
+              },
+              is_accepted: friend.is_accepted,
+              is_user_from: friend.is_user_from,
+              blocked: friend.blocked
+            }));
+            if (transData)
+                setUser(transData[0]);
+          } catch (error) {
+              console.error('Error fetching data: ', error);
+          }
+        }
+        else
+          console.log('Access token is undefined or falsy');
+    }
+
     useEffect(() => {
-            fetchProfileData();
+        fetchProfileData();
+        fetchUser();
     }, []);
 
     const [modalShow, setModalShow] = useState<boolean>(false);
@@ -162,6 +209,8 @@ export default function ({ params }: { params: { username: string } })
     
     const parag: string =   "Hey there! I'm Snake07, a dedicated ping pong gamer. From lightning-fast reflexes to strategic plays, I'm all about dominating the virtual table. Join me as we smash our way to victory, one pixel at a time!";
     
+    
+
     return (
         <>
         {profile && (
@@ -178,9 +227,37 @@ export default function ({ params }: { params: { username: string } })
                             <div className='col-xl-2 order-xl-2 my-3 text-center'>
                                 <Image className={`${styles.profile_img}`} width={200   } height={200  } src={profile?.image_url ?? '/char3.png'} alt='Profile'/>
                                 <div><span className='valo-font' style={{color: '#FFEBEB', fontSize: '1.5em'}}>{profile.username}</span></div>
+                                {/* <div className={`${styles.action} row d-flex justify-content-center`}>
+                                    <div className={`col-md-5 col-8 ${styles.btn}`}><button>Message</button></div>
+                                    {
+                                        user &&
+                                        user.is_accepted ? 
+                                        (
+                                            <div></div>
+                                        ) :
+                                        (
+                                            user.is_user_from ? 
+                                            (
+                                                <div className={`col-md-5 col-8 ${styles.btn}`}><button>waiting</button></div>
+                                            ) :
+                                            (
+                                                <div className={`col-md-5 col-8 ${styles.btn}`}><button>invite</button></div>
+                                            )
+                                        )
+                                    }
+                                    
+                                </div> */}
                                 <div className={`${styles.action} row d-flex justify-content-center`}>
                                     <div className={`col-md-5 col-8 ${styles.btn}`}><button>Message</button></div>
-                                    <div className={`col-md-5 col-8 ${styles.btn}`}><button>invite</button></div>
+                                    {user && user.is_accepted ? (
+                                        <div></div>
+                                    ) : (
+                                        user && user.is_user_from ? (
+                                            <div className={`col-md-5 col-8 ${styles.btn}`}><button>Waiting</button></div>
+                                        ) : (
+                                            <div className={`col-md-5 col-8 ${styles.btn}`}><button>Invite</button></div>
+                                        )
+                                    )}
                                 </div>
                             </div> 
                             <div className='col-xl-4 order-xl-3 my-3'>

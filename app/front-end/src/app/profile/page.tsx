@@ -179,8 +179,8 @@ export default function ()
                                 <Image className={`${styles.profile_img}`} width={200   } height={200  } src={profile?.image_url ?? '/char3.png'} alt='Profile'/>
                                 <div><span className='valo-font' style={{color: '#FFEBEB', fontSize: '1.5em'}}>{profile.username}</span></div>
                                 <div className={`${styles.action} row d-flex justify-content-center`}>
-                                    <div className={`col-md-5 col-8 ${styles.btn}`}><button>Message</button></div>
-                                    <div className={`col-md-5 col-8 ${styles.btn}`}><button>invite</button></div>
+                                        <div className={`col-md-5 col-8 ${styles.btn}`}><button>Play</button></div>
+                                        <div className={`col-md-5 col-8 ${styles.btn}`}><button>Delete</button></div>
                                 </div>
                             </div> 
                             <div className='col-xl-4 order-xl-3 my-3'>

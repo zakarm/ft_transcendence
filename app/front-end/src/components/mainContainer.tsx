@@ -112,7 +112,6 @@ export default function MainContainer({ children }: { children: React.ReactNode 
 					});
 					if (response.ok){
 						const data = await response.json();
-						console.log('yess', data);
 						const transformedData = data.friends
 						.filter((friend: Friend) => friend.is_accepted == true)
 						.map((friend: Friend) => ({
@@ -146,7 +145,6 @@ export default function MainContainer({ children }: { children: React.ReactNode 
 					});
 					if (response.ok){
 						const data = await response.json();
-						console.log('nooo', data);
 						const notificationFetch = data.notifications
 						.map((notification: Notification) => ({
 							notification_id: notification.notification_id,
