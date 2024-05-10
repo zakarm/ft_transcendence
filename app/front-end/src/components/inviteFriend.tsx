@@ -15,8 +15,7 @@ import { ImUserPlus , ImUserMinus , ImUsers } from "react-icons/im";
 import { CgUnblock } from "react-icons/cg";
 import { ToastContainer, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { cookies } from 'next/headers';
-
+import { MdBlock } from "react-icons/md";
 interface Props{
     show: boolean;
     close: () => void;
@@ -118,6 +117,7 @@ export default function InviteFriend( {show, close}: Props) {
 
   const fetchUser = async (api: string, message: string, user_data: Friend_) => {
     const access = Cookies.get('access');
+    
     if (access)
     {
       try {
@@ -142,11 +142,23 @@ export default function InviteFriend( {show, close}: Props) {
         const data = await res.json();
         if (data)
         {
-          if (api === 'friends-remove' || api === 'friends-add')
+          if (api === 'friends-unblock')
           {
-            if (api === 'friends-remove')
+              console.log('test');
+            const unblockedUser = searchedBlockedFriends.at(searchedFriends.findIndex(user => user.user.username === user_data.user.username));
+            if (unblockedUser)
             {
+              setsearchedFriends([...searchedFriends, unblockedUser]);
+              setsearchedBlockedFriends(searchedBlockedFriends.filter(user => user.user.username !== user_data.user.username));
+            }
+          }
+          if (api === 'friends-remove' || api === 'friends-add' || 'friends-block')
+          {
+            if (api === 'friends-remove' || 'friends-block')
+            {
+              setUsers(users.filter(user => user.user.username !== user_data.user.username));
               setsearchedFriends(searchedFriends.filter(friend => friend.user.username !== user_data.user.username));
+              
             }
             else
             {
@@ -162,15 +174,6 @@ export default function InviteFriend( {show, close}: Props) {
           {
             users.filter(friend => friend.user.username === user_data.user.username)[0].is_accepted = true;
             setsearchedPendingFriends(searchedPendingFriends.filter(friend => friend.user.username !== user_data.user.username));
-          }
-          else if (api === 'friends-unblock')
-          {
-            const unblockedUser = searchedBlockedFriends.at(searchedFriends.findIndex(user => user.user.username === user_data.user.username));
-            if (unblockedUser)
-            {
-              setsearchedFriends([...searchedFriends, unblockedUser]);
-              setsearchedBlockedFriends(searchedBlockedFriends.filter(user => user.user.username !== user_data.user.username));
-            }
           }
           toast.success(message);
         }
@@ -329,7 +332,10 @@ export default function InviteFriend( {show, close}: Props) {
                                       friend.is_accepted 
                                       ? 
                                       (
-                                        <div className='col-9 text-end' ><Button variant="dark" onClick={() => fetchUser('friends-remove', 'removed from friends', friend)}>Remove <IoIosRemoveCircle color="#FFEBEB" /></Button></div>
+                                        <div className="col-9 d-flex">
+                                          <div className='col text-end p-1' ><Button variant="dark" onClick={() => fetchUser('friends-remove', 'removed from friends', friend)}>Remove <IoIosRemoveCircle color="#FFEBEB" /></Button></div>
+                                          <div className='col text-end p-1' ><Button variant="dark" onClick={() => fetchUser('friends-block', 'user is blocked', friend)}>Block <MdBlock color="#FFEBEB" /></Button></div>
+                                        </div>
                                       ) 
                                       : 
                                       (
