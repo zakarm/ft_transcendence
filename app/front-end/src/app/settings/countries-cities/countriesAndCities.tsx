@@ -1,5 +1,5 @@
 import styles from '../styles.module.css'
-import { ChangeEvent, useEffect, useState, useContext } from 'react'
+import { ChangeEvent, useEffect, useState, useContext, useRef } from 'react'
 import { FormContext } from '../page'
 
 const data : {[country : string] : string[]} = require('./countries.min.json')
@@ -20,13 +20,16 @@ function    CountriesAndCities(
         id="",
     } : Props) {
     
-    const   {accountValues, setValues} = useContext(FormContext);
+    const   {accountValues, updateField} = useContext(FormContext);
 
     const   [selectedCountry, setselectedCountry] = useState<string>(accountValues['country']);
     const   [selectedCity, setSelectedCity] = useState<string>(accountValues['city']);
 
     const   [citiesOptions, setCitiesOptions] = useState<string[]>([])
     const   [countryOptions, setcountryOptions] = useState<string[]>([])
+    
+    let isFirstRender : boolean = useRef<boolean>(true);
+    let i : number = useRef<number>(0);
 
     useEffect(() => {
 
@@ -36,6 +39,24 @@ function    CountriesAndCities(
         setcountryOptions(countryOption)
 
     }, []);
+
+    useEffect(() => {
+        setselectedCountry(accountValues['country']);
+        setSelectedCity(accountValues['city']);
+    }, [accountValues])
+    
+    useEffect(() => {
+        if ( ! isFirstRender.current) {
+            setSelectedCity("--");
+            updateField("city", "");
+        } else {
+            if (i.current > 0) {
+                isFirstRender.current = false;
+            }
+            i.current += 1;
+        }
+
+    }, [accountValues['country']]);
 
     let cities : string[] = [];
     useEffect(() => {
@@ -52,6 +73,7 @@ function    CountriesAndCities(
             setCitiesOptions(<option key="--" value="--">--</option>)
         }
     }, [selectedCountry]);
+
     return (
         <>
             <div className={`${className} flex-wrap flex-xl-nowrap`}>
@@ -65,7 +87,10 @@ function    CountriesAndCities(
                             className={`itim-font ${styles.input} ps-4`}
                             name="countries"
                             id={id}
-                            onChange={ (e: ChangeEvent<HTMLInputElement>) => { setselectedCountry(e.target.value) } }>
+                            onChange={ (e: ChangeEvent<HTMLInputElement>) => {
+                                setselectedCountry(e.target.value);
+                                updateField("country", e.target.value);
+                            } }>
                             <option
                                 className={`itim-font ${styles.input}`}
                                 hidden
@@ -90,7 +115,10 @@ function    CountriesAndCities(
                         className={`itim-font ${styles.input} ps-4`}
                         name="countries"
                         id={id}
-                        onChange={ (e : ChangeEvent<HTMLInputElement>) => { setSelectedCity(e.target.value) } }>
+                        onChange={ (e : ChangeEvent<HTMLInputElement>) => {
+                            setSelectedCity(e.target.value);
+                            updateField("city", e.target.value);
+                        } }>
                         <option
                             className={`itim-font`}
                             hidden

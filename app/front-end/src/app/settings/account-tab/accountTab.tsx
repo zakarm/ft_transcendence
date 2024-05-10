@@ -29,7 +29,7 @@ function    GetInput(
         labelClass=""
     }: Props) {
 
-    const   {accountValues, setValues} = useContext(FormContext);
+    const   { updateField } = useContext(FormContext);
 
         return (
             <div className={`${className} flex-wrap flex-xxl-nowrap `}>
@@ -46,7 +46,7 @@ function    GetInput(
                         id={inputId}
                         maxLength={inputLength}
                         autoComplete="off"
-                        // onChange={(e : ChangeEvent<HTMLInputElement>) => {setValues(accountValues)}}
+                        onChange={(e : ChangeEvent<HTMLInputElement>) => {updateField(inputId, e.target.value)}}
                     />
                 </div>
             </div>
@@ -55,7 +55,7 @@ function    GetInput(
 
 function    GenerateInputFields() {
     
-    const   {accountValues, setValues} = useContext(FormContext);
+    const   { valuesToPost } = useContext(FormContext);
 
     const   inputProps = [
         {
@@ -63,7 +63,7 @@ function    GenerateInputFields() {
             inputType : "text",
             inputId: "first_name",
             labelText: "First Name",
-            placeholder : accountValues["first_name"],
+            placeholder : valuesToPost["first_name"],
             inputLength : 20
         },
         {
@@ -71,7 +71,7 @@ function    GenerateInputFields() {
             inputType : "text",
             inputId: "last_name",
             labelText: "Last Name",
-            placeholder : accountValues["last_name"],
+            placeholder : valuesToPost["last_name"],
             inputLength : 20
         },
         {
@@ -79,7 +79,7 @@ function    GenerateInputFields() {
             inputType : "text",
             inputId: "nickname",
             labelText: "Nickname",
-            placeholder : accountValues["nickname"],
+            placeholder : valuesToPost["nickname"],
             inputLength : 20
         }
     ]
@@ -109,18 +109,13 @@ function    GenerateInputFields() {
                     id="countries">
                 </CountriesAndCities>
 
-                {/* <CountriesAndCities
-                    className="p-0 m-0 my-4 row justify-content-center"
-                    labelText='City'
-                    id="cities"
-                    renderCountries={false}>
-                </CountriesAndCities> */}
-
         </>
     );
 }
 
 function    AccountTab() {
+    const   { updateField } = useContext(FormContext);
+
     return (
         <>
 
@@ -130,7 +125,11 @@ function    AccountTab() {
                         <img src="profile.jpeg" alt="" className={`${styles.profilePic}`}/>
                         <img src="camera.png" alt="" className={`${styles.camera}`}/>
                     </label>
-                    <input type="file" className="d-none" id="file_input" />
+                    <input
+                        type="file"
+                        className="d-none"
+                        onChange={(e : ChangeEvent<HTMLInputElement>) => updateField('image', e.target.value)}
+                        id="file_input" />
                 </div>
             </fieldset>
             <fieldset className="col-12 col-xxl-6 p-0 m-0 d-flex justify-content-center align-items-center">
