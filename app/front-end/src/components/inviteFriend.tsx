@@ -5,7 +5,6 @@ import React, { useEffect, useState } from 'react';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { InputGroup, Modal, Form, Button, Spinner } from 'react-bootstrap';
-import friends from './friends.json';
 import Splayer from "./Splayer";
 import Cookies from 'js-cookie';
 
@@ -229,10 +228,6 @@ export default function InviteFriend( {show, close}: Props) {
     setsearchedPendingFriends(users.filter(friend => !friend.is_accepted && !friend.is_user_from));
     fetchBlockedUsers();
   }
-
-  // useEffect(() => {
-  //   update();
-  // }, [users, searchedFriends, searchedPendingFriends, searchedBlockedFriends])
 
   useEffect(() => {
     if (show)

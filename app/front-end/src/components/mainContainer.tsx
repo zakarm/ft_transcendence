@@ -12,6 +12,7 @@ import InviteFriend from "./inviteFriend";
 import { useGlobalContext } from "./webSocket";
 import Spinner from 'react-bootstrap/Spinner'
 import Cookies from 'js-cookie';
+import { usePathname, useRouter } from "next/navigation";
 
 interface FriendSocket {
 	id: number;
