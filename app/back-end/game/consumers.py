@@ -230,6 +230,22 @@ class GameConsumer(AsyncWebsocketConsumer):
                             # delete_room(self.room_name)
                             return
                     await self.broadcast_message({"action": "start_game"})
+                    message = {
+                        "action": "score",
+                        "user1score": room.getScores()["user1"],
+                        "user2score": room.getScores()["user2"],
+                    }
+                    await self.broadcast_message(message)
+                    ball_position, ball_velocity = room.get_updated_ball()
+                    message = {
+                        "action": "update",
+                        "ball_position_x": ball_position["x"],
+                        "ball_position_z": ball_position["z"],
+                        "ball_velocity_x": ball_velocity["velocity_x"],
+                        "ball_velocity_z": ball_velocity["velocity_z"],
+                    }
+                    await self.broadcast_message(message)
+                    await asyncio.sleep(5)
                 room.ball_update()
                 room.ball_intersect()
                 room.paddle_update()

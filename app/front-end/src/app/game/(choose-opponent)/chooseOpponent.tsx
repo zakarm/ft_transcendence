@@ -41,12 +41,12 @@ function ChooseOpponent({ setPageId }: Props) {
         <div
           className={`${styles.option} col-10 col-sm-3 col-md-8 col-xl-3 p-1`}
         >
-          <Link href="/game/RemoteMatchGame">
-            <OptionCard
-              cardTitle="MATCH GAME"
-              imageSrc="back3.png"
-              setPageId={setPageId}
-            ></OptionCard>
+          <Link href="/game/RemoteMatchGame"style={{ textDecoration: "none" }}>
+              <OptionCard
+                cardTitle="MATCH GAME"
+                imageSrc="back3.png"
+                setPageId={setPageId}
+              ></OptionCard>
           </Link>
         </div>
 

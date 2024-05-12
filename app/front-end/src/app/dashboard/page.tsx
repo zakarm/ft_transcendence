@@ -16,12 +16,12 @@ import { LineController } from 'chart.js/auto';
 import { useRouter } from 'next/navigation'
 import { Dropdown } from 'react-bootstrap';
 import ExportCSV from '@/components/export';
-import { CategoryScale, 
-    LinearScale, 
-    Title, 
-    Legend, 
+import { CategoryScale,
+    LinearScale,
+    Title,
+    Legend,
     Tooltip,
-    PointElement, 
+    PointElement,
     LineElement } from 'chart.js';
 
 interface TotalMinutes {
@@ -71,7 +71,7 @@ export default function Dashboard() {
     const gameData: GameData[] = [];
     const gameCsv: GameData[] = [];
     useEffect(() => {
-        const fetchData = async () => 
+        const fetchData = async () =>
         {
             const access = Cookies.get('access');
 
@@ -105,8 +105,8 @@ export default function Dashboard() {
                     const period = 'year';
                     const response = await fetch('http://localhost:8000/api/game-stats-report', {
                         method: 'POST',
-                        headers: 
-                        { 
+                        headers:
+                        {
                             Authorization: `Bearer ${access}` ,
                             'Content-Type': 'application/json'
                         },
@@ -175,17 +175,17 @@ export default function Dashboard() {
 
     const chartLabels = dashboardData?.total_minutes.months || [];
     const chartData = dashboardData?.total_minutes.minutes_months || [];
-    
+
     Chart.register(
-        CategoryScale, 
-        LinearScale, 
-        Title, 
-        Legend, 
-        Tooltip, 
-        LineController, 
-        PointElement, 
+        CategoryScale,
+        LinearScale,
+        Title,
+        Legend,
+        Tooltip,
+        LineController,
+        PointElement,
         LineElement);
-    
+
     Chart.defaults.font.family = 'Itim';
     Chart.defaults.font.size = 14;
     const options: ChartOptions<'line'> = {
@@ -200,7 +200,7 @@ export default function Dashboard() {
         },
         },
     };
-    
+
     const labels: string[] = chartLabels;
     const data: ChartData<'line'>  = {
         labels,
@@ -216,100 +216,169 @@ export default function Dashboard() {
     };
 
     return (
-        <div className={`container-fluid ${styles.page_body} vh-100`}>
-            {/* {csvData && <ExportCSV data={gameCsv} filename="game_history.csv"></ExportCSV>} */}
-            <div className="row m-0 mt-5">
-                <div className="col-12 mt-5">
-                    <div className={`row ${styles.card} m-1`}>
-                        <div className='col-12 col-md-6'>
-                            <div className={`${styles.index_img}`}>
-                                <div className={`row`}>
-                                    <small className={`itim-font ${styles.small_title}`}>upcoming</small>
-                                </div>
-                                <div className={`row`}>
-                                    <div className={`col-12 col-md-8`}>
-                                        <h1 className={`${styles.titles} valo-font`}>THE ULTIMATE PING-PONG GAME.</h1>
-                                    </div>
-                                </div>
-                                <div className={`row`}>
-                                    <div className={`col-12 col-md-12`}>
-                                        <h6 className={`${styles.med_titles} itim-font`}>Welcome to our online ping pong paradise! Dive into
-                                            the fast-paced  world of table tennis with our website,
-                                            where players of all levels can  connect, compete,
-                                            and improve their skills. From casual matches to intense
-                                            tournaments, we've got everything you need to serve up some
-                                            excitement!
-                                        </h6>
-                                    </div>
-                                    <div>
-                                        <ButtonValo onClick={clickButton} value="Play" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='col-12 col-md-6'>
-                            <div className={`${styles.imageContainer} position-relative`}>
-                                <Image src="/dashboard_char.png" width={350} height={350} alt="anime charachter" />
-                            </div>
-                        </div>
+      <div className={`container-fluid ${styles.page_body} vh-100`}>
+        {/* {csvData && <ExportCSV data={gameCsv} filename="game_history.csv"></ExportCSV>} */}
+        <div className="row m-0 mt-5">
+          <div className="col-12 mt-5">
+            <div className={`row ${styles.card} m-1`}>
+              <div className="col-12 col-md-6">
+                <div className={`${styles.index_img}`}>
+                  <div className={`row`}>
+                    <small className={`itim-font ${styles.small_title}`}>
+                      upcoming
+                    </small>
+                  </div>
+                  <div className={`row`}>
+                    <div className={`col-12 col-md-8`}>
+                      <h1 className={`${styles.titles} valo-font`}>
+                        THE ULTIMATE PING-PONG GAME.
+                      </h1>
                     </div>
-                </div>
-                <div className="col-12 mt-3">
-                    <div className="row">
-                        <div className="col-12 col-lg-6">
-                            <div className={`d-flex flex-column p-3 ${styles.card} ${styles.buttom_cards} m-1`}>
-                                <div className='row'>
-                                    <div className='col-6 d-flex align-items-start justify-content-start'>
-                                    <p className={`itim-font ${styles.med_titles}`}><FaHistory color='#FFEBEB'/> GAME HISTORY</p>
-                                    </div>
-                                    <div className='col-6 d-flex align-items-end justify-content-end'>
-                                        <Dropdown onClick={toggleDropdown}>
-                                            <Dropdown.Toggle variant="dark" id="dropdown-basic" className={`itim-font ${styles.all_down}`}>
-                                                ALL
-                                            </Dropdown.Toggle>
-
-                                            <Dropdown.Menu show={dropdownOpen}>
-                                                <Dropdown.Item href="#/action-1" className='itim-font'>This Day</Dropdown.Item>
-                                                <Dropdown.Item href="#/action-2" className='itim-font'>This Month</Dropdown.Item>
-                                                <Dropdown.Item href="#/action-3" className='itim-font'>This Year</Dropdown.Item>
-                                            </Dropdown.Menu>
-                                        </Dropdown>
-                                    </div>
-                                </div>
-                                <hr style={{color: '#FFEBEB', backgroundColor: '#FFEBEB', height: 1}}/>
-                                <GameHistoryCard data={gameData}/>
-                            </div>
-                        </div>
-                        <div className={`col-12 col-lg-6 ${styles.chart_grid}`}>
-                            <div className={`d-flex flex-column p-3 ${styles.card} ${styles.buttom_cards} m-1`}>
-                                <div className='row'>
-                                    <div className='col-6 d-flex align-items-start justify-content-start'>
-                                        <p className={`itim-font ${styles.med_titles}`}><BiStats color='#FFEBEB'/> MY GAME STATS</p>
-                                    </div>
-                                    <div className='col-6 d-flex align-items-end justify-content-end'>
-                                        <Dropdown onClick={toggleDropdownGameStats}>
-                                            <Dropdown.Toggle variant="dark" id="dropdown-basic" className={`itim-font ${styles.all_down}`}>
-                                                ALL
-                                            </Dropdown.Toggle>
-
-                                            <Dropdown.Menu show={dropdownOpenGameStats}>
-                                                <Dropdown.Item href="#/action-1" className='itim-font'>This Month</Dropdown.Item>
-                                                <Dropdown.Item href="#/action-2" className='itim-font'>3 Months</Dropdown.Item>
-                                                <Dropdown.Item href="#/action-3" className='itim-font'>1 Year</Dropdown.Item>
-                                            </Dropdown.Menu>
-                                        </Dropdown>
-                                    </div>
-                                </div>
-                                <hr style={{color: '#FFEBEB', backgroundColor: '#FFEBEB', height: 1}}/>
-                                <div className='d-flex align-items-center justify-content-center h-75'>
-                                    <div>&nbsp;</div>
-                                    <Line className='itim-font' options={options} data={data} />
-                                </div>
-                            </div>
-                        </div>
+                  </div>
+                  <div className={`row`}>
+                    <div className={`col-12 col-md-12`}>
+                      <h6 className={`${styles.med_titles} itim-font`}>
+                        Welcome to our online ping pong paradise! Dive into the
+                        fast-paced world of table tennis with our website, where
+                        players of all levels can connect, compete, and improve
+                        their skills. From casual matches to intense
+                        tournaments, we've got everything you need to serve up
+                        some excitement!
+                      </h6>
                     </div>
+                    <div>
+                      <ButtonValo onClick={clickButton} value="Play" />
+                    </div>
+                  </div>
                 </div>
+              </div>
+              <div className="col-12 col-md-6">
+                <div className={`${styles.imageContainer} position-relative`}>
+                  <Image
+                    src="/dashboard_char.png"
+                    width={350}
+                    height={350}
+                    alt="anime charachter"
+                    priority
+                  />
+                </div>
+              </div>
             </div>
+          </div>
+          <div className="col-12 mt-3">
+            <div className="row">
+              <div className="col-12 col-lg-6">
+                <div
+                  className={`d-flex flex-column p-3 ${styles.card} ${styles.buttom_cards} m-1`}
+                >
+                  <div className="row">
+                    <div className="col-6 d-flex align-items-start justify-content-start">
+                      <p className={`itim-font ${styles.med_titles}`}>
+                        <FaHistory color="#FFEBEB" /> GAME HISTORY
+                      </p>
+                    </div>
+                    <div className="col-6 d-flex align-items-end justify-content-end">
+                      <Dropdown onClick={toggleDropdown}>
+                        <Dropdown.Toggle
+                          variant="dark"
+                          id="dropdown-basic"
+                          className={`itim-font ${styles.all_down}`}
+                        >
+                          ALL
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu show={dropdownOpen}>
+                          <Dropdown.Item
+                            href="#/action-1"
+                            className="itim-font"
+                          >
+                            This Day
+                          </Dropdown.Item>
+                          <Dropdown.Item
+                            href="#/action-2"
+                            className="itim-font"
+                          >
+                            This Month
+                          </Dropdown.Item>
+                          <Dropdown.Item
+                            href="#/action-3"
+                            className="itim-font"
+                          >
+                            This Year
+                          </Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </div>
+                  </div>
+                  <hr
+                    style={{
+                      color: "#FFEBEB",
+                      backgroundColor: "#FFEBEB",
+                      height: 1,
+                    }}
+                  />
+                  <GameHistoryCard data={gameData} />
+                </div>
+              </div>
+              <div className={`col-12 col-lg-6 ${styles.chart_grid}`}>
+                <div
+                  className={`d-flex flex-column p-3 ${styles.card} ${styles.buttom_cards} m-1`}
+                >
+                  <div className="row">
+                    <div className="col-6 d-flex align-items-start justify-content-start">
+                      <p className={`itim-font ${styles.med_titles}`}>
+                        <BiStats color="#FFEBEB" /> MY GAME STATS
+                      </p>
+                    </div>
+                    <div className="col-6 d-flex align-items-end justify-content-end">
+                      <Dropdown onClick={toggleDropdownGameStats}>
+                        <Dropdown.Toggle
+                          variant="dark"
+                          id="dropdown-basic"
+                          className={`itim-font ${styles.all_down}`}
+                        >
+                          ALL
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu show={dropdownOpenGameStats}>
+                          <Dropdown.Item
+                            href="#/action-1"
+                            className="itim-font"
+                          >
+                            This Month
+                          </Dropdown.Item>
+                          <Dropdown.Item
+                            href="#/action-2"
+                            className="itim-font"
+                          >
+                            3 Months
+                          </Dropdown.Item>
+                          <Dropdown.Item
+                            href="#/action-3"
+                            className="itim-font"
+                          >
+                            1 Year
+                          </Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </div>
+                  </div>
+                  <hr
+                    style={{
+                      color: "#FFEBEB",
+                      backgroundColor: "#FFEBEB",
+                      height: 1,
+                    }}
+                  />
+                  <div className="d-flex align-items-center justify-content-center h-75">
+                    <div>&nbsp;</div>
+                    <Line className="itim-font" options={options} data={data} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     );
 }
