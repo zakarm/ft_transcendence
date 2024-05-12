@@ -1,7 +1,7 @@
 import styles from '../styles.module.css'
 import { ChangeEvent, useContext } from 'react'
-import { FormContext } from '../page'
-import { GetInput, GetCheckboxInput, Props } from '../components/input'
+import { FormContext } from '../form-components/formContext'
+import { GetInput, GetCheckboxInput, Props } from '../form-components/input'
 
 function    GenerateInputFields() {
     const   { valuesToPost } = useContext(FormContext);

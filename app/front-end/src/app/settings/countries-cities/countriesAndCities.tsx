@@ -1,6 +1,6 @@
 import styles from '../styles.module.css'
 import { ChangeEvent, useEffect, useState, useContext, useRef } from 'react'
-import { FormContext } from '../page'
+import { FormContext } from '../form-components/formContext'
 
 const data : {[country : string] : string[]} = require('./countries.min.json')
 

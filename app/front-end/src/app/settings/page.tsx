@@ -3,15 +3,9 @@
 import styles from './styles.module.css'
 import AccountTab from './account-tab/accountTab'
 import SecurityTab from './security-tab/security'
-import { ChangeEvent, createContext, useState, useEffect, useRef, useLayoutEffect } from 'react'
+import { ChangeEvent, useState, useEffect, useRef } from 'react'
 import Cookies from 'js-cookie'
-
-interface AccountTabProps {
-    [formTitle : string] : string
-    key : string;
-}
-
-const   FormContext = createContext<AccountTabProps>();
+import { FormContext, AccountTabProps } from './form-components/formContext'
 
 async function    getInitialData({setValuesToPost, setAccountValues}) {
     
@@ -183,4 +177,3 @@ function    SettingsPage()
 }
 
 export default SettingsPage;
-export { FormContext };

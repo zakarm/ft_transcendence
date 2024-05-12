@@ -1,8 +1,8 @@
 import styles from '../styles.module.css'
 import CountriesAndCities from '../countries-cities/countriesAndCities'
 import { ChangeEvent, useContext } from 'react'
-import { FormContext } from '../page'
-import { GetInput, Props } from '../components/input'
+import { FormContext } from '../form-components/formContext'
+import { GetInput, Props } from '../form-components/input'
 
 function    GenerateInputFields() {
     
