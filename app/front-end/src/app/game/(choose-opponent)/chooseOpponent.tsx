@@ -33,7 +33,7 @@ function ChooseOpponent({ setPageId }: Props) {
         >
           <OptionCard
             cardTitle="TOURNAMENT"
-            imageSrc="back.png"
+            imageSrc="/back.png"
             setPageId={setPageId}
           ></OptionCard>
         </div>
@@ -44,7 +44,7 @@ function ChooseOpponent({ setPageId }: Props) {
           <Link href="/game/RemoteMatchGame"style={{ textDecoration: "none" }}>
               <OptionCard
                 cardTitle="MATCH GAME"
-                imageSrc="back3.png"
+                imageSrc="/back3.png"
                 setPageId={setPageId}
               ></OptionCard>
           </Link>
@@ -55,7 +55,7 @@ function ChooseOpponent({ setPageId }: Props) {
         >
           <OptionCard
             cardTitle="AI BOT GAME"
-            imageSrc="back2.png"
+            imageSrc="/back2.png"
             setPageId={setPageId}
           ></OptionCard>
         </div>

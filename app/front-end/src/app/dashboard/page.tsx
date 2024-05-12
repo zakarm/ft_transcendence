@@ -258,6 +258,7 @@ export default function Dashboard() {
                     src="/dashboard_char.png"
                     width={350}
                     height={350}
+                    style={{ width: "auto", height: "auto" }}
                     alt="anime charachter"
                     priority
                   />

@@ -28,8 +28,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/components/BootstrapClient.js",
-    "src/components/bootstrap.tsx"
   ],
   "exclude": ["node_modules", "test", "*.test.ts", "*.spec.ts"]
 }

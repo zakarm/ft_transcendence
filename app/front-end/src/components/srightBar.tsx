@@ -51,7 +51,7 @@ interface NotificationWebSocket {
     title: string;
     user: number;
     image_url: string;
-  }  
+  }
 
 interface CustomToggleProps {
     children: React.ReactNode;
@@ -79,8 +79,8 @@ export default function SrightBar({webSocketNotifications, notifications_data, u
         }
         return usr1.id - usr2.id;
     })
-    .map((user: Friend, index: number) => 
-        <Splayer key={index} nickname={user.username} id={user.id} image={user.image_url} isConnected={user.connected}/>
+    .map((user: Friend, index: number) =>
+        <Splayer  nickname={user.username} id={user.id} image={user.image_url} isConnected={user.connected}/>
     );
 
     const router = useRouter();
@@ -92,7 +92,7 @@ export default function SrightBar({webSocketNotifications, notifications_data, u
                                 <div className={`${styles.holder} text-center p-2`}>
                                     <div className={`col-inline ${styles.notification1}`}>
                                        <Dropdown>
-                                            <Image className={`${styles.img_class1}`} width={60} height={60} src={userdata.image_url} alt='Profile' onClick={() => router.push('/profile')}/>
+                                            <Image className={`${styles.img_class1}`} width={60} height={60} src={userdata.image_url || "/Def_pfp.png"} alt='Profile' onClick={() => router.push('/profile')}/>
                                            <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
                                                 <span className={`${styles.badge1}`}>3</span>
                                            </Dropdown.Toggle>
@@ -100,8 +100,8 @@ export default function SrightBar({webSocketNotifications, notifications_data, u
                                            {webSocketNotifications.map((key: Notification, index:number) => (
                                                     <Dropdown.Item key={index} eventKey={index}><Notification notification={key} /></Dropdown.Item>
                                             ))}
-                                            {notifications_data && 
-                                                notifications_data.map((key: Notification, index: number) => 
+                                            {notifications_data &&
+                                                notifications_data.map((key: Notification, index: number) =>
                                                     <Dropdown.Item key={index} eventKey={index}><Notification notification={key} /></Dropdown.Item>
                                                 )
                                             }
