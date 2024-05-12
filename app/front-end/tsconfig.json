@@ -20,8 +20,7 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
-      "three": ["./node_modules/three/src/Three"]
+      "@/*": ["./src/*"]
     }
   },
   "include": [

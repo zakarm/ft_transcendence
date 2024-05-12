@@ -9,7 +9,7 @@ import Ball from "./Ball";
 import Paddle from "./Paddle";
 import "./PongGame.css";
 import BoardItem from "../BoardItem/BoardItem";
-
+import gsap from "gsap";
 interface ConnectionInfo {
   index: number;
   roomName: string;
@@ -39,59 +39,47 @@ const PongGame: React.FC<Props> = ({
   players,
 }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({
-    width: 0,
-    height: window.innerHeight,
-  });
   const [user1score, setUser1Score] = useState<number>(0);
   const [user2score, setUser2Score] = useState<number>(0);
-  const yoruImage = "/yoru.jpeg";
-  const omenImage = "/omen.jpeg";
 
   useEffect(() => {
-    function updateDimensions() {
-      if (containerRef.current) {
-        setDimensions({
-          width: containerRef.current.clientWidth,
-          height: window.innerHeight,
-        });
-      }
-    }
-
-    window.addEventListener("resize", updateDimensions);
-    updateDimensions();
-
-    return () => {
-      window.removeEventListener("resize", updateDimensions);
-    };
-  }, []);
-
-  useEffect(() => {
+    const { current: container } = containerRef;
+    if (!container) return;
+    let width = container.clientWidth;
+    let height = window.innerHeight;
     const newScene = new THREE.Scene();
     newScene.background = new THREE.Color(0x000000);
     const newCamera = new THREE.PerspectiveCamera(
       75,
-      dimensions.width / window.innerHeight,
+      width / height,
       0.1,
       1000
     );
-    if (dimensions.width < 600) newCamera.fov = 100;
-    else if (dimensions.width >= 600 && dimensions.width < 1024)
-      newCamera.fov = 90;
+    if (width < 500) newCamera.fov = 120;
+    else if (width >= 500 && width < 1000) newCamera.fov = 100;
+    else if (width >= 1000 && width < 1200) newCamera.fov = 90;
     else newCamera.fov = 75;
-    // newCamera.position.set(0, 5, 0);
-    newCamera.position.set(6, 8, 0);
-    newCamera.lookAt(new THREE.Vector3(9, 9, 0));
+    newCamera.updateProjectionMatrix();
+    // newCamera.position.set(5, 0, 5);
+    newCamera.position.set(5, 0, 5);
+    const targetPosition = new THREE.Vector3(6, 8, 0);
+    gsap.to(newCamera.position, {
+      x: targetPosition.x,
+      y: targetPosition.y,
+      z: targetPosition.z,
+      duration: 3,
+      onUpdate: () => {
+        newCamera.lookAt(new THREE.Vector3(0, 0, 0));
+      },
+    });
     const newRenderer = new THREE.WebGLRenderer();
-    newRenderer.setSize(dimensions.width, window.innerHeight);
-    const { current: container } = containerRef;
-    if (container) container.appendChild(newRenderer.domElement);
-
+    newRenderer.setSize(width, height);
+    container.appendChild(newRenderer.domElement);
     const controls = new OrbitControls(newCamera, newRenderer.domElement);
     controls.enableZoom = true;
     controls.enablePan = true;
     controls.minDistance = 10;
-    controls.maxDistance = 160;
+    controls.maxDistance = 120;
     controls.update();
 
     const surface = new Surface(10, 5, 1, 1, 0x161625);
@@ -134,12 +122,8 @@ const PongGame: React.FC<Props> = ({
     directionalLight.position.set(0, 10, 0);
     newScene.add(directionalLight);
 
-    const light = new THREE.PointLight(0xffffff, 0.5);
-    light.position.set(
-      ball.mesh.position.x,
-      ball.mesh.position.y + 0.1,
-      ball.mesh.position.z
-    );
+    const light = new THREE.PointLight(0xffffff, 1);
+    light.position.copy(ball.mesh.position).y += 0.1;
     newScene.add(light);
 
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -174,13 +158,15 @@ const PongGame: React.FC<Props> = ({
     };
 
     const handleResize = () => {
-      if (dimensions.width < 600) newCamera.fov = 100;
-      else if (dimensions.width >= 600 && dimensions.width < 1024)
-        newCamera.fov = 90;
+      let width = container.clientWidth;
+      let height = window.innerHeight;
+      if (width < 500) newCamera.fov = 120;
+      else if (width >= 500 && width < 1000) newCamera.fov = 100;
+      else if (width >= 1000 && width < 1200) newCamera.fov = 90;
       else newCamera.fov = 75;
-      newCamera.aspect = dimensions.width / dimensions.height;
+      newCamera.aspect = width / height;
       newCamera.updateProjectionMatrix();
-      newRenderer.setSize(dimensions.width, dimensions.height);
+      newRenderer.setSize(width, height);
     };
 
     const sendMessage = (data: Record<string, any>) => {
@@ -193,52 +179,36 @@ const PongGame: React.FC<Props> = ({
     const handleMessage = (event: MessageEvent) => {
       const data = JSON.parse(event.data);
       if (data.message.action === "update") {
-        if (connectionInfo.index === 1)
-          ball.update(
-            data.message.ball_position_x,
-            data.message.ball_position_z,
-            data.message.ball_velocity_x,
-            data.message.ball_velocity_z
-          );
-        else
-          ball.update(
-            data.message.ball_position_x * -1,
-            data.message.ball_position_z * -1,
-            data.message.ball_velocity_x * -1,
-            data.message.ball_velocity_z * -1
-          );
-        light.position.copy(ball.mesh.position);
+        const factor = connectionInfo.index === 1 ? 1 : -1;
+        ball.update(
+          data.message.ball_position_x * factor,
+          data.message.ball_position_z * factor,
+          data.message.ball_velocity_x * factor,
+          data.message.ball_velocity_z * factor
+        );
+        light.position.copy(ball.mesh.position).y += 0.1;
       }
       if (data.message.action === "reset") {
-        if (connectionInfo.index === 1)
-          ball.update(
-            0,
-            data.message.ball_position_z,
-            data.message.ball_velocity_x,
-            data.message.ball_velocity_z
-          );
-        else
-          ball.update(
-            0,
-            data.message.ball_position_z * -1,
-            data.message.ball_velocity_x * -1,
-            data.message.ball_velocity_z * -1
-          );
-        light.position.copy(ball.mesh.position);
+        const factor = connectionInfo.index === 1 ? 1 : -1;
+        ball.update(
+          0,
+          data.message.ball_position_z * factor,
+          data.message.ball_velocity_x * factor,
+          data.message.ball_velocity_z * factor
+        );
+        light.position.copy(ball.mesh.position).y += 0.1;
         paddle1.reset();
         paddle2.reset();
       }
       if (data.message.action === "paddle_update") {
-        if (connectionInfo.index === 1) {
-          if (data.message.paddle === 1)
-            paddle1.update(data.message.paddle_position_z);
-          if (data.message.paddle === 2)
-            paddle2.update(data.message.paddle_position_z);
-        } else {
-          if (data.message.paddle === 1)
-            paddle2.update(data.message.paddle_position_z * -1);
-          if (data.message.paddle === 2)
-            paddle1.update(data.message.paddle_position_z * -1);
+        const factor = connectionInfo.index === 1 ? 1 : -1;
+        const updatePaddle1 = connectionInfo.index === 1 ? paddle1 : paddle2;
+        const updatePaddle2 = connectionInfo.index === 1 ? paddle2 : paddle1;
+        if (data.message.paddle === 1) {
+          updatePaddle1.update(data.message.paddle_position_z * factor);
+        }
+        if (data.message.paddle === 2) {
+          updatePaddle2.update(data.message.paddle_position_z * factor);
         }
       }
       if (data.message.action === "score") {
@@ -259,6 +229,7 @@ const PongGame: React.FC<Props> = ({
     animate();
 
     return () => {
+      console.log("PongGame unmounted");
       webSocket.removeEventListener("message", handleMessage);
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keyup", handleKeyUp);
@@ -270,19 +241,19 @@ const PongGame: React.FC<Props> = ({
         }
       }
     };
-  }, [dimensions, connectionInfo, webSocket, user1score, user2score]);
+  }, []);
 
   return (
     <div className="Pong_Game_container">
       <div className="board">
         <BoardItem
-          championName={players[0].name}
+          championName={players[0].name || "Player 1"}
           hashtag="#TheHacker007"
           score={user1score}
           imageSrc={players[0].imageUrl}
         />
         <BoardItem
-          championName={players[1].name}
+          championName={players[1].name || "Player 2"}
           hashtag="#TheHacker007"
           score={user2score}
           imageSrc={players[1].imageUrl}
