@@ -150,6 +150,8 @@ const PongGame: React.FC<Props> = ({
         case "ArrowLeft":
         case "ArrowRight":
           break;
+        case "Space":
+          sendMessage({ action: "pause" });
         default:
           break;
       }

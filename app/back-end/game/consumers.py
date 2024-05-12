@@ -138,9 +138,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             if self.scope["user"].is_authenticated:
                 await self.accept()
                 self.user = await get_user(user_id=self.scope["user"].id)
-                self.room_name, self.room = await self.find_or_create_room(
-                    self.user
-                )
+                self.room_name, self.room = await self.find_or_create_room(self.user)
                 await self.channel_layer.group_add(self.room_name, self.channel_name)
                 index = self.room.get_user_index(self.user.email)
                 message = {
@@ -199,6 +197,11 @@ class GameConsumer(AsyncWebsocketConsumer):
                 elif action == "paddle_stop":
                     paddle = text_data_json["paddle"]
                     room.set_paddle_speed(paddle, 0)
+                elif action == "pause":
+                    if room.get_user_pause(self.user.email) < 2:
+                        if room.is_paused() != True:
+                            room.set_user_pause(self.user.email)
+                            room.set_game_pause()
                 else:
                     print(f"Invalid action received: {action}", file=sys.stderr)
             else:
@@ -246,6 +249,12 @@ class GameConsumer(AsyncWebsocketConsumer):
                     }
                     await self.broadcast_message(message)
                     await asyncio.sleep(5)
+                if room.is_paused():
+                    await self.broadcast_message({"action": "pause"})
+                    await asyncio.sleep(28)
+                    room.set_game_resume()
+                    await self.broadcast_message({"action": "start_game"})
+                    await asyncio.sleep(2)
                 room.ball_update()
                 room.ball_intersect()
                 room.paddle_update()
