@@ -7,7 +7,8 @@ from .serializer import (MainDashboardSerializer,
                          FriendsSerializer,
                          UserSerializer,
                          BlockedFriendsSerializer,
-                         NotificationUserSerializer)
+                         NotificationUserSerializer,
+                         GameHistorySerializer)
 from .models import Friendship, Notification
 from authentication.models import User
 from rest_framework import status
@@ -15,6 +16,7 @@ import sys
 from django.db.models import F, Q
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from django.contrib.auth.models import AnonymousUser
 
  
 class MainDashboardView(APIView):
@@ -140,21 +142,33 @@ class AddFriendshipView(APIView):
 
             notification = Notification.objects.create(user=user_add,
                                                        title='New friend !',
-                                                       message=f"{user_from.username} sent you a friend request.")
+                                                       message=f"{user_from.username} sent you a friend request.",
+                                                       image_url="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Aatrox_0.jpg")
             channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(
                 f"room_{user_add.id}",
                 {
                     "type": "send_notification",
+                    "notification_id": notification.notification_id,
                     "message": notification.message,
-                    "user": notification.user,
+                    "user": serialize_user(user_from),
                     "title": notification.title,
+                    "image_url": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Aatrox_0.jpg"
                 },
             )
 
             return Response({'success': 'Friendship Added'}, status=status.HTTP_200_OK)
         except Friendship.DoesNotExist:
             return Response({'error': 'Friendship does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+
+def serialize_user(user):
+    if isinstance(user, AnonymousUser):
+        return None
+    return {
+        'id': user.id,
+        'username': user.username,
+        'image_url': user.image_url,
+    }
 
 class BlockFriendshipView(APIView):
     authentication_classes = [JWTAuthentication]
@@ -186,7 +200,6 @@ class BlockFriendshipView(APIView):
             return self.block_friend(friendship, user_from)
         except Friendship.DoesNotExist:
             return Response({'error': 'Friendship does not exist'}, status=status.HTTP_400_BAD_REQUEST)
-
 
 class UnblockFriendshipView(APIView):
     authentication_classes = [JWTAuthentication]
@@ -235,4 +248,16 @@ class NotificationsView(APIView):
     def get(self, request):
         user = request.user
         serializer = NotificationUserSerializer(instance=user)
+        return Response(serializer.data)
+
+class GameHistoryReportView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    serializer_class = GameHistorySerializer
+    def post(self, request):
+        user = request.user
+        period = request.data.get("period")
+        context = {"period": period}
+        serializer = self.serializer_class(instance=user, context=context)
         return Response(serializer.data)

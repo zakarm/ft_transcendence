@@ -1,0 +1,143 @@
+/* @font-face {
+  font-family: "Valorax";
+  src: local("Valorax"),
+    url("../../assets/fonts/valorax.otf") format("opentype");
+} */
+@import url("https://fonts.googleapis.com/css2?family=Itim&display=swap");
+
+.Lobby_container {
+  /* margin-right: 30px; */
+  padding: 0;
+  position: relative;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: itim;
+}
+
+.vs_key {
+  font-family: Valorax;
+  color: white;
+  padding: 15px;
+  font-size: 55px;
+  animation: fadeIn 1s forwards;
+}
+
+.blurred-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  backdrop-filter: blur(5px);
+}
+
+.search-text {
+  position: absolute;
+  /* border:1px solid white; */
+  /* width: 320px; */
+  /* text-align: center; */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: valorax;
+  font-size: 4em;
+  color: white;
+  text-shadow: 0px 0px 20px rgba(255, 255, 255, 0.6);
+  z-index: 10;
+  animation: pulseGlow 2s infinite ease-in-out;
+  -webkit-text-stroke: 1px black;
+  text-stroke: 1px black;
+}
+
+.play-again-button {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  width: 320px;
+  border-radius: 20px;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  font-family: valorax;
+  font-size: 1.5em;
+  color: white;
+  text-shadow: 0px 0px 20px rgba(255, 255, 255, 0.6);
+  z-index: 10;
+  animation: pulseGlow 2s infinite ease-in-out;
+  -webkit-text-stroke: 1px black;
+  text-stroke: 1px black;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 1px solid white;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.back-to-home {
+  position: absolute;
+  top: 62%;
+  left: 50%;
+  width: 320px;
+  border-radius: 20px;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  font-family: valorax;
+  font-size: 1.5em;
+  color: white;
+  text-shadow: 0px 0px 20px rgba(255, 255, 255, 0.6);
+  z-index: 10;
+  animation: pulseGlow 2s infinite ease-in-out;
+  -webkit-text-stroke: 1px black;
+  text-stroke: 1px black;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 1px solid white;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.winner-text {
+  width: 320px;
+  text-align: center;
+  color: rgba(70, 198, 70, 0.5);
+}
+
+.loser-text {
+  width: 320px;
+  text-align: center;
+  color: rgba(191, 63, 63, 0.5);
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes pulseGlow {
+  0% {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 1);
+  }
+  100% {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .search-text,.play-again-button,.back-to-home {
+    transform: scale(0.5) translate(-100%, -100%);
+  }
+  .Lobby_container {
+    flex-direction: column;
+  }
+  .vs_key {
+    transform: scale(0.7);
+  }
+}

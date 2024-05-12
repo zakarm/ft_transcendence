@@ -17,7 +17,7 @@ class Notification(models.Model):
     user = models.ForeignKey('authentication.User', models.DO_NOTHING,
                                   db_column='user')
     image_url = models.CharField(max_length=200, blank=True)
-    message_url = models.CharField(max_length=200, blank=True)
+    message = models.CharField(max_length=200, blank=True)
     title = models.CharField(max_length=50, blank=True)
     link = models.CharField(max_length=200, blank=True)
 

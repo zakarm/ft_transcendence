@@ -53,9 +53,9 @@ def migrate_and_run_server():
     logging.info("Applying migrations...")
     make_migrations_cmd = "python manage.py makemigrations authentication"
     subprocess.run(make_migrations_cmd.split(), check=True)
-    make_migrations_cmd = "python manage.py makemigrations game"
-    subprocess.run(make_migrations_cmd.split(), check=True)
     make_migrations_cmd = "python manage.py makemigrations dashboards"
+    subprocess.run(make_migrations_cmd.split(), check=True)
+    make_migrations_cmd = "python manage.py makemigrations game"
     subprocess.run(make_migrations_cmd.split(), check=True)
     migrate_cmd = "python manage.py migrate"
     subprocess.run(migrate_cmd.split(), check=True)

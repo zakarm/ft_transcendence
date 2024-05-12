@@ -14,6 +14,8 @@ import { useState, useEffect } from 'react';
 import { ChartOptions, ChartData } from 'chart.js';
 import { LineController } from 'chart.js/auto';
 import { useRouter } from 'next/navigation'
+import { Dropdown } from 'react-bootstrap';
+import ExportCSV from '@/components/export';
 import { CategoryScale, 
     LinearScale, 
     Title, 
@@ -54,12 +56,20 @@ interface GameData {
     score: number;
     date: string;
     result: 'WIN' | 'LOSS';
-  }
+}
 
 export default function Dashboard() {
     const [dashboardData, setDashboardData] = useState<UserData | null>(null);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [dropdownOpenGameStats, setDropdownOpenGameStats] = useState(false);
+    const [csvData, setCsvData] = useState<UserData | null>(null);
+
+    const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
+    const toggleDropdownGameStats = () => setDropdownOpenGameStats(!dropdownOpenGameStats);
+
     const router = useRouter();
     const gameData: GameData[] = [];
+    const gameCsv: GameData[] = [];
     useEffect(() => {
         const fetchData = async () => 
         {
@@ -86,6 +96,38 @@ export default function Dashboard() {
             }
             };
         fetchData();
+
+        const fetchDataForCsv = async () => {
+            const access = Cookies.get('access');
+            if (access)
+            {
+                try {
+                    const period = 'year';
+                    const response = await fetch('http://localhost:8000/api/game-stats-report', {
+                        method: 'POST',
+                        headers: 
+                        { 
+                            Authorization: `Bearer ${access}` ,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ period }),
+                    });
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log(data)
+                        setCsvData(data);
+                    } else if (response.status === 401) {
+                        console.log('Unauthorized');
+                    } else {
+                        console.error('An unexpected error happened:', response.status);
+                    }
+                }
+                catch (error) {
+                    console.error('An unexpected error happened:', error);
+                }
+            }
+        }
+        fetchDataForCsv()
     }, []);
 
     if (dashboardData) {
@@ -101,6 +143,25 @@ export default function Dashboard() {
         dashboardData.matches_as_user_two.forEach((match) => {
             gameData.push({
             player: dashboardData.username,
+            score: match.score_user_two,
+            date: match.match_start,
+            result: match.score_user_two > match.score_user_one ? 'WIN' : 'LOSS',
+            });
+        });
+    }
+    if (csvData){
+        csvData.matches_as_user_one.forEach((match) => {
+            gameCsv.push({
+            player: csvData.username,
+            score: match.score_user_one,
+            date: match.match_start,
+            result: match.score_user_one > match.score_user_two ? 'WIN' : 'LOSS',
+            });
+        });
+
+        csvData.matches_as_user_two.forEach((match) => {
+            gameCsv.push({
+            player: csvData.username,
             score: match.score_user_two,
             date: match.match_start,
             result: match.score_user_two > match.score_user_one ? 'WIN' : 'LOSS',
@@ -156,6 +217,7 @@ export default function Dashboard() {
 
     return (
         <div className={`container-fluid ${styles.page_body} vh-100`}>
+            {/* {csvData && <ExportCSV data={gameCsv} filename="game_history.csv"></ExportCSV>} */}
             <div className="row m-0 mt-5">
                 <div className="col-12 mt-5">
                     <div className={`row ${styles.card} m-1`}>
@@ -201,7 +263,17 @@ export default function Dashboard() {
                                     <p className={`itim-font ${styles.med_titles}`}><FaHistory color='#FFEBEB'/> GAME HISTORY</p>
                                     </div>
                                     <div className='col-6 d-flex align-items-end justify-content-end'>
-                                        <p className={`itim-font ${styles.all_down}`}>ALL <FaChevronDown color='#FFEBEB'/></p>
+                                        <Dropdown onClick={toggleDropdown}>
+                                            <Dropdown.Toggle variant="dark" id="dropdown-basic" className={`itim-font ${styles.all_down}`}>
+                                                ALL
+                                            </Dropdown.Toggle>
+
+                                            <Dropdown.Menu show={dropdownOpen}>
+                                                <Dropdown.Item href="#/action-1" className='itim-font'>This Day</Dropdown.Item>
+                                                <Dropdown.Item href="#/action-2" className='itim-font'>This Month</Dropdown.Item>
+                                                <Dropdown.Item href="#/action-3" className='itim-font'>This Year</Dropdown.Item>
+                                            </Dropdown.Menu>
+                                        </Dropdown>
                                     </div>
                                 </div>
                                 <hr style={{color: '#FFEBEB', backgroundColor: '#FFEBEB', height: 1}}/>
@@ -215,7 +287,17 @@ export default function Dashboard() {
                                         <p className={`itim-font ${styles.med_titles}`}><BiStats color='#FFEBEB'/> MY GAME STATS</p>
                                     </div>
                                     <div className='col-6 d-flex align-items-end justify-content-end'>
-                                        <p className={`itim-font ${styles.all_down}`}>ALL <FaChevronDown color='#FFEBEB'/></p>
+                                        <Dropdown onClick={toggleDropdownGameStats}>
+                                            <Dropdown.Toggle variant="dark" id="dropdown-basic" className={`itim-font ${styles.all_down}`}>
+                                                ALL
+                                            </Dropdown.Toggle>
+
+                                            <Dropdown.Menu show={dropdownOpenGameStats}>
+                                                <Dropdown.Item href="#/action-1" className='itim-font'>This Month</Dropdown.Item>
+                                                <Dropdown.Item href="#/action-2" className='itim-font'>3 Months</Dropdown.Item>
+                                                <Dropdown.Item href="#/action-3" className='itim-font'>1 Year</Dropdown.Item>
+                                            </Dropdown.Menu>
+                                        </Dropdown>
                                     </div>
                                 </div>
                                 <hr style={{color: '#FFEBEB', backgroundColor: '#FFEBEB', height: 1}}/>

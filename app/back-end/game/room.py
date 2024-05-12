@@ -1,4 +1,3 @@
-
 class RoomObject:
     def __init__(self):
         # game state
@@ -24,14 +23,27 @@ class RoomObject:
         # users
         self.reconect_user = ""
         self.Original_users = {
-            "user1": {"joined": 0, "user_id": "", "index": 1, "channel_name": ""},
-            "user2": {"joined": 0, "user_id": "", "index": 2, "channel_name": ""},
+            "user1": {
+                "joined": 0,
+                "user_id": "",
+                "user_data": {"user_img": "", "username": ""},
+                "index": 1,
+                "channel_name": "",
+            },
+            "user2": {
+                "joined": 0,
+                "user_id": "",
+                "user_data": {"user_img": "", "username": ""},
+                "index": 2,
+                "channel_name": "",
+            },
         }
         self.score = {"user1": 0, "user2": 0}
 
     # distructor
     def __del__(self):
         print("Room deleted")
+
     # ------------------------> game <------------------------
 
     def start_game(self):
@@ -50,16 +62,23 @@ class RoomObject:
 
     def is_reconecting(self):
         return self.reconect
+
     # ------------------------> user <------------------------
     def get_winner(self):
         if self.score["user1"] == 7:
-            return self.Original_users["user1"]["user_id"] , self.Original_users["user2"]["user_id"]
+            return (
+                self.Original_users["user1"]["user_id"],
+                self.Original_users["user2"]["user_id"],
+            )
         elif self.score["user2"] == 7:
-            return self.Original_users["user2"]["user_id"] , self.Original_users["user1"]["user_id"]
+            return (
+                self.Original_users["user2"]["user_id"],
+                self.Original_users["user1"]["user_id"],
+            )
         return None
 
     def is_winner(self):
-        if(self.score["user1"] == 7 or self.score["user2"] == 7):
+        if self.score["user1"] == 7 or self.score["user2"] == 7:
             return True
         return False
 
@@ -87,7 +106,9 @@ class RoomObject:
     def get_original_users(self):
         return (
             self.Original_users["user1"]["user_id"],
+            self.Original_users["user1"]["user_data"],
             self.Original_users["user2"]["user_id"],
+            self.Original_users["user2"]["user_data"],
         )
 
     def is_user_joined(self, user_id):
@@ -98,14 +119,22 @@ class RoomObject:
             return True
         return False
 
-    def add_user(self, channel_name, user_id):
+    def add_user(self, channel_name, user_id, user_data):
         if self.Original_users["user1"]["joined"] == 0:
             self.Original_users["user1"]["channel_name"] = channel_name
             self.Original_users["user1"]["user_id"] = user_id
+            self.Original_users["user1"]["user_data"] = {
+                "user_img": user_data.image_url,
+                "username": user_data.username,
+            }
             self.Original_users["user1"]["joined"] = 1
         elif self.Original_users["user2"]["joined"] == 0:
             self.Original_users["user2"]["channel_name"] = channel_name
             self.Original_users["user2"]["user_id"] = user_id
+            self.Original_users["user2"]["user_data"] = {
+                "user_img": user_data.image_url,
+                "username": user_data.username,
+            }
             self.Original_users["user2"]["joined"] = 1
             self.room_is_full = True
 
@@ -116,7 +145,7 @@ class RoomObject:
             self.Original_users["user2"]["channel_name"] = channel_name
         self.reconect = False
 
-    def set_reconect(self,user_id):
+    def set_reconect(self, user_id):
         if self.game_ended == False:
             self.reconect_user = user_id
             self.reconect = True

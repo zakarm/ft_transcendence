@@ -46,7 +46,7 @@ down: ## Stop and remove Docker containers
 	@echo "$(YELLOW)Stopping and removing Docker containers...$(RESET)"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) $(DOCKER_COMPOSE_FLAGS) down
 
-restart: down up ## Restart Docker containers
+restart: down build up ## Restart Docker containers
 
 logs: ## View logs from Docker containers
 	@echo "$(GREEN)Viewing logs from Docker containers...$(RESET)"
@@ -70,6 +70,9 @@ clean: clean-all ## Remove build artifacts and temporary files
 	rm -rf ./app/back-end/__pycache__
 	find . -type f -name '*.pyc' -delete
 	find . -type d -name '__pycache__' -delete
+	rm -rf ./app/back-end/authentication/migrations
+	rm -rf ./app/back-end/game/migrations
+	rm -rf ./app/back-end/dashboards/migrations
 
 .PHONY: update-version
 update-version: ## Update the version number
