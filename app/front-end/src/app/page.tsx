@@ -11,7 +11,7 @@ const LandingPage: React.FC = () => {
         <Scene />
       </Canvas> */}
       <div className={styles.content}>
-        <h1 className={`${styles.title} valo-font`}>VALO-PONG</h1>
+        <h1 className={`${styles.title} valo-font`}>VAL-PONG</h1>
         <div className={styles.buttonContainer}>
           <Link className={`${styles.button} valo-font`} href='sign-in'>SIGN IN</Link>
           <Link className={`${styles.button} valo-font`} href='sign-up'>SIGN UP</Link>
