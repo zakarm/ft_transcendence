@@ -6,12 +6,8 @@ import styles from './styles.module.css'
 import AccountTab from '@/components/SettingsForm/account-tab/accountTab'
 import SecurityTab from '@/components/SettingsForm/security-tab/security'
 import { FormContext, SettingsProps } from '@/components/SettingsForm/form-components/formContext'
+import { ToastContainer, toast } from 'react-toastify';
 
-// interface props extends SettingsProps {
-//     setValuesToPost : ({}) => void,
-//     setAccountValues : ({}) => void,
-//     isChanged : MutableRefObject<boolean>
-// }
 
 async function    getInitialData({setValuesToPost, setAccountValues} :
     {
@@ -36,7 +32,7 @@ async function    getInitialData({setValuesToPost, setAccountValues} :
                 "country" : "Morocco",
                 "city" : "",
                 "image" : "C:/ste7/nte7",
-                "password" : "",
+                "new_password" : "",
                 "repeat_password" : "",
                 "is_two_fact" : false,
                 "two_fact_secret" : ""
@@ -51,7 +47,7 @@ async function    getInitialData({setValuesToPost, setAccountValues} :
                 "country" : "Morocco",
                 "city" : "",
                 "image" : "C:/ste7/nte7",
-                "password" : "",
+                "new_password" : "",
                 "repeat_password" : "",
                 "is_two_fact" : false,
                 "two_fact_secret" : ""
@@ -63,10 +59,41 @@ async function    getInitialData({setValuesToPost, setAccountValues} :
 }
 
 /* Submits the form */
-const   postFormData = async ({valuesToPost, isChanged} : {valuesToPost : SettingsProps['valuesToPost'], isChanged : MutableRefObject<boolean>}) => {
+const   postFormData = async ({valuesToPost, isChanged} :
+    {
+        valuesToPost : SettingsProps['valuesToPost'],
+        isChanged : MutableRefObject<boolean>
+    }) => {
     try {
 
-        if (isChanged.current) {
+        const   validateEmail : (email : string) => boolean = (email) => {
+            let rgx : RegExp = /^([a-zA-Z0-9\._]+)@([a-zA-Z0-9])+.([a-z]+)(.[a-z]+)?$/;
+            return rgx.test(email);
+        }
+
+        const   validateInput : () => boolean = () => {
+            const   toCheck : string[] = ["first_name", "last_name", "nickname", "email"];
+            let     isValid : boolean = true;
+
+            toCheck.map((key) => {
+                if (valuesToPost[key] === "") {
+                    toast.error(`Invalid input : ${key}`)
+                    isValid = false;
+                }
+            });
+            if (! validateEmail(valuesToPost["email"] as string)) {
+                toast.error(`Invalid input : email`);
+                isValid = false;
+            }
+
+            if (valuesToPost['new_password'] !== valuesToPost['repeat_password']) {
+                toast.error(`Invalid input : new_password or repeat_password`);
+                isValid = false;
+            }
+            return isValid;
+        }
+
+        if (isChanged.current && validateInput()) {
             isChanged.current = false;
             const   access = Cookies.get('access');
             
@@ -75,24 +102,21 @@ const   postFormData = async ({valuesToPost, isChanged} : {valuesToPost : Settin
             method : "POST",
             headers : {
                 "content-type" : "application/json",
-                "Authorization" : `Beaver ${access}`
-            },
-            body : JSON.stringify(valuesToPost)
-        })
+                "Authorization" : `Bearer ${access}`
+                },
+                body : JSON.stringify(valuesToPost)
+            });
 
-        if (res.ok) {
-            /* .... updates form placeholders */
+            if (res.ok) {
+                toast.success("To be saved...");
+                /* .... updates form placeholders */
+            }
         }
-    }
+
     } catch (error) {
         console.error("Unexpected error : ", error);
     }
 }
-
-// interface ValuesTypes extends SettingsProps {
-//     setValuesToPost : ({}) => void;
-//     setAccountValues : ({}) => void;
-// }
 
 function    SettingsPage()
 {
@@ -113,13 +137,12 @@ function    SettingsPage()
         const   compareDictValues = (d1 : SettingsProps['accountValues'], d2 : SettingsProps['valuesToPost']) => {
             let count : number = 0;
             for (const key in d1) {
-                if (d1[key] !== d2[key]){
+                if (d1[key] !== d2[key]) {
                     break ;
                 }
                 count++;
             }
 
-            // console.log(Object.entries(d1).length, count, ! (Object.entries(d1).length === count))
             return ( ! (Object.entries(d1).length === count) )
         }
 
@@ -150,6 +173,7 @@ function    SettingsPage()
 
     return (
         <div className={` ${styles.wrapper} container-fluid vh-100  -warning p-0 m-0`}>
+            <ToastContainer />
             <div className="row h-100 p-0 m-0">
 
                 <section className="row p-0 m-0 mt-5">

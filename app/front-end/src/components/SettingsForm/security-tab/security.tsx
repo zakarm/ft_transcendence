@@ -8,29 +8,22 @@ function    GenerateInputFields() {
 
     const   inputProps = [
         {
-            className : "p-0 m-0 mt-4 row justify-content-center itim-font",
-            inputType : "text",
-            inputId: "password",
-            labelText: "Password",
+            inputId: "new_password",
+            labelText: "New Password",
             inputLength : 200
         },
         {
-            className : "p-0 m-0 mt-4 row justify-content-center itim-font",
-            inputType : "text",
             inputId: "repeat_password",
             labelText: "Repeat Password",
             inputLength : 200
         },
         {
-            className : "p-0 m-0 mt-4 row justify-content-center itim-font",
             inputType : "checkbox",
             inputId: "is_two_fact",
             labelText: "Enable 2FA",
             placeholder : valuesToPost["is_two_fact"],
         },
         {
-            className : "p-0 m-0 my-4 row justify-content-center itim-font",
-            inputType : "text",
             inputId: "two_fact_secret",
             labelText: "2FA Secret Pass",
             inputLength : 200
@@ -44,8 +37,8 @@ function    GenerateInputFields() {
                     return (  
                         <div key={inputId}>
                             <GetInput
-                                className={className}
-                                inputType={inputType}
+                                className="p-0 m-0 mt-4 row justify-content-center itim-font"
+                                inputType="text"
                                 inputId={inputId}
                                 labelText={labelText}
                                 placeholder={placeholder}
@@ -57,7 +50,7 @@ function    GenerateInputFields() {
             }
             <div key={inputProps[2].inputId}>
                 <GetCheckboxInput
-                    className={inputProps[2].className}
+                    className="p-0 m-0 mt-4 row justify-content-center itim-font"
                     inputType={inputProps[2].inputType}
                     inputId={inputProps[2].inputId}
                     labelText={inputProps[2].labelText}
@@ -67,7 +60,7 @@ function    GenerateInputFields() {
             </div>
             <div key={inputProps[3].inputId}>
                 <GetInput
-                    className={inputProps[3].className}
+                    className="p-0 m-0 mt-4 row justify-content-center itim-font"
                     inputType={inputProps[3].inputType}
                     inputId={inputProps[3].inputId}
                     labelText={inputProps[3].labelText}

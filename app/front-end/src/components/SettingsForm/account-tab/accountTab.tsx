@@ -13,28 +13,32 @@ function    GenerateInputFields() {
             inputId: "first_name",
             labelText: "First Name",
             placeholder : valuesToPost["first_name"],
+            inputLength : 20
         },
         {
             inputId: "last_name",
             labelText: "Last Name",
             placeholder : valuesToPost["last_name"],
+            inputLength : 20
         },
         {
             inputId: "nickname",
             labelText: "Nickname",
             placeholder : valuesToPost["nickname"],
+            inputLength : 20
         },
         {
             inputId: "email",
             labelText: "Email",
             placeholder : valuesToPost["email"],
+            inputLength : 256
         }
     ]
 
     return (
         <>
             {
-                inputProps.map(({ inputId, labelText, placeholder } : Props) => {
+                inputProps.map(({ inputId, labelText, placeholder, inputLength } : Props) => {
                     return (  
                         <div key={inputId}>
                             <GetInput
@@ -43,7 +47,7 @@ function    GenerateInputFields() {
                                 inputId={inputId}
                                 labelText={labelText}
                                 placeholder={placeholder}
-                                inputLength={20}>
+                                inputLength={inputLength}>
                             </GetInput>
                         </div>
                     )
