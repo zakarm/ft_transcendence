@@ -1,11 +1,11 @@
 'use client'
 
-import styles from './styles.module.css'
-import AccountTab from './account-tab/accountTab'
-import SecurityTab from './security-tab/security'
 import React,  { ChangeEvent, useState, useEffect, useRef, MutableRefObject } from 'react'
 import Cookies from 'js-cookie'
-import { FormContext, SettingsProps } from './form-components/formContext'
+import styles from './styles.module.css'
+import AccountTab from '@/components/SettingsForm/account-tab/accountTab'
+import SecurityTab from '@/components/SettingsForm/security-tab/security'
+import { FormContext, SettingsProps } from '@/components/SettingsForm/form-components/formContext'
 
 // interface props extends SettingsProps {
 //     setValuesToPost : ({}) => void,
@@ -32,6 +32,7 @@ async function    getInitialData({setValuesToPost, setAccountValues} :
                 "first_name" : "Mushigarou",
                 "last_name" : "HobaHoba",
                 "nickname" : "saba",
+                "email" : "hey@hey.com",
                 "country" : "Morocco",
                 "city" : "",
                 "image" : "C:/ste7/nte7",
@@ -46,6 +47,7 @@ async function    getInitialData({setValuesToPost, setAccountValues} :
                 "first_name" : "Mushigarou",
                 "last_name" : "HobaHoba",
                 "nickname" : "saba",
+                "email" : "hey@hey.com",
                 "country" : "Morocco",
                 "city" : "",
                 "image" : "C:/ste7/nte7",

@@ -1,4 +1,4 @@
-import styles from '../styles.module.css'
+import styles from '@/app/settings/styles.module.css'
 import React, { ChangeEvent, useEffect, useState, useContext, useRef, MutableRefObject } from 'react'
 import { FormContext, SettingsProps } from '../form-components/formContext'
 

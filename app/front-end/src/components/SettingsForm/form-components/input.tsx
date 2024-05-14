@@ -1,6 +1,6 @@
-import { FormContext, SettingsProps } from '../form-components/formContext'
+import { FormContext, SettingsProps } from './formContext'
 import { ChangeEvent, useContext, useState, useEffect } from 'react'
-import styles from '../styles.module.css'
+import styles from '@/app/settings/styles.module.css'
 
 interface Props {
     inputType ?: string;

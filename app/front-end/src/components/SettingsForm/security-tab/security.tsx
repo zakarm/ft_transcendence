@@ -1,4 +1,4 @@
-import styles from '../styles.module.css'
+import styles from '@/app/settings/styles.module.css'
 import { ChangeEvent, useContext } from 'react'
 import { FormContext, SettingsProps } from '../form-components/formContext'
 import { GetInput, GetCheckboxInput, Props } from '../form-components/input'

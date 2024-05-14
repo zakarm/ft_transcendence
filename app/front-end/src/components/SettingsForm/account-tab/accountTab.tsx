@@ -1,4 +1,4 @@
-import styles from '../styles.module.css'
+import styles from '@/app/settings/styles.module.css'
 import CountriesAndCities from '../countries-cities/countriesAndCities'
 import { ChangeEvent, useContext } from 'react'
 import { FormContext, SettingsProps } from '../form-components/formContext'
@@ -10,44 +10,40 @@ function    GenerateInputFields() {
 
     const   inputProps = [
         {
-            className : "p-0 m-0 mt-4 row justify-content-center itim-font",
-            inputType : "text",
             inputId: "first_name",
             labelText: "First Name",
             placeholder : valuesToPost["first_name"],
-            inputLength : 20
         },
         {
-            className : "p-0 m-0 mt-4 row justify-content-center itim-font",
-            inputType : "text",
             inputId: "last_name",
             labelText: "Last Name",
             placeholder : valuesToPost["last_name"],
-            inputLength : 20
         },
         {
-            className : "p-0 m-0 mt-4 row justify-content-center itim-font",
-            inputType : "text",
             inputId: "nickname",
             labelText: "Nickname",
             placeholder : valuesToPost["nickname"],
-            inputLength : 20
+        },
+        {
+            inputId: "email",
+            labelText: "Email",
+            placeholder : valuesToPost["email"],
         }
     ]
 
     return (
         <>
             {
-                inputProps.map(({className, inputType, inputId, labelText, placeholder, inputLength} : Props) => {
+                inputProps.map(({ inputId, labelText, placeholder } : Props) => {
                     return (  
                         <div key={inputId}>
                             <GetInput
-                                className={className}
-                                inputType={inputType}
+                                className="p-0 m-0 mt-4 row justify-content-center itim-font"
+                                inputType="text"
                                 inputId={inputId}
                                 labelText={labelText}
                                 placeholder={placeholder}
-                                inputLength={inputLength}>
+                                inputLength={20}>
                             </GetInput>
                         </div>
                     )
