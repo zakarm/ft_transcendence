@@ -1,6 +1,6 @@
 import styles from '../styles.module.css'
-import { ChangeEvent, useEffect, useState, useContext, useRef } from 'react'
-import { FormContext } from '../form-components/formContext'
+import React, { ChangeEvent, useEffect, useState, useContext, useRef, MutableRefObject } from 'react'
+import { FormContext, SettingsProps } from '../form-components/formContext'
 
 const data : {[country : string] : string[]} = require('./countries.min.json')
 
@@ -20,20 +20,20 @@ function    CountriesAndCities(
         id="",
     } : Props) {
     
-    const   {accountValues, updateField} = useContext(FormContext);
+    const   {accountValues, updateField} = useContext<SettingsProps>(FormContext);
 
-    const   [selectedCountry, setselectedCountry] = useState<string>(accountValues['country']);
-    const   [selectedCity, setSelectedCity] = useState<string>(accountValues['city']);
+    const   [selectedCountry, setselectedCountry] = useState<string | boolean>(accountValues['country']);
+    const   [selectedCity, setSelectedCity] = useState<string | boolean>(accountValues['city']);
 
-    const   [citiesOptions, setCitiesOptions] = useState<string[]>([])
-    const   [countryOptions, setcountryOptions] = useState<string[]>([])
+    const   [citiesOptions, setCitiesOptions] = useState<React.JSX.Element[]>([])
+    const   [countryOptions, setcountryOptions] = useState<React.JSX.Element[]>([])
     
-    let isFirstRender : boolean = useRef<boolean>(true);
-    let i : number = useRef<number>(0);
+    let isFirstRender = useRef<boolean>(true);
+    let i = useRef<number>(0);
 
     useEffect(() => {
 
-        let countryOption : string[] = Object.keys(data).map((country) => (
+        let countryOption : React.JSX.Element[] = Object.keys(data).map((country) => (
             <option key={country} value={country}>{country}</option>
         ));
         setcountryOptions(countryOption)
@@ -60,17 +60,17 @@ function    CountriesAndCities(
 
     let cities : string[] = [];
     useEffect(() => {
-        if (selectedCountry && data[selectedCountry]) {
+        if (selectedCountry && data[selectedCountry as string]) {
 
-            cities = data[selectedCountry].filter((value, index) => (
-                data[selectedCountry].indexOf(value) === index
+            cities = data[selectedCountry as string].filter((value, index) => (
+                data[selectedCountry as string].indexOf(value) === index
                 ));
             
             setCitiesOptions(cities.map((city: string) => (
                 <option key={city} value={city}>{city}</option>
             )));
         } else {
-            setCitiesOptions(<option key="--" value="--">--</option>)
+            setCitiesOptions([<option key="--" value="--">--</option>])
         }
     }, [selectedCountry]);
 
@@ -87,14 +87,14 @@ function    CountriesAndCities(
                             className={`itim-font ${styles.input} ps-4`}
                             name="countries"
                             id={id}
-                            onChange={ (e: ChangeEvent<HTMLInputElement>) => {
+                            onChange={ (e: ChangeEvent<HTMLSelectElement>) => {
                                 setselectedCountry(e.target.value);
                                 updateField("country", e.target.value);
                             } }>
                             <option
                                 className={`itim-font ${styles.input}`}
                                 hidden
-                                value={ selectedCountry }>
+                                value={ selectedCountry as string}>
                                     { selectedCountry || "Choose a country"}
                             </option>
                             
@@ -115,15 +115,15 @@ function    CountriesAndCities(
                         className={`itim-font ${styles.input} ps-4`}
                         name="countries"
                         id={id}
-                        onChange={ (e : ChangeEvent<HTMLInputElement>) => {
+                        onChange={ (e : ChangeEvent<HTMLSelectElement>) => {
                             setSelectedCity(e.target.value);
                             updateField("city", e.target.value);
                         } }>
                         <option
                             className={`itim-font`}
                             hidden
-                            value={ selectedCity }>
-                                { selectedCity  || "--"}
+                            value={ selectedCity as string}>
+                                { selectedCity as string  || "--"}
                         </option>
 
                         { citiesOptions }

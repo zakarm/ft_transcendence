@@ -1,10 +1,10 @@
-import { FormContext } from '../form-components/formContext'
+import { FormContext, SettingsProps } from '../form-components/formContext'
 import { ChangeEvent, useContext, useState, useEffect } from 'react'
 import styles from '../styles.module.css'
 
 interface Props {
     inputType ?: string;
-    placeholder ?: string;
+    placeholder ?: string | boolean;
     className ?: string;
     inputClassName ?: string;
     inputId ?:string;
@@ -28,11 +28,11 @@ function    GetCheckboxInput(
         labelClass=""
     }: Props) {
 
-    const   { accountValues, updateField } = useContext(FormContext);
+    const   { accountValues, updateField } = useContext<SettingsProps>(FormContext);
     const   [isChecked, setIsChecked] = useState<boolean>(false);
 
     useEffect(() => {
-        console.log('accountValues[inputId] :' , accountValues[inputId] , "Boolean(accountValues[inputId])", Boolean(accountValues[inputId]))
+        // console.log('accountValues[inputId] :' , accountValues[inputId] , "Boolean(accountValues[inputId])", Boolean(accountValues[inputId]))
         setIsChecked(Boolean(accountValues[inputId]))
     }, [accountValues[inputId]])
 
@@ -77,7 +77,7 @@ function    GetInput(
         labelClass=""
     }: Props) {
 
-    const   { updateField } = useContext(FormContext);
+    const   { updateField } = useContext<SettingsProps>(FormContext);
 
         return (
             <div className={`${className} flex-wrap flex-xxl-nowrap `}>
@@ -89,7 +89,7 @@ function    GetInput(
                 <div className={`${styles.inputHolder} row p-0 m-1`}>
                         <input
                             type={inputType}
-                            placeholder={placeholder}
+                            placeholder={placeholder as string}
                             className={`${styles.input} ${inputClassName} ps-4`}
                             id={inputId}
                             maxLength={inputLength}

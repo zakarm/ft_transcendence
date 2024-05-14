@@ -3,11 +3,21 @@
 import styles from './styles.module.css'
 import AccountTab from './account-tab/accountTab'
 import SecurityTab from './security-tab/security'
-import { ChangeEvent, useState, useEffect, useRef } from 'react'
+import React,  { ChangeEvent, useState, useEffect, useRef, MutableRefObject } from 'react'
 import Cookies from 'js-cookie'
-import { FormContext, AccountTabProps } from './form-components/formContext'
+import { FormContext, SettingsProps } from './form-components/formContext'
 
-async function    getInitialData({setValuesToPost, setAccountValues}) {
+// interface props extends SettingsProps {
+//     setValuesToPost : ({}) => void,
+//     setAccountValues : ({}) => void,
+//     isChanged : MutableRefObject<boolean>
+// }
+
+async function    getInitialData({setValuesToPost, setAccountValues} :
+    {
+        setValuesToPost : SettingsProps['setValuesToPost'],
+        setAccountValues : SettingsProps['setAccountValues']
+    }) {
     
     try {
         const   access = Cookies.get('access');
@@ -51,7 +61,7 @@ async function    getInitialData({setValuesToPost, setAccountValues}) {
 }
 
 /* Submits the form */
-const   postFormData = async ({valuesToPost, isChanged}) => {
+const   postFormData = async ({valuesToPost, isChanged} : {valuesToPost : SettingsProps['valuesToPost'], isChanged : MutableRefObject<boolean>}) => {
     try {
 
         if (isChanged.current) {
@@ -77,15 +87,20 @@ const   postFormData = async ({valuesToPost, isChanged}) => {
     }
 }
 
+// interface ValuesTypes extends SettingsProps {
+//     setValuesToPost : ({}) => void;
+//     setAccountValues : ({}) => void;
+// }
+
 function    SettingsPage()
 {
-    const   [valuesToPost, setValuesToPost] =  useState<AccountTabProps>({})
-    const   [accountValues, setAccountValues] = useState<AccountTabProps>({});
+    const   [valuesToPost, setValuesToPost] =  useState<SettingsProps['valuesToPost']>({})
+    const   [accountValues, setAccountValues] = useState<SettingsProps['accountValues']>({});
     const   [tab, setTab] = useState<string>("account");
-    const   isChanged : boolean = useRef<boolean>(false);
+    const   isChanged = useRef<boolean>(false);
 
     /* Updates a specific field of the input */
-    const   updateField = (key : string, value : string) => {
+    const   updateField = (key : string, value : string | boolean) => {
         const   newValues = { ...accountValues };
         newValues[key] = value;
         setAccountValues(newValues);
@@ -93,7 +108,7 @@ function    SettingsPage()
 
     /* Compares values in  [accountValues, valuesToPost] */    
     const   checkDifferences = () => {
-        const   compareDictValues = (d1: { [key: string]: string }, d2 : { [key: string]: string }) => {
+        const   compareDictValues = (d1 : SettingsProps['accountValues'], d2 : SettingsProps['valuesToPost']) => {
             let count : number = 0;
             for (const key in d1) {
                 if (d1[key] !== d2[key]){
@@ -106,9 +121,9 @@ function    SettingsPage()
             return ( ! (Object.entries(d1).length === count) )
         }
 
-        const updatePostValues = (values: { [key: string]: string }) => {
+        const updatePostValues = (values: SettingsProps['accountValues']) => {
 
-            let newValues: { [key: string]: string } = { ...values };
+            let newValues: SettingsProps['accountValues'] = { ...values };
             for (const [key, value] of Object.entries(values)) {
                 newValues[key] = value;
             }
@@ -146,12 +161,12 @@ function    SettingsPage()
 
                         <fieldset className={`${styles.tab_container} row p-0 m-0`}>
                             <div className="col m-2 p-2 d-flex flex-row flex-nowrap">
-                                <h2 className="col-4 m-1 col-xl-2 itim-font" onClick={(e : ChangeEvent<HTMLInputElement>) => setTab("account")}>Account</h2>
-                                <h2 className="col-4 m-1 col-xl-2 itim-font" onClick={(e : ChangeEvent<HTMLInputElement>) => setTab("security")}>Security</h2>
-                                <h2 className="col-4 m-1 col-xl-2 itim-font" onClick={(e : ChangeEvent<HTMLInputElement>) => setTab("game")}>Game</h2>
+                                <h2 className="col-4 m-1 col-xl-2 itim-font" onClick={() => setTab("account")}>Account</h2>
+                                <h2 className="col-4 m-1 col-xl-2 itim-font" onClick={() => setTab("security")}>Security</h2>
+                                <h2 className="col-4 m-1 col-xl-2 itim-font" onClick={() => setTab("game")}>Game</h2>
                             </div>
                         </fieldset>
-                    <FormContext.Provider value={{accountValues, valuesToPost, updateField}}>
+                    <FormContext.Provider value={{accountValues, valuesToPost, updateField, setValuesToPost, setAccountValues}}>
                         <div className={`${styles.content_container} row  p-0 m-0  justify-content-center align-items-center`}>
                             {
                                 tab === "account" &&  <AccountTab/>
@@ -165,7 +180,7 @@ function    SettingsPage()
                     <div className="col-12 d-flex justify-content-center my-4">
                         <button
                             className={`valo-font col-8 col-md-6 ${styles.create_button}`}
-                            onClick={(e : ChangeEvent<HTMLInputElement>) =>{ postFormData({valuesToPost, isChanged}) } }>
+                            onClick={() =>{ postFormData({valuesToPost, isChanged}) } }>
                                 SAVE
                         </button>
                     </div>

@@ -1,10 +1,10 @@
 import styles from '../styles.module.css'
 import { ChangeEvent, useContext } from 'react'
-import { FormContext } from '../form-components/formContext'
+import { FormContext, SettingsProps } from '../form-components/formContext'
 import { GetInput, GetCheckboxInput, Props } from '../form-components/input'
 
 function    GenerateInputFields() {
-    const   { valuesToPost } = useContext(FormContext);
+    const   { valuesToPost } = useContext<SettingsProps>(FormContext);
 
     const   inputProps = [
         {
@@ -80,7 +80,7 @@ function    GenerateInputFields() {
 }
 
 function    SecurityTab() {
-    const   { accountValues } = useContext(FormContext);
+    const   { accountValues } = useContext<SettingsProps>(FormContext);
 
     return (
         <>
