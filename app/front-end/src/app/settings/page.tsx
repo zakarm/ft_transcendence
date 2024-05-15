@@ -6,7 +6,8 @@ import styles from './styles.module.css'
 import AccountTab from '@/components/SettingsForm/account-tab/accountTab'
 import SecurityTab from '@/components/SettingsForm/security-tab/security'
 import { FormContext, SettingsProps } from '@/components/SettingsForm/form-components/formContext'
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
+import { notificationStyle } from '@/components/ToastProvider'
 
 
 async function    getInitialData({setValuesToPost, setAccountValues} :
@@ -14,14 +15,14 @@ async function    getInitialData({setValuesToPost, setAccountValues} :
         setValuesToPost : SettingsProps['setValuesToPost'],
         setAccountValues : SettingsProps['setAccountValues']
     }) {
-    
+
     try {
         const   access = Cookies.get('access');
         const   response = await fetch('', {
             method : "GET",
             headers :{ Authorization : `Bearer ${access}` },
         })
-        
+
         // const data = await response.json();
         setValuesToPost(
             {
@@ -72,22 +73,22 @@ const   postFormData = async ({valuesToPost, isChanged} :
         }
 
         const   validateInput : () => boolean = () => {
-            const   toCheck : string[] = ["first_name", "last_name", "nickname", "email"];
+            const   toCheck : string[] = ["first_name", "last_name", "nickname"];
             let     isValid : boolean = true;
 
             toCheck.map((key) => {
                 if (valuesToPost[key] === "") {
-                    toast.error(`Invalid input : ${key}`)
+                    toast.error(`Invalid input : ${key}`, notificationStyle)
                     isValid = false;
                 }
             });
             if (! validateEmail(valuesToPost["email"] as string)) {
-                toast.error(`Invalid input : email`);
+                toast.error(`Invalid input : email`, notificationStyle);
                 isValid = false;
             }
 
             if (valuesToPost['new_password'] !== valuesToPost['repeat_password']) {
-                toast.error(`Invalid input : new_password or repeat_password`);
+                toast.error(`Invalid input : new_password or repeat_password`, notificationStyle);
                 isValid = false;
             }
             return isValid;
@@ -108,7 +109,7 @@ const   postFormData = async ({valuesToPost, isChanged} :
             });
 
             if (res.ok) {
-                toast.success("To be saved...");
+                toast.success("To be saved...", notificationStyle);
                 /* .... updates form placeholders */
             }
         }
@@ -173,7 +174,6 @@ function    SettingsPage()
 
     return (
         <div className={` ${styles.wrapper} container-fluid vh-100  -warning p-0 m-0`}>
-            <ToastContainer />
             <div className="row h-100 p-0 m-0">
 
                 <section className="row p-0 m-0 mt-5">
