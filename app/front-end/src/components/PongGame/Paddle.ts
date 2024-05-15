@@ -32,11 +32,10 @@ export default class Paddle {
       emissiveIntensity: 0.5,
       side: THREE.DoubleSide,
     });
-	  this.mesh = new THREE.Mesh(this.geometry, this.material);
-    // this.mesh.position.set(...this.positions);
-	  this.mesh.position.x = this.positions[0];
-	  this.mesh.position.y = this.positions[1];
-	  this.mesh.position.z = this.positions[2];
+    this.mesh = new THREE.Mesh(this.geometry, this.material);
+    this.mesh.position.x = this.positions[0];
+    this.mesh.position.y = this.positions[1];
+    this.mesh.position.z = this.positions[2];
   }
 
   update(paddle_position_z: number) {
@@ -44,10 +43,9 @@ export default class Paddle {
   }
 
   reset() {
-	  // this.mesh.position.set(...this.positions);
-	  this.mesh.position.x = this.positions[0];
-	  this.mesh.position.y = this.positions[1];
-	  this.mesh.position.z = this.positions[2];
+    this.mesh.position.x = this.positions[0];
+    this.mesh.position.y = this.positions[1];
+    this.mesh.position.z = this.positions[2];
   }
 
   addToScene(scene: THREE.Scene) {

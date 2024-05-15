@@ -54,13 +54,14 @@ const PongGame: React.FC<Props> = ({
       0.1,
       1000
     );
-    if (width < 500) newCamera.fov = 120;
-    else if (width >= 500 && width < 1000) newCamera.fov = 100;
-    else if (width >= 1000 && width < 1200) newCamera.fov = 90;
-    else newCamera.fov = 75;
+    let maxWidth = 2500;
+    let fraction = (width - 300) / (maxWidth - 300);
+    let minFOV = 120;
+    let maxFOV = 65;
+    newCamera.fov = minFOV - fraction * (minFOV - maxFOV);
     newCamera.updateProjectionMatrix();
     // newCamera.position.set(5, 0, 5);
-    newCamera.position.set(5, 0, 5);
+    newCamera.position.set(25, 15, 16);
     const targetPosition = new THREE.Vector3(6, 8, 0);
     gsap.to(newCamera.position, {
       x: targetPosition.x,
@@ -78,7 +79,7 @@ const PongGame: React.FC<Props> = ({
     controls.enableZoom = true;
     controls.enablePan = true;
     controls.minDistance = 10;
-    controls.maxDistance = 120;
+    controls.maxDistance = 20;
     controls.update();
 
     const surface = new Surface(10, 5, 1, 1, 0x161625);
@@ -114,7 +115,7 @@ const PongGame: React.FC<Props> = ({
     paddle1.addToScene(newScene);
     paddle2.addToScene(newScene);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
     newScene.add(ambientLight);
 
     const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
@@ -161,10 +162,11 @@ const PongGame: React.FC<Props> = ({
     const handleResize = () => {
       let width = container.clientWidth;
       let height = window.innerHeight;
-      if (width < 500) newCamera.fov = 120;
-      else if (width >= 500 && width < 1000) newCamera.fov = 100;
-      else if (width >= 1000 && width < 1200) newCamera.fov = 90;
-      else newCamera.fov = 75;
+      let maxWidth = 2500;
+      let fraction = (width - 300) / (maxWidth - 300);
+      let minFOV = 120;
+      let maxFOV = 65;
+      newCamera.fov = minFOV - fraction * (minFOV - maxFOV);
       newCamera.aspect = width / height;
       newCamera.updateProjectionMatrix();
       newRenderer.setSize(width, height);

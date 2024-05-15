@@ -36,10 +36,9 @@ export default class Ball {
     );
     this.material = new THREE.MeshStandardMaterial({ color: this.color });
     this.mesh = new THREE.Mesh(this.geometry, this.material);
-    // this.mesh.position.set(...this.positions);
-		  this.mesh.position.x = this.positions[0];
-      this.mesh.position.y = this.positions[1];
-      this.mesh.position.z = this.positions[2];
+    this.mesh.position.x = this.positions[0];
+    this.mesh.position.y = this.positions[1];
+    this.mesh.position.z = this.positions[2];
   }
 
   update(
