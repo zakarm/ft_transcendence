@@ -3,16 +3,68 @@ import { ChangeEvent, useContext, useState, useEffect } from 'react'
 import styles from '@/app/settings/styles.module.css'
 
 interface Props {
-    inputType ?: string;
-    placeholder ?: string | boolean;
-    className ?: string;
-    inputClassName ?: string;
-    inputId ?:string;
-    labelText ?:string;
-    labelClass ?: string;
-    inputLength ?: number;
-    index ?: number;
-    setValues ?: (e : ChangeEvent<HTMLInputElement>) => void;
+    inputType       ?: string;
+    placeholder     ?: string | boolean;
+    className       ?: string;
+    inputClassName  ?: string;
+    inputId         ?: string;
+    labelText       ?: string;
+    labelClass      ?: string;
+    value           ?: string | boolean;
+    inputLength     ?: number;
+    index           ?: number;
+    setValues       ?: (e : ChangeEvent<HTMLInputElement>) => void;
+}
+
+interface ListInputProps {
+    className   ?: string;
+    labelText   ?: string;
+    id          ?: string;
+    opt         ?: string[];
+    choosenPosition     ?: string;
+}
+
+function    GetListInput(
+    {
+        className="",
+        labelText="",
+        id="",
+        opt=[],
+        choosenPosition=""
+    } : ListInputProps) {
+    
+    const   {accountValues, updateField} = useContext<SettingsProps>(FormContext);
+
+    return (
+        <>
+            <div className={`${className} flex-wrap flex-xl-nowrap mb-4 `}>
+            <label
+                    className={` col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`} 
+                    htmlFor={id}>
+                    {labelText}
+                </label>
+
+                <div className={`${styles.inputHolder} row p-0 m-1`}>
+                    <select 
+                        className={`itim-font ${styles.input} ps-4`}
+                        name=""
+                        id={id}
+                        value={ choosenPosition }
+                        onChange={ (e : ChangeEvent<HTMLSelectElement>) => { updateField(id, e.target.value); } }>
+                        {    
+                            opt.map((val) => (
+                                <option key={val}
+                                    className={`itim-font`}
+                                    value={val}>
+                                            { val }
+                                </option>
+                            ))
+                        }
+                    </select>
+                </div>
+            </div>
+        </>
+    );
 }
 
 function    GetCheckboxInput(
@@ -64,6 +116,45 @@ function    GetCheckboxInput(
         );
 }
 
+function    GetColorInput(
+    {
+        className="col",
+        inputClassName="",
+        inputType="text",
+        placeholder="",
+        inputId="",
+        labelText="",
+        inputLength,
+        index=0,
+        labelClass="",
+        value=""
+    }: Props) {
+
+    const   { updateField } = useContext<SettingsProps>(FormContext);
+
+        return (
+            <div className={`${className} flex-wrap flex-xxl-nowrap `}>
+                <label
+                    className={` col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`} 
+                    htmlFor={inputId}>
+                    {labelText}
+                </label>
+                <div className={`${styles.inputHolder} row p-0 m-1`}>
+                        <input
+                            type={inputType}
+                            value={value as string}
+                            className={`${styles.inputColor} ${inputClassName} `}
+                            id={inputId}
+                            maxLength={inputLength}
+                            autoComplete="off"
+                            onChange={ (e : ChangeEvent<HTMLInputElement>) => { updateField(inputId, e.target.value) } }
+                            />
+                </div>
+            </div>
+        );
+}
+
+
 function    GetInput(
     {
         className="col",
@@ -82,7 +173,7 @@ function    GetInput(
         return (
             <div className={`${className} flex-wrap flex-xxl-nowrap `}>
                 <label
-                    className={`col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`} 
+                    className={` col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`} 
                     htmlFor={inputId}>
                     {labelText}
                 </label>
@@ -94,7 +185,7 @@ function    GetInput(
                             id={inputId}
                             maxLength={inputLength}
                             autoComplete="off"
-                            onChange={ (e : ChangeEvent<HTMLInputElement>) => { updateField(inputId, e.target.value) } }
+                            onChange={ (e : ChangeEvent<HTMLInputElement>) => { console.log(inputId), updateField(inputId, e.target.value) } }
                             />
                 </div>
             </div>
@@ -102,4 +193,4 @@ function    GetInput(
 }
 
 export type { Props as Props }
-export { GetCheckboxInput, GetInput }
+export { GetCheckboxInput, GetInput, GetListInput, GetColorInput }
