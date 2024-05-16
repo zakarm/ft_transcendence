@@ -42,6 +42,10 @@
     width : 400px;
 }
 
+.inputHolderColor {
+    width : 400px;
+}
+
 .input {
     width : 100%;
     outline: none;
@@ -49,7 +53,37 @@
     background-color: var(--clr--grey);
     height: 70px;
     border-radius: 25px;
-    accent-color: red;
+    /* accent-color: red; */
+    border : none;
+}
+
+.inputColor {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .inputColor::-webkit-color-swatch {
+    border-radius: 25px;
+    border: none;
+  }
+
+  .inputColor::-moz-color-swatch {
+    border-radius: 25px;
+    border: none;
+  }
+
+.inputColor {
+    /* width : 100%; */
+    /* outline: none; */
+    /* color: #706f71; */
+    border: 2px solid black;
+    background-color: var(--clr--grey);
+    height: 70px;
+    border-radius: 25px;
+    /* accent-color: red; */
     border : none;
 }
 
@@ -150,6 +184,9 @@
     }
     
     .input {
+        height: 50px;
+    }
+    .inputColor {
         height: 50px;
     }
     .select {

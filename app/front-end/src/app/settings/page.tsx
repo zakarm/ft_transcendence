@@ -8,6 +8,7 @@ import SecurityTab from '@/components/SettingsForm/security-tab/security'
 import { FormContext, SettingsProps } from '@/components/SettingsForm/form-components/formContext'
 import { toast } from 'react-toastify';
 import { notificationStyle } from '@/components/ToastProvider'
+import GameTab from '@/components/SettingsForm/game-tab/gameTab'
 
 
 async function    getInitialData({setValuesToPost, setAccountValues} :
@@ -36,7 +37,11 @@ async function    getInitialData({setValuesToPost, setAccountValues} :
                 "new_password" : "",
                 "repeat_password" : "",
                 "is_two_fact" : false,
-                "two_fact_secret" : ""
+                "two_fact_secret" : "",
+                "table_color" : "#ff0000",
+                "ball_color" : "#00ff00",
+                "paddle_color" : "#0000ff",
+                "table_position" : "prespective",
             }
         )
         setAccountValues(
@@ -51,7 +56,11 @@ async function    getInitialData({setValuesToPost, setAccountValues} :
                 "new_password" : "",
                 "repeat_password" : "",
                 "is_two_fact" : false,
-                "two_fact_secret" : ""
+                "two_fact_secret" : "",
+                "table_color" : "#ff0000",
+                "ball_color" : "#00ff00",
+                "paddle_color" : "#0000ff",
+                "table_position" : "prespective",
             }
         )
     } catch(error) {
@@ -60,10 +69,10 @@ async function    getInitialData({setValuesToPost, setAccountValues} :
 }
 
 /* Submits the form */
-const   postFormData = async ({valuesToPost, isChanged} :
+const   postFormData = async ({valuesToPost, isFormChanged} :
     {
         valuesToPost : SettingsProps['valuesToPost'],
-        isChanged : MutableRefObject<boolean>
+        isFormChanged : MutableRefObject<boolean>
     }) => {
     try {
 
@@ -94,8 +103,8 @@ const   postFormData = async ({valuesToPost, isChanged} :
             return isValid;
         }
 
-        if (isChanged.current && validateInput()) {
-            isChanged.current = false;
+        if (isFormChanged.current && validateInput()) {
+            isFormChanged.current = false;
             const   access = Cookies.get('access');
             
             console.log('------> JSON To Post', JSON.stringify(valuesToPost));
@@ -124,7 +133,7 @@ function    SettingsPage()
     const   [valuesToPost, setValuesToPost] =  useState<SettingsProps['valuesToPost']>({})
     const   [accountValues, setAccountValues] = useState<SettingsProps['accountValues']>({});
     const   [tab, setTab] = useState<string>("account");
-    const   isChanged = useRef<boolean>(false);
+    const   isFormChanged = useRef<boolean>(false);
 
     /* Updates a specific field of the input */
     const   updateField = (key : string, value : string | boolean) => {
@@ -155,7 +164,7 @@ function    SettingsPage()
             }
             if (compareDictValues(accountValues, valuesToPost)) {
                 setValuesToPost(newValues);
-                isChanged.current = true;
+                isFormChanged.current = true;
             }
         }
 
@@ -198,6 +207,8 @@ function    SettingsPage()
                                 tab === "account" &&  <AccountTab/>
                                 ||
                                 tab === "security" &&  <SecurityTab/>
+                                ||
+                                tab === "game" && <GameTab />
                             }
                         </div>
                     </FormContext.Provider>
@@ -206,7 +217,7 @@ function    SettingsPage()
                     <div className="col-12 d-flex justify-content-center my-4">
                         <button
                             className={`valo-font col-8 col-md-6 ${styles.create_button}`}
-                            onClick={() =>{ postFormData({valuesToPost, isChanged}) } }>
+                            onClick={() =>{ postFormData({valuesToPost, isFormChanged}) } }>
                                 SAVE
                         </button>
                     </div>
