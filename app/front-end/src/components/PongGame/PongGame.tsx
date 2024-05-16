@@ -45,7 +45,7 @@ const PongGame: React.FC<Props> = ({
     const { current: container } = containerRef;
     if (!container) return;
     let width = container.clientWidth;
-    let height = window.innerHeight;
+    let height = container.clientHeight;
     const newScene = new THREE.Scene();
     newScene.background = new THREE.Color(0x000000);
     const newCamera = new THREE.PerspectiveCamera(
@@ -161,7 +161,7 @@ const PongGame: React.FC<Props> = ({
 
     const handleResize = () => {
       let width = container.clientWidth;
-      let height = window.innerHeight;
+      let height = container.clientHeight;
       let maxWidth = 2500;
       let fraction = (width - 300) / (maxWidth - 300);
       let minFOV = 120;
