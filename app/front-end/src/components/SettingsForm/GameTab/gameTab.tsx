@@ -84,7 +84,7 @@ function GenerateInputFields() {
 
         <div className="row p-0 m-0 justify-content-center align-items-center flex-end">
           <div className="col-5">
-            <button 
+            <button
                 type="button"
                 className={`${styles.previewButton} p-0 m-0 my-4 row justify-content-center align-items-center itim-font`}
                 onClick={ (e : MouseEvent<HTMLButtonElement>) => {
@@ -100,7 +100,7 @@ function GenerateInputFields() {
             </button>
           </div>
           <div className="col-5">
-            <button 
+            <button
                 type="button"
                 className={`${styles.previewButton} p-0 m-0 my-4 row justify-content-center align-items-center itim-font`}
                 onClick={ (e : MouseEvent<HTMLButtonElement>) => {
@@ -119,9 +119,9 @@ function GenerateInputFields() {
 }
 
 function GameTab() {
-  
-  const { accountValues } = useContext<SettingsProps>(FormContext);
-  
+
+  const { updateField, accountValues } = useContext<SettingsProps>(FormContext);
+
   const [paddleColor, setPaddleColor] = useState<string>((accountValues['paddleColor'] as string) ?? "");
   const [tableColor, setTableColor] = useState<string>((accountValues['tableColor'] as string) ?? "");
   const [ballColor, setBallColor] = useState<string>((accountValues['ballColor'] as string) ?? "");
@@ -129,40 +129,27 @@ function GameTab() {
   useEffect(() =>{
     setTableColor((accountValues['table_color'] as string));
   }, [accountValues['table_color'],])
-  
+
     useEffect(() =>{
       setBallColor((accountValues['ball_color'] as string));
     }, [accountValues['ball_color'],])
-    
+
     useEffect(() =>{
       setPaddleColor((accountValues['paddle_color'] as string));
     }, [accountValues['paddle_color'],])
 
-//   const [paddleColorC, setPaddleColorC] = useState("#ff4655");
-//   const [tableColorC, setTableColorC] = useState("#161625");
-//   const [ballColorC, setBallColorC] = useState("#ffffff");
-//   const handleColorSubmit = (color: any) => {
-//     console.log(color);
-//     setPaddleColor(color);
-//   };
-//   const handleColorSubmit_ = (color: any) => {
-//     console.log(color);
-//     setTableColor(color);
-//   };
-//   const handleColorSubmit__ = (color: any) => {
-//     console.log(color);
-//     setBallColor(color);
-//   };
-//   const handleColorChange = (e: { target: { value: any } }) => {
-//     setPaddleColorC(e.target.value);
-//   };
-//   const handleColorChange_ = (e: { target: { value: any } }) => {
-//     setTableColorC(e.target.value);
-//   };
-//   const handleColorChange__ = (e: { target: { value: any } }) => {
-//     setBallColorC(e.target.value);
-//   };
-
+        useEffect(() => {
+          const pos = accountValues["table_position"] as string;
+          const view =
+            pos === "default"
+              ? "pos_default"
+              : pos === "horizantal"
+              ? "pos_horizantal"
+              : "pos_vertical";
+          const pos_v = Cookies.get(view) as string;
+          console.log("pos_values", pos_v);
+          updateField("current_table_view", pos_v);
+        }, [accountValues["table_position"]]);
   return (
     <>
       <fieldset className="col-12 col-xxl-6 p-0 m-0 d-flex justify-content-center align-items-center">
@@ -174,9 +161,9 @@ function GameTab() {
             TableColor={convertHexColor(tableColor)}
             BallColor={convertHexColor(ballColor)}
             paddleColor={convertHexColor(paddleColor)}
-            Gameposition_x={6}
-            Gameposition_y={8}
-            Gameposition_z={0}
+            Gameposition_x={parseInt((accountValues["current_table_view"] as string).split(",")[0])}
+            Gameposition_y={parseInt((accountValues["current_table_view"] as string).split(",")[1])}
+            Gameposition_z={parseInt((accountValues["current_table_view"] as string).split(",")[2])}
           />
         </div>
       </fieldset>

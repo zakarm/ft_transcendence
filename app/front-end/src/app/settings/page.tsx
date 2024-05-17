@@ -28,15 +28,19 @@ async function getInitialData({
   setAccountValues: SettingsProps["setAccountValues"];
 }) {
   try {
-    
+
     const access = Cookies.get("access");
     const response = await fetch("", {
       method: "GET",
       headers: { Authorization: `Bearer ${access}` },
     });
-    
+
     // const data = await response.json();
-    
+
+	Cookies.set("pos_default", "6,8,0");
+	Cookies.set("pos_horizantal", "0,10,5");
+	Cookies.set("pos_vertical", "5,10,15");
+
     Cookies.set("theme_table_color", "#161625")
     Cookies.set("theme_ball_color", "#ffffff")
     Cookies.set("theme_paddle_color", "#ff4655")
@@ -62,6 +66,7 @@ async function getInitialData({
       ball_color: "#ffffff",
       paddle_color: "#ff4655",
       table_position: "default",
+      current_table_view: "6,8,0",
     });
     setAccountValues({
       first_name: "Mushigarou",
@@ -79,6 +84,7 @@ async function getInitialData({
       ball_color: "#ffffff",
       paddle_color: "#ff4655",
       table_position: "default",
+      current_table_view: "6,8,0",
     });
   } catch (error) {
     console.error("Unexpected error : ", error);
