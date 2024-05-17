@@ -46,17 +46,13 @@ const GameContainer: React.FC<Props> = ({
       controlsRef.current.dispose();
     }
     if (sceneRef.current) {
-      sceneRef.current?.traverse((object: THREE.Object3D) => {
+      sceneRef.current.traverse((object) => {
         if (object instanceof THREE.Mesh) {
           object.geometry.dispose();
           if (object.material instanceof THREE.Material) {
             object.material.dispose();
           } else if (Array.isArray(object.material)) {
-            if (Array.isArray(object.material)) {
-              object.material.forEach((material: THREE.Material) =>
-                material.dispose()
-              );
-            }
+            object.material.forEach((material) => material.dispose());
           }
         }
       });
@@ -189,15 +185,13 @@ const GameContainer: React.FC<Props> = ({
       renderer.dispose();
       container.removeChild(renderer.domElement);
 
-      sceneRef.current?.traverse((object: THREE.Object3D) => {
+      scene.traverse((object) => {
         if (object instanceof THREE.Mesh) {
           object.geometry.dispose();
           if (object.material instanceof THREE.Material) {
             object.material.dispose();
           } else if (Array.isArray(object.material)) {
-            object.material.forEach((material: THREE.Material) =>
-              material.dispose()
-            );
+            object.material.forEach((material) => material.dispose());
           }
         }
       });
@@ -221,3 +215,19 @@ const GameContainer: React.FC<Props> = ({
 };
 
 export default GameContainer;
+// ```
+
+// ### Explanation of Key Changes
+
+// 1. **Comprehensive Cleanup**:
+//    - Disposing of geometries and materials within the scene to ensure all WebGL resources are properly cleaned up.
+//    - Removing the renderer's DOM element from the container.
+//    - Cancelling any ongoing animation frames.
+
+// 2. **Scene and Camera References**:
+//    - Keeping references to the scene, camera, controls, and animation frame ID to properly clean them up during component unmount or re-render.
+
+// 3. **Conditional Cleanup**:
+//    - Before creating new instances, checking and disposing of any existing instances.
+
+// By ensuring thorough cleanup of all WebGL resources, this approach should prevent the accumulation of WebGL contexts and resolve the warning about too many active WebGL contexts.
