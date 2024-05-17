@@ -1,6 +1,6 @@
 import styles from "@/app/settings/styles.module.css";
 import React, { useState } from "react";
-import { ChangeEvent, useContext } from "react";
+import { MouseEvent, useContext, useEffect } from "react";
 import { FormContext, SettingsProps } from "../form-components/formContext";
 import {
   GetInput,
@@ -9,13 +9,15 @@ import {
   Props,
 } from "../form-components/input";
 import GameContainer from "@/components/PongGame/GameContainer";
+import Cookies from "js-cookie";
+
 const convertHexColor = (hex: string): number => {
   const cleanedHex = hex.replace("#", "");
   return parseInt(cleanedHex, 16);
 };
 
 function GenerateInputFields() {
-  const { valuesToPost } = useContext<SettingsProps>(FormContext);
+  const { updateField, valuesToPost } = useContext<SettingsProps>(FormContext);
 
   const inputProps = [
     {
@@ -36,7 +38,7 @@ function GenerateInputFields() {
     {
       inputId: "table_position",
       labelText: "Table Position",
-      opt: ["parallel", "prespective"],
+      opt: ["default", "horizantal", "vertical"],
     },
   ];
 
@@ -67,6 +69,7 @@ function GenerateInputFields() {
             );
           }
         )}
+
       <div key={inputProps[3].inputId}>
         <GetListInput
           className="p-0 m-0 mt-4 row justify-content-center itim-font"
@@ -74,16 +77,67 @@ function GenerateInputFields() {
           id={inputProps[3].inputId}
           opt={inputProps[3].opt}
           choosenPosition={valuesToPost["table_position"] as string}
-        ></GetListInput>
+          >
+        </GetListInput>
       </div>
+
+
+        <div className="row p-0 m-0 justify-content-center align-items-center flex-end">
+          <div className="col-5">
+            <button 
+                type="button"
+                className={`${styles.previewButton} p-0 m-0 my-4 row justify-content-center align-items-center itim-font`}
+                onClick={ (e : MouseEvent<HTMLButtonElement>) => {
+                  updateField(inputProps[0].inputId,
+                    (Cookies.get("theme_table_color") as string) ?? "#161625");
+                  updateField(inputProps[1].inputId,
+                    (Cookies.get("theme_ball_color") as string) ?? "#ffffff");
+                  updateField(inputProps[2].inputId,
+                    (Cookies.get("theme_paddle_color") as string) ?? "#ff4655");
+                } }
+                >
+                  Website Colors
+            </button>
+          </div>
+          <div className="col-5">
+            <button 
+                type="button"
+                className={`${styles.previewButton} p-0 m-0 my-4 row justify-content-center align-items-center itim-font`}
+                onClick={ (e : MouseEvent<HTMLButtonElement>) => {
+                  updateField(inputProps[0].inputId, (Cookies.get(inputProps[0].inputId) as string) ?? "");
+                  updateField(inputProps[1].inputId, (Cookies.get(inputProps[1].inputId) as string) ?? "");
+                  updateField(inputProps[2].inputId, (Cookies.get(inputProps[2].inputId) as string) ?? "");
+                } }
+                >
+                  Your Colors
+            </button>
+          </div>
+        </div>
+
     </>
   );
 }
 
 function GameTab() {
-  const [paddleColor, setPaddleColor] = useState("#ff4655");
-  const [tableColor, setTableColor] = useState("#161625");
-  const [ballColor, setBallColor] = useState("#ffffff");
+  
+  const { accountValues } = useContext<SettingsProps>(FormContext);
+  
+  const [paddleColor, setPaddleColor] = useState<string>((accountValues['paddleColor'] as string) ?? "");
+  const [tableColor, setTableColor] = useState<string>((accountValues['tableColor'] as string) ?? "");
+  const [ballColor, setBallColor] = useState<string>((accountValues['ballColor'] as string) ?? "");
+
+  useEffect(() =>{
+    setTableColor((accountValues['table_color'] as string));
+  }, [accountValues['table_color'],])
+  
+    useEffect(() =>{
+      setBallColor((accountValues['ball_color'] as string));
+    }, [accountValues['ball_color'],])
+    
+    useEffect(() =>{
+      setPaddleColor((accountValues['paddle_color'] as string));
+    }, [accountValues['paddle_color'],])
+
 //   const [paddleColorC, setPaddleColorC] = useState("#ff4655");
 //   const [tableColorC, setTableColorC] = useState("#161625");
 //   const [ballColorC, setBallColorC] = useState("#ffffff");

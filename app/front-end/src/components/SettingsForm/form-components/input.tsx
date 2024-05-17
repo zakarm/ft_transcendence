@@ -1,6 +1,13 @@
 import { FormContext, SettingsProps } from './formContext'
-import { ChangeEvent, useContext, useState, useEffect } from 'react'
+import {
+    ChangeEvent,
+    MouseEvent,
+    useContext,
+    useState,
+    useEffect
+} from 'react'
 import styles from '@/app/settings/styles.module.css'
+import Cookies from "js-cookie";
 
 interface Props {
     inputType       ?: string;
@@ -17,11 +24,11 @@ interface Props {
 }
 
 interface ListInputProps {
-    className   ?: string;
-    labelText   ?: string;
-    id          ?: string;
-    opt         ?: string[];
-    choosenPosition     ?: string;
+    className       ?: string;
+    labelText       ?: string;
+    id              ?: string;
+    opt             ?: string[];
+    choosenPosition ?: string;
 }
 
 function    GetListInput(
@@ -95,7 +102,7 @@ function    GetCheckboxInput(
                     htmlFor={inputId}>
                     {labelText}
                 </label>
-                <div className={`${styles.inputHolder} row justify-content-start p-0 m-1`}>
+                <div className={`${styles.inputHolder} ${styles.checkbox} row justify-content-start p-0 m-1`}>
                     <label className="col-3">
                         <input
                             type={inputType}
@@ -131,27 +138,54 @@ function    GetColorInput(
     }: Props) {
 
     const   { updateField } = useContext<SettingsProps>(FormContext);
+    const   [colorToPreview, setcolorToPreview] = useState<string>("")
 
-        return (
-            <div className={`${className} flex-wrap flex-xxl-nowrap `}>
-                <label
-                    className={` col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`} 
-                    htmlFor={inputId}>
-                    {labelText}
-                </label>
-                <div className={`${styles.inputHolder} row p-0 m-1`}>
-                        <input
-                            type={inputType}
-                            value={value as string}
-                            className={`${styles.inputColor} ${inputClassName} `}
-                            id={inputId}
-                            maxLength={inputLength}
-                            autoComplete="off"
-                            onChange={ (e : ChangeEvent<HTMLInputElement>) => { updateField(inputId, e.target.value) } }
-                            />
+    // usestate to pass chosen color to 'onClick' of button
+    return (
+        <div className={`${className} flex-wrap flex-xxl-nowrap `}>
+            <label
+                className={` col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`} 
+                htmlFor={inputId}>
+                {labelText}
+            </label>
+            <div className={`${styles.inputHolder} row p-0 m-1 align-items-center justify-content-center`}>
+                <div className={`col-4`}>
+                    <input
+                        type={inputType}
+                        value={value as string}
+                        className={`${styles.inputColor} ${inputClassName} `}
+                        id={inputId}
+                        maxLength={inputLength}
+                        autoComplete="off"
+                        onChange={ (e : ChangeEvent<HTMLInputElement>) => {
+                            setcolorToPreview(e.target.value);
+                            value =  e.target.value
+                        } }
+                        />
+                </div>
+                <div className="col-4">
+                    <button
+                        type="button"
+                        className={`${styles.previewButton} ${inputClassName} `}
+                        onClick={ (e : MouseEvent<HTMLButtonElement>) => {
+                            colorToPreview && updateField(inputId, colorToPreview)
+                        } }
+                        >Preview</button>
+                </div>
+                <div className="col-4">
+                    <button 
+                        type="button"
+                        className={`${styles.previewButton} ${inputClassName} `}
+                        onClick={ (e : MouseEvent<HTMLButtonElement>) => {
+                            colorToPreview && updateField(inputId, (Cookies.get(inputId) as string))
+                        } }
+                    >
+                        Reset
+                    </button>
                 </div>
             </div>
-        );
+        </div>
+    );
 }
 
 
@@ -185,8 +219,9 @@ function    GetInput(
                             id={inputId}
                             maxLength={inputLength}
                             autoComplete="off"
-                            onChange={ (e : ChangeEvent<HTMLInputElement>) => { console.log(inputId), updateField(inputId, e.target.value) } }
-                            />
+                            onChange={ (e : ChangeEvent<HTMLInputElement>) => { updateField(inputId, e.target.value) } }
+                            >
+                        </input>
                 </div>
             </div>
         );

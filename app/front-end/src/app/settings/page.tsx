@@ -28,13 +28,24 @@ async function getInitialData({
   setAccountValues: SettingsProps["setAccountValues"];
 }) {
   try {
+    
     const access = Cookies.get("access");
     const response = await fetch("", {
       method: "GET",
       headers: { Authorization: `Bearer ${access}` },
     });
-
+    
     // const data = await response.json();
+    
+    Cookies.set("theme_table_color", "#161625")
+    Cookies.set("theme_ball_color", "#ffffff")
+    Cookies.set("theme_paddle_color", "#ff4655")
+
+    Cookies.set("table_color", "#161625")
+    Cookies.set("ball_color", "#ffffff")
+    Cookies.set("paddle_color", "#ff4655")
+
+
     setValuesToPost({
       first_name: "Mushigarou",
       last_name: "HobaHoba",
@@ -47,10 +58,10 @@ async function getInitialData({
       repeat_password: "",
       is_two_fact: false,
       two_fact_secret: "",
-      table_color: "#ff0000",
-      ball_color: "#00ff00",
-      paddle_color: "#0000ff",
-      table_position: "prespective",
+      table_color: "#161625",
+      ball_color: "#ffffff",
+      paddle_color: "#ff4655",
+      table_position: "default",
     });
     setAccountValues({
       first_name: "Mushigarou",
@@ -64,10 +75,10 @@ async function getInitialData({
       repeat_password: "",
       is_two_fact: false,
       two_fact_secret: "",
-      table_color: "#ff0000",
-      ball_color: "#00ff00",
-      paddle_color: "#0000ff",
-      table_position: "prespective",
+      table_color: "#161625",
+      ball_color: "#ffffff",
+      paddle_color: "#ff4655",
+      table_position: "default",
     });
   } catch (error) {
     console.error("Unexpected error : ", error);
@@ -129,6 +140,11 @@ const postFormData = async ({
 
       if (res.ok) {
         toast.success("To be saved...", notificationStyle);
+        /* New Chosen Colors */
+        Cookies.set("table_color", (valuesToPost['table_color'] as string))
+        Cookies.set("ball_color", (valuesToPost['ball_color'] as string))
+        Cookies.set("paddle_color", (valuesToPost['paddle_color'] as string))
+
         /* .... updates form placeholders */
       }
     }
@@ -149,9 +165,12 @@ function SettingsPage() {
 
   /* Updates a specific field of the input */
   const updateField = (key: string, value: string | boolean) => {
-    const newValues = { ...accountValues };
-    newValues[key] = value;
-    setAccountValues(newValues);
+
+    setAccountValues((prevValues : SettingsProps["accountValues"]) => {
+      const newValues = { ...prevValues };
+      newValues[key] = value;
+      return newValues;
+    });
   };
 
   /* Compares values in  [accountValues, valuesToPost] */

@@ -1,10 +1,3 @@
-/* --clr-red: #FF4755;
---clr-ldark : #161625;
---clr--white: #FFEBEB;
---clr-dark: #111111;
---clr--green : #27B299;
---clr--grey : #2C3143; */
-
 /******** Form ********/
 
 .form_container {
@@ -40,44 +33,54 @@
     width : 400px;
 }
 
-.inputHolderColor {
-    width : 400px;
-}
 
 .input {
-    width : 100%;
-    outline: none;
-    color: #706f71;
-    background-color: var(--clr--grey);
-    height: 70px;
-    border-radius: 25px;
-    /* accent-color: red; */
-    border : none;
+  width : 100%;
+  outline: none;
+  color: #706f71;
+  background-color: var(--clr--grey);
+  height: 70px;
+  border-radius: 25px;
+  /* accent-color: red; */
+  border : none;
+}
+
+.previewButton {
+  width : 100%;
+  min-width: 60px;
+  border : none;
+  height: 70px;
+  border-radius: 25px;
+  background-color: #706f71;
+  cursor: pointer;
+}
+
+.inputHolderColor {
+    font-size: clamp(1rem, -0.268rem + 2.6144vw, 1.2rem);
+    width : 400px;
 }
 
 .inputColor {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    border: none;
+    width : 100%;
     cursor: pointer;
   }
 
   .inputColor::-webkit-color-swatch {
+    width: 100%;
     border-radius: 25px;
-    border: none;
+    border: 2px solid var(--clr--white);
   }
 
   .inputColor::-moz-color-swatch {
+    width: 100%;
     border-radius: 25px;
-    border: none;
+    border: 2px solid var(--clr--white);
   }
 
 .inputColor {
-    /* width : 100%; */
-    /* outline: none; */
-    /* color: #706f71; */
-    border: 2px solid black;
     background-color: var(--clr--grey);
     height: 70px;
     border-radius: 25px;
@@ -89,7 +92,10 @@
   color: var(--clr--white);
 }
 
-.input:hover {
+.input:hover,
+.inputColor:hover,
+.checkbox:hover,
+.previewButton:hover {
   scale: 1.01;
 }
 
@@ -168,25 +174,15 @@
     width: 350px;
   }
 
-  .profilePic {
+  .profilePic, .qr_code {
     width: 200px;
     height: 200px;
   }
 
-    .qr_code {
-        width: 200px;
-        height: 200px;
+    .input, .inputColor, .select, .previewButton {
+        height: 50px;
     }
 
-    .input {
-        height: 50px;
-    }
-    .inputColor {
-        height: 50px;
-    }
-    .select {
-        height: 50px;
-    }
     .form_container {
         height: auto;
     }
@@ -204,11 +200,6 @@
     width: 250px;
   }
 
-  /* .profilePic {
-        border-radius: 50%;
-        width: 200px;
-        height: 200px;
-    } */
   .form_container {
     width: 80%;
   }
@@ -223,12 +214,7 @@
     width: 200px;
   }
 
-  .profilePic {
-    width: 100px;
-    height: 100px;
-  }
-
-  .qr_code {
+  .profilePic, .qr_code {
     width: 100px;
     height: 100px;
   }
