@@ -6,6 +6,7 @@ import {
   GetInput,
   GetColorInput,
   GetListInput,
+  GetInputRange,
   Props,
 } from "../form-components/input";
 import GameContainer from "@/components/PongGame/GameContainer";
@@ -80,6 +81,10 @@ function GenerateInputFields() {
           >
         </GetListInput>
       </div>
+
+      <GetInputRange
+          // className="p-0 m-0 mt-4 row justify-content-center itim-font"
+        />
 
 
         <div className="row p-0 m-0 justify-content-center align-items-center flex-end">

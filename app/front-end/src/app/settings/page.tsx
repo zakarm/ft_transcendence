@@ -37,9 +37,9 @@ async function getInitialData({
 
     // const data = await response.json();
 
-	Cookies.set("pos_default", "6,8,0");
-	Cookies.set("pos_horizantal", "0,10,5");
-	Cookies.set("pos_vertical", "5,10,15");
+	  Cookies.set("pos_default", "6,8,0");
+	  Cookies.set("pos_horizantal", "0,10,5");
+	  Cookies.set("pos_vertical", "5,10,15");
 
     Cookies.set("theme_table_color", "#161625")
     Cookies.set("theme_ball_color", "#ffffff")
@@ -67,7 +67,9 @@ async function getInitialData({
       paddle_color: "#ff4655",
       table_position: "default",
       current_table_view: "6,8,0",
+      game_difficulty : "2"
     });
+
     setAccountValues({
       first_name: "Mushigarou",
       last_name: "HobaHoba",
@@ -85,6 +87,7 @@ async function getInitialData({
       paddle_color: "#ff4655",
       table_position: "default",
       current_table_view: "6,8,0",
+      game_difficulty : "2"
     });
   } catch (error) {
     console.error("Unexpected error : ", error);
@@ -115,6 +118,7 @@ const postFormData = async ({
           isValid = false;
         }
       });
+
       if (!validateEmail(valuesToPost["email"] as string)) {
         toast.error(`Invalid input : email`, notificationStyle);
         isValid = false;

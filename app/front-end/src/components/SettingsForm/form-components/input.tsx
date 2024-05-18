@@ -142,7 +142,7 @@ function    GetColorInput(
 
     // usestate to pass chosen color to 'onClick' of button
     return (
-        <div className={`${className} flex-wrap flex-xxl-nowrap `}>
+        <div className={`${className} flex-wrap flex-xxl-nowrap`}>
             <label
                 className={` col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`} 
                 htmlFor={inputId}>
@@ -188,6 +188,39 @@ function    GetColorInput(
     );
 }
 
+function    GetInputRange({className} : Props) {
+    const   { updateField, accountValues } = useContext<SettingsProps>(FormContext);
+
+
+    return (
+        <>
+        <div className={`p-0 m-0 mt-4 row justify-content-center itim-font  flex-wrap flex-xxl-nowrap`}>
+            <label
+                className={`  col-8 col-sm-3 itim-font d-flex align-items-center  p-0 m-0 ${styles.inputTitle} `}
+                htmlFor="myRange">
+                    Game Difficulty
+            </label>
+            <div className={`${styles.inputHolder} row p-0 m-1 align-items-center justify-content-center`}>
+
+            <div className=" col d-flex justify-content-center p-0 my-3 ms-1">
+                <input type="range"
+                    min="0"
+                    max="2"
+                    step="1"
+                    value={ accountValues['game_difficulty'] }
+                    className={`${styles.slider}`}
+                    onChange={(e : ChangeEvent<HTMLInputElement> ) => {
+                            updateField("game_difficulty", e.target.value);
+                        }
+                    }
+                    id="myRange"/>
+            </div>
+            </div>
+        </div>
+        </>
+    )
+}
+
 
 function    GetInput(
     {
@@ -205,7 +238,7 @@ function    GetInput(
     const   { updateField } = useContext<SettingsProps>(FormContext);
 
         return (
-            <div className={`${className} flex-wrap flex-xxl-nowrap `}>
+            <div className={`${className} flex-wrap flex-xxl-nowrap`}>
                 <label
                     className={` col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`} 
                     htmlFor={inputId}>
@@ -227,5 +260,7 @@ function    GetInput(
         );
 }
 
+
+
 export type { Props as Props }
-export { GetCheckboxInput, GetInput, GetListInput, GetColorInput }
+export { GetCheckboxInput, GetInput, GetListInput, GetColorInput, GetInputRange }
