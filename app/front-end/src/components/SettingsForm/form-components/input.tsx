@@ -207,7 +207,7 @@ function    GetInputRange({className} : Props) {
                     min="0"
                     max="2"
                     step="1"
-                    value={ accountValues['game_difficulty'] }
+                    value={ accountValues['game_difficulty'] as string }
                     className={`${styles.slider}`}
                     onChange={(e : ChangeEvent<HTMLInputElement> ) => {
                             updateField("game_difficulty", e.target.value);

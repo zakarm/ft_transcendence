@@ -63,21 +63,40 @@ function GenerateInputFields() {
 }
 
 function AccountTab() {
-  const { updateField } = useContext<SettingsProps>(FormContext);
+  const { updateField, accountValues } = useContext<SettingsProps>(FormContext);
 
   return (
     <>
       <fieldset className="col-12 col-xxl-6 p-0 m-0 d-flex justify-content-center align-items-center h-100">
         <div className={`${styles.image_container}`}>
           <label htmlFor="file_input" className={`${styles.image_container}`}>
-            <img src="profile.jpeg" alt="" className={`${styles.profilePic}`} />
-            <img src="camera.png" alt="" className={`${styles.camera}`} />
+            <img
+              id = {`profile_pic`}
+              src={`${accountValues['image']}`}
+              alt="profile"
+              className={`${styles.profilePic}`}
+            />
+            <img
+              src="camera.png"
+              alt="camera"
+              className={`${styles.camera}`}
+            />
           </label>
           <input
             type="file"
             className="d-none"
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              updateField("image", e.target.value)
+            accept="image/*"
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                const reader = new FileReader()
+                if (e.target.files) {
+                  reader.readAsDataURL(e.target.files[0]);
+                  reader.onloadend = () => {
+                    if (reader.result && typeof reader.result === 'string') {
+                      updateField("image", reader.result)
+                    }
+                  }
+                }
+              }
             }
             id="file_input"
           />
