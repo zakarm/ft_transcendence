@@ -171,7 +171,7 @@ function SettingsPage() {
   const [accountValues, setAccountValues] = useState<
     SettingsProps["accountValues"]
   >({});
-  const [tab, setTab] = useState<string>("account");
+  const [tab, setTab] = useState<string>("Account");
   const isFormChanged = useRef<boolean>(false);
   /* Updates a specific field of the input */
   const updateField = (key: string, value: string | boolean) => {

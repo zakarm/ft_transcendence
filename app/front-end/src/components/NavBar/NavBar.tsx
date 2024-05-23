@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, ChangeEvent } from "react";
 import "./NavBar.css";
 
 interface TournamentProps {
@@ -22,14 +22,20 @@ const NavBar: React.FC<TournamentProps> = ({ options,  setChoosenTab }: Tourname
             <button
               key={option}
               type="button"
-              onClick={() => {setChoosenTab(option); console.log('-->', option)}}
+              onClick={() => setChoosenTab(option)}
               >
                 {option}
               </button>
           ))}
         </>
       ) : (
-        <select name="tournament" id="tournament">
+        <select
+          name="tournament"
+          id="tournament"
+          onChange={(e : ChangeEvent<HTMLSelectElement>) => {
+            setChoosenTab(e.target.value)
+          }}
+        >
           {options.map((option: any) => (
             <option key={option} value={option}>
               {option}
