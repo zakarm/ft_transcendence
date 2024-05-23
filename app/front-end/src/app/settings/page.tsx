@@ -95,6 +95,83 @@ async function getInitialData({
   }
 }
 
+const validateInput: (valuesToPost: SettingsProps["valuesToPost"]) => boolean = (valuesToPost: SettingsProps["valuesToPost"]) => {
+  
+  const validateEmail: (email: string) => boolean = (email) => {
+    let rgx: RegExp = /^([a-zA-Z0-9\._]+)@([a-zA-Z0-9])+.([a-z]+)(.[a-z]+)?$/;
+    return rgx.test(email);
+  };
+
+  const toCheck: string[] = ["first_name", "last_name", "nickname"];
+  let isValid: boolean = true;
+
+  toCheck.map((key) => {
+    if (valuesToPost[key] === "") {
+      toast.error(`Invalid input : ${key}`, notificationStyle);
+      isValid = false;
+    }
+  });
+
+  if (!validateEmail(valuesToPost["email"] as string)) {
+    toast.error(`Invalid input : email`, notificationStyle);
+    isValid = false;
+  }
+
+  if (valuesToPost["new_password"] !== valuesToPost["repeat_password"]) {
+    toast.error(
+      `Invalid input : new_password or repeat_password`,
+      notificationStyle
+    );
+    isValid = false;
+  }
+  return isValid;
+};
+
+// const isBase64 = (str: string): boolean => {
+//   if (typeof str !== 'string') {
+//     return false;
+//   }
+//   // Regular expression to validate base64 format
+//   const base64Regex = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
+//   // Check if the string length is a multiple of 4
+//   if (str.length % 4 !== 0) {
+//     return false;
+//   }
+//   // Check if the string matches the base64 format
+//   return base64Regex.test(str);
+// };
+
+const handleImageUpload = async (file: string): Promise<string | null> => {
+  
+  // if (!isBase64(file)) {
+  //   console.error("The provided string is not a valid base64 encoded string.");
+  //   return null;
+  // }
+
+  try {
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ file }),
+    });
+
+    const data = await response.json();
+    console.log('----------> here -->', data)
+    if (data.url) {
+      return data.url;
+    } else {
+      console.error('Failed to upload image', data.error);
+      return null;
+    }
+  } 
+  catch (error) {
+    console.error('Error uploading image', error);
+    return null;
+  }
+};
+
 /* Submits the form */
 const postFormData = async ({
   valuesToPost,
@@ -103,44 +180,25 @@ const postFormData = async ({
   valuesToPost: SettingsProps["valuesToPost"];
   isFormChanged: MutableRefObject<boolean>;
 }) => {
-  try {
-    const validateEmail: (email: string) => boolean = (email) => {
-      let rgx: RegExp = /^([a-zA-Z0-9\._]+)@([a-zA-Z0-9])+.([a-z]+)(.[a-z]+)?$/;
-      return rgx.test(email);
-    };
 
-    const validateInput: () => boolean = () => {
-      const toCheck: string[] = ["first_name", "last_name", "nickname"];
-      let isValid: boolean = true;
-
-      toCheck.map((key) => {
-        if (valuesToPost[key] === "") {
-          toast.error(`Invalid input : ${key}`, notificationStyle);
-          isValid = false;
+  if (isFormChanged.current && validateInput(valuesToPost)) {
+    
+      const changeImageURL = async () => {
+        if (typeof valuesToPost['image'] === 'string') {
+          const promise = await handleImageUpload(valuesToPost['image']);
+          if (promise !== null && typeof promise === 'string') {
+            valuesToPost['image'] = promise;
+          }
         }
-      });
-
-      if (!validateEmail(valuesToPost["email"] as string)) {
-        toast.error(`Invalid input : email`, notificationStyle);
-        isValid = false;
       }
 
-      if (valuesToPost["new_password"] !== valuesToPost["repeat_password"]) {
-        toast.error(
-          `Invalid input : new_password or repeat_password`,
-          notificationStyle
-        );
-        isValid = false;
-      }
-      return isValid;
-    };
+      const postData = async () => {
 
-    if (isFormChanged.current && validateInput()) {
-      isFormChanged.current = false;
-      const access = Cookies.get("access");
-
-      console.log("------> JSON To Post", JSON.stringify(valuesToPost));
-      const res = await fetch("", {
+        await changeImageURL();
+        console.log("------> JSON To Post", JSON.stringify(valuesToPost));
+        isFormChanged.current = false;
+        const access = Cookies.get("access");
+        const res = await fetch("", {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -155,13 +213,18 @@ const postFormData = async ({
         Cookies.set("table_color", (valuesToPost['table_color'] as string))
         Cookies.set("ball_color", (valuesToPost['ball_color'] as string))
         Cookies.set("paddle_color", (valuesToPost['paddle_color'] as string))
-
+        
         /* .... updates form placeholders */
-      }
+      } 
     }
-  } catch (error) {
-    console.error("Unexpected error : ", error);
-  }
+
+    try {
+      postData();
+    }
+    catch (error) {
+      console.error("Unexpected error : ", error);
+    }
+  }   
 };
 
 function SettingsPage() {
@@ -224,7 +287,7 @@ function SettingsPage() {
   useEffect(() => {
     checkDifferences();
   }, [accountValues]);
-  
+
   return (
     <div
     className={` ${styles.wrapper} container-fluid vh-100  -warning p-0 m-0`}

@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@types/js-cookie": "^3.0.6",
+    "@types/node": "^20.12.12",
     "@types/react": "^18",
     "@types/three": "^0.164.0",
     "eslint": "^8",

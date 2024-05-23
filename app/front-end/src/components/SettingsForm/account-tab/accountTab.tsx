@@ -70,31 +70,6 @@ function GenerateInputFields() {
 function AccountTab() {
   const { updateField, accountValues } = useContext<SettingsProps>(FormContext);
 
-  const handleUpload = async (file: string): Promise<string | null> => {
-    try {
-      // console.log('---------->', file)
-      const response = await fetch("/api/hello", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ file }),
-      });
-
-      const data = await response.json();
-      console.log('----------> here -->', data)
-      if (data.url) {
-        return data.url;
-      } else {
-        console.error('Failed to upload image', data.error);
-        return null;
-      }
-    } catch (error) {
-      console.error('Error uploading image', error);
-      return null;
-    }
-  };
-
   return (
     <>
       <fieldset className="col-12 col-xxl-6 p-0 m-0 d-flex justify-content-center align-items-center h-100">
@@ -125,7 +100,6 @@ function AccountTab() {
                   reader.onloadend = () => {
                     if (reader.result && typeof reader.result === 'string') {
                       updateField("image", reader.result);
-                      handleUpload(reader.result);
                     }
                   }
                 }

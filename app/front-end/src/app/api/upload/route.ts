@@ -1,9 +1,9 @@
 import { v2 as cloudinary } from 'cloudinary';
 
 cloudinary.config({
-  cloud_name : 'dv1i5yh71',
-  api_secret : 'wT60LS0kxMmvofHiCPVpvXYtuMs',
-  api_key : '698329492731743',
+  cloud_name : process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+  api_secret : process.env.CLOUDINARY_API_SECRET,
+  api_key : process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
   secure : true
 });
 
@@ -25,9 +25,14 @@ export async function POST(req : Request) {
       use_filename: true
     })
 
-    return new Response(JSON.stringify({ url : uploadedResponse.secure_url }))
+    return new Response(JSON.stringify({ url : uploadedResponse.secure_url }), {
+      status : 200
+    })
   }
   catch (error) {
-      console.log("Couldn't upload image : ", error)
+      console.log("Couldn't upload image : ", error);
+      return new Response(JSON.stringify({}), {
+        status : 401
+      })
   }
 }
