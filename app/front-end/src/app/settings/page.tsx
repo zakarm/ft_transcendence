@@ -30,11 +30,11 @@ async function getInitialData({
 }) {
   try {
 
-    const access = Cookies.get("access");
-    const response = await fetch("", {
-      method: "GET",
-      headers: { Authorization: `Bearer ${access}` },
-    });
+    // const access = Cookies.get("access");
+    // const response = await fetch("", {
+    //   method: "GET",
+    //   headers: { Authorization: `Bearer ${access}` },
+    // });
 
     // const data = await response.json();
 
@@ -173,16 +173,16 @@ function SettingsPage() {
   >({});
   const [tab, setTab] = useState<string>("account");
   const isFormChanged = useRef<boolean>(false);
-
   /* Updates a specific field of the input */
   const updateField = (key: string, value: string | boolean) => {
-
+    
     setAccountValues((prevValues : SettingsProps["accountValues"]) => {
       const newValues = { ...prevValues };
       newValues[key] = value;
       return newValues;
     });
   };
+  const options = ["Account", "Security", "Game"];
 
   /* Compares values in  [accountValues, valuesToPost] */
   const checkDifferences = () => {
@@ -197,10 +197,10 @@ function SettingsPage() {
         }
         count++;
       }
-
+      
       return !(Object.entries(d1).length === count);
     };
-
+    
     const updatePostValues = (values: SettingsProps["accountValues"]) => {
       let newValues: SettingsProps["accountValues"] = { ...values };
       for (const [key, value] of Object.entries(values)) {
@@ -224,11 +224,10 @@ function SettingsPage() {
   useEffect(() => {
     checkDifferences();
   }, [accountValues]);
-
-	  const options = ["Account", "Security", "Game"];
+  
   return (
     <div
-      className={` ${styles.wrapper} container-fluid vh-100  -warning p-0 m-0`}
+    className={` ${styles.wrapper} container-fluid vh-100  -warning p-0 m-0`}
     >
       <div className="row h-100 p-0 m-0">
         <section className="row p-0 m-0 mt-5">
@@ -243,27 +242,9 @@ function SettingsPage() {
           <form
             className={`row ${styles.form_container} p-1 m-0 justify-content-between align-items-center`}
           >
-						  <NavBar options={options} />
 			<fieldset className={`${styles.tab_container} row p-0 m-0`}>
               <div className="col m-2 p-2 d-flex flex-row flex-nowrap">
-                <h2
-                  className="col-4 m-1 col-xl-2 itim-font"
-                  onClick={() => setTab("account")}
-                >
-                  Account
-                </h2>
-                <h2
-                  className="col-4 m-1 col-xl-2 itim-font"
-                  onClick={() => setTab("security")}
-                >
-                  Security
-                </h2>
-                <h2
-                  className="col-4 m-1 col-xl-2 itim-font"
-                  onClick={() => setTab("game")}
-                >
-                  Game
-                </h2>
+                <NavBar options={options} setChoosenTab={setTab} />
               </div>
             </fieldset>
             <FormContext.Provider
@@ -279,9 +260,9 @@ function SettingsPage() {
                 className={`${styles.content_container} row  p-0 m-0  justify-content-center align-items-center`}
               >
                 {
-                  (tab === "account" && <AccountTab />) ||
-                    (tab === "security" && <SecurityTab />)
-                  ||(tab === "game" && <GameTab />)
+                  (tab === "Account" && <AccountTab />) ||
+                    (tab === "Security" && <SecurityTab />)
+                  ||(tab === "Game" && <GameTab />)
                 }
               </div>
             </FormContext.Provider>

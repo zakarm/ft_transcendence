@@ -4,9 +4,10 @@ import "./NavBar.css";
 
 interface TournamentProps {
   options: string[];
+  setChoosenTab : (s : string) => void;
 }
 
-const NavBar: React.FC<TournamentProps> = ({ options }: TournamentProps) => {
+const NavBar: React.FC<TournamentProps> = ({ options,  setChoosenTab }: TournamentProps) => {
   const [isSmall, setIsSmall] = useState(window.innerWidth <= 215 * options.length + 200);
 
     window.addEventListener("resize", () => {
@@ -18,7 +19,13 @@ const NavBar: React.FC<TournamentProps> = ({ options }: TournamentProps) => {
       {!isSmall ? (
         <>
           {options.map((option: any) => (
-            <button key={option}>{option}</button>
+            <button
+              key={option}
+              type="button"
+              onClick={() => {setChoosenTab(option); console.log('-->', option)}}
+              >
+                {option}
+              </button>
           ))}
         </>
       ) : (

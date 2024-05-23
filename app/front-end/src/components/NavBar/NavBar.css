@@ -20,11 +20,11 @@
   animation: pulseborder 1.5s;
 }
 
-._nav_bar select {
+/* ._nav_bar select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-}
+} */
 
 ._nav_bar select:hover,
 ._nav_bar button:hover {
