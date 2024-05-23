@@ -4,6 +4,7 @@ import { ChangeEvent, useContext } from "react";
 import { FormContext, SettingsProps } from "../form-components/formContext";
 import { GetInput, Props } from "../form-components/input";
 
+
 function GenerateInputFields() {
   const { valuesToPost } = useContext<SettingsProps>(FormContext);
 
@@ -11,24 +12,28 @@ function GenerateInputFields() {
     {
       inputId: "first_name",
       labelText: "First Name",
+      inputType : "text",
       placeholder: valuesToPost["first_name"],
       inputLength: 20,
     },
     {
       inputId: "last_name",
       labelText: "Last Name",
+      inputType : "text",
       placeholder: valuesToPost["last_name"],
       inputLength: 20,
     },
     {
       inputId: "nickname",
       labelText: "Nickname",
+      inputType : "text",
       placeholder: valuesToPost["nickname"],
       inputLength: 20,
     },
     {
       inputId: "email",
       labelText: "Email",
+      inputType : "email",
       placeholder: valuesToPost["email"],
       inputLength: 256,
     },
@@ -37,12 +42,12 @@ function GenerateInputFields() {
   return (
     <>
       {inputProps.map(
-        ({ inputId, labelText, placeholder, inputLength }: Props) => {
+        ({ inputId, labelText, placeholder, inputLength, inputType }: Props) => {
           return (
             <div key={inputId}>
               <GetInput
                 className="p-0 m-0 mt-4 row justify-content-center itim-font"
-                inputType="text"
+                inputType={inputType}
                 inputId={inputId}
                 labelText={labelText}
                 placeholder={placeholder}
@@ -65,6 +70,31 @@ function GenerateInputFields() {
 function AccountTab() {
   const { updateField, accountValues } = useContext<SettingsProps>(FormContext);
 
+  const handleUpload = async (file: string): Promise<string | null> => {
+    try {
+      // console.log('---------->', file)
+      const response = await fetch("/api/hello", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ file }),
+      });
+
+      const data = await response.json();
+      console.log('----------> here -->', data)
+      if (data.url) {
+        return data.url;
+      } else {
+        console.error('Failed to upload image', data.error);
+        return null;
+      }
+    } catch (error) {
+      console.error('Error uploading image', error);
+      return null;
+    }
+  };
+
   return (
     <>
       <fieldset className="col-12 col-xxl-6 p-0 m-0 d-flex justify-content-center align-items-center h-100">
@@ -86,19 +116,21 @@ function AccountTab() {
             type="file"
             className="d-none"
             accept="image/*"
+            id="file_input"
             onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 const reader = new FileReader()
-                if (e.target.files) {
-                  reader.readAsDataURL(e.target.files[0]);
+                const files : FileList | null = e.target.files
+                if (files && files.length > 0) {
+                  reader.readAsDataURL(files[0]);
                   reader.onloadend = () => {
                     if (reader.result && typeof reader.result === 'string') {
-                      updateField("image", reader.result)
+                      updateField("image", reader.result);
+                      handleUpload(reader.result);
                     }
                   }
                 }
               }
             }
-            id="file_input"
           />
         </div>
       </fieldset>
