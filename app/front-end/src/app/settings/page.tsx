@@ -18,6 +18,7 @@ import {
 import { toast } from "react-toastify";
 import { notificationStyle } from "@/components/ToastProvider";
 import GameTab from "@/components/SettingsForm/GameTab/gameTab";
+import NavBar from "@/components/NavBar/NavBar";
 // import GameTab from "@/components/SettingsForm/Game-tab/gametab";
 
 async function getInitialData({
@@ -224,6 +225,7 @@ function SettingsPage() {
     checkDifferences();
   }, [accountValues]);
 
+	  const options = ["Account", "Security", "Game"];
   return (
     <div
       className={` ${styles.wrapper} container-fluid vh-100  -warning p-0 m-0`}
@@ -241,7 +243,8 @@ function SettingsPage() {
           <form
             className={`row ${styles.form_container} p-1 m-0 justify-content-between align-items-center`}
           >
-            <fieldset className={`${styles.tab_container} row p-0 m-0`}>
+						  <NavBar options={options} />
+			<fieldset className={`${styles.tab_container} row p-0 m-0`}>
               <div className="col m-2 p-2 d-flex flex-row flex-nowrap">
                 <h2
                   className="col-4 m-1 col-xl-2 itim-font"

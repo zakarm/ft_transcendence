@@ -31,11 +31,13 @@ function ChooseOpponent({ setPageId }: Props) {
         <div
           className={`${styles.option} col-10 col-sm-3 col-md-8 col-xl-3 mx-3`}
         >
-          <OptionCard
-            cardTitle="TOURNAMENT"
-            imageSrc="/back.png"
-            setPageId={setPageId}
-          ></OptionCard>
+          <Link href="/game/Tournament" style={{ textDecoration: "none" }}>
+            <OptionCard
+              cardTitle="TOURNAMENT"
+              imageSrc="/back.png"
+              setPageId={setPageId}
+            ></OptionCard>
+          </Link>
         </div>
 
         <div

@@ -23,12 +23,12 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
       <div className="Tournament_card_image">
         <SafeImage src={imageUrl} alt="" />
       </div>
-      <div className="Tournament_card_info">
+      <div className="Tournament_card_info mt-3">
         <p className="Tournament_card_name">{name}</p>
         <p className="Tournament_card_date">{date}</p>
       </div>
       <hr />
-      <div className="Tournament_card_info_row">
+      <div className="Tournament_card_info_row mt-3">
         <Link href={pageUrl}>
           <button>JOIN</button>
         </Link>
