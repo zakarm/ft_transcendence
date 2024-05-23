@@ -1,0 +1,46 @@
+._nav_bar {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+._nav_bar button,
+._nav_bar select {
+  width: 200px;
+  height: 50px;
+  border: 0;
+  border-bottom: 1px solid #df3d4b;
+  background-color: transparent;
+  /* background-color: black; */
+  color: #feebeb;
+  font-size: 20px;
+  margin-left: 15px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.3s ease;
+  animation: pulseborder 1.5s;
+}
+
+._nav_bar select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+._nav_bar select:hover,
+._nav_bar button:hover {
+  cursor: pointer;
+  animation: pulseborder 1.5s ease;
+  border-bottom: 1px solid #feebeb;
+}
+
+@keyframes pulseborder {
+  0% {
+    border-color: #df3d4b;
+  }
+  50% {
+    border-color: transparent;
+  }
+  100% {
+    border-color: #df3d4b;
+  }
+}
