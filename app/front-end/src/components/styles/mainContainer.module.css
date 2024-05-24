@@ -5,10 +5,26 @@
     opacity: 1;
 }
 
+.loadingMessage {
+    margin-top: 1rem;
+}
+
+.darkBackground {
+    background-color: #161625;
+    color: #fff;
+}
+
+.spinnerContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
 .sidebar_toggle {
     background-color: #161625;
 }
-
 
 .toglle{
     display: none;
@@ -20,8 +36,7 @@
 
 .close_btn{
     color: #F4E6E6;
-}
-  
+} 
 
 @media (max-width: 767px) {
     

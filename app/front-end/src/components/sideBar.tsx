@@ -24,11 +24,12 @@ export default function SideBar() {
   });
 
   useEffect(() => {
-    const pathUrls = ["/dashboard", "/game", "/chat", "/achievement", "/settings"];
-    const index = pathUrls.indexOf(pathname);
+    const pathUrls = ["/dashboard", "/game", "/chat", "/achievements", "/settings"];
+	  const index = pathUrls.indexOf(pathname);
+	  if(index === -1) return;
     setActiveIcon(index);
     gsap.to(`.icon_${index}`, { rotation: "45" });
-    gsap.to(".logo", { rotation: "+=1080", duration: 1 }); 
+    gsap.to(".logo", { rotation: "+=1080", duration: 1 });
   }, [pathname]);
 
 
@@ -36,7 +37,12 @@ export default function SideBar() {
       <div className={`${styles.side_container} d-inline-flex flex-column justify-content-around align-items-center vh-100 py-4 px-2`}>
         <div className="flex-grow-1 pt-3">
           <Link href="/dashboard" >
-            <Image src="/LOGO.svg" width={60} height={60} className={`${styles.logo} logo img-fluid rounded rounded-circle`} alt="ying"/>
+			<Image src="/LOGO.svg"
+				  width={60}
+				  height={60}
+				  style={{ width: "auto", height: "auto" }}
+				  className={`${styles.logo} logo img-fluid rounded rounded-circle`}
+				  alt="ying" />
           </Link>
 		</div>
         <div className="flex-grow-1 d-flex flex-column justify-content-around">
@@ -49,7 +55,7 @@ export default function SideBar() {
             <Link className="" href="/chat">
              	<IoChatbubble className={`${styles.side_icon} icon_2`} color={activeIcon === 2 ? '#FF4755' : '#FFEBEB'}/>
             </Link>
-            <Link className="" href="/achievement">
+            <Link className="" href="/achievements">
             	<FaTrophy className={`${styles.side_icon} icon_3`} color={activeIcon === 3 ? '#FF4755' : '#FFEBEB'}/>
             </Link>
             <Link className="" href="/settings">

@@ -1,0 +1,93 @@
+/**-----------------Card----------------- */
+
+.Tournament_card {
+ color: #565665;
+  width: 320px;
+  height: 300px;
+  border-radius: 25px;
+  margin: 10px 20px;
+  background-color:#161625;
+  border: 0.2px solid #363a3d;
+  font-family: ;
+  animation: fadeIn 1s;
+}
+
+.Tournament_card_image {
+  width: 100%;
+  height: 130px;
+  background: #feebeb;
+  opacity: 0.5;
+  border-radius: 25px 25px 0 0;
+  border-bottom: 2px solid #df3d4b;
+}
+
+.Tournament_card_info ,.Tournament_card_info_row{
+  height: 70px;
+  padding: 0 10px;
+}
+
+.Tournament_card_info_row{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 0 0 25px 25px;
+}
+.Tournament_card button{
+  width: 100px;
+  height: 40px;
+  border: 0;
+  background-color: #df3d4b;
+  color: #feebeb;
+  font-family: valorax;
+  font-size: 1.5rem;
+  border-radius:15px;
+}
+
+.Tournament_card hr{
+  width: 90%;
+  height: 0.5px;
+  margin: 0 auto;
+  background-color: #565665;
+  border: 0.5px solid #565665;
+}
+
+.Tournament_card_participants{
+  display:flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-left: 7px;
+  font-size: clamp(0.7rem, 0.475rem + 1.2vw, 1rem);
+}
+
+.Tournament_card_participants_nbr{
+  margin:0 10px 10px 0;
+  padding-bottom: 10px;
+  font-size: clamp(0.7rem, 0.475rem + 1.2vw, 1rem);
+}
+
+.Tournament_card img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 25px 25px 0 0;
+}
+
+.Tournament_card_name{
+  font-size: clamp(1rem, 0.9rem + 1.6vw, 1.6rem);
+  font-weight: bold;
+  color: #feebeb;
+  line-height: 10px;
+}
+
+.Tournament_card_date {
+  font-size: clamp(0.9rem, 0.4rem + 1.6vw, 1.1rem)
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

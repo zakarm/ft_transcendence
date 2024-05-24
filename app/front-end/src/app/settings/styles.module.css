@@ -1,0 +1,253 @@
+/******** Form ********/
+
+.form_container {
+  box-shadow: 0px 0px 20px 0px var(--clr-red);
+  border: 3px solid var(--clr-red);
+  border-radius: 25px;
+  width: 96%;
+  min-width: 300px;
+  background-color: var(--clr-ldark);
+  height: 900px;
+  transition: box-shadow 0.4s ease-in-out, border 0.4s ease-in-out;
+}
+
+.wrapper {
+  overflow: auto;
+}
+
+.form_container:hover {
+  transition: border 0.25 ease-in-out;
+  border: 3px solid var(--clr-red);
+  box-shadow: 0px 0px 30px 0px var(--clr-red);
+}
+/******** inputs ********/
+
+.inputTitle {
+  font-size: clamp(1.3rem, -0.268rem + 2.6144vw, 1.6rem);
+  color: var(--clr--grey);
+}
+
+.inputHolder {
+    font-size: clamp(1rem, -0.268rem + 2.6144vw, 1.2rem);
+    color : var(--clr-ldark);
+    width : 400px;
+}
+
+.input {
+  width : 100%;
+  outline: none;
+  color: #706f71;
+  background-color: var(--clr--grey);
+  height: 70px;
+  border-radius: 25px;
+  /* accent-color: red; */
+  border : none;
+}
+
+.previewButton {
+  width : 100%;
+  min-width: 60px;
+  border : none;
+  height: 70px;
+  border-radius: 25px;
+  background-color: #706f71;
+  cursor: pointer;
+}
+
+.inputHolderColor {
+    font-size: clamp(1rem, -0.268rem + 2.6144vw, 1.2rem);
+    width : 400px;
+}
+
+.inputColor {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width : 100%;
+    cursor: pointer;
+  }
+
+  .inputColor::-webkit-color-swatch {
+    width: 100%;
+    border-radius: 25px;
+    border: 2px solid var(--clr--white);
+  }
+
+  .inputColor::-moz-color-swatch {
+    width: 100%;
+    border-radius: 25px;
+    border: 2px solid var(--clr--white);
+  }
+
+.inputColor {
+    background-color: var(--clr--grey);
+    height: 70px;
+    border-radius: 25px;
+    /* accent-color: red; */
+    border : none;
+}
+
+.input:focus {
+  color: var(--clr--white);
+}
+
+.input:hover,
+.inputColor:hover,
+.checkbox:hover,
+.previewButton:hover {
+  scale: 1.01;
+}
+
+.slider {
+  appearance: none;
+  width: 95%;
+  height: 15px;
+  border-radius: 25px;  
+  background: var(--clr--grey);
+  outline: none;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%; 
+  background: var(--clr-red);
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: var(--clr-red);
+  cursor: pointer;
+}
+
+/* select option */
+
+.tab_container {
+  height: 10%;
+}
+
+.content_container {
+  height: 80%;
+}
+
+/******** Image ********/
+
+.qr_image {
+  filter: blur(5px);
+}
+
+.image_container {
+  position: relative;
+  transition: transform 0.4s ease-in-out;
+}
+
+.profilePic {
+  border-radius: 50%;
+  width: 300px;
+  height: 300px;
+}
+
+.qr_code {
+  border-radius: 25px;
+  width: 300px;
+  height: 300px;
+}
+
+.camera {
+  position: absolute;
+  top: 75%;
+  right: 1%;
+}
+
+.image_container:hover {
+  transform: scale(1.03);
+  cursor: pointer;
+}
+
+/******** button ********/
+.create_button {
+  height: 100px;
+  border: none;
+  border-radius: 25px;
+  background-color: var(--clr-red);
+  color: var(--clr--white);
+  min-width: 180px;
+  max-width: 800px;
+  font-size: clamp(1.2rem, -0.268rem + 2.6144vw, 3rem);
+  box-shadow: 0px 100px 100px -10px rgba(255, 71, 85, 0.7),
+    0px 10px 100px 10px var(--clr-dark);
+  transition: box-shadow 0.6s ease-in-out, transform 0.6s ease-in-out;
+}
+
+.create_button:hover {
+  background-color: var(--clr--white);
+  color: var(--clr-dark);
+  box-shadow: 0px 100px 100px -10px rgba(255, 235, 235, 0.7),
+    0px 10px 100px 10px var(--clr-dark);
+}
+
+@media only screen and (max-width: 1400px) {
+  .formTitle {
+    font-size: 1rem;
+  }
+
+  .inputHolder {
+    width: 350px;
+  }
+
+  .profilePic, .qr_code {
+    width: 200px;
+    height: 200px;
+  }
+
+    .input, .inputColor, .select, .previewButton {
+        height: 50px;
+    }
+
+    .form_container {
+        height: auto;
+    }
+}
+
+@media only screen and (max-width: 776px) {
+  .create_button {
+    height: 70px;
+  }
+  .formTitle {
+    font-size: 1rem;
+  }
+
+  .inputHolder {
+    width: 250px;
+  }
+
+  .form_container {
+    width: 80%;
+  }
+}
+
+@media only screen and (max-width: 360px) {
+  .formTitle {
+    font-size: 1rem;
+  }
+
+  .inputHolder {
+    width: 200px;
+  }
+
+  .profilePic, .qr_code {
+    width: 100px;
+    height: 100px;
+  }
+
+  .camera {
+    height: 20px;
+  }
+}

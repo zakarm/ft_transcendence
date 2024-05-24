@@ -21,9 +21,9 @@ export default function SocialAuth({ className, platform }: Props) {
 
   return (
       <button className={className} onClick={handleAuthRedirect} type="button">
-          {platform === "google" && <FaGoogle color="#FFEBEB" />}
-          {platform === "github" && <FaGithub color="#FFEBEB" />}
-          {platform === "42" && <Si42 color="#FFEBEB" />}
+          {platform === "google" && <FaGoogle />}
+          {platform === "github" && <FaGithub />}
+          {platform === "42" && <Si42 />}
       </button>
   );
 }
