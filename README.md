@@ -515,3 +515,4 @@ Columns:
 ### Frontend
 
 - [NextJS and Cloudinary — App Router Integration](https://medium.com/@varchasvipandey/nextjs-and-cloudinary-app-router-integration-ad7fd2e0fdb2)
+- [NextJS 13 API Routes: Better Than Expected!](https://www.youtube.com/watch?v=vrR4MlB7nBI&ab_channel=Joshtriedcoding)
