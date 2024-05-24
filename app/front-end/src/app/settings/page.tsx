@@ -30,11 +30,11 @@ async function getInitialData({
 }) {
   try {
 
-    const access = Cookies.get("access");
-    const response = await fetch("", {
-      method: "GET",
-      headers: { Authorization: `Bearer ${access}` },
-    });
+    // const access = Cookies.get("access");
+    // const response = await fetch("", {
+    //   method: "GET",
+    //   headers: { Authorization: `Bearer ${access}` },
+    // });
 
     // const data = await response.json();
 
@@ -95,6 +95,77 @@ async function getInitialData({
   }
 }
 
+const validateInput: (valuesToPost: SettingsProps["valuesToPost"]) => boolean = (valuesToPost: SettingsProps["valuesToPost"]) => {
+  
+  const validateEmail: (email: string) => boolean = (email) => {
+    let rgx: RegExp = /^([a-zA-Z0-9\._]+)@([a-zA-Z0-9])+.([a-z]+)(.[a-z]+)?$/;
+    return rgx.test(email);
+  };
+
+  const toCheck: string[] = ["first_name", "last_name", "nickname"];
+  let isValid: boolean = true;
+
+  toCheck.map((key) => {
+    if (valuesToPost[key] === "") {
+      toast.error(`Invalid input : ${key}`, notificationStyle);
+      isValid = false;
+    }
+  });
+
+  if (!validateEmail(valuesToPost["email"] as string)) {
+    toast.error(`Invalid input : email`, notificationStyle);
+    isValid = false;
+  }
+
+  if (valuesToPost["new_password"] !== valuesToPost["repeat_password"]) {
+    toast.error(
+      `Invalid input : new_password or repeat_password`,
+      notificationStyle
+    );
+    isValid = false;
+  }
+  return isValid;
+};
+
+const isBase64 = (str: string): boolean => {
+  if (typeof str !== 'string') {
+    return false;
+  }
+  try {
+    btoa(str)
+    return true
+  } catch (error) {
+    return false
+  }
+};
+
+const handleImageUpload = async (file: string): Promise<string | null> => {
+  
+  if (!isBase64(file)) {
+    console.error("The provided string is not a valid base64 encoded string.");
+    return null;
+  }
+
+  try {
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ file }),
+    });
+
+    const data = await response.json();
+    if (data.url === undefined) {
+      return null;
+    }
+    return data.url;
+  } 
+  catch (error) {
+    return null;
+  }
+};
+
 /* Submits the form */
 const postFormData = async ({
   valuesToPost,
@@ -103,44 +174,25 @@ const postFormData = async ({
   valuesToPost: SettingsProps["valuesToPost"];
   isFormChanged: MutableRefObject<boolean>;
 }) => {
-  try {
-    const validateEmail: (email: string) => boolean = (email) => {
-      let rgx: RegExp = /^([a-zA-Z0-9\._]+)@([a-zA-Z0-9])+.([a-z]+)(.[a-z]+)?$/;
-      return rgx.test(email);
-    };
 
-    const validateInput: () => boolean = () => {
-      const toCheck: string[] = ["first_name", "last_name", "nickname"];
-      let isValid: boolean = true;
-
-      toCheck.map((key) => {
-        if (valuesToPost[key] === "") {
-          toast.error(`Invalid input : ${key}`, notificationStyle);
-          isValid = false;
+  if (isFormChanged.current && validateInput(valuesToPost)) {
+    
+      const changeImageURL = async () => {
+        if (typeof valuesToPost['image'] === 'string') {
+          const promise = await handleImageUpload(valuesToPost['image']);
+          if (promise !== null && typeof promise === 'string') {
+            valuesToPost['image'] = promise;
+          }
         }
-      });
-
-      if (!validateEmail(valuesToPost["email"] as string)) {
-        toast.error(`Invalid input : email`, notificationStyle);
-        isValid = false;
       }
 
-      if (valuesToPost["new_password"] !== valuesToPost["repeat_password"]) {
-        toast.error(
-          `Invalid input : new_password or repeat_password`,
-          notificationStyle
-        );
-        isValid = false;
-      }
-      return isValid;
-    };
+      const postData = async () => {
 
-    if (isFormChanged.current && validateInput()) {
-      isFormChanged.current = false;
-      const access = Cookies.get("access");
-
-      console.log("------> JSON To Post", JSON.stringify(valuesToPost));
-      const res = await fetch("", {
+        await changeImageURL();
+        console.log("------> JSON To Post", JSON.stringify(valuesToPost));
+        isFormChanged.current = false;
+        const access = Cookies.get("access");
+        const res = await fetch("", {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -155,13 +207,18 @@ const postFormData = async ({
         Cookies.set("table_color", (valuesToPost['table_color'] as string))
         Cookies.set("ball_color", (valuesToPost['ball_color'] as string))
         Cookies.set("paddle_color", (valuesToPost['paddle_color'] as string))
-
+        
         /* .... updates form placeholders */
-      }
+      } 
     }
-  } catch (error) {
-    console.error("Unexpected error : ", error);
-  }
+
+    try {
+      postData();
+    }
+    catch (error) {
+      console.error("Unexpected error : ", error);
+    }
+  }   
 };
 
 function SettingsPage() {
@@ -171,18 +228,18 @@ function SettingsPage() {
   const [accountValues, setAccountValues] = useState<
     SettingsProps["accountValues"]
   >({});
-  const [tab, setTab] = useState<string>("account");
+  const [tab, setTab] = useState<string>("Account");
   const isFormChanged = useRef<boolean>(false);
-
   /* Updates a specific field of the input */
   const updateField = (key: string, value: string | boolean) => {
-
+    
     setAccountValues((prevValues : SettingsProps["accountValues"]) => {
       const newValues = { ...prevValues };
       newValues[key] = value;
       return newValues;
     });
   };
+  const options = ["Account", "Security", "Game"];
 
   /* Compares values in  [accountValues, valuesToPost] */
   const checkDifferences = () => {
@@ -197,10 +254,10 @@ function SettingsPage() {
         }
         count++;
       }
-
+      
       return !(Object.entries(d1).length === count);
     };
-
+    
     const updatePostValues = (values: SettingsProps["accountValues"]) => {
       let newValues: SettingsProps["accountValues"] = { ...values };
       for (const [key, value] of Object.entries(values)) {
@@ -225,10 +282,9 @@ function SettingsPage() {
     checkDifferences();
   }, [accountValues]);
 
-	  const options = ["Account", "Security", "Game"];
   return (
     <div
-      className={` ${styles.wrapper} container-fluid vh-100  -warning p-0 m-0`}
+    className={` ${styles.wrapper} container-fluid vh-100  -warning p-0 m-0`}
     >
       <div className="row h-100 p-0 m-0">
         <section className="row p-0 m-0 mt-5">
@@ -243,27 +299,9 @@ function SettingsPage() {
           <form
             className={`row ${styles.form_container} p-1 m-0 justify-content-between align-items-center`}
           >
-						  <NavBar options={options} />
 			<fieldset className={`${styles.tab_container} row p-0 m-0`}>
               <div className="col m-2 p-2 d-flex flex-row flex-nowrap">
-                <h2
-                  className="col-4 m-1 col-xl-2 itim-font"
-                  onClick={() => setTab("account")}
-                >
-                  Account
-                </h2>
-                <h2
-                  className="col-4 m-1 col-xl-2 itim-font"
-                  onClick={() => setTab("security")}
-                >
-                  Security
-                </h2>
-                <h2
-                  className="col-4 m-1 col-xl-2 itim-font"
-                  onClick={() => setTab("game")}
-                >
-                  Game
-                </h2>
+                <NavBar options={options} setChoosenTab={setTab} />
               </div>
             </fieldset>
             <FormContext.Provider
@@ -279,9 +317,9 @@ function SettingsPage() {
                 className={`${styles.content_container} row  p-0 m-0  justify-content-center align-items-center`}
               >
                 {
-                  (tab === "account" && <AccountTab />) ||
-                    (tab === "security" && <SecurityTab />)
-                  ||(tab === "game" && <GameTab />)
+                  (tab === "Account" && <AccountTab />) ||
+                    (tab === "Security" && <SecurityTab />)
+                  ||(tab === "Game" && <GameTab />)
                 }
               </div>
             </FormContext.Provider>

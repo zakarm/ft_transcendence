@@ -17,7 +17,7 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
   participantsJoined,
   imageUrl,
   pageUrl,
-}) => {
+} : TournamentCardProps) => {
   return (
     <div className="Tournament_card">
       <div className="Tournament_card_image">

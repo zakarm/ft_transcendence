@@ -4,6 +4,7 @@ import { ChangeEvent, useContext } from "react";
 import { FormContext, SettingsProps } from "../form-components/formContext";
 import { GetInput, Props } from "../form-components/input";
 
+
 function GenerateInputFields() {
   const { valuesToPost } = useContext<SettingsProps>(FormContext);
 
@@ -11,24 +12,28 @@ function GenerateInputFields() {
     {
       inputId: "first_name",
       labelText: "First Name",
+      inputType : "text",
       placeholder: valuesToPost["first_name"],
       inputLength: 20,
     },
     {
       inputId: "last_name",
       labelText: "Last Name",
+      inputType : "text",
       placeholder: valuesToPost["last_name"],
       inputLength: 20,
     },
     {
       inputId: "nickname",
       labelText: "Nickname",
+      inputType : "text",
       placeholder: valuesToPost["nickname"],
       inputLength: 20,
     },
     {
       inputId: "email",
       labelText: "Email",
+      inputType : "email",
       placeholder: valuesToPost["email"],
       inputLength: 256,
     },
@@ -37,12 +42,12 @@ function GenerateInputFields() {
   return (
     <>
       {inputProps.map(
-        ({ inputId, labelText, placeholder, inputLength }: Props) => {
+        ({ inputId, labelText, placeholder, inputLength, inputType }: Props) => {
           return (
             <div key={inputId}>
               <GetInput
                 className="p-0 m-0 mt-4 row justify-content-center itim-font"
-                inputType="text"
+                inputType={inputType}
                 inputId={inputId}
                 labelText={labelText}
                 placeholder={placeholder}
@@ -86,19 +91,20 @@ function AccountTab() {
             type="file"
             className="d-none"
             accept="image/*"
+            id="file_input"
             onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 const reader = new FileReader()
-                if (e.target.files) {
-                  reader.readAsDataURL(e.target.files[0]);
+                const files : FileList | null = e.target.files
+                if (files && files.length > 0) {
+                  reader.readAsDataURL(files[0]);
                   reader.onloadend = () => {
                     if (reader.result && typeof reader.result === 'string') {
-                      updateField("image", reader.result)
+                      updateField("image", reader.result);
                     }
                   }
                 }
               }
             }
-            id="file_input"
           />
         </div>
       </fieldset>
