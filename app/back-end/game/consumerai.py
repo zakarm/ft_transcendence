@@ -89,7 +89,7 @@ def increment_room_index():
         print(f"An error occurred in increment_room_index: {e}", file=sys.stderr)
 
 
-class GameConsumer(AsyncWebsocketConsumer):
+class GameConsumerAi(AsyncWebsocketConsumer):
     # -----------------------> 0. send_direct_message <-----------------------
     async def send_winner_message(self, winner):
         try:
@@ -150,23 +150,21 @@ class GameConsumer(AsyncWebsocketConsumer):
                     "Room_name": self.room_name,
                 }
                 await self.message({"message": message})
-                if self.room.is_ready():
-                    user1, user1_data, user2, user2_data = (
-                        self.room.get_original_users()
-                    )
-                    # check the users ?//???????
-                    message = {
-                        "action": "opponents",
-                        "user1": user1,
-                        "user1_image_url": user1_data["user_img"],
-                        "user1_username": user1_data["username"],
-                        "user2": user2,
-                        "user2_image_url": user2_data["user_img"],
-                        "user2_username": user2_data["username"],
-                    }
-                    await self.broadcast_message(message)
-                    if self.room.is_started() == False:
-                        asyncio.ensure_future(self.start_game())
+                user1, user1_data, user2, user2_data = (
+                       self.room.get_original_users()
+                   )
+                # check the users ?//???????
+                message = {
+                    "action": "opponents",
+                    "user1": user1,
+                    "user1_image_url": user1_data["user_img"],
+                    "user1_username": user1_data["username"],
+                    "user2": "Ai",
+                    "user2_image_url": "https://cdnb.artstation.com/p/assets/images/images/036/952/231/large/leo-marques-yoru.jpg?1619071309",
+                    "user2_username": "Ai",
+                }
+                await self.broadcast_message(message)
+                asyncio.ensure_future(self.start_game())
             else:
                 await self.close()
         except Exception as e:
@@ -192,10 +190,12 @@ class GameConsumer(AsyncWebsocketConsumer):
                 if action == "paddle_move":
                     paddle = text_data_json["paddle"]
                     speed = text_data_json["speed"]
-                    room.set_paddle_speed(paddle, speed)
+                    if(paddle == 2):
+                        room.set_paddle_speed(paddle, speed)
                 elif action == "paddle_stop":
                     paddle = text_data_json["paddle"]
-                    room.set_paddle_speed(paddle, 0)
+                    if(paddle == 2):
+                        room.set_paddle_speed(paddle, 0)
                 elif action == "pause":
                     if room.get_user_pause(self.user.email) < 2:
                         if room.is_paused() != True:
@@ -218,36 +218,6 @@ class GameConsumer(AsyncWebsocketConsumer):
             await self.init_pos()
             room = get_room(self.room_name)
             while True:
-                if room.is_reconecting():
-                    i = 0
-                    while room.is_reconecting():
-                        await asyncio.sleep(1)
-                        message = {"action": "reconnecting"}
-                        await self.broadcast_message(message)
-                        if (i := i + 1) > 60:
-                            room.end_game()
-                            room.make_user_winner(room.get_online_user())
-                            winner, loser = room.get_winner()
-                            await self.send_winner_message(winner)
-                            # delete_room(self.room_name)
-                            return
-                    await self.broadcast_message({"action": "start_game"})
-                    message = {
-                        "action": "score",
-                        "user1score": room.getScores()["user1"],
-                        "user2score": room.getScores()["user2"],
-                    }
-                    await self.broadcast_message(message)
-                    ball_position, ball_velocity = room.get_updated_ball()
-                    message = {
-                        "action": "update",
-                        "ball_position_x": ball_position["x"],
-                        "ball_position_z": ball_position["z"],
-                        "ball_velocity_x": ball_velocity["velocity_x"],
-                        "ball_velocity_z": ball_velocity["velocity_z"],
-                    }
-                    await self.broadcast_message(message)
-                    await asyncio.sleep(5)
                 if room.is_paused():
                     await self.broadcast_message({"action": "pause"})
                     await asyncio.sleep(28)
@@ -257,6 +227,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 room.ball_update()
                 room.ball_intersect()
                 room.paddle_update()
+                room.bot()
                 if room.is_paddle_move(1):
                     message = {
                         "action": "paddle_update",
@@ -342,17 +313,6 @@ class GameConsumer(AsyncWebsocketConsumer):
     # -----------------------> 5. find_or_create_room <-----------------------
     async def find_or_create_room(self, user):
         try:
-            rooms_items = get_rooms_items()
-            for room_name, room in rooms_items:
-                if not room.is_ended():
-                    if room.is_ready() and room.is_user_joined(user.email):
-                        room.reconecting_user(self.channel_name, user.email)
-                        await self.message({"message": {"action": "reconnected"}})
-                        return room_name, room
-                    elif not room.is_ready() and not room.is_user_joined(user.email):
-                        room.add_user(self.channel_name, user.email, user)
-                        await self.message({"message": {"action": "joined"}})
-                        return room_name, room
             increment_room_index()
             new_room = RoomObject()
             new_room_name = f"room_{get_room_index()}"

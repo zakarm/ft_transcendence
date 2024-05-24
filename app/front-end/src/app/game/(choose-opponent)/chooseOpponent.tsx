@@ -55,11 +55,13 @@ function ChooseOpponent({ setPageId }: Props) {
         <div
           className={`${styles.option} col-10 col-sm-3 col-md-8 col-xl-3 mx-3`}
         >
-          <OptionCard
-            cardTitle="AI BOT GAME"
-            imageSrc="/back2.png"
-            setPageId={setPageId}
-          ></OptionCard>
+          <Link href="/game/Ai" style={{ textDecoration: "none" }}>
+            <OptionCard
+              cardTitle="AI BOT GAME"
+              imageSrc="/back2.png"
+              setPageId={setPageId}
+            ></OptionCard>
+          </Link>
         </div>
       </div>
     </div>
