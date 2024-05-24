@@ -3,18 +3,7 @@ load-plugins=pylint_django
 django-settings-module=ft_transcendence.settings
 
 [MESSAGES CONTROL]
-disable=missing-docstring,
-        import-error,
-        invalid-name,
-        too-few-public-methods,
-        abstract-method,
-        arguments-renamed,
-        too-many-locals,
-        too-many-branches,
-        too-many-statements,x
-        import-outside-toplevel,
-        arguments-differ,
-        no-else-return
+disable=all
 
 [FORMAT]
 max-line-length=120
