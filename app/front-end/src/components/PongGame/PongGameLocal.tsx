@@ -64,16 +64,17 @@ const PongGameLocal: React.FC = () => {
     camera.fov = minFOV - fraction * (minFOV - maxFOV);
     camera.updateProjectionMatrix();
     // camera.position.set(5, 0, 5);
-    camera.position.set(10, 25, 15);
+    camera.position.set(0, 25, 0);
+    // camera.position.set(10, 25, 15);
 
     // const targetPosition = new THREE.Vector3(1, 10, 0);
-    // const targetPosition = new THREE.Vector3(0, 10, 0);
-    const targetPosition = new THREE.Vector3(8, 6, 0);
+    const targetPosition = new THREE.Vector3(0, 10, 0);
+    // const targetPosition = new THREE.Vector3(8, 6, 0);
     gsap.to(camera.position, {
       x: targetPosition.x,
       y: targetPosition.y,
       z: targetPosition.z,
-      duration: 3,
+      duration: 5,
       onUpdate: () => {
         camera.lookAt(new THREE.Vector3(0, 0, 0));
       },
@@ -115,7 +116,7 @@ const PongGameLocal: React.FC = () => {
       boundary.addToScene(scene);
     });
 
-    const ball = new Ball(0.1, 46, 46, 0xffffff, [0, 0.1, 0], 0, 0);
+    const ball = new Ball(0.1, 46, 46, 0xffffff, [0, 0.1, 0], 0.025, 0.025);
     ball.addToScene(scene);
 
     const wall1 = new Wall(10, 0.5, 0.1, 0x161625, [0, 0.2, 2.6]);
@@ -186,12 +187,7 @@ const PongGameLocal: React.FC = () => {
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
-    };
-
-    //   if (data.message.action === "score") {
-    //     setUser1Score(data.message.user1score);
-    //     setUser2Score(data.message.user2score);
-    //   }
+	};
 
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("keyup", handleKeyUp);
@@ -208,14 +204,14 @@ const PongGameLocal: React.FC = () => {
         ball.mesh.position.set(0, 0.1, z);
         paddle1.mesh.position.set(-4.8, 0.15, 0);
         paddle2.mesh.position.set(4.8, 0.15, 0);
-        setUser1Score(user1score + 1);
+		setUser1Score((prevScore: number) => prevScore + 1);
       }
       if (ball.mesh.position.x > 5) {
         ball.Velocityx *= -1;
         ball.mesh.position.set(0, 0.1, z);
         paddle1.mesh.position.set(-4.8, 0.15, 0);
         paddle2.mesh.position.set(4.8, 0.15, 0);
-        setUser2Score(user2score + 1);
+        setUser2Score((prevScore: number) => prevScore + 1);
       }
       light.position.copy(ball.mesh.position);
       animateIdRef.current = requestAnimationFrame(animate);

@@ -59,6 +59,7 @@ export default class Ball {
     this.Velocityx *= 1.00005;
     this.Velocityz *= 1.00005;
   }
+
   intersect(
     wall1: { mesh: THREE.Mesh },
     wall2: { mesh: THREE.Mesh },
