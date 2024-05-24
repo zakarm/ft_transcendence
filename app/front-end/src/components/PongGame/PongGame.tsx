@@ -1,4 +1,3 @@
-"use client";
 import React, { useState, useEffect, useRef } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -9,7 +8,7 @@ import Ball from "./Ball";
 import Paddle from "./Paddle";
 import "./PongGame.css";
 import BoardItem from "../BoardItem/BoardItem";
-
+import gsap from "gsap";
 interface ConnectionInfo {
   index: number;
   roomName: string;
@@ -39,63 +38,88 @@ const PongGame: React.FC<Props> = ({
   players,
 }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({
-    width: 0,
-    height: window.innerHeight,
-  });
+  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+  const sceneRef = useRef<THREE.Scene | null>(null);
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+  const controlsRef = useRef<OrbitControls | null>(null);
+  const animateIdRef = useRef<number | null>(null);
   const [user1score, setUser1Score] = useState<number>(0);
   const [user2score, setUser2Score] = useState<number>(0);
-  const yoruImage = "/yoru.jpeg";
-  const omenImage = "/omen.jpeg";
 
   useEffect(() => {
-    function updateDimensions() {
-      if (containerRef.current) {
-        setDimensions({
-          width: containerRef.current.clientWidth,
-          height: window.innerHeight,
-        });
-      }
+    const { current: container } = containerRef;
+    if (!container) return;
+
+    // Dispose of existing WebGL resources if they exist
+    if (rendererRef.current) {
+      rendererRef.current.dispose();
+      container.removeChild(rendererRef.current.domElement);
+    }
+    if (controlsRef.current) {
+      controlsRef.current.dispose();
+    }
+    if (sceneRef.current) {
+      sceneRef.current?.traverse((object: THREE.Object3D) => {
+        if (object instanceof THREE.Mesh) {
+          object.geometry.dispose();
+          if (object.material instanceof THREE.Material) {
+            object.material.dispose();
+          } else if (Array.isArray(object.material)) {
+            if (Array.isArray(object.material)) {
+              object.material.forEach((material: THREE.Material) =>
+                material.dispose()
+              );
+            }
+          }
+        }
+      });
     }
 
-    window.addEventListener("resize", updateDimensions);
-    updateDimensions();
+    // Initialize scene, camera, and renderer
+    let width = container.clientWidth;
+    let height = container.clientHeight;
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x000000);
 
-    return () => {
-      window.removeEventListener("resize", updateDimensions);
-    };
-  }, []);
+    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+    let maxWidth = 2500;
+    let fraction = (width - 300) / (maxWidth - 300);
+    let minFOV = 120;
+    let maxFOV = 65;
+    camera.fov = minFOV - fraction * (minFOV - maxFOV);
+    camera.updateProjectionMatrix();
+    // camera.position.set(5, 0, 5);
+    camera.position.set(25, 15, 16);
 
-  useEffect(() => {
-    const newScene = new THREE.Scene();
-    newScene.background = new THREE.Color(0x000000);
-    const newCamera = new THREE.PerspectiveCamera(
-      75,
-      dimensions.width / window.innerHeight,
-      0.1,
-      1000
-    );
-    if (dimensions.width < 600) newCamera.fov = 100;
-    else if (dimensions.width >= 600 && dimensions.width < 1024)
-      newCamera.fov = 90;
-    else newCamera.fov = 75;
-    // newCamera.position.set(0, 5, 0);
-    newCamera.position.set(6, 8, 0);
-    newCamera.lookAt(new THREE.Vector3(9, 9, 0));
-    const newRenderer = new THREE.WebGLRenderer();
-    newRenderer.setSize(dimensions.width, window.innerHeight);
-    const { current: container } = containerRef;
-    if (container) container.appendChild(newRenderer.domElement);
+    const targetPosition = new THREE.Vector3(6, 8, 0);
+    gsap.to(camera.position, {
+      x: targetPosition.x,
+      y: targetPosition.y,
+      z: targetPosition.z,
+      duration: 3,
+      onUpdate: () => {
+        camera.lookAt(new THREE.Vector3(0, 0, 0));
+      },
+    });
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(width, height);
+    container.appendChild(renderer.domElement);
 
-    const controls = new OrbitControls(newCamera, newRenderer.domElement);
+    const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableZoom = true;
     controls.enablePan = true;
     controls.minDistance = 10;
-    controls.maxDistance = 160;
+    controls.maxDistance = 20;
     controls.update();
 
+    // Store references to clean up later
+    rendererRef.current = renderer;
+    sceneRef.current = scene;
+    cameraRef.current = camera;
+    controlsRef.current = controls;
+
     const surface = new Surface(10, 5, 1, 1, 0x161625);
-    surface.addToScene(newScene);
+    surface.addToScene(scene);
 
     const boundaries: {
       width: number;
@@ -111,36 +135,32 @@ const PongGame: React.FC<Props> = ({
     ];
     boundaries.forEach(({ width, height, depth, positions }) => {
       const boundary = new Boundary(width, height, depth, positions, 0xff4655);
-      boundary.addToScene(newScene);
+      boundary.addToScene(scene);
     });
 
     const ball = new Ball(0.1, 46, 46, 0xffffff, [0, 0.1, 0], 0, 0);
-    ball.addToScene(newScene);
+    ball.addToScene(scene);
 
     const wall1 = new Wall(10, 0.5, 0.1, 0x161625, [0, 0.2, 2.6]);
     const wall2 = new Wall(10, 0.5, 0.1, 0x161625, [0, 0.2, -2.6]);
-    wall1.addToScene(newScene);
-    wall2.addToScene(newScene);
+    wall1.addToScene(scene);
+    wall2.addToScene(scene);
 
     const paddle1 = new Paddle(0.2, 0.2, 1, 0xff4655, [-4.8, 0.15, 0]);
     const paddle2 = new Paddle(0.2, 0.2, 1, 0xff4655, [4.8, 0.15, 0]);
-    paddle1.addToScene(newScene);
-    paddle2.addToScene(newScene);
+    paddle1.addToScene(scene);
+    paddle2.addToScene(scene);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    newScene.add(ambientLight);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+    scene.add(ambientLight);
 
     const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
     directionalLight.position.set(0, 10, 0);
-    newScene.add(directionalLight);
+    scene.add(directionalLight);
 
-    const light = new THREE.PointLight(0xffffff, 0.5);
-    light.position.set(
-      ball.mesh.position.x,
-      ball.mesh.position.y + 0.1,
-      ball.mesh.position.z
-    );
-    newScene.add(light);
+    const light = new THREE.PointLight(0xffffff, 1);
+    light.position.copy(ball.mesh.position).y += 0.1;
+    scene.add(light);
 
     const handleKeyDown = (event: KeyboardEvent) => {
       let i = connectionInfo.index;
@@ -166,6 +186,8 @@ const PongGame: React.FC<Props> = ({
         case "ArrowLeft":
         case "ArrowRight":
           break;
+        case "Space":
+          sendMessage({ action: "pause" });
         default:
           break;
       }
@@ -174,13 +196,16 @@ const PongGame: React.FC<Props> = ({
     };
 
     const handleResize = () => {
-      if (dimensions.width < 600) newCamera.fov = 100;
-      else if (dimensions.width >= 600 && dimensions.width < 1024)
-        newCamera.fov = 90;
-      else newCamera.fov = 75;
-      newCamera.aspect = dimensions.width / dimensions.height;
-      newCamera.updateProjectionMatrix();
-      newRenderer.setSize(dimensions.width, dimensions.height);
+      let width = container.clientWidth;
+      let height = container.clientHeight;
+      let maxWidth = 2500;
+      let fraction = (width - 300) / (maxWidth - 300);
+      let minFOV = 120;
+      let maxFOV = 65;
+      camera.fov = minFOV - fraction * (minFOV - maxFOV);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
     };
 
     const sendMessage = (data: Record<string, any>) => {
@@ -193,52 +218,36 @@ const PongGame: React.FC<Props> = ({
     const handleMessage = (event: MessageEvent) => {
       const data = JSON.parse(event.data);
       if (data.message.action === "update") {
-        if (connectionInfo.index === 1)
-          ball.update(
-            data.message.ball_position_x,
-            data.message.ball_position_z,
-            data.message.ball_velocity_x,
-            data.message.ball_velocity_z
-          );
-        else
-          ball.update(
-            data.message.ball_position_x * -1,
-            data.message.ball_position_z * -1,
-            data.message.ball_velocity_x * -1,
-            data.message.ball_velocity_z * -1
-          );
-        light.position.copy(ball.mesh.position);
+        const factor = connectionInfo.index === 1 ? 1 : -1;
+        ball.update(
+          data.message.ball_position_x * factor,
+          data.message.ball_position_z * factor,
+          data.message.ball_velocity_x * factor,
+          data.message.ball_velocity_z * factor
+        );
+        light.position.copy(ball.mesh.position).y += 0.1;
       }
       if (data.message.action === "reset") {
-        if (connectionInfo.index === 1)
-          ball.update(
-            0,
-            data.message.ball_position_z,
-            data.message.ball_velocity_x,
-            data.message.ball_velocity_z
-          );
-        else
-          ball.update(
-            0,
-            data.message.ball_position_z * -1,
-            data.message.ball_velocity_x * -1,
-            data.message.ball_velocity_z * -1
-          );
-        light.position.copy(ball.mesh.position);
+        const factor = connectionInfo.index === 1 ? 1 : -1;
+        ball.update(
+          0,
+          data.message.ball_position_z * factor,
+          data.message.ball_velocity_x * factor,
+          data.message.ball_velocity_z * factor
+        );
+        light.position.copy(ball.mesh.position).y += 0.1;
         paddle1.reset();
         paddle2.reset();
       }
       if (data.message.action === "paddle_update") {
-        if (connectionInfo.index === 1) {
-          if (data.message.paddle === 1)
-            paddle1.update(data.message.paddle_position_z);
-          if (data.message.paddle === 2)
-            paddle2.update(data.message.paddle_position_z);
-        } else {
-          if (data.message.paddle === 1)
-            paddle2.update(data.message.paddle_position_z * -1);
-          if (data.message.paddle === 2)
-            paddle1.update(data.message.paddle_position_z * -1);
+        const factor = connectionInfo.index === 1 ? 1 : -1;
+        const updatePaddle1 = connectionInfo.index === 1 ? paddle1 : paddle2;
+        const updatePaddle2 = connectionInfo.index === 1 ? paddle2 : paddle1;
+        if (data.message.paddle === 1) {
+          updatePaddle1.update(data.message.paddle_position_z * factor);
+        }
+        if (data.message.paddle === 2) {
+          updatePaddle2.update(data.message.paddle_position_z * factor);
         }
       }
       if (data.message.action === "score") {
@@ -253,36 +262,56 @@ const PongGame: React.FC<Props> = ({
     window.addEventListener("resize", handleResize);
 
     const animate = () => {
-      requestAnimationFrame(animate);
-      newRenderer.render(newScene, newCamera);
+      animateIdRef.current = requestAnimationFrame(animate);
+      renderer.render(scene, camera);
     };
     animate();
 
     return () => {
+      console.log("PongGame unmounted");
       webSocket.removeEventListener("message", handleMessage);
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keyup", handleKeyUp);
       window.removeEventListener("resize", handleResize);
-      newRenderer.dispose();
-      if (container && newRenderer) {
-        if (container.contains(newRenderer.domElement)) {
-          container.removeChild(newRenderer.domElement);
-        }
+      controls.dispose();
+      if (animateIdRef.current !== null) {
+        cancelAnimationFrame(animateIdRef.current);
       }
+      renderer.dispose();
+      container.removeChild(renderer.domElement);
+
+      sceneRef.current?.traverse((object: THREE.Object3D) => {
+        if (object instanceof THREE.Mesh) {
+          object.geometry.dispose();
+          if (object.material instanceof THREE.Material) {
+            object.material.dispose();
+          } else if (Array.isArray(object.material)) {
+            object.material.forEach((material: THREE.Material) =>
+              material.dispose()
+            );
+          }
+        }
+      });
+
+      rendererRef.current = null;
+      sceneRef.current = null;
+      cameraRef.current = null;
+      controlsRef.current = null;
+      animateIdRef.current = null;
     };
-  }, [dimensions, connectionInfo, webSocket, user1score, user2score]);
+  }, []);
 
   return (
     <div className="Pong_Game_container">
       <div className="board">
         <BoardItem
-          championName={players[0].name}
+          championName={players[0].name || "Player 1"}
           hashtag="#TheHacker007"
           score={user1score}
           imageSrc={players[0].imageUrl}
         />
         <BoardItem
-          championName={players[1].name}
+          championName={players[1].name || "Player 2"}
           hashtag="#TheHacker007"
           score={user2score}
           imageSrc={players[1].imageUrl}

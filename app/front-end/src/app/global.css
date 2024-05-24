@@ -1,34 +1,48 @@
-@import url('https://fonts.googleapis.com/css2?family=Itim&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Itim&display=swap");
 
 :root {
-  --clr-red: #FF4755;
-  --clr-ldark : #161625;
-  --clr--white: #FFEBEB;
+  --clr-red: #ff4755;
+  --clr-ldark: #161625;
+  --clr--white: #ffebeb;
   --clr-dark: #111111;
-  --clr--green : #27B299;
-  --clr--grey : #2C3143;
+  --clr--green: #27b299;
+  --clr--grey: #2c3143;
 }
 
 @font-face {
-    font-family: 'valorax';
-    src: url('/valorax.otf') format('opentype')
-  }
-  
-  * {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-  }
-  
-  body {
-    background-color: #111111;
-  }
+  font-family: "valorax";
+  src: url("/valorax.otf") format("opentype");
+}
 
-  .itim-font {
-    font-family: 'itim', cursive !important;
-  }
-  
-  .valo-font {
-    font-family: 'valorax', Georgia, 'Times New Roman', Times, serif;
-    color: #FFEBEB;
-  }
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-color: black;
+}
+
+.itim-font {
+  font-family: "itim", cursive !important;
+}
+
+.valo-font {
+  font-family: "valorax", Georgia, "Times New Roman", Times, serif;
+  color: #ffebeb;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: black;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #df3d4b;
+  border-radius: 5px;
+  margin-left: 50px;
+}

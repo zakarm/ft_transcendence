@@ -114,7 +114,9 @@ const RemoteMatchGame: React.FC = () => {
         <>
           <PlayerCard {...MyProfile} />
           <div className="blurred-background"></div>
-          <div className="search-text">SEARCHING...</div>
+          <div className="t-text">
+            <div className="search-text">SEARCHING...</div>
+          </div>
         </>
       )}
 
@@ -129,46 +131,67 @@ const RemoteMatchGame: React.FC = () => {
         gameState === "start_game" ||
         gameState === "winner" ||
         gameState === "loser" ||
+        gameState === "pause" ||
         gameState === "reconnecting") &&
         webSocket && (
           <>
             {gameState === "load_game" && (
               <>
                 <div className="blurred-background"></div>
-                <div className="search-text">LOADING...</div>
+                <div className="t-text">
+                  <div className="load-text">LOADING...</div>
+                </div>
               </>
             )}
             {gameState === "winner" && (
               <>
                 <div className="blurred-background"></div>
-                <div className="search-text winner-text">WINNER</div>
-                <Link href="/game">
-                  <button className="play-again-button">PLAY AGAIN</button>
-                </Link>
-                <Link href="/">
-                  <button className="back-to-home">BACK TO HOME</button>
-                </Link>
+                <div className="t-text">
+                  <div className="winner-text">WINNER</div>
+                  <Link href="/game">
+                    <button className="play-again-button">play again</button>
+                  </Link>
+                  <Link href="/dashboard">
+                    <button className="back-to-home">back to home</button>
+                  </Link>
+                </div>
               </>
             )}
             {gameState === "loser" && (
               <>
                 <div className="blurred-background"></div>
-                <div className="search-text loser-text">LOSER</div>
-                <Link href="/game">
-                  <button className="play-again-button">PLAY AGAIN</button>
-                </Link>
-                <Link href="/dashboard">
-                  <button className="back-to-home">BACK TO HOME</button>
-                </Link>
+                <div className="t-text">
+                  <div className="loser-text">LOSER</div>
+                  <Link href="/game">
+                    <button className="play-again-button">play again</button>
+                  </Link>
+                  <Link href="/dashboard">
+                    <button className="back-to-home">back to home</button>
+                  </Link>
+                </div>
+              </>
+            )}
+            {gameState === "pause" && (
+              <>
+                <div className="blurred-background"></div>
+                <div className="t-text">
+                  <div className="pause-text">PAUSED</div>
+                </div>
               </>
             )}
             {gameState === "reconnecting" && (
               <>
                 <div className="blurred-background"></div>
-                <div className="search-text">RECONNECTING...</div>
+                <div className="t-text">
+                  <div className="reconnect-text">RECONNECTING...</div>
+                </div>
               </>
             )}
-				  <PongGame webSocket={webSocket} connectionInfo={connectionInfo} players={opponents} />
+            <PongGame
+              webSocket={webSocket}
+              connectionInfo={connectionInfo}
+              players={opponents}
+            />
           </>
         )}
     </div>

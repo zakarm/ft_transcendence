@@ -39,9 +39,9 @@ export default function SignInPage() {
                     const {url_code} = data;
                     setTwoFaData({ value: url_code, email });
                 }
-                else 
+                else
                 {
-                    toast.success('Successfully signed in !');   
+                    toast.success('Successfully signed in !');
                     Cookies.set("access", access, { path: '/' })
                     Cookies.set("refresh", refresh, { path: '/' })
                     router.push('/dashboard')
@@ -59,50 +59,100 @@ export default function SignInPage() {
         }
     }
     return (
-        <div className='container'>
-            <ToastContainer />
-            {twoFaData && <TwoFa value={twoFaData.value} email={twoFaData.email} />}
-            <div className={`${styles.flexx} border-danger border-3`}>
-                <div className={`${styles.main_card} shadow row`}>
-                    <div className={`col-lg-6 ${styles.main_img}`} style={{position: 'relative', minHeight: '300px'}}>
-                            <NextImage fill={true} src='/signimage.png' alt='Sign' className={`${styles.main_img}`} />
-                    </div>
-                    <div className={`col-lg-6 mb-5`}>
-                        <div className={`d-flex align-items-center flex-column`}>
-                            <div className={`mt-4 mb-4`}>
-                                <h1 className={`text-center valo-font`}>
-                                    VAL-PONG
-                                </h1>
-                            </div>
-                            <form className={`form-group mt-3 mb-3 w-75 ${styles.forml}`} onSubmit={signInPost}>
-                                <div className='mb-3'>
-                                    <input className={`form-control ${styles.input_class} p-3 mb-3 border-0`} type='email' autoComplete="off" placeholder='Email' name="email" required/>
-                                </div>
-                                <div className='mb-5'>
-                                    <input className={`form-control ${styles.input_class} p-3 mb-3 border-0`} type='password' autoComplete="off" placeholder='Password' name="password" required/>
-                                </div>
-
-                                <div className='mb-3 text-center'>
-                                    <button className={`${styles.sign_btn} w-50`} type='submit'>
-                                        Sign In
-                                    </button>
-                                </div>
-                                <div className='row p-2 text-center'>
-                                    <Form.Label className='' style={{fontFamily: "itim", color: '#565A69'}}>Already have an account? <Link href="/sign-up" style={{color: '#FF4755', fontFamily: 'itim'}}>sign up</Link></Form.Label>
-                                </div>
-                                <div className='row text-start mt-3'>
-                                    <Form.Label style={{fontFamily: "itim", color: '#565A69'}}>or sign in with :</Form.Label>
-                                    <div className='d-flex justify-content-around align-items-center'>
-                                        <SocialAuth className={`${styles.auth_btn} col-sm-2`} platform="google" />
-                                        <SocialAuth className={`${styles.auth_btn} col-sm-2`} platform="github" />
-                                        <SocialAuth className={`${styles.auth_btn} col-sm-2`} platform="42" />
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+      <div className={`container`}>
+        {/* <ToastContainer /> */}
+        {twoFaData && <TwoFa value={twoFaData.value} email={twoFaData.email} />}
+        <div className={`${styles.flexx}`}>
+          <div className={`${styles.main_card} shadow row`}>
+            <div
+              className={`col-lg-6 ${styles.main_img}`}
+              style={{ position: "relative", minHeight: "400px" }}
+            >
+              <NextImage
+                fill={true}
+                sizes="100%"
+                style={{ objectFit: "cover" }}
+                src="/pong_background.png"
+                alt="Sign"
+                className={`${styles.main_img}`}
+                priority={true}
+              />
             </div>
+            <div className={`col-lg-6 mb-5`}>
+              <div className={`d-flex align-items-center flex-column`}>
+                <div className={`mt-4 mb-4`}>
+                  <h1 className={`text-center valo-font`}>VAL-PONG</h1>
+                </div>
+                <form
+                  className={`form-group mt-3 mb-3 w-75 ${styles.forml}`}
+                  onSubmit={signInPost}
+                >
+                  <div className="mb-3">
+                    <input
+                      className={`form-control ${styles.input_class} p-3 mb-3 border-0`}
+                      type="email"
+                      autoComplete="off"
+                      placeholder="Email"
+                      name="email"
+                      required
+                    />
+                  </div>
+                  <div className="mb-5">
+                    <input
+                      className={`form-control ${styles.input_class} p-3 mb-3 border-0`}
+                      type="password"
+                      autoComplete="off"
+                      placeholder="Password"
+                      name="password"
+                      required
+                    />
+                  </div>
+
+                  <div className="mb-3 text-center">
+                    <button className={`${styles.sign_btn} w-50`} type="submit">
+                      Sign In
+                    </button>
+                  </div>
+                  <div className="row p-2 text-center">
+                    <Form.Label
+                      className=""
+                      style={{ fontFamily: "itim", color: "#565A69" }}
+                    >
+                      Don't have an account?{" "}
+                      <Link
+                        href="/sign-up"
+                        style={{ color: "#FF4755", fontFamily: "itim" }}
+                      >
+                        sign up
+                      </Link>
+                    </Form.Label>
+                  </div>
+                  <div className="row text-start mt-3">
+                    <Form.Label
+                      style={{ fontFamily: "itim", color: "#565A69" }}
+                    >
+                      or sign in with :
+                    </Form.Label>
+                    <div className="d-flex justify-content-around align-items-center">
+                      <SocialAuth
+                        className={`${styles.auth_btn} col-sm-2`}
+                        platform="google"
+                      />
+                      <SocialAuth
+                        className={`${styles.auth_btn} col-sm-2`}
+                        platform="github"
+                      />
+                      <SocialAuth
+                        className={`${styles.auth_btn} col-sm-2`}
+                        platform="42"
+                      />
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     );
 }

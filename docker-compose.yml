@@ -4,7 +4,7 @@ services:
     back-end:
         container_name: back-end
         image: back-end:42
-        build: 
+        build:
             context: ./app/back-end
             dockerfile: Dockerfile
         restart: always
@@ -23,7 +23,7 @@ services:
     front-end:
         container_name: front-end
         image: front-end:42
-        build: 
+        build:
             context: ./app/front-end
             dockerfile: Dockerfile
         restart: always
@@ -40,11 +40,11 @@ services:
 
         networks:
             - ft_transcendence
-    
+
     data-base:
         container_name: data-base
         image: data-base:42
-        build: 
+        build:
             context: ./app/data-base
             dockerfile: Dockerfile
         restart: always
@@ -56,11 +56,11 @@ services:
             - v_data-base:/var/lib/postgresql/data
         networks:
             - ft_transcendence
-    
+
     redis:
         container_name: redis
         image: redis:42
-        build: 
+        build:
             context: ./services/redis
             dockerfile: Dockerfile
         restart: on-failure

@@ -15,7 +15,7 @@ import { ImUserPlus , ImUserMinus , ImUsers } from "react-icons/im";
 import { CgUnblock } from "react-icons/cg";
 import { ToastContainer, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { MdBlock } from "react-icons/md";
 interface Props{
     show: boolean;
     close: () => void;
@@ -116,8 +116,8 @@ export default function InviteFriend( {show, close}: Props) {
   }
 
   const fetchUser = async (api: string, message: string, user_data: Friend_) => {
-    console.log(user_data);
     const access = Cookies.get('access');
+    
     if (access)
     {
       try {
@@ -142,33 +142,41 @@ export default function InviteFriend( {show, close}: Props) {
         const data = await res.json();
         if (data)
         {
-          if (api === 'friends-remove' || api === 'friends-add')
+          if (api === 'friends-unblock')
           {
-            if (api === 'friends-remove')
+              console.log('test');
+            const unblockedUser = searchedBlockedFriends.at(searchedFriends.findIndex(user => user.user.username === user_data.user.username));
+            if (unblockedUser)
             {
+              setsearchedFriends([...searchedFriends, unblockedUser]);
+              setsearchedBlockedFriends(searchedBlockedFriends.filter(user => user.user.username !== user_data.user.username));
+            }
+          }
+          if (api === 'friends-remove' || api === 'friends-add' || 'friends-block')
+          {
+            if (api === 'friends-remove' || 'friends-block')
+            {
+              setUsers(users.filter(user => user.user.username !== user_data.user.username));
               setsearchedFriends(searchedFriends.filter(friend => friend.user.username !== user_data.user.username));
-              toast.warning(message);
+              
             }
             else
             {
-              console.log('=>' , searchedFriends);
               const updatedUsers = searchedFriends.map(item => {
                 if (item.user.username === user_data.user.username)
                     return {...item, is_user_from: true};
                 return item;
               });
               setsearchedFriends(updatedUsers);
-              toast.success(message);
             }
           }
           else if (api === 'friends-accept')
           {
             users.filter(friend => friend.user.username === user_data.user.username)[0].is_accepted = true;
             setsearchedPendingFriends(searchedPendingFriends.filter(friend => friend.user.username !== user_data.user.username));
-            toast.success(message);
           }
+          toast.success(message);
         }
-        
       } catch (error) {
           console.error('Error fetching data: ', error);
       }
@@ -177,22 +185,64 @@ export default function InviteFriend( {show, close}: Props) {
       console.log('Access token is undefined or falsy');
   }
 
-  const update = () => {
-    fetchUsersData();
-    setsearchedFriends(users.filter(friend => ((friend.is_accepted || friend.is_user_from) && !friend.blocked)));
-    setsearchedPendingFriends(users.filter(friend => !friend.is_accepted && !friend.is_user_from && !friend.blocked));
-    setsearchedBlockedFriends(users.filter(user => user.blocked));
+  const fetchBlockedUsers =  async () => {
+    const access = Cookies.get('access');
+    if (access)
+    {
+      try {
+        const res = await fetch('http://localhost:8000/api/blocked-friends', {
+              headers: { Authorization: `Bearer ${access}` },
+            });
+
+        if (!res.ok)
+        {
+          if (res.status === 400)
+            return toast.error('Action not allowed');
+          else
+            throw new Error('Failed to fetch data');
+        }
+
+        const data = await res.json();
+        const transData = data.friends.map((friend: Friend_) => ({
+          user: {
+            id: friend.user.id,
+            username: friend.user.username,
+            image_url: friend.user.image_url,
+          },
+          is_accepted: friend.is_accepted,
+          is_user_from: friend.is_user_from,
+          blocked: friend.blocked
+        }));
+
+        setsearchedBlockedFriends(transData.filter((friend: Friend_) => friend.blocked));
+
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    else
+      console.log('');
   }
 
-  useEffect(() => {
-    console.log("->" , users);
-    if (show)
-      update();
-  }, [show, selectedTab]);
+  const update = () => {
+    fetchUsersData();
+    setsearchedFriends(users.filter(friend => ((friend.is_accepted || friend.is_user_from))));
+    setsearchedPendingFriends(users.filter(friend => !friend.is_accepted && !friend.is_user_from));
+    fetchBlockedUsers();
+  }
+
+  // useEffect(() => {
+  //   update();
+  // }, [users, searchedFriends, searchedPendingFriends, searchedBlockedFriends])
 
   useEffect(() => {
-    console.log(searchedFriends);
-  }, [searchedFriends])
+    if (show)
+      update();
+  }, [show]);
+
+  useEffect(() => {
+      update();
+  }, [selectedTab]);
 
   const handle_search = () => {
     if (users)
@@ -227,7 +277,7 @@ export default function InviteFriend( {show, close}: Props) {
 
   return (
       <>
-        <ToastContainer 
+        {/* <ToastContainer 
           position="top-right"
           autoClose={2000}
           hideProgressBar={false}
@@ -239,7 +289,7 @@ export default function InviteFriend( {show, close}: Props) {
           pauseOnHover
           theme="colored"
           transition={Zoom}
-        />
+        /> */}
         <Modal contentClassName={`${styles.friend_modal}`} show={show} aria-labelledby="add_friend" centered>
                 <Tabs
                   defaultActiveKey="friends"
@@ -282,7 +332,10 @@ export default function InviteFriend( {show, close}: Props) {
                                       friend.is_accepted 
                                       ? 
                                       (
-                                        <div className='col-9 text-end' ><Button variant="dark" onClick={() => fetchUser('friends-remove', 'removed from friends', friend)}>Remove <IoIosRemoveCircle color="#FFEBEB" /></Button></div>
+                                        <div className="col-9 d-flex">
+                                          <div className='col text-end p-1' ><Button variant="dark" onClick={() => fetchUser('friends-remove', 'removed from friends', friend)}>Remove <IoIosRemoveCircle color="#FFEBEB" /></Button></div>
+                                          <div className='col text-end p-1' ><Button variant="dark" onClick={() => fetchUser('friends-block', 'user is blocked', friend)}>Block <MdBlock color="#FFEBEB" /></Button></div>
+                                        </div>
                                       ) 
                                       : 
                                       (

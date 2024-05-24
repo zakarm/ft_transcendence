@@ -87,7 +87,10 @@ const useWebSocket = (url: string) => {
       }
       if (data.message.action === "reconnecting") {
         setGameState("reconnecting");
-      }
+	  }
+		if (data.message.action === "pause") {
+      setGameState("pause");
+    }
       if (data.message.action === "end_game") {
         if (data.message.status === "winner") setGameState("winner");
         else setGameState("loser");

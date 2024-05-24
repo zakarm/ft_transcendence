@@ -1,7 +1,7 @@
 
 
 .container{
-    background-image: url("/bg.png");
+     background-image: url("/bg.png");
     background-size: cover;
     background-position: center;
     backdrop-filter: grayscale(50%) blur(5px);

@@ -48,7 +48,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
     >
       <img src={`${imageUrl}`} alt={name} />
       <div className="chart">
-        <h2 className="name">{name}</h2>
+        <h2 className="name">{name || "player"}</h2>
         <RadarChart outerRadius={60} width={250} height={250} data={data}>
           <PolarGrid />
           <PolarAngleAxis dataKey="subject" />
