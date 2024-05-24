@@ -48,6 +48,27 @@ export default class Paddle {
     this.mesh.position.z = this.positions[2];
   }
 
+  paddleUpdate() {
+    let newPosition1 = this.mesh.position.z + this.speed;
+    if (newPosition1 < -2.5 + this.depth / 2) {
+      this.mesh.position.z = -2.5 + this.depth / 2;
+      this.speed = 0;
+    } else if (newPosition1 > 2.5 - this.depth / 2) {
+      this.mesh.position.z = 2.5 - this.depth / 2;
+      this.speed = 0;
+    } else {
+      this.mesh.position.z = newPosition1;
+    }
+  }
+
+  move(paddleSpeed: number) {
+    this.speed = paddleSpeed;
+  }
+
+  stop() {
+    this.speed = 0;
+  }
+
   addToScene(scene: THREE.Scene) {
     scene.add(this.mesh);
   }
