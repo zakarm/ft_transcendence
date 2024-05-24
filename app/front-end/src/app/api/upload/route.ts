@@ -16,6 +16,7 @@ export async function POST(req : Request) {
   if (req == null || req.body == null) return ;
 
   const   { file }  = await req.json();
+  
   try {
     const uploadedResponse = await cloudinary.uploader.upload(file, {
       upload_preset : 'ml_default',
@@ -26,13 +27,10 @@ export async function POST(req : Request) {
     })
 
     return new Response(JSON.stringify({ url : uploadedResponse.secure_url }), {
-      status : 200
+      status : 201
     })
   }
   catch (error) {
-      console.log("Couldn't upload image : ", error);
-      return new Response(JSON.stringify({}), {
-        status : 401
-      })
+      return new Response(JSON.stringify({}), {})
   }
 }

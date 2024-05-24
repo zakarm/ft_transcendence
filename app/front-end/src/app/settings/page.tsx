@@ -127,26 +127,24 @@ const validateInput: (valuesToPost: SettingsProps["valuesToPost"]) => boolean = 
   return isValid;
 };
 
-// const isBase64 = (str: string): boolean => {
-//   if (typeof str !== 'string') {
-//     return false;
-//   }
-//   // Regular expression to validate base64 format
-//   const base64Regex = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
-//   // Check if the string length is a multiple of 4
-//   if (str.length % 4 !== 0) {
-//     return false;
-//   }
-//   // Check if the string matches the base64 format
-//   return base64Regex.test(str);
-// };
+const isBase64 = (str: string): boolean => {
+  if (typeof str !== 'string') {
+    return false;
+  }
+  try {
+    btoa(str)
+    return true
+  } catch (error) {
+    return false
+  }
+};
 
 const handleImageUpload = async (file: string): Promise<string | null> => {
   
-  // if (!isBase64(file)) {
-  //   console.error("The provided string is not a valid base64 encoded string.");
-  //   return null;
-  // }
+  if (!isBase64(file)) {
+    console.error("The provided string is not a valid base64 encoded string.");
+    return null;
+  }
 
   try {
     const response = await fetch("/api/upload", {
@@ -158,16 +156,12 @@ const handleImageUpload = async (file: string): Promise<string | null> => {
     });
 
     const data = await response.json();
-    console.log('----------> here -->', data)
-    if (data.url) {
-      return data.url;
-    } else {
-      console.error('Failed to upload image', data.error);
+    if (data.url === undefined) {
       return null;
     }
+    return data.url;
   } 
   catch (error) {
-    console.error('Error uploading image', error);
     return null;
   }
 };

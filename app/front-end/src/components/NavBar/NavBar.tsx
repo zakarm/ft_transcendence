@@ -3,11 +3,11 @@ import React, { useState, ChangeEvent } from "react";
 import "./NavBar.css";
 
 interface TournamentProps {
-  options: string[];
-  setChoosenTab : (s : string) => void;
+  options : string[];
+  setChoosenTab ?: (s : string) => void;
 }
 
-const NavBar: React.FC<TournamentProps> = ({ options,  setChoosenTab }: TournamentProps) => {
+const NavBar: React.FC<TournamentProps> = ({ options, setChoosenTab = () : void => {} }: TournamentProps) => {
   const [isSmall, setIsSmall] = useState(window.innerWidth <= 215 * options.length + 200);
 
     window.addEventListener("resize", () => {
@@ -20,6 +20,7 @@ const NavBar: React.FC<TournamentProps> = ({ options,  setChoosenTab }: Tourname
         <>
           {options.map((option: any) => (
             <button
+              className="itim-font"
               key={option}
               type="button"
               onClick={() => setChoosenTab(option)}
@@ -30,6 +31,7 @@ const NavBar: React.FC<TournamentProps> = ({ options,  setChoosenTab }: Tourname
         </>
       ) : (
         <select
+          className="itim-font"
           name="tournament"
           id="tournament"
           onChange={(e : ChangeEvent<HTMLSelectElement>) => {
