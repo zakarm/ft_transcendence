@@ -5,14 +5,19 @@
 --clr--green : #27B299;
 --clr--grey : #2C3143; */
 .formWrapper {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 10px;
+    border-radius: 25px;
     background-color: var(--clr-ldark);
-    height : auto;
-    width : 600px;
+    height : 100%;
+    max-height: 900px;
+    width : 100%;
 }
 
 .input {
     outline: none;
-    color: var(--clr--lgrey);
+    color: #565a69;
     /* color: var(--clr--white); */
     background-color: var(--clr--grey);
     height: 50px;
@@ -21,6 +26,8 @@
 }
 
 .inputTitle {
+    width : 450px;
+
     color : var(--clr--grey);
 }
 
@@ -59,22 +66,26 @@
   
   .imageFile {
     width : 450px;
-    color : var(--clr--lgrey);
-    /* display: inline-block; */
+    color : #565a69;
     padding: 12px 12px;
     cursor: pointer;
   }
 
  .create_button {
+    width : 200px;
+    height : 50px;
     border : none;
-    border-radius : 25px;
+    border-radius : 15px;
     background-color : #FF4755;
-    color : #111111;
-    font-size: clamp(0.9rem, -0.268rem + 2.6144vw, 1.6rem);
+    color : var(--clr--white);
+    font-size: clamp(1rem, 0.953rem + 0.253vw, 1.9rem)
   }
 
-  .create_button:hover {
-    scale : 1.1;
+  .create_button:hover,  .slider::-webkit-slider-thumb:hover {
+    scale : 1.01;
+    color : var(--clr-dark);
+    background-color: var(--clr--white);
+    
   }
 
   .input:focus {
@@ -92,7 +103,7 @@
     }
     
     .inputHolder, .imageFile {
-        width : 350px;
+        /* width : 350px; */
     }
 
     .formWrapper {
@@ -105,27 +116,29 @@
     .formTitle {
         font-size: 1rem;
     }
-
+    .create_button {
+        height : 50px;
+    }
     .inputHolder, .imageFile {
-        width : 250px;
+        /* width : 250px; */
     }
 
     .formWrapper {
-        width : 300px;
+        width : 400px;
     }
 }
 
-@media only screen and (max-width: 360px) {
+@media only screen and (max-width: 400px) {
     
     .formTitle {
         font-size: 1rem;
     }
     
-    .inputHolder, .imageFile {
+    /* .inputHolder, .imageFile {
         width : 150px;
-    }
+    } */
 
     .formWrapper {
-        width : 200px;
+        width : 300px;
     }
 }

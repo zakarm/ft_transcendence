@@ -39,7 +39,7 @@
   overflow: auto;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-around;
   width: calc(100% - 2px);
   height: calc(100% - 240px);
 }

@@ -4,7 +4,6 @@ import styles from './styles.module.css'
 import React, { Component, ChangeEvent } from 'react';
 import { useState } from 'react';
 
-
 interface Props{
     inputType ?: string;
     placeholder ?: string;
@@ -54,7 +53,7 @@ function    GetInput(
                     className={`${styles.input} ${inputClassName} ps-4`}
                     id={inputId}
                     maxLength={inputLength}
-                    onChange={(e) => {if (handleChange) {handleChange(e, index)}}}
+                    onChange={(e : ChangeEvent<HTMLInputElement>) => {if (handleChange) {handleChange(e, index)}}}
                 />
             </div>
         </div>
@@ -62,7 +61,7 @@ function    GetInput(
     )
 }
 
-function    GetImageInput({handleChange = () => {}, index=0} : Props) {
+function    GetImageInput({ handleChange = () => {}, index = 0 } : Props) {
     const [val, setVal] = useState<string>("");
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -83,10 +82,11 @@ function    GetImageInput({handleChange = () => {}, index=0} : Props) {
                     className={`col-9 itim-font text-end d-flex justify-content-between ${styles.input} ${styles.imageFile}`}
                     htmlFor="imageInput">
                         <div className={`${styles.imageText} text-nowrap ms-2`}>{val.split('\\').pop()}</div>
-                        <div><img src="imageUpload.png" height="15px"/></div>
+                        <div><img src="../../../imageUpload.png" height="15px"/></div>
                 </label>
                 <input
                     type="file"
+                    accept="image/*"
                     placeholder="upload an image"
                     className={`imageInput`}
                     id="imageInput"
@@ -103,18 +103,29 @@ function    InputRange({handleChange = () => {}, index=0} : Props) {
         <>
         <div className={`row justify-content-center ${styles.slidecontainer} p-0 mt-2`}>
             <label
-                className={`col-9 itim-font text-left p-1 ms-4 ${styles.inputTitle}`}
+                className={`col-9 itim-font text-left p-1 ${styles.inputTitle}`}
                 htmlFor="myRange">
                     Game Difficulty
             </label>
-            <div className="col-9 d-flex justify-content-center p-0 my-3">
+            <div className={`col-9 d-flex justify-content-center p-0 my-3 ${styles.inputTitle}`}>
                 <input type="range"
                     min="0"
                     max="2"
                     step="1"
                     className={`${styles.slider}`}
-                    onChange={(e) => handleChange(e, index)}
+                    onChange={(e : ChangeEvent<HTMLInputElement>) => handleChange(e, index)}
                     id="myRange"/>
+            </div>
+            <div className={`row justify-content-between p-0 mb-2 ${styles.inputTitle}`}>
+                    <div className="col">
+                        <p className={`itim-font`}>Easy</p>
+                    </div>
+                    <div className="col d-flex justify-content-center">
+                        <p className={`itim-font`}>Medium</p>
+                    </div>
+                    <div className="col d-flex justify-content-end">
+                        <p className={`itim-font`}>Hard</p>
+                    </div>
             </div>
         </div>
         </>
@@ -199,15 +210,15 @@ function CreateTournament() {
     const handleSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         update();
-        
+
         console.log(JSON.stringify(inputValues))
         try {
-            const response = await fetch('', {
-                method : "POST",
-                headers : {"content-type" : "application/json"},
-                body : JSON.stringify(inputValues)
-            });
-            let data =  await response.json()
+            // const response = await fetch('', {
+            //     method : "POST",
+            //     headers : {"content-type" : "application/json"},
+            //     body : JSON.stringify(inputValues)
+            // });
+            // let data =  await response.json()
         } catch (error) {
             console.error('Error : ', error);
         }
@@ -215,7 +226,9 @@ function CreateTournament() {
 
     return (
         <>
-        <form className={`${styles.formWrapper} row justify-content-center p-0 m-0`} onSubmit={(e) => handleSubmit(e)}>
+        <form
+            className={`${styles.formWrapper} row justify-content-center p-0 m-0`}
+            onSubmit={(e : React.FormEvent<HTMLFormElement>) => handleSubmit(e)}>
 
             <fieldset className={`row justify-content-center p-0 m-0`}>
                     <div className="row">
@@ -227,10 +240,10 @@ function CreateTournament() {
                         <RenderInputFields handleChange={handleChange}></RenderInputFields>
                     </div>
             </fieldset>
-            <div className="row p-0 my-4">
+            <div className="row p-0 my-2">
                 <div className="col d-flex justify-content-center">
                         <button
-                            className={`valo-font col-6 col-md-4 ${styles.create_button}`}>
+                            className={`valo-font mb-3 ${styles.create_button}`}>
                                 CREATE
                         </button>
                 </div>

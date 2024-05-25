@@ -96,6 +96,54 @@ const tournamentTestData : TournamentsData = {
         "imageUrl": "/Ping_Pong_Battle_4.png",
         "pageUrl": "/tournament/epsilon",
       },
+      "Alpha Chmpionship": {
+        "date": "Mar 1, 2023, 10:00 AM",
+        "participantsJoined": 10,
+        "imageUrl": "/Ping_Pong_Battle_4.png",
+        "pageUrl": "/tournament/alpha",
+      },
+      "BetCup": {
+        "date": "Mar 5, 2023, 3:00 PM",
+        "participantsJoined": 8,
+        "imageUrl": "/Ping_Pong_Battle_4.png",
+        "pageUrl": "/tournament/beta",
+      },
+      "Gamma Tornament": {
+        "date": "Mar 10, 2023, 12:00 PM",
+        "participantsJoined": 15,
+        "imageUrl": "/Ping_Pong_Battle_4.png",
+        "pageUrl": "/tournament/gamma",
+      },
+      "Alpha hampionshi": {
+        "date": "Mar 1, 2023, 10:00 AM",
+        "participantsJoined": 10,
+        "imageUrl": "/Ping_Pong_Battle_4.png",
+        "pageUrl": "/tournament/alpha",
+      },
+      "Beta u": {
+        "date": "Mar 5, 2023, 3:00 PM",
+        "participantsJoined": 8,
+        "imageUrl": "/Ping_Pong_Battle_4.png",
+        "pageUrl": "/tournament/beta",
+      },
+      "Gamma Tornamen": {
+        "date": "Mar 10, 2023, 12:00 PM",
+        "participantsJoined": 15,
+        "imageUrl": "/Ping_Pong_Battle_4.png",
+        "pageUrl": "/tournament/gamma",
+      },
+      "Delta Oen": {
+        "date": "May 12, 2024, 1:00 PM",
+        "participantsJoined": 20,
+        "imageUrl": "/Ping_Pong_Battle_4.png",
+        "pageUrl": "/tournament/delta",
+      },
+      "Epsilo Clash": {
+        "date": "May 15, 2024, 2:00 PM",
+        "participantsJoined": 18,
+        "imageUrl": "/Ping_Pong_Battle_4.png",
+        "pageUrl": "/tournament/epsilon",
+      },
       "Zeta Championship": {
         "date": "May 20, 2024, 11:00 AM",
         "participantsJoined": 25,
@@ -221,7 +269,86 @@ const tournamentTestData : TournamentsData = {
         "participantsJoined": 6,
         "imageUrl": "/Ping_Pong_Battle_4.png",
         "pageUrl": "/tournament/nu",
-      }
+      },
+      "Lambd Invitational": {
+        "date": "Jun 1, 2024, 10:00 AM",
+        "participantsJoined": 5,
+        "imageUrl": "/Ping_Pong_Battle_4.png",
+        "pageUrl": "/tournament/lambda",
+      },
+      "Mu Callenge": {
+        "date": "Jun 5, 2024, 3:00 PM",
+        "participantsJoined": 7,
+        "imageUrl": "/Ping_Pong_Battle_4.png",
+        "pageUrl": "/tournament/mu",
+      },
+      "Nu Tounament": {
+        "date": "Jun 10, 2024, 12:00 PM",
+        "participantsJoined": 6,
+        "imageUrl": "/Ping_Pong_Battle_4.png",
+        "pageUrl": "/tournament/nu",
+      },
+    "MuCallenge": {
+      "date": "Jun 5, 2024, 3:00 PM",
+      "participantsJoined": 7,
+      "imageUrl": "/Ping_Pong_Battle_4.png",
+      "pageUrl": "/tournament/mu",
+    },
+    "NuTounament": {
+      "date": "Jun 10, 2024, 12:00 PM",
+      "participantsJoined": 6,
+      "imageUrl": "/Ping_Pong_Battle_4.png",
+      "pageUrl": "/tournament/nu",
+    },
+    "uTounament": {
+      "date": "Jun 10, 2024, 12:00 PM",
+      "participantsJoined": 6,
+      "imageUrl": "/Ping_Pong_Battle_4.png",
+      "pageUrl": "/tournament/nu",
+    },
+    "Nu Tourament": {
+      "date": "Jun 10, 2024, 12:00 PM",
+      "participantsJoined": 6,
+      "imageUrl": "/Ping_Pong_Battle_4.png",
+      "pageUrl": "/tournament/nu",
+    },
+    "Lambd Invittional": {
+      "date": "Jun 1, 2024, 10:00 AM",
+      "participantsJoined": 5,
+      "imageUrl": "/Ping_Pong_Battle_4.png",
+      "pageUrl": "/tournament/lambda",
+    },
+    "Mu Callnge": {
+      "date": "Jun 5, 2024, 3:00 PM",
+      "participantsJoined": 7,
+      "imageUrl": "/Ping_Pong_Battle_4.png",
+      "pageUrl": "/tournament/mu",
+    },
+    "NTounament": {
+      "date": "Jun 10, 2024, 12:00 PM",
+      "participantsJoined": 6,
+      "imageUrl": "/Ping_Pong_Battle_4.png",
+      "pageUrl": "/tournament/nu",
+    },
+  "MuCalenge": {
+    "date": "Jun 5, 2024, 3:00 PM",
+    "participantsJoined": 7,
+    "imageUrl": "/Ping_Pong_Battle_4.png",
+    "pageUrl": "/tournament/mu",
+  },
+  "NuTonament": {
+    "date": "Jun 10, 2024, 12:00 PM",
+    "participantsJoined": 6,
+    "imageUrl": "/Ping_Pong_Battle_4.png",
+    "pageUrl": "/tournament/nu",
+  },
+  "uTunament": {
+    "date": "Jun 10, 2024, 12:00 PM",
+    "participantsJoined": 6,
+    "imageUrl": "/Ping_Pong_Battle_4.png",
+    "pageUrl": "/tournament/nu",
+  }
+
     },
     "Local": {
       "Omicron Local": {
