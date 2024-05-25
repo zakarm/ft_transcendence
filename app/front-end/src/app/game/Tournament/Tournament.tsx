@@ -5,6 +5,7 @@ import "./Tournament.css";
 import TournamentCard from "../../../components/TournamentCard/TournamentCard";
 import NavBar from "@/components/NavBar/NavBar";
 import { TournamentsData } from '@/app/api/testTournament/route'
+import CreateTournament from "@/components/TournamentForm/form"
 
 
 async function fetchTournamentsData(
@@ -82,8 +83,23 @@ const Tournament: React.FC = () => {
       <div className="Tournament_nav_bar">
         <NavBar options={NavBarOptions} setChoosenTab={setChoosenTab} />
       </div>
-      <section className="Tournament_section">
-        { tournamentsToRender }
+      <section className="row Tournament_section">
+        { choosenTab !== 'My Tournament' ?
+          <div className="col d-flex flex-wrap justify-content-around">
+            { tournamentsToRender }
+          </div>
+            :
+            <>
+              <div className="col-12 col-xl-5 col-xxl-7 order-2 order-xl-1 d-flex flex-wrap justify-content-around">
+                { tournamentsToRender }
+              </div>
+              <div className="col-12 col-xl-4 order-1 order-xl-2 d-flex justify-content-center">
+                <CreateTournament />
+              </div>
+            </>
+
+            
+        }
       </section>
     </div>
   );

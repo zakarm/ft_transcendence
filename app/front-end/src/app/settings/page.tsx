@@ -20,6 +20,8 @@ import { notificationStyle } from "@/components/ToastProvider";
 import GameTab from "@/components/SettingsForm/GameTab/gameTab";
 import NavBar from "@/components/NavBar/NavBar";
 // import GameTab from "@/components/SettingsForm/Game-tab/gametab";
+import handleImageUpload from '@/components/UploadImageBase64ToCloudinary/uploadToCloudinary'
+
 
 async function getInitialData({
   setValuesToPost,
@@ -127,45 +129,6 @@ const validateInput: (valuesToPost: SettingsProps["valuesToPost"]) => boolean = 
   return isValid;
 };
 
-const isBase64 = (str: string): boolean => {
-  if (typeof str !== 'string') {
-    return false;
-  }
-  try {
-    btoa(str)
-    return true
-  } catch (error) {
-    return false
-  }
-};
-
-const handleImageUpload = async (file: string): Promise<string | null> => {
-  
-  if (!isBase64(file)) {
-    console.error("The provided string is not a valid base64 encoded string.");
-    return null;
-  }
-
-  try {
-    const response = await fetch("/api/upload", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ file }),
-    });
-
-    const data = await response.json();
-    if (data.url === undefined) {
-      return null;
-    }
-    return data.url;
-  } 
-  catch (error) {
-    return null;
-  }
-};
-
 /* Submits the form */
 const postFormData = async ({
   valuesToPost,
@@ -182,6 +145,8 @@ const postFormData = async ({
           const promise = await handleImageUpload(valuesToPost['image']);
           if (promise !== null && typeof promise === 'string') {
             valuesToPost['image'] = promise;
+          } else {
+            toast.error("Error : cannot upload image", notificationStyle);
           }
         }
       }

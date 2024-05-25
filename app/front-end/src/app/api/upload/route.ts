@@ -7,12 +7,7 @@ cloudinary.config({
   secure : true
 });
 
-type Data = {
-    url?: string;
-    error?: string;
-};
-
-export async function POST(req : Request) {
+async function POST(req : Request) {
   if (req == null || req.body == null) return ;
 
   const   { file }  = await req.json();
@@ -34,3 +29,5 @@ export async function POST(req : Request) {
       return new Response(JSON.stringify({}), {})
   }
 }
+
+export { POST }
