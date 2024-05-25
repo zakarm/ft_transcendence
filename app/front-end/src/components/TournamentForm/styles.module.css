@@ -11,14 +11,13 @@
     border-radius: 25px;
     background-color: var(--clr-ldark);
     height : 100%;
-    max-height: 900px;
+    max-height: 700px;
     width : 100%;
 }
 
 .input {
     outline: none;
     color: #565a69;
-    /* color: var(--clr--white); */
     background-color: var(--clr--grey);
     height: 50px;
     border-radius: 25px;
@@ -98,14 +97,6 @@
   
 @media only screen and (max-width: 1600px) {
 
-    .formTitle {
-        font-size: 1rem;
-    }
-    
-    .inputHolder, .imageFile {
-        /* width : 350px; */
-    }
-
     .formWrapper {
         width : 430px;
     }
@@ -114,13 +105,10 @@
 @media only screen and (max-width: 776px) {
 
     .formTitle {
-        font-size: 1rem;
+        font-size: 1.5rem;
     }
     .create_button {
         height : 50px;
-    }
-    .inputHolder, .imageFile {
-        /* width : 250px; */
     }
 
     .formWrapper {
@@ -133,10 +121,6 @@
     .formTitle {
         font-size: 1rem;
     }
-    
-    /* .inputHolder, .imageFile {
-        width : 150px;
-    } */
 
     .formWrapper {
         width : 300px;

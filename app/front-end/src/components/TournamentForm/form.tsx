@@ -3,6 +3,13 @@
 import styles from './styles.module.css'
 import React, { Component, ChangeEvent } from 'react';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { notificationStyle } from '../ToastProvider';
+import handleImageUpload from '../UploadImageBase64ToCloudinary/uploadToCloudinary';
+
+interface InputEventProps {
+    e : ChangeEvent<HTMLInputElement>;
+  }
 
 interface Props{
     inputType ?: string;
@@ -14,14 +21,11 @@ interface Props{
     labelClass ?: string;
     inputLength ?: number;
     index ?: number;
-    handleChange ?: (e : ChangeEvent<HTMLInputElement>, i : number) => void;
-}
-interface InputValuesProps {
-    [key: string]: string;
+    handleChange ?: (e : InputEventProps | string, i : number) => void;
 }
 
-interface SubmitButtonProps {
-    props: string[];
+interface InputValuesProps {
+    [key: string]: string;
 }
 
 function    GetInput(
@@ -37,6 +41,12 @@ function    GetInput(
         index=0,
         labelClass=""
     }: Props) {
+        
+        const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+            if (handleChange) {
+              handleChange({ e }, index!); // Wrapping the event in an object
+            }
+          };
 
         return (
         <>
@@ -53,7 +63,8 @@ function    GetInput(
                     className={`${styles.input} ${inputClassName} ps-4`}
                     id={inputId}
                     maxLength={inputLength}
-                    onChange={(e : ChangeEvent<HTMLInputElement>) => {if (handleChange) {handleChange(e, index)}}}
+                    onChange={handleInputChange}
+                    required
                 />
             </div>
         </div>
@@ -62,12 +73,22 @@ function    GetInput(
 }
 
 function    GetImageInput({ handleChange = () => {}, index = 0 } : Props) {
-    const [val, setVal] = useState<string>("");
+    const [imageName, setImageName] = useState<string>("");
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setVal(e.target.value);
-        if (handleChange)
-            handleChange(e, index);
+        const   reader = new FileReader();
+        const   files : FileList | null = e.target.files
+
+        setImageName(e.target.value); // used to display name of uploaded image
+        if (files && files.length > 0) {
+            reader.readAsDataURL(files[0]);
+            reader.onloadend = async () => {
+                if (reader.result && typeof reader.result === 'string') {
+                    if (handleChange)
+                        handleChange(reader.result, index);
+                }
+            }
+        }
     };
 
     return (
@@ -81,7 +102,7 @@ function    GetImageInput({ handleChange = () => {}, index = 0 } : Props) {
                 <label
                     className={`col-9 itim-font text-end d-flex justify-content-between ${styles.input} ${styles.imageFile}`}
                     htmlFor="imageInput">
-                        <div className={`${styles.imageText} text-nowrap ms-2`}>{val.split('\\').pop()}</div>
+                        <div className={`${styles.imageText} text-nowrap ms-2`}>{imageName.split('\\').pop()}</div>
                         <div><img src="../../../imageUpload.png" height="15px"/></div>
                 </label>
                 <input
@@ -90,7 +111,7 @@ function    GetImageInput({ handleChange = () => {}, index = 0 } : Props) {
                     placeholder="upload an image"
                     className={`imageInput`}
                     id="imageInput"
-                    onChange={handleInputChange}
+                    onChange={(e : ChangeEvent<HTMLInputElement>) => handleInputChange(e)}
                 />
             </div>
         </div>
@@ -99,6 +120,11 @@ function    GetImageInput({ handleChange = () => {}, index = 0 } : Props) {
 }
 
 function    InputRange({handleChange = () => {}, index=0} : Props) {
+    
+    const handleRangeChange = (e: ChangeEvent<HTMLInputElement>) => {
+        handleChange({ e }, index);
+      };
+    
     return (
         <>
         <div className={`row justify-content-center ${styles.slidecontainer} p-0 mt-2`}>
@@ -113,7 +139,7 @@ function    InputRange({handleChange = () => {}, index=0} : Props) {
                     max="2"
                     step="1"
                     className={`${styles.slider}`}
-                    onChange={(e : ChangeEvent<HTMLInputElement>) => handleChange(e, index)}
+                    onChange={handleRangeChange}
                     id="myRange"/>
             </div>
             <div className={`row justify-content-between p-0 mb-2 ${styles.inputTitle}`}>
@@ -142,7 +168,7 @@ function RenderInputFields({ handleChange=()=>{} } : Props) {
             labelText="Username"
             inputLength={20}
             index={0}
-            handleChange={(e : ChangeEvent<HTMLInputElement>) => handleChange(e, 0)}>
+            handleChange={(e : InputEventProps | string) => handleChange(e, 0)}>
         </GetInput>
         <GetInput
             className="p-2 mt-2 row justify-content-center"
@@ -151,15 +177,15 @@ function RenderInputFields({ handleChange=()=>{} } : Props) {
             labelText="Tournament name"
             inputLength={30}
             index={1}
-            handleChange={(e : ChangeEvent<HTMLInputElement>) => handleChange(e, 1)}>
+            handleChange={(e : InputEventProps | string) => handleChange(e, 1)}>
         </GetInput>
-        <GetInput
+        {/* <GetInput
             className="p-2 mt-2 row justify-content-center"
             inputType="date"
             inputId="start_date"
             labelText="Start date"
             index={2}
-            handleChange={(e : ChangeEvent<HTMLInputElement>) => handleChange(e, 2)}>
+            handleChange={(e : InputEventProps | string) => handleChange(e, 2)}>
         </GetInput>
         <GetInput
             className="p-2 mt-2 row justify-content-center"
@@ -167,14 +193,14 @@ function RenderInputFields({ handleChange=()=>{} } : Props) {
             inputId="start_time"
             labelText="Start time"
             index={3}
-            handleChange={(e : ChangeEvent<HTMLInputElement>) => handleChange(e, 3)}>
-        </GetInput>
+            handleChange={(e : InputEventProps | string) => handleChange(e, 3)}>
+        </GetInput> */}
         <GetImageInput
-            handleChange={(e : ChangeEvent<HTMLInputElement>) => handleChange(e, 4)}
+            handleChange={(e : InputEventProps | string) => handleChange(e, 4)}
             index={4}>
         </GetImageInput>
         <InputRange
-            handleChange={(e : ChangeEvent<HTMLInputElement>) => handleChange(e, 5)}
+            handleChange={(e : InputEventProps | string) => handleChange(e, 5)}
             index={5}>
         </InputRange>
         </>
@@ -182,9 +208,9 @@ function RenderInputFields({ handleChange=()=>{} } : Props) {
 }
 
 function CreateTournament() {
-    const   [values, setValue] = useState<string[]>(["", "", "", "", "", ""]);
+    const   [currentValues, setCurrentValues] = useState<string[]>(["", "", "", "", "", ""]);
 
-    let inputValues : InputValuesProps = {
+    let ValuesToPost : InputValuesProps = {
         "username" : "", //
         "tournament_name" : "",
         "tournament_start" : "",
@@ -192,33 +218,48 @@ function CreateTournament() {
         "tournament_image" : "", //
         "game_difficulty" : "1"
     };
-    const handleChange = (e : ChangeEvent<HTMLInputElement>, i : number) => {
-        const   newValues = [...values];
-        newValues[i] = e.target.value;
-        setValue(newValues);
+
+    const handleChange = (e : InputEventProps | string, i : number) => {
+        const   newValues = [...currentValues];
+
+        typeof e === 'string' ? newValues[i] = e : newValues[i] = e.e.target.value;
+        setCurrentValues(newValues);
     }
 
-    const update = () => {
+    const formValidation : () => Promise<boolean> = async () => {
         let   i : number = 0;
-        for (let [key, value] of Object.entries(inputValues)) {
-            if (values[i] && values[i] !== '')
-                inputValues[key] = values[i];
+        let   isChanged : boolean = false;
+        for (let [key, value] of Object.entries(ValuesToPost)) {
+            if (currentValues[i] && currentValues[i] !== '' && currentValues[i] !== ValuesToPost[key]) {
+                if (key === 'tournament_image') {
+                    const   imageURL : string | null = await handleImageUpload(currentValues[i]);
+                    (imageURL !== null) ? currentValues[i] = imageURL : toast.error("Error : cannot upload image");
+                }
+                ValuesToPost[key] = currentValues[i];
+                isChanged = true;
+            }
             i++;
         }
+        return isChanged;
     }
 
     const handleSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        update();
+        const   isValid : boolean = await formValidation();
+        if (!isValid)
+            return ;
 
-        console.log(JSON.stringify(inputValues))
+        console.log(JSON.stringify(ValuesToPost))
         try {
             // const response = await fetch('', {
             //     method : "POST",
             //     headers : {"content-type" : "application/json"},
-            //     body : JSON.stringify(inputValues)
+            //     body : JSON.stringify(ValuesToPost)
             // });
-            // let data =  await response.json()
+            // if (response.ok){
+                toast.success("To be saved...", notificationStyle);
+                // let data =  await response.json()
+            // }
         } catch (error) {
             console.error('Error : ', error);
         }
