@@ -84,7 +84,7 @@ const Tournament: React.FC = () => {
       <div className="Tournament_nav_bar">
         <NavBar options={ NavBarOptions } setChoosenTab={ setChoosenTab } />
       </div>
-      <section className="row Tournament_section">
+      <section className="row Tournament_section p-0 m-0">
         { 
           choosenTab === 'My Tournament' ?
               <>
