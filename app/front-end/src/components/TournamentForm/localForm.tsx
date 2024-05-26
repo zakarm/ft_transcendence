@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 import styles from './localForm.module.css'
 import { notificationStyle } from '../ToastProvider';
 import { toast } from 'react-toastify'
@@ -18,7 +18,6 @@ interface   getInputProps {
     labelClassName      ?: string;
     inputLength         ?: number;
 }
-
 
 function    InputRange({ id, updatePlayersList } : {id : string, updatePlayersList : (key : string, val : string) => void}) {
 
@@ -80,7 +79,7 @@ function    GetInput({
     )
 }
 
-function    LocalTournamentForm() {
+function    LocalTournamentForm({setRerender} : { setRerender : React.Dispatch<React.SetStateAction<boolean>> } ) {
 
     const   [players, setPlayers] = useState<localPlayersProps>({
         "tournament_name"   : "",
@@ -103,15 +102,7 @@ function    LocalTournamentForm() {
         }
         localStorage.setItem(players['tournament_name'], JSON.stringify(players));
         toast.success(`${players['tournament_name']} local tournament created successfully`, notificationStyle);
-        console.log(`Saved in Local Storage : "${players['tournament_name']}" ----->`, players)
-        console.log('====>', localStorage);``
-        for (let i = 0; i < localStorage.length; i++) {
-            let key = localStorage.key(i);
-            if (key){
-                let value = localStorage.getItem(key);
-                console.log(`Current tournament in Local Storage: ${key}: ${value}`);
-            }
-        }
+        setRerender((prev : boolean) => !prev);
     }
 
     const   updatePlayersList : (key : string, val : string) => void = (key : string, val : string) => {

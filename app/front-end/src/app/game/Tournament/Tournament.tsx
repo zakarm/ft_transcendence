@@ -7,7 +7,6 @@ import NavBar from "@/components/NavBar/NavBar";
 import { TournamentsData } from '@/app/api/testTournament/route'
 import { RemoteTournamentForm } from "@/components/TournamentForm/remoteForm"
 import { LocalTournamentForm } from "@/components/TournamentForm/localForm"
-// import Local
 
 async function fetchTournamentsData(
   currentTab : string,
@@ -45,6 +44,7 @@ async function  getTournamentsTabData(
 
     Object.entries(data.tournaments).forEach(([name, details]) => {
       tournamentCards.push(
+        <div key={name}>
         <TournamentCard
           key={name}
           name={name}
@@ -53,6 +53,7 @@ async function  getTournamentsTabData(
           imageUrl={details.imageUrl}
           pageUrl={details.pageUrl}
         />
+        </div>
       );
     });
 
@@ -64,18 +65,60 @@ const Tournament: React.FC = () => {
   const NavBarOptions : string[] = ["All", "Ongoing", "Completed", "My Tournament" , "Local"];
   const [choosenTab, setChoosenTab] = useState<string>("All");
   const [tournamentsToRender, setTournamentsToRender] = useState<React.JSX.Element[]>([]);
+  const [localTournaments, setLocalTournaments] = useState<React.JSX.Element[]>([]);
+  const [prevLocalStorageLength, setPrevLocalStorageLength] = useState<number>(localStorage.length)
+  const [rerender, setRerender] = useState<boolean>(false);
 
   useEffect(() => {
-
     const data = async () => {
       const promise = await getTournamentsTabData(choosenTab, NavBarOptions);
       setTournamentsToRender(promise);
     }
-
     data();
   }, [choosenTab])
+  // const test = () => {
 
-  return (
+    useEffect(() => {
+      const tournamentCards : React.JSX.Element[] = [];
+      
+      for (let i : number = 0; i < localStorage.length; i++) {
+        const key : string | null = localStorage.key(i);
+        if (key) {
+          const val = localStorage.getItem(key);
+          if (val) {
+            const value = JSON.parse(val);
+            console.log('value=-=>', value);
+
+            tournamentCards.push(
+              <div key={value["tournament_name"]}>
+                <TournamentCard
+                  name={value["tournament_name"]}
+                  date = "10/06/2024"
+                  participantsJoined={5}
+                  imageUrl="/Ping_Pong_Battle_4.png"
+                  pageUrl = "#"
+                />
+              </div>
+            );
+        }
+      }
+    }
+    setLocalTournaments(tournamentCards);
+  }, [rerender, localStorage.length])
+
+  useEffect(() => {
+    const test = () => {
+
+      if (localStorage.length !== prevLocalStorageLength) {
+        setRerender((prev : boolean) => prev = !prev);
+        setPrevLocalStorageLength(localStorage.length);
+      }
+      
+    }
+    window.addEventListener<"storage">('storage', test)
+  }, [rerender])
+
+return (
     <div className="containerTournament">
       <div className="Tournament_title">TOURNAMENT</div>
       <div className="Tournament_search">
@@ -95,11 +138,16 @@ const Tournament: React.FC = () => {
                 <RemoteTournamentForm />
               </div>
               </>
-          
+
           : choosenTab === 'Local' ?
               <>
               <div className="col d-flex flex-wrap justify-content-center">
-                <LocalTournamentForm />
+                <div className="col  d-flex flex-wrap justify-content-center">
+                  <LocalTournamentForm setRerender={ setRerender }/>
+                </div>
+                <div className="col-12 d-flex flex-wrap justify-content-center ">
+                  { localTournaments }
+                </div>
               </div>
               </>
           :
