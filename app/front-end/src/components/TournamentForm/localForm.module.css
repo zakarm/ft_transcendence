@@ -4,38 +4,56 @@
 --clr-dark: #111111;
 --clr--green : #27B299;
 --clr--grey : #2C3143; */
-.formWrapper {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 10px;
-    height: 700px;
+
+.form_container {
     border-radius: 25px;
     background-color: var(--clr-ldark);
-    width : 100%;
+    width: 100%;
+    min-width: 300px;
+    max-width: 1700px;
 }
 
-.input {
+/* .form_title {
+    height: 10%;
+}
+
+.input_container {
+    height: 90%;
+}
+
+.input_tourn_name {
+    height: 10%;
+} */
+
+.input_title {
+    width : 450px
+}
+
+.rangeTitle, .input_title {
+    color : #565a69;
+}
+
+.input_holder {
+    width : 450px;
+}
+
+.input_text {
     outline: none;
-    color: #565a69;
-    background-color: var(--clr--grey);
-    height: 50px;
-    border-radius: 25px;
     border : none;
+    border-radius: 25px;
+    height: 60px;
+    color: #565a69;
+    width: 100%;
+    background-color: var(--clr--grey);
 }
 
-.inputTitle {
-    width : 450px;
-
-    color : var(--clr--grey);
-}
-
-.inputHolder {
-    width : 450px;
+.input_text:focus {
+    color : var(--clr--white)
 }
 
 .slider {
     appearance: none;
-    width: 95%;
+    width: 100%;
     height: 15px;
     border-radius: 25px;  
     background: var(--clr--grey);
@@ -62,14 +80,14 @@
     cursor: pointer;
   }
   
-  .imageFile {
-    width : 450px;
-    color : #565a69;
-    padding: 12px 12px;
-    cursor: pointer;
+  .slider::-webkit-slider-thumb:hover {
+    scale : 1.01;
+    color : var(--clr-dark);
+    background-color: var(--clr--white);
+    
   }
 
- .create_button {
+  .create_button {
     width : 200px;
     height : 50px;
     border : none;
@@ -86,42 +104,13 @@
     
   }
 
-  .input:focus {
-    color: var(--clr--white);
-  }
-
-  .input:hover {
-    scale : 1.01;
-  }
   
-@media only screen and (max-width: 1600px) {
+  @media only screen and (max-width: 530px) {
 
-    .formWrapper {
-        width : 430px;
+    .input_title {
+        width : 290px
     }
-}
-
-@media only screen and (max-width: 776px) {
-
-    .formTitle {
-        font-size: 1.5rem;
-    }
-    .create_button {
-        height : 50px;
-    }
-
-    .formWrapper {
-        width : 400px;
-    }
-}
-
-@media only screen and (max-width: 400px) {
-    
-    .formTitle {
-        font-size: 1rem;
-    }
-
-    .formWrapper {
-        width : 300px;
+    .input_holder {
+        width : 290px
     }
 }
