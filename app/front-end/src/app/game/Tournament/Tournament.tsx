@@ -5,8 +5,9 @@ import "./Tournament.css";
 import TournamentCard from "../../../components/TournamentCard/TournamentCard";
 import NavBar from "@/components/NavBar/NavBar";
 import { TournamentsData } from '@/app/api/testTournament/route'
-import CreateTournament from "@/components/TournamentForm/form"
-
+import { RemoteTournamentForm } from "@/components/TournamentForm/remoteForm"
+import { LocalTournamentForm } from "@/components/TournamentForm/localForm"
+// import Local
 
 async function fetchTournamentsData(
   currentTab : string,
@@ -81,24 +82,31 @@ const Tournament: React.FC = () => {
         <input className="ps-3" type="search" name="" id="" placeholder="Search Tournament" />
       </div>
       <div className="Tournament_nav_bar">
-        <NavBar options={NavBarOptions} setChoosenTab={setChoosenTab} />
+        <NavBar options={ NavBarOptions } setChoosenTab={ setChoosenTab } />
       </div>
-      <section className="row Tournament_section">
-        { choosenTab !== 'My Tournament' ?
-          <div className="col d-flex flex-wrap justify-content-around">
-            { tournamentsToRender }
-          </div>
-            :
-            <>
+      <section className="row Tournament_section p-0 m-0">
+        { 
+          choosenTab === 'My Tournament' ?
+              <>
               <div className="col-12 col-xl-5 col-xxl-7 order-2 order-xl-1 d-flex flex-wrap justify-content-around">
                 { tournamentsToRender }
               </div>
               <div className="col-12 col-xl-4 order-1 order-xl-2 d-flex justify-content-center">
-                <CreateTournament />
+                <RemoteTournamentForm />
               </div>
-            </>
+              </>
+          
+          : choosenTab === 'Local' ?
+              <>
+              <div className="col d-flex flex-wrap justify-content-center">
+                <LocalTournamentForm />
+              </div>
+              </>
+          :
 
-            
+              <div className="col d-flex flex-wrap justify-content-center">
+                { tournamentsToRender }
+              </div>            
         }
       </section>
     </div>

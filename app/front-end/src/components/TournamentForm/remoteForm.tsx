@@ -179,22 +179,6 @@ function RenderInputFields({ handleChange=()=>{} } : Props) {
             index={1}
             handleChange={(e : InputEventProps | string) => handleChange(e, 1)}>
         </GetInput>
-        {/* <GetInput
-            className="p-2 mt-2 row justify-content-center"
-            inputType="date"
-            inputId="start_date"
-            labelText="Start date"
-            index={2}
-            handleChange={(e : InputEventProps | string) => handleChange(e, 2)}>
-        </GetInput>
-        <GetInput
-            className="p-2 mt-2 row justify-content-center"
-            inputType="time"
-            inputId="start_time"
-            labelText="Start time"
-            index={3}
-            handleChange={(e : InputEventProps | string) => handleChange(e, 3)}>
-        </GetInput> */}
         <GetImageInput
             handleChange={(e : InputEventProps | string) => handleChange(e, 4)}
             index={4}>
@@ -207,7 +191,7 @@ function RenderInputFields({ handleChange=()=>{} } : Props) {
     )
 }
 
-function CreateTournament() {
+function RemoteTournamentForm() {
     const   [currentValues, setCurrentValues] = useState<string[]>(["", "", "", "", "", ""]);
 
     let ValuesToPost : InputValuesProps = {
@@ -294,4 +278,4 @@ function CreateTournament() {
     )
 }
 
-export default  CreateTournament;
+export  { RemoteTournamentForm, InputRange };
