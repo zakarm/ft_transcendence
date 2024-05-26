@@ -13,18 +13,6 @@
     max-width: 1700px;
 }
 
-/* .form_title {
-    height: 10%;
-}
-
-.input_container {
-    height: 90%;
-}
-
-.input_tourn_name {
-    height: 10%;
-} */
-
 .input_title {
     width : 450px
 }
@@ -104,13 +92,9 @@
     
   }
 
-  
   @media only screen and (max-width: 530px) {
 
-    .input_title {
-        width : 290px
-    }
-    .input_holder {
+    .input_title, .input_holder  {
         width : 290px
     }
 }

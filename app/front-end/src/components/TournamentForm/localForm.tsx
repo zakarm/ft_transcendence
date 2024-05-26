@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, FormEvent } from 'react';
 import styles from './localForm.module.css'
 import { notificationStyle } from '../ToastProvider';
 import { toast } from 'react-toastify'
@@ -95,7 +95,7 @@ function    LocalTournamentForm() {
         "difficulty"        : "1"
     });
 
-    const   handleSubmit = (e : ChangeEvent<HTMLInputElement>) => {
+    const   handleSubmit = (e : FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (localStorage.getItem(players['tournament_name']) !== null) {
             toast.error("Tournament name already exists", notificationStyle);
