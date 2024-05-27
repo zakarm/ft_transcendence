@@ -35,10 +35,6 @@ interface LocalPlayersProps {
           };
 }
 
-// interface localPlayersProps {
-//     [key: string]: string;
-// }
-
 interface getInputProps {
     type: string;
     id: string;
@@ -94,16 +90,19 @@ function GetInput({
 }: getInputProps) {
     return (
         <>
-            <div className={`row ${styles.input_holder} justify-content-center`}>
+            <div className={`row  justify-content-center`}>
                 <div className="col-9 my-2 ms-4 d-flex">
-                    <label htmlFor={id} className={`  ${labelClassName} ${styles.input_title}`}>
+                    <label
+                        htmlFor={id}
+                        className={`col-9 itim-font text-left p-0 m-0 ${styles.labelClass} ${styles.input_title}`}
+                    >
                         {label}
                     </label>
                 </div>
-                <div className="col-9">
+                <div className={`col-9 ${styles.input_holder} row justify-content-center p-0 m-2`}>
                     <input
                         type={type}
-                        className={`${inputClassName} ${styles.input_text} p-4`}
+                        className={`${inputClassName} ${styles.input_text} ps-4`}
                         maxLength={inputLength}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => updatePlayersList(id, e.target.value)}
                         required
@@ -161,7 +160,17 @@ function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<Reac
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const data = localStorage.getItem('tournaments');
-        const tournaments: LocalPlayersProps[] = data ? JSON.parse(data) : [];
+        let tournaments: LocalPlayersProps[] = [];
+
+        if (data) {
+            try {
+                tournaments = JSON.parse(data);
+            } catch (error) {
+                console.error('Error parsing JSON data from localStorage:', error);
+                toast.error('Error reading stored tournaments data. Please try again later.', notificationStyle);
+                return;
+            }
+        }
         if (tournaments.length >= 5) {
             toast.error('You can only create 5 tournaments', notificationStyle);
             return;
@@ -175,11 +184,6 @@ function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<Reac
         players['date'] = getFormattedDateTime();
         tournaments.push(players);
         localStorage.setItem('tournaments', JSON.stringify(tournaments));
-        // if (localStorage.getItem(players['tournament_name']) !== null) {
-        //     toast.error('Tournament name already exists', notificationStyle);
-        //     return;
-        // }
-        // localStorage.setItem(players['tournament_name'], JSON.stringify(players));
         toast.success(`${players['tournament_name']} local tournament created successfully`, notificationStyle);
         setRerender((prev: boolean) => !prev);
     };
@@ -238,12 +242,16 @@ function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<Reac
         },
     ];
     return (
-        <form className={`  row p-0 m-4 ${styles.form_container} `} onSubmit={handleSubmit}>
-            <span className={`  col-12 d-flex flex-row justify-content-center my-2 mt-2 `}>
-                <h2 className="valo-font align-self-center text-center mt-4">CREATE LOCAL TOURNAMENT</h2>
-            </span>
+        <form className={`row p-0 m-0 ${styles.form_container}`} onSubmit={handleSubmit}>
             <fieldset className="row justify-content-center p-0 m-0">
-                <div className="col-12 d-flex flex-column align-items-center flex-wrap">
+                <div className="row">
+                    <div className={`col text-center`}>
+                        <legend className="valo-font align-self-center text-center mt-4">
+                            CREATE LOCAL TOURNAMENT
+                        </legend>
+                    </div>
+                </div>
+                <div className="row justify-content-center">
                     <GetInput
                         type={inputData[0].type}
                         label={inputData[0].label}
@@ -252,50 +260,20 @@ function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<Reac
                         labelClassName="itim-font"
                         updatePlayersList={updatePlayersList}
                     />
-                </div>
-
-                <div className="col-12 col-xl-6 d-flex flex-column align-items-center flex-wrap">
-                    {
-                        <>
-                            {inputData.slice(1, 5).map((elem) => (
-                                <div key={elem.id}>
-                                    <GetInput
-                                        type={elem.type}
-                                        label={elem.label}
-                                        id={elem.id}
-                                        inputLength={20}
-                                        labelClassName="itim-font"
-                                        updatePlayersList={updatePlayersList}
-                                    />
-                                </div>
-                            ))}
-                        </>
-                    }
-                </div>
-
-                <div className="col-12 col-xl-6 d-flex flex-column align-items-center flex-wrap">
-                    {
-                        <>
-                            {inputData.slice(5, 9).map((elem) => (
-                                <div key={elem.id}>
-                                    <GetInput
-                                        type={elem.type}
-                                        label={elem.label}
-                                        id={elem.id}
-                                        inputLength={20}
-                                        labelClassName="itim-font"
-                                        updatePlayersList={updatePlayersList}
-                                    />
-                                </div>
-                            ))}
-                        </>
-                    }
-                </div>
-
-                <div className="col-12">
+                    <>
+                        {inputData.map((elem) => (
+							<GetInput
+                                type={elem.type}
+                                label={elem.label}
+                                id={elem.id}
+                                inputLength={20}
+                                labelClassName="itim-font"
+                                updatePlayersList={updatePlayersList}
+                            />
+                        ))}
+                    </>
                     <InputRange id="difficulty" updatePlayersList={updatePlayersList}></InputRange>
                 </div>
-
                 <div className="col-12 d-flex flex-row justify-content-center">
                     <button className={`valo-font mb-4 ${styles.create_button}`} type="submit">
                         CREATE

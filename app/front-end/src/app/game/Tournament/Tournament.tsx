@@ -8,36 +8,6 @@ import { TournamentsData } from '@/app/api/testTournament/route';
 import { RemoteTournamentForm } from '@/components/TournamentForm/remoteForm';
 import { LocalTournamentForm } from '@/components/TournamentForm/localForm';
 
-// interface Match {
-//     user1: {
-//         name: string;
-//         score: number;
-//     };
-//     user2: {
-//         name: string;
-//         score: number;
-//     };
-// }
-
-// interface TournamentData {
-//     quatre_final: {
-//         match1: Match;
-//         match2: Match;
-//         match3: Match;
-//         match4: Match;
-//     };
-//     semi_final: {
-//         match1: Match;
-//         match2: Match;
-//     };
-//     final: {
-//         match1: Match;
-//     };
-// }
-
-// interface LocalPlayersProps {
-//     [key: string]: string | number | TournamentData;
-// }
 interface LocalPlayersProps {
     [key: string]:
         | string
@@ -112,10 +82,20 @@ const Tournament: React.FC = () => {
 
     useEffect(() => {
         const tournamentCards: React.JSX.Element[] = [];
-
         const data = localStorage.getItem('tournaments');
-        const tournaments: LocalPlayersProps[] = data ? JSON.parse(data) : [];
-        tournaments.forEach((value) => {
+        let tournaments: LocalPlayersProps[] = [];
+
+        if (data) {
+            try {
+                tournaments = JSON.parse(data);
+            } catch (error) {
+                console.error('Error parsing JSON data from localStorage:', error);
+                // Handle the error appropriately, e.g., by setting tournaments to an empty array
+                tournaments = [];
+            }
+        }
+
+        tournaments.forEach((value, index) => {
             tournamentCards.push(
                 <div key={value.tournament_name as string}>
                     <TournamentCard
@@ -123,33 +103,12 @@ const Tournament: React.FC = () => {
                         date={value.date as string}
                         participantsJoined={value.Participants as number}
                         imageUrl={value.tournamentImage as string}
-                        pageUrl="#"
+                        pageUrl={`/game/LocalTournament/${index}`}
                     />
                 </div>,
             );
         });
-        //   for (let i : number = 0; i < localStorage.length; i++) {
-        //     const key : string | null = localStorage.key(i);
-        //     if (key) {
-        //       const val = localStorage.getItem(key);
-        //       if (val) {
-        //         const value = JSON.parse(val);
-        //         console.log('value=-=>', value);
 
-        //         tournamentCards.push(
-        //           <div key={value["tournament_name"]}>
-        //             <TournamentCard
-        //               name={value["tournament_name"]}
-        //               date = "10/06/2024"
-        //               participantsJoined={5}
-        //               imageUrl="/Ping_Pong_Battle_4.png"
-        //               pageUrl = "#"
-        //             />
-        //           </div>
-        //         );
-        //     }
-        //   }
-        // }
         setLocalTournaments(tournamentCards);
     }, [rerender, localStorage.length]);
 
@@ -184,11 +143,11 @@ const Tournament: React.FC = () => {
                     </>
                 ) : choosenTab === 'Local' ? (
                     <>
-                        <div className="col d-flex flex-wrap justify-content-center">
-                            <div className="col  d-flex flex-wrap justify-content-center">
-                                <LocalTournamentForm setRerender={setRerender} />
-                            </div>
-                            <div className="col-12 d-flex flex-wrap justify-content-center ">{localTournaments}</div>
+                        <div className="col-12 col-xl-5 col-xxl-7 order-2 order-xl-1 d-flex flex-wrap justify-content-around">
+                            {localTournaments}
+                        </div>
+                        <div className="col-12 col-xl-4 order-1 order-xl-2 d-flex justify-content-center">
+                            <LocalTournamentForm setRerender={setRerender} />
                         </div>
                     </>
                 ) : (

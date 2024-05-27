@@ -37,23 +37,23 @@
     appearance: none;
     width: 95%;
     height: 15px;
-    border-radius: 25px;  
+    border-radius: 25px;
     background: var(--clr--grey);
     outline: none;
     -webkit-transition: .2s;
     transition: opacity .2s;
   }
-  
+
   .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 25px;
     height: 25px;
-    border-radius: 50%; 
+    border-radius: 50%;
     background: var(--clr-red);
     cursor: pointer;
   }
-  
+
   .slider::-moz-range-thumb {
     width: 25px;
     height: 25px;
@@ -61,7 +61,7 @@
     background: var(--clr-red);
     cursor: pointer;
   }
-  
+
   .imageFile {
     width : 450px;
     color : #565a69;
@@ -83,7 +83,7 @@
     scale : 1.01;
     color : var(--clr-dark);
     background-color: var(--clr--white);
-    
+
   }
 
   .input:focus {
@@ -93,7 +93,7 @@
   .input:hover {
     scale : 1.01;
   }
-  
+
 @media only screen and (max-width: 1600px) {
 
     .formWrapper {
@@ -116,7 +116,7 @@
 }
 
 @media only screen and (max-width: 400px) {
-    
+
     .formTitle {
         font-size: 1rem;
     }

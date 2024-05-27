@@ -222,7 +222,7 @@ function SettingsPage() {
     }, [accountValues]);
 
     return (
-        <div className={` ${styles.wrapper} container-fluid vh-100  -warning p-0 m-0`}>
+        <div className={`${styles.wrapper} container-fluid vh-100 p-0 m-0`}>
             <div className="row h-100 p-0 m-0">
                 <section className="row p-0 m-0 mt-5">
                     <div className="col">
