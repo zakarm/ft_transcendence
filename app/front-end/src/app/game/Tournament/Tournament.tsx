@@ -146,7 +146,7 @@ const Tournament: React.FC = () => {
                         <div className="col-12 col-xl-5 col-xxl-7 order-2 order-xl-1 d-flex flex-wrap justify-content-around">
                             {localTournaments}
                         </div>
-                        <div className="col-12 col-xl-4 order-1 order-xl-2 d-flex justify-content-center">
+                        <div className="col-12 col-xl-5 order-1 order-xl-2 d-flex justify-content-center">
                             <LocalTournamentForm setRerender={setRerender} />
                         </div>
                     </>

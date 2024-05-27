@@ -1,6 +1,6 @@
 'use client';
 
-import styles from './styles.module.css';
+import styles from './remoteForm.module.css';
 import React, { Component, ChangeEvent } from 'react';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -49,14 +49,12 @@ function GetInput({
     return (
         <>
             <div className={`${className}`}>
-                <div className="col-9 my-2 ms-4 d-flex">
                     <label
                         htmlFor={inputId}
                         className={`col-9 itim-font text-left p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`}
                     >
                         {labelText}
                     </label>
-                </div>
                 <div className={`col-9 ${styles.inputHolder} row justify-content-center p-0 m-2`}>
                     <input
                         type={inputType}
@@ -102,8 +100,8 @@ function GetImageInput({ handleChange = () => {}, index = 0 }: Props) {
                         className={`col-9 itim-font text-end d-flex justify-content-between ${styles.input} ${styles.imageFile}`}
                         htmlFor="imageInput"
                     >
-                        <div className={`${styles.imageText} text-nowrap ms-2`}>{imageName.split('\\').pop()}</div>
-                        <div>
+                        <marquee className={`text-nowrap ms-2`}>{imageName.split('\\').pop()}</marquee>
+                        <div className="ps-2">
                             <img src="../../../imageUpload.png" height="15px" />
                         </div>
                     </label>

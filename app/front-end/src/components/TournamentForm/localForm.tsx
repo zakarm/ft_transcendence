@@ -48,35 +48,40 @@ interface getInputProps {
 function InputRange({ id, updatePlayersList }: { id: string; updatePlayersList: (key: string, val: string) => void }) {
     return (
         <>
-            <div className={`  row justify-content-center ${styles.slidecontainer} p-0 mt-2`}>
-                <label className={`  col-9 itim-font text-left p-1 ${styles.rangeTitle}`} htmlFor="myRange">
-                    Game Difficulty
+        <div className={`row justify-content-center ${styles.slidecontainer} p-0 m-0`}>
+            <div className={`row p-0 m-0 ${styles.rangeTitle}`}>
+                <label
+                    className={`col itim-font text-left p-1  p-0 m-0`}
+                    htmlFor="myRange">
+                        Game Difficulty
                 </label>
-                <div className={`  col-9 d-flex justify-content-center p-0 my-3 ${styles.rangeTitle}`}>
-                    <input
-                        type="range"
-                        min="0"
-                        max="2"
-                        step="1"
-                        className={`${styles.slider}`}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => updatePlayersList(id, e.target.value)}
-                        id="myRange"
-                    />
-                </div>
-                <div className={`row p-0 mb-2 justify-content-center ${styles.rangeTitle}`}>
-                    <div className="col-3">
-                        <p className={`  itim-font`}>Easy</p>
-                    </div>
-                    <div className="col-3 d-flex justify-content-center">
-                        <p className={`itim-font`}>Medium</p>
-                    </div>
-                    <div className="col-3 d-flex justify-content-end">
-                        <p className={`itim-font`}>Hard</p>
-                    </div>
+            </div>
+            <div className={`row p-0 m-0 d-flex justify-content-center p-0 m-0 ${styles.rangeTitle}`}>
+                <div className="col">
+
+                <input type="range"
+                    min="0"
+                    max="2"
+                    step="1"
+                    className={`${styles.slider}`}
+                    onChange={ (e : ChangeEvent<HTMLInputElement>) => updatePlayersList(id, e.target.value) }
+                    id="myRange"/>
                 </div>
             </div>
+            <div className={`row p-0 m-0 justify-content-center ${styles.rangeTitle}`}>
+                    <div className="col-4 ">
+                        <p className={`itim-font`}>Easy</p>
+                    </div>
+                    <div className="col-4 d-flex justify-content-center">
+                        <p className={`itim-font`}>Medium</p>
+                    </div>
+                    <div className="col-4 d-flex justify-content-end">
+                        <p className={`itim-font`}>Hard</p>
+                    </div>
+            </div>
+        </div>
         </>
-    );
+    )
 }
 
 function GetInput({
@@ -90,27 +95,22 @@ function GetInput({
 }: getInputProps) {
     return (
         <>
-            <div className={`row  justify-content-center`}>
-                <div className="col-9 my-2 ms-4 d-flex">
-                    <label
-                        htmlFor={id}
-                        className={`col-9 itim-font text-left p-0 m-0 ${styles.labelClass} ${styles.input_title}`}
-                    >
-                        {label}
-                    </label>
-                </div>
-                <div className={`col-9 ${styles.input_holder} row justify-content-center p-0 m-2`}>
-                    <input
-                        type={type}
-                        className={`${inputClassName} ${styles.input_text} ps-4`}
-                        maxLength={inputLength}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => updatePlayersList(id, e.target.value)}
-                        required
-                    />
-                </div>
+        <div className={`  row ${styles.input_holder} justify-content-center p-0 m-0`}>
+            <div className="col-12  p-0 m-0">
+                <label htmlFor={id} className={`itim-font text-left p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`}>{ label }</label>
             </div>
+            <div className={`col-12 ${styles.input_holder} row justify-content-center p-0 m-1 `}>
+                <input 
+                    type        = { type }
+                    className   = {`${inputClassName} ${styles.input_text} p-3`}
+                    maxLength   = { inputLength }
+                    onChange    = { (e : ChangeEvent<HTMLInputElement>) => updatePlayersList(id, e.target.value) }
+                    required
+                />
+            </div>
+        </div>
         </>
-    );
+    )
 }
 
 function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<React.SetStateAction<boolean>> }) {
@@ -242,45 +242,86 @@ function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<Reac
         },
     ];
     return (
-        <form className={`row p-0 m-0 ${styles.form_container}`} onSubmit={handleSubmit}>
-            <fieldset className="row justify-content-center p-0 m-0">
-                <div className="row">
-                    <div className={`col text-center`}>
-                        <legend className="valo-font align-self-center text-center mt-4">
-                            CREATE LOCAL TOURNAMENT
-                        </legend>
-                    </div>
-                </div>
-                <div className="row justify-content-center">
+        <form className={`row p-0 m-0 ${styles.formWrapper}`} onSubmit={ handleSubmit }>
+        <span className={`row justify-content-center m-0 p-0 ${styles.formTitle}`}>
+            <legend className={`col-12 valo-font align-self-center text-center flex-nowrap`}>CREATE LOCAL TOURNAMENT</legend>
+        </span>
+        <fieldset className="row justify-content-center p-0 m-0">
+
+            <div className="col-12 d-flex flex-column align-items-center flex-wrap">
+                <div className=" w-100 d-flex justify-content-center">
                     <GetInput
-                        type={inputData[0].type}
-                        label={inputData[0].label}
-                        id={inputData[0].id}
+                        type = {inputData[0].type}
+                        label = { inputData[0].label }
+                        id = {inputData[0].id}
                         inputLength={30}
-                        labelClassName="itim-font"
-                        updatePlayersList={updatePlayersList}
-                    />
+                        labelClassName='itim-font'
+                        updatePlayersList={ updatePlayersList }
+                        />                    
+                </div>
+            </div>
+
+            <div className="row p-0 m-0 flex-column align-items-center flex-wrap">
+                    <InputRange
+                        id = "difficulty"
+                        updatePlayersList={ updatePlayersList }
+                    ></InputRange>
+            </div>
+
+            <div className="col-6 d-flex flex-column align-items-center flex-wrap">
+                {
                     <>
-                        {inputData.map((elem) => (
-							<GetInput
-                                type={elem.type}
-                                label={elem.label}
-                                id={elem.id}
+                    {
+                        inputData.slice(1, 5).map((elem) => (
+                            <div key={elem.id} className=" w-100 d-flex justify-content-center">
+                                <GetInput
+                                type = {elem.type}
+                                label = { elem.label }
+                                id = {elem.id}
                                 inputLength={20}
-                                labelClassName="itim-font"
-                                updatePlayersList={updatePlayersList}
-                            />
-                        ))}
+                                labelClassName='itim-font'
+                                updatePlayersList={ updatePlayersList }
+                                />
+                            </div>
+                        ))
+                    }
                     </>
-                    <InputRange id="difficulty" updatePlayersList={updatePlayersList}></InputRange>
-                </div>
-                <div className="col-12 d-flex flex-row justify-content-center">
-                    <button className={`valo-font mb-4 ${styles.create_button}`} type="submit">
+                }
+            </div>
+
+            <div className="col-6 d-flex flex-column align-items-center flex-wrap">
+                {
+                    <>
+                    {
+                        inputData.slice(5, 9).map((elem) => (
+                            <div key={elem.id} className=" w-100 d-flex justify-content-center">
+                                <GetInput
+                                type = {elem.type}
+                                label = { elem.label }
+                                id = {elem.id}
+                                inputLength={20}
+                                labelClassName='itim-font'
+                                updatePlayersList={ updatePlayersList }
+                                />
+                            </div>
+                        ))
+                    }
+                    </>
+                }
+            </div>
+
+
+            <div className="col-12 d-flex flex-row justify-content-center">
+                <button
+                    className={`  valo-font my-4 ${styles.create_button}`}
+                    type="submit"
+                    >
                         CREATE
-                    </button>
-                </div>
-            </fieldset>
-        </form>
+                </button>
+            </div>
+
+        </fieldset>
+    </form>
     );
 }
 

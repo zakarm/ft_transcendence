@@ -25,7 +25,6 @@
 
 .inputTitle {
     width : 450px;
-
     color : var(--clr--grey);
 }
 
@@ -83,7 +82,6 @@
     scale : 1.01;
     color : var(--clr-dark);
     background-color: var(--clr--white);
-
   }
 
   .input:focus {

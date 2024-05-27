@@ -5,32 +5,38 @@
 --clr--green : #27B299;
 --clr--grey : #2C3143; */
 
-.form_container {
+.formWrapper {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 10px;
+    height: 700px;
     border-radius: 25px;
     background-color: var(--clr-ldark);
-    width: 96%;
-    min-width: 300px;
-    max-width: 1700px;
+    width : 100%;
 }
 
-.input_title {
+
+.inputTitle {
     width: 450px;
 }
 
 .rangeTitle,
-.input_title {
-    color: #565a69;
+.inputTitle {
+    color: var(--clr--grey);
+    width : 450px;
+    max-width: 100%;
 }
 
-.input_holder {
-    width: 400px;
+.input_holder, .inputTitle {
+    width : 450px;
+    max-width: 100%;
 }
 
 .input_text {
     outline: none;
     border: none;
     border-radius: 25px;
-    height: 60px;
+    height: 50px;
     color: #565a69;
     width: 100%;
     background-color: var(--clr--grey);
@@ -85,6 +91,9 @@
     font-size: clamp(1rem, 0.953rem + 0.253vw, 1.9rem);
 }
 
+.input_holder:hover {
+    scale: 1.01;
+}
 .create_button:hover,
 .slider::-webkit-slider-thumb:hover {
     scale: 1.01;
@@ -92,13 +101,46 @@
     background-color: var(--clr--white);
 }
 
-@media only screen and (max-width: 530px) {
-    .input_title,
+/* @media only screen and (max-width: 530px) {
+    .inputTitle,
     .input_holder {
         width: 290px;
     }
-    .form_container {
+    .formWrapper {
         width: 300px;
         min-width: 300px;
+    }
+} */
+
+
+@media only screen and (max-width: 1600px) {
+
+    .formWrapper {
+        width : 430px;
+    }
+}
+
+@media only screen and (max-width: 776px) {
+
+    .formTitle {
+        font-size: 1.5rem;
+    }
+    .create_button {
+        height : 50px;
+    }
+
+    .formWrapper {
+        width : 400px;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+
+    .formTitle {
+        font-size: 1rem;
+    }
+
+    .formWrapper {
+        width : 300px;
     }
 }
