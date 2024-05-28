@@ -157,8 +157,30 @@ function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<Reac
         },
     });
 
+    const   isPlayerNameDuplicate : () => boolean = () => {
+        const   playersName = Object.entries(players).filter(([key]) => /^player_\d+$/.test(key));
+
+        for (const i in playersName) {
+            if (playersName[i]) {
+                const [key0, value0] = playersName[i];
+                for (const k in playersName) {
+                    if (playersName[k]) {
+                        const [key1, value1] = playersName[k];
+                        if (value1 && value0 && key0 !== key1 && value0 === value1) {
+                            toast.error(`Duplicate name : ${key0} - ${key1}`);
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        if (!isPlayerNameDuplicate()) { return; }
         const data = localStorage.getItem('tournaments');
         let tournaments: LocalPlayersProps[] = [];
 
@@ -243,7 +265,7 @@ function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<Reac
     ];
     return (
         <form className={`row p-0 m-0 ${styles.formWrapper}`} onSubmit={ handleSubmit }>
-        <span className={`row justify-content-center m-0 p-0 ${styles.formTitle}`}>
+        <span className={`row justify-content-center m-0 p-0 mt-4 ${styles.formTitle}`}>
             <legend className={`col-12 valo-font align-self-center text-center flex-nowrap`}>CREATE LOCAL TOURNAMENT</legend>
         </span>
         <fieldset className="row justify-content-center p-0 m-0">

@@ -56,7 +56,6 @@
 }
 
 .progress_bar {
-    width: 44%;
     border-radius: 25px;
     background: linear-gradient(90deg, var(--clr-red), var(--clr-dark) 100%);
 }

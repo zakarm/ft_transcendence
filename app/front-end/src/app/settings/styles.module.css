@@ -11,6 +11,7 @@
   transition: box-shadow 0.4s ease-in-out, border 0.4s ease-in-out;
 }
 
+
 .wrapper {
   overflow: auto;
 }
@@ -33,6 +34,12 @@
     width : 400px;
 }
 
+.rangeTitle {
+    color: var(--clr--grey);
+    width : 400px;
+    max-width: 100%;
+}
+  
 .input {
   width : 100%;
   outline: none;
@@ -198,7 +205,7 @@
     font-size: 1rem;
   }
 
-  .inputHolder {
+  .inputHolder, .rangeTitle {
     width: 350px;
   }
 
@@ -224,7 +231,7 @@
     font-size: 1rem;
   }
 
-  .inputHolder {
+  .inputHolder, .rangeTitle {
     width: 250px;
   }
 
@@ -238,7 +245,7 @@
     font-size: 1rem;
   }
 
-  .inputHolder {
+  .inputHolder, .rangeTitle {
     width: 200px;
   }
 
