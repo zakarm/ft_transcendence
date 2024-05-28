@@ -89,7 +89,7 @@ const validateInput: (valuesToPost: SettingsProps['valuesToPost']) => boolean = 
     valuesToPost: SettingsProps['valuesToPost'],
 ) => {
     const validateEmail: (email: string) => boolean = (email) => {
-        let rgx: RegExp = /^([a-zA-Z0-9\._]+)@([a-zA-Z0-9])+.([a-z]+)(.[a-z]+)?$/;
+        const rgx: RegExp = /^([a-zA-Z0-9\._]+)@([a-zA-Z0-9])+.([a-z]+)(.[a-z]+)?$/;
         return rgx.test(email);
     };
 
@@ -198,7 +198,7 @@ function SettingsPage() {
         };
 
         const updatePostValues = (values: SettingsProps['accountValues']) => {
-            let newValues: SettingsProps['accountValues'] = { ...values };
+            const newValues: SettingsProps['accountValues'] = { ...values };
             for (const [key, value] of Object.entries(values)) {
                 newValues[key] = value;
             }

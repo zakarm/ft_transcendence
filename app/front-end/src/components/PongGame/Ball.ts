@@ -66,11 +66,11 @@ export default class Ball {
     paddle1: { mesh: THREE.Mesh; depth: number; width: number },
     paddle2: { mesh: THREE.Mesh; depth: number; width: number }
   ) {
-    var ballSphere = new THREE.Sphere(this.mesh.position, this.radius);
-    var wall1Box = new THREE.Box3().setFromObject(wall1.mesh);
-    var wall2Box = new THREE.Box3().setFromObject(wall2.mesh);
-    var paddle1Box = new THREE.Box3().setFromObject(paddle1.mesh);
-    var paddle2Box = new THREE.Box3().setFromObject(paddle2.mesh);
+    const ballSphere = new THREE.Sphere(this.mesh.position, this.radius);
+    const wall1Box = new THREE.Box3().setFromObject(wall1.mesh);
+    const wall2Box = new THREE.Box3().setFromObject(wall2.mesh);
+    const paddle1Box = new THREE.Box3().setFromObject(paddle1.mesh);
+    const paddle2Box = new THREE.Box3().setFromObject(paddle2.mesh);
     if (paddle1Box.intersectsSphere(ballSphere)) {
       if (
         this.mesh.position.z > paddle1.mesh.position.z + paddle1.depth / 2 &&
