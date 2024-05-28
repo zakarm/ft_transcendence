@@ -11,9 +11,6 @@ const nextConfig = {
             { hostname: 'avatars.githubusercontent.com' },
         ],
     },
-    eslint: {
-        ignoreDuringBuilds: true,
-    },
     reactStrictMode: false,
 };
 

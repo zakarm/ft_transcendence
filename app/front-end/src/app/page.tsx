@@ -1,15 +1,10 @@
-// 'use client'
-
 import Link from 'next/link';
-import React, { useRef } from 'react';
+import React from 'react';
 import styles from './LandingPage.module.css';
 
 const LandingPage: React.FC = () => {
   return (
     <div className={styles.container}>
-      {/* <Canvas>
-        <Scene />
-      </Canvas> */}
       <div className={styles.content}>
         <h1 className={`${styles.title} valo-font`}>VAL-PONG</h1>
         <div className={styles.buttonContainer}>
