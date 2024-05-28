@@ -12,15 +12,16 @@ DOCKER_COMPOSE_FLAGS := --env-file .env
 VERSION := $(MAJOR).$(MINOR).$(PATCH)
 DATA_DIR := ${HOME}/Desktop/data
 DOCKER_FRONT := front-end
-COMMAND := npx tsc --noEmit
 
 # Define colors
 GREEN := $(shell tput -Txterm setaf 2)
 YELLOW := $(shell tput -Txterm setaf 3)
 RESET := $(shell tput -Txterm sgr0)
+RED := $(shell tput -Txterm setaf 1)
+BLUE := $(shell tput -Txterm setaf 4)
 
 # Define targets
-.PHONY: help start create-data-dir remove-data-dir build up down restart logs version remove-volumes clean check
+.PHONY: help version start build up down restart logs create-data-dir remove-data-dir remove-volumes clean re check tools
 
 help: ## Show this help message
 	@echo "Usage: make [target]"
@@ -28,15 +29,10 @@ help: ## Show this help message
 	@echo "Targets:"
 	@egrep '^(.+)\:\ ##\ (.+)' $(MAKEFILE_LIST) | column -t -c 2 -s ':#'
 
+version: ## Show the current version
+	@echo "$(GREEN)Current version: $(VERSION)$(RESET)"
+
 start: build up ## Start Docker containers
-
-create-data-dir: ## Create the data directory
-	@echo "$(GREEN)Creating data directory $(DATA_DIR)...$(RESET)"
-	@mkdir -p $(DATA_DIR)
-
-remove-data-dir: ## Remove the data directory
-	@echo "$(YELLOW)Removing data directory $(DATA_DIR)...$(RESET)"
-	@rm -rf $(DATA_DIR)
 
 build: create-data-dir ## Build Docker images
 	@echo "$(GREEN)Building Docker images...$(RESET)"
@@ -56,8 +52,13 @@ logs: ## View logs from Docker containers
 	@echo "$(GREEN)Viewing logs from Docker containers...$(RESET)"
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) $(DOCKER_COMPOSE_FLAGS) logs -f
 
-version: ## Show the current version
-	@echo "$(GREEN)Current version: $(VERSION)$(RESET)"
+create-data-dir: ## Create the data directory
+	@echo "$(GREEN)Creating data directory $(DATA_DIR)...$(RESET)"
+	@mkdir -p $(DATA_DIR)
+
+remove-data-dir: ## Remove the data directory
+	@echo "$(YELLOW)Removing data directory $(DATA_DIR)...$(RESET)"
+	@rm -rf $(DATA_DIR)
 
 remove-volumes: ## Remove Docker volumes
 	@echo "$(YELLOW)Removing Docker volumes...$(RESET)"
@@ -74,13 +75,24 @@ clean: down remove-volumes remove-data-dir ## Clean up build artifacts and tempo
 	@rm -rf ./app/back-end/game/migrations
 	@rm -rf ./app/back-end/dashboards/migrations
 
-check:
-	@docker exec -it $(DOCKER_FRONT) $(COMMAND); \
-    status=$$?; \
-    if [ $$status -eq 0 ]; then \
-        echo "$(GREEN)SUCCESS$(RESET)"; \
-    fi
+re: clean start ## Clean and start Docker containers
 
+check: ## Check the status of the Docker containers
+	@echo "$(YELLOW)Available tools:$(RESET)"
+	@echo "$(BLUE)1. TypeScript compiler (no emit)$(RESET)"
+	@echo "$(BLUE)2. Check for package updates$(RESET)"
+	@echo "$(BLUE)3. Check for Update package versions$(RESET)"
+	@echo "$(BLUE)4. Check for unused dependencies$(RESET)"
+	@read -p "Select a tool (1-4): " tool_choice; \
+	case $$tool_choice in \
+		1) tool_command="npx tsc --noEmit";; \
+		2) tool_command="npx npm-check";; \
+		3) tool_command="npx npm-check-updates";; \
+		4) tool_command="npm run depcheck";; \
+		*) echo "Invalid choice!"; exit 1;; \
+	esac; \
+	echo "$(YELLOW)Running $$tool_command...$(RESET)"; \
+	docker exec -it $(DOCKER_FRONT) $$tool_command && echo "$(GREEN)=======>SUCCESS<=======$(RESET)" || echo "$(RED)=======>ERROR<=======$(RESET)"
 
 # update-version: ## Update the version number
 # 	@read -p "Enter new version (MAJOR.MINOR.PATCH): " NEW_VERSION; \
