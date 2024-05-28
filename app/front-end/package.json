@@ -6,7 +6,8 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "watch": "tsc --watch"
   },
   "dependencies": {
     "@gsap/react": "^2.1.0",

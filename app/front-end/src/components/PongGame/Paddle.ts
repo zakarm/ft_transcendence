@@ -49,7 +49,7 @@ export default class Paddle {
   }
 
   paddleUpdate() {
-    let newPosition1 = this.mesh.position.z + this.speed;
+    const newPosition1 = this.mesh.position.z + this.speed;
     if (newPosition1 < -2.5 + this.depth / 2) {
       this.mesh.position.z = -2.5 + this.depth / 2;
       this.speed = 0;

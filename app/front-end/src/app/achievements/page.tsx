@@ -62,7 +62,7 @@ const AchievementsProgressBar: React.FC<AchievementsProps> = React.memo(
             }
         });
 
-        let unlockedAchievements: number =
+        const unlockedAchievements: number =
             choosenTab === 'All'
                 ? Math.ceil((achivementsUnlockedCount / totalUnlocked) * 100)
                 : choosenTab === 'Match' && achievements.match

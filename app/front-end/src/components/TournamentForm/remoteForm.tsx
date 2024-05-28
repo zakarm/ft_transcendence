@@ -1,7 +1,7 @@
 'use client';
 
 import styles from './remoteForm.module.css';
-import React, { Component, ChangeEvent } from 'react';
+import React, { ChangeEvent } from 'react';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { notificationStyle } from '../ToastProvider';
@@ -18,7 +18,6 @@ interface Props {
     inputClassName?: string;
     inputId?: string;
     labelText?: string;
-    labelClass?: string;
     inputLength?: number;
     index?: number;
     handleChange?: (e: InputEventProps | string, i: number) => void;
@@ -38,7 +37,6 @@ function GetInput({
     handleChange,
     inputLength,
     index = 0,
-    labelClass = '',
 }: Props) {
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (handleChange) {
@@ -187,7 +185,7 @@ function RenderInputFields({ handleChange = () => {} }: Props) {
 function RemoteTournamentForm() {
     const [currentValues, setCurrentValues] = useState<string[]>(['', '', '', '', '', '']);
 
-    let ValuesToPost: InputValuesProps = {
+    const ValuesToPost: InputValuesProps = {
         username: '', //
         tournament_name: '',
         tournament_start: '',
@@ -206,8 +204,8 @@ function RemoteTournamentForm() {
     const formValidation: () => Promise<boolean> = async () => {
         let i: number = 0;
         let isChanged: boolean = false;
-        for (let [key, value] of Object.entries(ValuesToPost)) {
-            if (currentValues[i] && currentValues[i] !== '' && currentValues[i] !== ValuesToPost[key]) {
+        for (const [key, value] of Object.entries(ValuesToPost)) {
+            if (currentValues[i] && currentValues[i] !== '' && currentValues[i] !== value) {
                 if (key === 'tournament_image') {
                     const imageURL: string | null = await handleImageUpload(currentValues[i]);
                     imageURL !== null ? (currentValues[i] = imageURL) : toast.error('Error : cannot upload image');

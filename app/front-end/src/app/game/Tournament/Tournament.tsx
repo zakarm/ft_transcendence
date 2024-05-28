@@ -134,7 +134,7 @@ const Tournament: React.FC = () => {
             <section className="row Tournament_section p-0 m-0">
                 {choosenTab === 'My Tournament' ? (
                     <>
-                        <div className="col-12 col-xl-5 col-xxl-7 order-2 order-xl-1 d-flex flex-wrap justify-content-around">
+                        <div className="col-12 col-xl-5 col-xxl-7 order-2 order-xl-1 d-flex flex-wrap justify-content-center">
                             {tournamentsToRender}
                         </div>
                         <div className="col-12 col-xl-4 order-1 order-xl-2 d-flex justify-content-center">
@@ -143,7 +143,7 @@ const Tournament: React.FC = () => {
                     </>
                 ) : choosenTab === 'Local' ? (
                     <>
-                        <div className="col-12 col-xl-5 col-xxl-7 order-2 order-xl-1 d-flex flex-wrap justify-content-around">
+                        <div className="col-12 col-xl-5 col-xxl-7 order-2 order-xl-1 d-flex flex-wrap justify-content-center">
                             {localTournaments}
                         </div>
                         <div className="col-12 col-xl-5 order-1 order-xl-2 d-flex justify-content-center">
@@ -151,7 +151,7 @@ const Tournament: React.FC = () => {
                         </div>
                     </>
                 ) : (
-                    <div className="col d-flex flex-wrap justify-content-center">{tournamentsToRender}</div>
+                    <div className="col d-flex flex-wrap justify-content-center ">{tournamentsToRender}</div>
                 )}
             </section>
         </div>

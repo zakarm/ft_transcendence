@@ -4,7 +4,6 @@ import React, { useState, ChangeEvent, FormEvent } from 'react';
 import styles from './localForm.module.css';
 import { notificationStyle } from '../ToastProvider';
 import { toast } from 'react-toastify';
-import Tournament from '@/app/game/Tournament/Tournament';
 
 function getFormattedDateTime(): string {
     const date: Date = new Date();
@@ -41,7 +40,6 @@ interface getInputProps {
     label: string;
     updatePlayersList: (key: string, val: string) => void;
     inputClassName?: string;
-    labelClassName?: string;
     inputLength?: number;
 }
 
@@ -89,7 +87,6 @@ function GetInput({
     id,
     label,
     updatePlayersList,
-    labelClassName,
     inputClassName,
     inputLength = 20,
 }: getInputProps) {
@@ -100,7 +97,7 @@ function GetInput({
                 <label htmlFor={id} className={`itim-font text-left p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`}>{ label }</label>
             </div>
             <div className={`col-12 ${styles.input_holder} row justify-content-center p-0 m-1 `}>
-                <input 
+                <input
                     type        = { type }
                     className   = {`${inputClassName} ${styles.input_text} p-3`}
                     maxLength   = { inputLength }
@@ -277,9 +274,8 @@ function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<Reac
                         label = { inputData[0].label }
                         id = {inputData[0].id}
                         inputLength={30}
-                        labelClassName='itim-font'
                         updatePlayersList={ updatePlayersList }
-                        />                    
+                        />
                 </div>
             </div>
 
@@ -301,7 +297,6 @@ function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<Reac
                                 label = { elem.label }
                                 id = {elem.id}
                                 inputLength={20}
-                                labelClassName='itim-font'
                                 updatePlayersList={ updatePlayersList }
                                 />
                             </div>
@@ -322,7 +317,6 @@ function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<Reac
                                 label = { elem.label }
                                 id = {elem.id}
                                 inputLength={20}
-                                labelClassName='itim-font'
                                 updatePlayersList={ updatePlayersList }
                                 />
                             </div>
