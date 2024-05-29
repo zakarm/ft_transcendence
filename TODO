@@ -1,0 +1,29 @@
+Mushigarou :
+    ----------------------------------------------------------------------------------
+    Bugs :
+        - Change typo error in "11-0"
+        - Remove console.log, console.error from all code
+        - Remove type "any" from all code
+        - Check data before using it or casting the type
+        - Prevent "cannot upload the image when "
+        - Handle cases of when color cookies are delete or invalid
+        - SignOut view returns 200 when refresh token looks like "l;fd", "fdsf;;;;;", ";;fs;;"...
+            while it returns 400 for tokens that looks like "gfsgfs", "fdsfdsfdsf", "jkkhbdfs8*(&*(&*(YHEIILEUWHIKN @!92u821h2"
+    
+    ----------------------------------------------------------------------------------
+    Feat :
+        - Implement "Ongoing" tab of tournament
+        - Implement searchbox logic in tournament page
+        - Make game customization buttons smaller
+        - Make achivements cards smaller
+        - Add "(ball speed)" as a description next to the "Game difficulty" label
+        - Background of enble 2FA from white to input's color
+        - Group color's cookies in into one object
+        - Fix width of label above input in settings to prevent label from moving on small screen sizes
+
+    ----------------------------------------------------------------------------------
+    Chore :
+        - POST settings data and handle response accordingly
+        - POST remote and local tournament data and handle response accordingly
+        - GET achivements data
+        - GET tournament cards data
