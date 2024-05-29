@@ -1,42 +1,41 @@
 {
-  "name": "front-end",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev --turbo",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "watch": "tsc --watch"
-  },
-  "dependencies": {
-    "@gsap/react": "^2.1.0",
-    "@types/react-bootstrap": "^0.32.36",
-    "bootstrap": "^5.3.3",
-    "chart.js": "^4.4.2",
-    "cloudinary": "^2.2.0",
-    "gsap": "^3.12.5",
-    "js-cookie": "^3.0.5",
-    "next": "14.1.3",
-    "react": "^18.2.0",
-    "react-bootstrap": "^2.10.2",
-    "react-chartjs-2": "^5.2.0",
-    "react-country-region-selector": "^3.6.1",
-    "react-dom": "^18",
-    "react-icons": "^5.0.1",
-    "react-otp-input": "^3.1.1",
-    "react-qr-code": "^2.0.12",
-    "react-toastify": "^10.0.5",
-    "recharts": "^2.12.6",
-    "three": "^0.164.1"
-  },
-  "devDependencies": {
-    "@types/js-cookie": "^3.0.6",
-    "@types/node": "^20.12.12",
-    "@types/react": "^18",
-    "@types/three": "^0.164.0",
-    "eslint": "^8",
-    "eslint-config-next": "14.1.3",
-    "typescript": "5.4.5"
-  }
+    "name": "front-end",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev --turbo",
+        "build": "next build",
+        "start": "next start",
+        "watch": "tsc --watch",
+        "depcheck": "depcheck"
+    },
+    "dependencies": {
+        "@gsap/react": "^2.1.1",
+        "@types/react-bootstrap": "^0.32.36",
+        "bootstrap": "^5.3.3",
+        "chart.js": "^4.4.3",
+        "cloudinary": "^2.2.0",
+        "gsap": "^3.12.5",
+        "js-cookie": "^3.0.5",
+        "next": "^14.2.3",
+        "react": "^18.3.1",
+        "react-bootstrap": "^2.10.2",
+        "react-chartjs-2": "^5.2.0",
+        "react-country-region-selector": "^3.6.1",
+        "react-dom": "^18.3.1",
+        "react-icons": "^5.2.1",
+        "react-otp-input": "^3.1.1",
+        "react-qr-code": "^2.0.13",
+        "react-toastify": "^10.0.5",
+        "recharts": "^2.12.7",
+        "three": "^0.164.1"
+    },
+    "devDependencies": {
+        "@types/js-cookie": "^3.0.6",
+        "@types/node": "^20.12.12",
+        "@types/react": "^18.3.3",
+        "@types/three": "^0.164.1",
+        "depcheck": "^1.4.7",
+        "typescript": "5.4.5"
+    }
 }
