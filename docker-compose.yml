@@ -34,9 +34,8 @@ services:
         env_file:
             - .env
         volumes:
-            - ./app/front-end:/front-end
-            - /front-end/node_modules
-            - /front-end/.next
+            - ./app/front-end/src:/front-end/src
+            - ./app/front-end/public:/front-end/public
 
         networks:
             - ft_transcendence

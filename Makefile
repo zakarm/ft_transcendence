@@ -86,13 +86,25 @@ check: ## Check the status of the Docker containers
 	@read -p "Select a tool (1-4): " tool_choice; \
 	case $$tool_choice in \
 		1) tool_command="npx tsc --noEmit";; \
-		2) tool_command="npx npm-check";; \
-		3) tool_command="npx npm-check-updates";; \
+		2) tool_command="npx npm-check --skip-unused";; \
+		3) tool_command="npx npm-check-updates --silent";; \
 		4) tool_command="npm run depcheck";; \
 		*) echo "Invalid choice!"; exit 1;; \
 	esac; \
 	echo "$(YELLOW)Running $$tool_command...$(RESET)"; \
 	docker exec -it $(DOCKER_FRONT) $$tool_command && echo "$(GREEN)=======>SUCCESS<=======$(RESET)" || echo "$(RED)=======>ERROR<=======$(RESET)"
+
+testfront: ## Run tests for the front-end
+	@echo "$(YELLOW)Running tests for the front-end...$(RESET)"
+	$(DOCKER_COMPOSE) -f docker-compose_test.yml $(DOCKER_COMPOSE_FLAGS) build --no-cache --progress=plain
+
+nodelink: ## Link node modules
+	@echo "$(YELLOW)Linking node modules...$(RESET)"
+	@mkdir -p /tmp/front
+	@cp -r ./app/front-end/package*.json /tmp/front/
+	@npm install --prefix /tmp/front
+	@ln -s /tmp/front/node_modules ./app/front-end/node_modules
+	@echo "$(GREEN)Node modules linked!$(RESET)"
 
 # update-version: ## Update the version number
 # 	@read -p "Enter new version (MAJOR.MINOR.PATCH): " NEW_VERSION; \

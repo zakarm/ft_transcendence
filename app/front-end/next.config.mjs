@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    minify: true,
     compress: true,
     images: {
         remotePatterns: [
