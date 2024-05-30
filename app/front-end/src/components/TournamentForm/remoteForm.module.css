@@ -1,0 +1,125 @@
+/* --clr-red: #FF4755;
+--clr-ldark : #161625;
+--clr--white: #FFEBEB;
+--clr-dark: #111111;
+--clr--green : #27B299;
+--clr--grey : #2C3143; */
+.formWrapper {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 10px;
+    height: 700px;
+    border-radius: 25px;
+    background-color: var(--clr-ldark);
+    width : 100%;
+}
+
+.input {
+    outline: none;
+    color: #565a69;
+    background-color: var(--clr--grey);
+    height: 50px;
+    border-radius: 25px;
+    border : none;
+}
+
+.inputTitle {
+    width : 450px;
+    color : var(--clr--grey);
+}
+
+.inputHolder {
+    width : 450px;
+}
+
+.slider {
+    appearance: none;
+    width: 95%;
+    height: 15px;
+    border-radius: 25px;
+    background: var(--clr--grey);
+    outline: none;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+  }
+
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: var(--clr-red);
+    cursor: pointer;
+  }
+
+  .slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: var(--clr-red);
+    cursor: pointer;
+  }
+
+  .imageFile {
+    width : 450px;
+    color : #565a69;
+    padding: 12px 12px;
+    cursor: pointer;
+  }
+
+ .create_button {
+    width : 200px;
+    height : 50px;
+    border : none;
+    border-radius : 15px;
+    background-color : #FF4755;
+    color : var(--clr--white);
+    font-size: clamp(1rem, 0.953rem + 0.253vw, 1.9rem)
+  }
+
+  .create_button:hover,  .slider::-webkit-slider-thumb:hover {
+    scale : 1.01;
+    color : var(--clr-dark);
+    background-color: var(--clr--white);
+  }
+
+  .input:focus {
+    color: var(--clr--white);
+  }
+
+  .input:hover {
+    scale : 1.01;
+  }
+
+@media only screen and (max-width: 1600px) {
+
+    .formWrapper {
+        width : 430px;
+    }
+}
+
+@media only screen and (max-width: 776px) {
+
+    .formTitle {
+        font-size: 1.5rem;
+    }
+    .create_button {
+        height : 50px;
+    }
+
+    .formWrapper {
+        width : 400px;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+
+    .formTitle {
+        font-size: 1rem;
+    }
+
+    .formWrapper {
+        width : 300px;
+    }
+}

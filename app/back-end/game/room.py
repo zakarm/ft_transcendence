@@ -305,6 +305,14 @@ class RoomObject:
             self.ball_velocity["velocity_z"] *= -1
 
     # ------------------------> paddle <------------------------
+    def bot(self):
+        if self.ball_position["x"] < 0 and self.ball_position["z"] > self.paddle1_position["z"]:
+            self.paddle1_speed = 0.1
+        elif self.ball_position["x"] < 0 and self.ball_position["z"] < self.paddle1_position["z"]:
+            self.paddle1_speed = -0.1
+        else:
+            self.paddle1_speed = 0
+
     def paddle_update(self):
         newPosition1 = self.paddle1_position["z"] + self.paddle1_speed
         if newPosition1 < -2.5 + self.paddle_depth / 2:

@@ -8,14 +8,17 @@ import { TbAppsFilled } from "react-icons/tb";
 import { IoGameController } from "react-icons/io5"
 import { IoMdLogOut } from "react-icons/io";
 import { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { IoChatbubble } from "react-icons/io5";
 import { FaTrophy } from "react-icons/fa6";
 import { IoMdSettings } from "react-icons/io";
 import Image from 'next/image';
+import {signOut} from '@/components/sign-out/signOut';
+import { NextRouter } from 'next/router';
 
 export default function SideBar() {
 
+  const   router = useRouter();
   const pathname = usePathname();
   const [activeIcon, setActiveIcon] = useState(0);
 
@@ -31,7 +34,6 @@ export default function SideBar() {
     gsap.to(`.icon_${index}`, { rotation: "45" });
     gsap.to(".logo", { rotation: "+=1080", duration: 1 });
   }, [pathname]);
-
 
   return (
       <div className={`${styles.side_container} d-inline-flex flex-column justify-content-around align-items-center vh-100 py-4 px-2`}>
@@ -63,7 +65,7 @@ export default function SideBar() {
             </Link>
 		</div>
 		<div className="flex-grow-1 d-flex align-items-end pb-3">
-			<IoMdLogOut className={`${styles.side_icon} ${styles.icon_5}`} color={activeIcon === 5 ? '#FF4755' : '#FFEBEB'}/>
+			<IoMdLogOut className={`${styles.side_icon} ${styles.icon_5}`} color={activeIcon === 5 ? '#FF4755' : '#FFEBEB'} onClick={() => signOut(router)}/>
 		</div>
       </div>
   );

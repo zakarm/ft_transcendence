@@ -149,7 +149,6 @@ class GameConsumer(AsyncWebsocketConsumer):
                     "username": self.user.username,
                     "Room_name": self.room_name,
                 }
-                # print(f"User {self.user.username} {self.user.email} {self.user.image_url}", file=sys.stderr)
                 await self.message({"message": message})
                 if self.room.is_ready():
                     user1, user1_data, user2, user2_data = (

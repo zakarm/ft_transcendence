@@ -1,12 +1,7 @@
-/* @font-face {
-  font-family: "Valorax";
-  src: local("Valorax"),
-    url("../../assets/fonts/valorax.otf") format("opentype");
-} */
+
 @import url("https://fonts.googleapis.com/css2?family=Itim&display=swap");
 
 .Lobby_container {
-  /* margin-right: 30px; */
   padding: 0;
   position: relative;
   background-color: black;

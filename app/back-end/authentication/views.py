@@ -67,12 +67,13 @@ class SignIn2Fa(APIView):
 class SignOutView(APIView):
     def post(self, request):
         """Post function"""
-        refresh_token = request.data.get('refresh')
-        if refresh_token is None:
+        try :
+            refresh_token = request.data.get('refresh')
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response({'message:', 'Successfully logged out'}, status=status.HTTP_200_OK)
+        except :
             return Response({'error': 'Refresh token is required'}, status=status.HTTP_400_BAD_REQUEST)
-        token = RefreshToken(refresh_token)
-        token.blacklist()
-        return Response({'message:', 'Successfully logged out'}, status=status.HTTP_200_OK)
 
 class SocialAuthExchangeView(APIView):
     serializer_class = SocialAuthSerializer

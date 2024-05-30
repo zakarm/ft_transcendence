@@ -142,7 +142,7 @@ function    GetColorInput(
 
     // usestate to pass chosen color to 'onClick' of button
     return (
-        <div className={`${className} flex-wrap flex-xxl-nowrap`}>
+        <div className={`${className} flex-wrap flex-xxl-nowrap `}>
             <label
                 className={` col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`} 
                 htmlFor={inputId}>
@@ -194,9 +194,9 @@ function    GetInputRange({className} : Props) {
 
     return (
         <>
-        <div className={`p-0 m-0 mt-4 row justify-content-center itim-font  flex-wrap flex-xxl-nowrap`}>
+        <div className={` p-0 m-0 mt-4 row justify-content-center itim-font  flex-wrap flex-xxl-nowrap`}>
             <label
-                className={`  col-8 col-sm-3 itim-font d-flex align-items-center  p-0 m-0 ${styles.inputTitle} `}
+                className={`col-8 col-sm-3 itim-font d-flex align-items-center  p-0 m-0 ${styles.inputTitle} `}
                 htmlFor="myRange">
                     Game Difficulty
             </label>
@@ -217,6 +217,23 @@ function    GetInputRange({className} : Props) {
             </div>
             </div>
         </div>
+        <div className={` p-0 m-0 row justify-content-center itim-font  flex-wrap flex-xxl-nowrap`}>
+        <label
+                className={`col-8 col-sm-3 itim-font d-flex align-items-center  p-0 m-0 ${styles.inputTitle} `}
+                htmlFor="myRange">
+            </label>
+        <div className={`row  p-0 m-0 justify-content-center ${styles.rangeTitle}`}>
+                    <div className="col-4 ">
+                        <p className={`itim-font`}>Easy</p>
+                    </div>
+                    <div className="col-4 d-flex justify-content-center">
+                        <p className={`itim-font`}>Medium</p>
+                    </div>
+                    <div className="col-4 d-flex justify-content-end">
+                        <p className={`itim-font`}>Hard</p>
+                    </div>
+            </div>
+            </div>
         </>
     )
 }
@@ -240,7 +257,7 @@ function    GetInput(
         return (
             <div className={`${className} flex-wrap flex-xxl-nowrap`}>
                 <label
-                    className={` col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`} 
+                    className={`col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`} 
                     htmlFor={inputId}>
                     {labelText}
                 </label>
