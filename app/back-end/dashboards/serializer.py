@@ -202,7 +202,7 @@ class GameHistorySerializer(serializers.ModelSerializer):
                                            Q(match_start__day=timezone.now().day))
         elif period == 'month':
             matches = Match.objects.filter(Q(user_two=obj) &
-                                           Q(match_start__day=timezone.now().month))
+                                           Q(match_start__month=timezone.now().month))
         elif period == "year":
             matches = Match.objects.filter(Q(user_two=obj) &
                                            Q(match_start__year=timezone.now().year))
