@@ -74,7 +74,7 @@ const UserComponent: React.FC<TournamentData_User> = (user:TournamentData_User) 
         <>
             <div className="tour_score">{user.score}</div>
             <div className="user_profile">
-                <div className="placeholder_image">
+                <div className={`placeholder_image ${user.status ? '' : 'garyscaleimg'}`}>
                     <SafeImage src={`${user.photoUrl}`} alt={user.name} />
                 </div>
             </div>

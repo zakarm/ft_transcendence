@@ -3,7 +3,7 @@ import './TournamentSmall.css';
 import SafeImage from '../../../components/SafeImage/SafeImage';
 import { TournamentData, TournamentMatchProps, TournamentStageProps, TournamentUserProps } from '@/types/game/Tournament';
 
-const User: React.FC<TournamentUserProps> = ({ user }) => {
+const User: React.FC<TournamentUserProps> = ({ user }: TournamentUserProps) => {
     return (
         <div className="user_sm">
             <div className="tour_score">{user?.score}</div>
@@ -16,7 +16,7 @@ const User: React.FC<TournamentUserProps> = ({ user }) => {
 };
 
 
-const Match: React.FC<TournamentMatchProps> = ({ match }) => {
+const Match: React.FC<TournamentMatchProps> = ({ match }: TournamentMatchProps) => {
     return (
         <div className="match">
             <User user={match.user1} />
@@ -29,12 +29,12 @@ const Match: React.FC<TournamentMatchProps> = ({ match }) => {
 };
 
 
-const Stage: React.FC<TournamentStageProps> = ({ title, matches }) => {
+const Stage: React.FC<TournamentStageProps> = ({ title, matches }: TournamentStageProps) => {
     return (
         <div className={`Tournament_${title.toLowerCase()}`}>
             <h1 className={`${title.toLowerCase()}_title`}>{title}</h1>
             <div className="teams_sm">
-                {matches.map((match: any, index: any) => (
+                {matches.map((match: any, index) => (
                     <Match key={index} match={match} />
                 ))}
             </div>
