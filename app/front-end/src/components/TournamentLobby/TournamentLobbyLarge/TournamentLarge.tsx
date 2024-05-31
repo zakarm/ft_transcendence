@@ -1,37 +1,14 @@
 import React from 'react';
 import './TournamentLarge.css';
 import SafeImage from '@/components/SafeImage/SafeImage';
-
-interface User {
-    name: string;
-    photoUrl: string;
-    score: number;
-    status: boolean;
-}
-
-interface Match {
-    user1: User;
-    user2: User;
-}
-
-interface Side {
-    index: number;
-    quarterfinals: Match[];
-    semifinals: Match[];
-    finals: Match[];
-}
-
-interface TournamentData {
-    side1: Side;
-    side2: Side;
-}
+import { TournamentData, TournamentData_Match, TournamentData_Side, TournamentData_User } from '@/types/game/Tournament';
 
 const TournamentLarge: React.FC<TournamentData> = (data: TournamentData) => {
     return (
         <div className="container_lg">
             <div className="Tournament_container border">
                 <div className="Tournament_name" style={{ height: '10%', width: '100%' }}>
-                    {'tournament name'}
+                    {data.TournamentName}
                 </div>
                 <div className="Tournament_container_" style={{ width: '100%' }}>
                     <TournamentSide {...data.side1} />
@@ -42,24 +19,24 @@ const TournamentLarge: React.FC<TournamentData> = (data: TournamentData) => {
     );
 };
 
-const TournamentSide: React.FC<Side> = (side: Side) => {
+const TournamentSide: React.FC<TournamentData_Side> = (side: TournamentData_Side) => {
     return (
         <div className="tounament_side">
             <div className="Quarterfinals">
                 <Team {...side.quarterfinals[0]} />
                 <Team {...side.quarterfinals[1]} />
             </div>
-			<div className="Semifinals">
+            <div className="Semifinals">
                 <Team {...side.semifinals[0]} />
             </div>
-			<div className="Finals">
+            <div className="Finals">
                 <TeamFinal {...side.finals[0]} />
             </div>
         </div>
     );
 };
 
-const Team: React.FC<Match> = (Matches: Match) => {
+const Team: React.FC<TournamentData_Match> = (Matches: TournamentData_Match) => {
     return (
         <div className="team">
             <div className="tournamet_side_border">
@@ -78,7 +55,7 @@ const Team: React.FC<Match> = (Matches: Match) => {
     );
 };
 
-const TeamFinal: React.FC<Match> = (match: Match) => {
+const TeamFinal: React.FC<TournamentData_Match> = (match: TournamentData_Match) => {
     return (
         <div className="team">
             <div className="tournamet_side_border"></div>
@@ -92,7 +69,7 @@ const TeamFinal: React.FC<Match> = (match: Match) => {
     );
 };
 
-const UserComponent: React.FC<User> = (user: User) => {
+const UserComponent: React.FC<TournamentData_User> = (user:TournamentData_User) => {
     return (
         <>
             <div className="tour_score">{user.score}</div>
@@ -101,7 +78,7 @@ const UserComponent: React.FC<User> = (user: User) => {
                     <SafeImage src={`${user.photoUrl}`} alt={user.name} />
                 </div>
             </div>
-            <marquee style={{ width: '120px', marginTop: "35px" }}>{user.name}</marquee>
+            <marquee style={{ width: '120px', marginTop: '35px' }}>{user.name}</marquee>
         </>
     );
 };

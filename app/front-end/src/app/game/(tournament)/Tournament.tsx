@@ -2,22 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import './Tournament.css';
-import TournamentCard from '../../../components/TournamentCard/TournamentCard';
 import NavBar from '@/components/NavBar/NavBar';
 import { TournamentsData } from '@/app/api/testTournament/route';
 import { RemoteTournamentForm } from '@/components/TournamentForm/remoteForm';
 import { LocalTournamentForm } from '@/components/TournamentForm/localForm';
-
-interface LocalPlayersProps {
-    [key: string]:
-        | string
-        | number
-        | {
-              [key: string]: {
-                  [key: string]: { [key: string]: { [key: string]: string | number } };
-              };
-          };
-}
+import TournamentCard from '@/components/TournamentCard/TournamentCard';
+import { LocalTournamentProps } from '@/types/game/Tournament';
 
 async function fetchTournamentsData(currentTab: string, NavBarOptions: string[]): Promise<TournamentsData | null> {
     const getData = async () => {
@@ -83,14 +73,13 @@ const Tournament: React.FC = () => {
     useEffect(() => {
         const tournamentCards: React.JSX.Element[] = [];
         const data = localStorage.getItem('tournaments');
-        let tournaments: LocalPlayersProps[] = [];
+        let tournaments: LocalTournamentProps[] = [];
 
         if (data) {
             try {
                 tournaments = JSON.parse(data);
             } catch (error) {
                 console.error('Error parsing JSON data from localStorage:', error);
-                // Handle the error appropriately, e.g., by setting tournaments to an empty array
                 tournaments = [];
             }
         }
