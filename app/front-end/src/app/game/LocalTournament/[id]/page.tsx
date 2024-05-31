@@ -379,7 +379,7 @@ const LocalTournamentPage: NextPage = () => {
             <div>
                 <TournamentLobby {...filtredTournamentData} />
             </div>
-            <div className="container-fluid d-flex ">
+            {/* <div className="container-fluid d-flex ">
                 <div className="conatiner_t">
                     <h1>Local Tournament Page</h1>
                     <pre>{JSON.stringify(tournamentData, null, 2)}</pre>
@@ -388,7 +388,7 @@ const LocalTournamentPage: NextPage = () => {
                     <h1>Local Tournament Page</h1>
                     <pre>{JSON.stringify(filtredTournamentData, null, 2)}</pre>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 };

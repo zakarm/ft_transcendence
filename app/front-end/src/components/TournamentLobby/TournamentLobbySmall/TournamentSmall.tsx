@@ -26,258 +26,79 @@ interface TournamentData {
     side2: Side;
 }
 
+interface UserProps {
+    user: {
+        name: string;
+        photoUrl: string;
+        score: number;
+        status: boolean;
+    };
+}
+
+const User: React.FC<UserProps> = ({ user }) => {
+    return (
+        <div className="user_sm">
+            <div className="tour_score">{user.score}</div>
+            <div className={`placeholder_image_sm ${user.status ? '' : 'garyscaleimg'}`}>
+                <SafeImage src={user.photoUrl} alt={user.name} />
+            </div>
+            <marquee style={{ width: '100px', marginTop: '15px' }}>{user.name}</marquee>
+        </div>
+    );
+};
+
+interface MatchProps {
+    match: {
+        user1: UserProps['user'];
+        user2: UserProps['user'];
+    };
+}
+
+const Match: React.FC<MatchProps> = ({ match }) => {
+    return (
+        <div className="match">
+            <User user={match.user1} />
+            <div className="user_hr">
+                <h1 className="vs">VS</h1>
+            </div>
+            <User user={match.user2} />
+        </div>
+    );
+};
+
+interface StageProps {
+    title: string;
+    matches: {
+        user1: UserProps['user'];
+        user2: UserProps['user'];
+    }[];
+}
+
+const Stage: React.FC<StageProps> = ({ title, matches }) => {
+    return (
+        <div className={`Tournament_${title.toLowerCase()}`}>
+            <h1 className={`${title.toLowerCase()}_title`}>{title}</h1>
+            <div className="teams_sm">
+                {matches.map((match: any, index : any) => (
+                    <Match key={index} match={match} />
+                ))}
+            </div>
+        </div>
+    );
+};
+
 const TournamentSmall: React.FC<TournamentData> = (data: TournamentData) => {
     return (
         <div className="container_sm">
             <div className="Tournament_container_sm">
-                <div className="Tournament_quarterfinals">
-                    <h1 className="quarterfinals_title">Quarterfinals</h1>
-                    <div className="teams_sm">
-                        <div className="match">
-                            <div className="user_sm">
-                                <div className="tour_score">{data.side1.quarterfinals[0].user1.score}</div>
-                                <div
-                                    className={`placeholder_image_sm ${
-                                        data.side1.quarterfinals[0].user1.status ? '' : 'garyscaleimg'
-                                    }`}
-                                >
-                                    <SafeImage
-                                        src={data.side1.quarterfinals[0].user1.photoUrl}
-                                        alt={data.side1.quarterfinals[0].user1.name}
-                                    />
-                                </div>
-                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side1.quarterfinals[0].user1.name}</marquee>
-                            </div>
-                            <div className="user_hr">
-                                <h1 className="vs">VS</h1>
-                            </div>
-                            <div className="user_sm">
-                                <div className="tour_score">{data.side1.quarterfinals[0].user2.score}</div>
-                                <div
-                                    className={`placeholder_image_sm ${
-                                        data.side1.quarterfinals[0].user2.status ? '' : 'garyscaleimg'
-                                    }`}
-                                >
-                                    <SafeImage
-                                        src={data.side1.quarterfinals[0].user2.photoUrl}
-                                        alt={data.side1.quarterfinals[0].user2.name}
-                                    />
-                                </div>
-                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side1.quarterfinals[0].user2.name}</marquee>
-                            </div>
-                        </div>
-                        <div className="match">
-                            <div className="user_sm">
-                                <div className="tour_score">{data.side1.quarterfinals[1].user1.score}</div>
-                                <div
-                                    className={`placeholder_image_sm ${
-                                        data.side1.quarterfinals[1].user1.status ? '' : 'garyscaleimg'
-                                    }`}
-                                >
-                                    <SafeImage
-                                        src={data.side1.quarterfinals[1].user1.photoUrl}
-                                        alt={data.side1.quarterfinals[1].user1.name}
-                                    />
-                                </div>
-                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side1.quarterfinals[1].user1.name}</marquee>
-                            </div>
-                            <div className="user_hr">
-                                <h1 className="vs">VS</h1>
-                            </div>
-                            <div className="user_sm">
-                                <div className="tour_score">{data.side1.quarterfinals[1].user2.score}</div>
-                                <div
-                                    className={`placeholder_image_sm ${
-                                        data.side1.quarterfinals[1].user2.status ? '' : 'garyscaleimg'
-                                    }`}
-                                >
-                                    <SafeImage
-                                        src={data.side1.quarterfinals[1].user2.photoUrl}
-                                        alt={data.side1.quarterfinals[1].user2.name}
-                                    />
-                                </div>
-                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side1.quarterfinals[1].user2.name}</marquee>
-                            </div>
-                        </div>
-                        <div className="match">
-                            <div className="user_sm">
-                                <div className="tour_score">{data.side2.quarterfinals[0].user1.score}</div>
-                                <div
-                                    className={`placeholder_image_sm ${
-                                        data.side2.quarterfinals[0].user1.status ? '' : 'garyscaleimg'
-                                    }`}
-                                >
-                                    <SafeImage
-                                        src={data.side2.quarterfinals[0].user1.photoUrl}
-                                        alt={data.side2.quarterfinals[0].user1.name}
-                                    />
-                                </div>
-                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side2.quarterfinals[0].user1.name}</marquee>
-                            </div>
-                            <div className="user_hr">
-                                <h1 className="vs">VS</h1>
-                            </div>
-                            <div className="user_sm">
-                                <div className="tour_score">{data.side2.quarterfinals[0].user2.score}</div>
-                                <div
-                                    className={`placeholder_image_sm ${
-                                        data.side2.quarterfinals[0].user2.status ? '' : 'garyscaleimg'
-                                    }`}
-                                >
-                                    <SafeImage
-                                        src={data.side2.quarterfinals[0].user2.photoUrl}
-                                        alt={data.side2.quarterfinals[0].user2.name}
-                                    />
-                                </div>
-                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side2.quarterfinals[0].user2.name}</marquee>
-                            </div>
-                        </div>
-                        <div className="match">
-                            <div className="user_sm">
-                                <div className="tour_score">{data.side2.quarterfinals[1].user1.score}</div>
-                                <div
-                                    className={`placeholder_image_sm ${
-                                        data.side2.quarterfinals[1].user1.status ? '' : 'garyscaleimg'
-                                    }`}
-                                >
-                                    <SafeImage
-                                        src={data.side2.quarterfinals[1].user1.photoUrl}
-                                        alt={data.side2.quarterfinals[1].user1.name}
-                                    />
-                                </div>
-                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side2.quarterfinals[1].user1.name}</marquee>
-                            </div>
-                            <div className="user_hr">
-                                <h1 className="vs">VS</h1>
-                            </div>
-                            <div className="user_sm">
-                                <div className="tour_score">{data.side2.quarterfinals[1].user2.score}</div>
-                                <div
-                                    className={`placeholder_image_sm ${
-                                        data.side2.quarterfinals[1].user2.status ? '' : 'garyscaleimg'
-                                    }`}
-                                >
-                                    <SafeImage
-                                        src={data.side2.quarterfinals[1].user2.photoUrl}
-                                        alt={data.side2.quarterfinals[1].user2.name}
-                                    />
-                                </div>
-                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side2.quarterfinals[1].user2.name}</marquee>
-                            </div>
-                        </div>
-                    </div>
+                <div className="Tournament_name" style={{ height: '100px', width: '100%' }}>
+                    {'tournament name'}
                 </div>
+                <Stage title="Quarterfinals" matches={data.side1.quarterfinals.concat(data.side2.quarterfinals)} />
                 <hr style={{ width: '70%', height: '5px', margin: 'auto', backgroundColor: 'white' }} />
-                <div className="Tournament_semifinals mt-4">
-                    <h1 className="semifinals_title">Semifinals</h1>
-                    <div className="teams_sm">
-                        <div className="match">
-                            <div className="user_sm">
-                                <div className="tour_score">{data.side1.semifinals[0].user1.score}</div>
-                                <div
-                                    className={`placeholder_image_sm ${
-                                        data.side1.semifinals[0].user1.status ? '' : 'garyscaleimg'
-                                    }`}
-                                >
-                                    <SafeImage
-                                        src={data.side1.semifinals[0].user1.photoUrl}
-                                        alt={data.side1.semifinals[0].user1.name}
-                                    />
-                                </div>
-                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side1.semifinals[0].user1.name}</marquee>
-                            </div>
-                            <div className="user_hr">
-                                <h1 className="vs">VS</h1>
-                            </div>
-                            <div className="user_sm">
-                                <div className="tour_score">{data.side1.semifinals[0].user2.score}</div>
-                                <div
-                                    className={`placeholder_image_sm ${
-                                        data.side1.semifinals[0].user2.status ? '' : 'garyscaleimg'
-                                    }`}
-                                >
-                                    <SafeImage
-                                        src={data.side1.semifinals[0].user2.photoUrl}
-                                        alt={data.side1.semifinals[0].user2.name}
-                                    />
-                                </div>
-                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side1.semifinals[0].user2.name}</marquee>
-                            </div>
-                        </div>
-                        <div className="match">
-                            <div className="user_sm">
-                                <div className="tour_score">{data.side2.semifinals[0].user1.score}</div>
-                                <div
-                                    className={`placeholder_image_sm ${
-                                        data.side2.semifinals[0].user1.status ? '' : 'garyscaleimg'
-                                    }`}
-                                >
-                                    <SafeImage
-                                        src={data.side2.semifinals[0].user1.photoUrl}
-                                        alt={data.side2.semifinals[0].user1.name}
-                                    />
-                                </div>
-                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side2.semifinals[0].user1.name}</marquee>
-                            </div>
-                            <div className="user_hr">
-                                <h1 className="vs">VS</h1>
-                            </div>
-                            <div className="user_sm">
-                                <div className="tour_score">{data.side2.semifinals[0].user2.score}</div>
-                                <div
-                                    className={`placeholder_image_sm ${
-                                        data.side2.semifinals[0].user2.status ? '' : 'garyscaleimg'
-                                    }`}
-                                >
-                                    <SafeImage
-                                        src={data.side2.semifinals[0].user2.photoUrl}
-                                        alt={data.side2.semifinals[0].user2.name}
-                                    />
-                                </div>
-                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side2.semifinals[0].user2.name}</marquee>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <Stage title="Semifinals" matches={data.side1.semifinals.concat(data.side2.semifinals)} />
                 <hr style={{ width: '70%', height: '5px', margin: 'auto', backgroundColor: 'white' }} />
-                <div className="Tournament_finals mt-4">
-                    <h1 className="finals_title">Finals</h1>
-                    <div className="teams_sm">
-                        <div className="match">
-                            <div className="user_sm">
-                                <div className="tour_score">{data.side1.finals[0].user1.score}</div>
-                                <div
-                                    className={`placeholder_image_sm ${
-                                        data.side1.finals[0].user1.status ? '' : 'garyscaleimg'
-                                    }`}
-                                >
-                                    <SafeImage
-                                        src={data.side1.finals[0].user1.photoUrl}
-                                        alt={data.side1.finals[0].user1.name}
-                                    />
-                                </div>
-                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side1.finals[0].user1.name}</marquee>
-                            </div>
-                            <div className="user_hr">
-                                <h1 className="vs">VS</h1>
-                            </div>
-                            <div className="user_sm">
-                                <div className="tour_score">{data.side2.finals[0].user1.score}</div>
-                                <div
-                                    className={`placeholder_image_sm ${
-                                        data.side2.finals[0].user1.status ? '' : 'garyscaleimg'
-                                    }`}
-                                >
-                                    <SafeImage
-                                        src={data.side2.finals[0].user1.photoUrl}
-                                        alt={data.side2.finals[0].user1.name}
-                                    />
-                                </div>
-                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side2.finals[0].user1.name}</marquee>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <Stage title="Finals" matches={data.side1.finals.concat(data.side2.finals)} />
             </div>
         </div>
     );
