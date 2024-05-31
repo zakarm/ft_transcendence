@@ -29,9 +29,14 @@ interface TournamentData {
 const TournamentLarge: React.FC<TournamentData> = (data: TournamentData) => {
     return (
         <div className="container_lg">
-            <div className="Tournament_container">
-                <TournamentSide {...data.side1} />
-                <TournamentSide {...data.side2} />
+            <div className="Tournament_container border">
+                <div className="Tournament_name" style={{ height: '10%', width: '100%' }}>
+                    {'tournament name'}
+                </div>
+                <div className="Tournament_container_" style={{ width: '100%' }}>
+                    <TournamentSide {...data.side1} />
+                    <TournamentSide {...data.side2} />
+                </div>
             </div>
         </div>
     );
@@ -44,10 +49,10 @@ const TournamentSide: React.FC<Side> = (side: Side) => {
                 <Team {...side.quarterfinals[0]} />
                 <Team {...side.quarterfinals[1]} />
             </div>
-            <div className="Semifinals">
+			<div className="Semifinals">
                 <Team {...side.semifinals[0]} />
             </div>
-            <div className="Finals">
+			<div className="Finals">
                 <TeamFinal {...side.finals[0]} />
             </div>
         </div>
@@ -90,12 +95,13 @@ const TeamFinal: React.FC<Match> = (match: Match) => {
 const UserComponent: React.FC<User> = (user: User) => {
     return (
         <>
+            <div className="tour_score">{user.score}</div>
             <div className="user_profile">
                 <div className="placeholder_image">
                     <SafeImage src={`${user.photoUrl}`} alt={user.name} />
                 </div>
             </div>
-            <div>{user.name}</div>
+            <marquee style={{ width: '120px', marginTop: "35px" }}>{user.name}</marquee>
         </>
     );
 };

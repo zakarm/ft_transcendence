@@ -35,6 +35,7 @@ const TournamentSmall: React.FC<TournamentData> = (data: TournamentData) => {
                     <div className="teams_sm">
                         <div className="match">
                             <div className="user_sm">
+                                <div className="tour_score">{data.side1.quarterfinals[0].user1.score}</div>
                                 <div
                                     className={`placeholder_image_sm ${
                                         data.side1.quarterfinals[0].user1.status ? '' : 'garyscaleimg'
@@ -45,12 +46,13 @@ const TournamentSmall: React.FC<TournamentData> = (data: TournamentData) => {
                                         alt={data.side1.quarterfinals[0].user1.name}
                                     />
                                 </div>
-                                <h2>{data.side1.quarterfinals[0].user1.name}</h2>
+                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side1.quarterfinals[0].user1.name}</marquee>
                             </div>
                             <div className="user_hr">
                                 <h1 className="vs">VS</h1>
                             </div>
                             <div className="user_sm">
+                                <div className="tour_score">{data.side1.quarterfinals[0].user2.score}</div>
                                 <div
                                     className={`placeholder_image_sm ${
                                         data.side1.quarterfinals[0].user2.status ? '' : 'garyscaleimg'
@@ -61,11 +63,12 @@ const TournamentSmall: React.FC<TournamentData> = (data: TournamentData) => {
                                         alt={data.side1.quarterfinals[0].user2.name}
                                     />
                                 </div>
-                                <h2>{data.side1.quarterfinals[0].user2.name}</h2>
+                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side1.quarterfinals[0].user2.name}</marquee>
                             </div>
                         </div>
                         <div className="match">
                             <div className="user_sm">
+                                <div className="tour_score">{data.side1.quarterfinals[1].user1.score}</div>
                                 <div
                                     className={`placeholder_image_sm ${
                                         data.side1.quarterfinals[1].user1.status ? '' : 'garyscaleimg'
@@ -76,12 +79,13 @@ const TournamentSmall: React.FC<TournamentData> = (data: TournamentData) => {
                                         alt={data.side1.quarterfinals[1].user1.name}
                                     />
                                 </div>
-                                <h2>{data.side1.quarterfinals[1].user1.name}</h2>
+                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side1.quarterfinals[1].user1.name}</marquee>
                             </div>
                             <div className="user_hr">
                                 <h1 className="vs">VS</h1>
                             </div>
                             <div className="user_sm">
+                                <div className="tour_score">{data.side1.quarterfinals[1].user2.score}</div>
                                 <div
                                     className={`placeholder_image_sm ${
                                         data.side1.quarterfinals[1].user2.status ? '' : 'garyscaleimg'
@@ -92,11 +96,12 @@ const TournamentSmall: React.FC<TournamentData> = (data: TournamentData) => {
                                         alt={data.side1.quarterfinals[1].user2.name}
                                     />
                                 </div>
-                                <h2>{data.side1.quarterfinals[1].user2.name}</h2>
+                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side1.quarterfinals[1].user2.name}</marquee>
                             </div>
                         </div>
                         <div className="match">
                             <div className="user_sm">
+                                <div className="tour_score">{data.side2.quarterfinals[0].user1.score}</div>
                                 <div
                                     className={`placeholder_image_sm ${
                                         data.side2.quarterfinals[0].user1.status ? '' : 'garyscaleimg'
@@ -107,12 +112,13 @@ const TournamentSmall: React.FC<TournamentData> = (data: TournamentData) => {
                                         alt={data.side2.quarterfinals[0].user1.name}
                                     />
                                 </div>
-                                <h2>{data.side2.quarterfinals[0].user1.name}</h2>
+                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side2.quarterfinals[0].user1.name}</marquee>
                             </div>
                             <div className="user_hr">
                                 <h1 className="vs">VS</h1>
                             </div>
                             <div className="user_sm">
+                                <div className="tour_score">{data.side2.quarterfinals[0].user2.score}</div>
                                 <div
                                     className={`placeholder_image_sm ${
                                         data.side2.quarterfinals[0].user2.status ? '' : 'garyscaleimg'
@@ -123,11 +129,12 @@ const TournamentSmall: React.FC<TournamentData> = (data: TournamentData) => {
                                         alt={data.side2.quarterfinals[0].user2.name}
                                     />
                                 </div>
-                                <h2>{data.side2.quarterfinals[0].user2.name}</h2>
+                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side2.quarterfinals[0].user2.name}</marquee>
                             </div>
                         </div>
                         <div className="match">
                             <div className="user_sm">
+                                <div className="tour_score">{data.side2.quarterfinals[1].user1.score}</div>
                                 <div
                                     className={`placeholder_image_sm ${
                                         data.side2.quarterfinals[1].user1.status ? '' : 'garyscaleimg'
@@ -138,12 +145,13 @@ const TournamentSmall: React.FC<TournamentData> = (data: TournamentData) => {
                                         alt={data.side2.quarterfinals[1].user1.name}
                                     />
                                 </div>
-                                <h2>{data.side2.quarterfinals[1].user1.name}</h2>
+                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side2.quarterfinals[1].user1.name}</marquee>
                             </div>
                             <div className="user_hr">
                                 <h1 className="vs">VS</h1>
                             </div>
                             <div className="user_sm">
+                                <div className="tour_score">{data.side2.quarterfinals[1].user2.score}</div>
                                 <div
                                     className={`placeholder_image_sm ${
                                         data.side2.quarterfinals[1].user2.status ? '' : 'garyscaleimg'
@@ -154,7 +162,7 @@ const TournamentSmall: React.FC<TournamentData> = (data: TournamentData) => {
                                         alt={data.side2.quarterfinals[1].user2.name}
                                     />
                                 </div>
-                                <h2>{data.side2.quarterfinals[1].user2.name}</h2>
+                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side2.quarterfinals[1].user2.name}</marquee>
                             </div>
                         </div>
                     </div>
@@ -165,6 +173,7 @@ const TournamentSmall: React.FC<TournamentData> = (data: TournamentData) => {
                     <div className="teams_sm">
                         <div className="match">
                             <div className="user_sm">
+                                <div className="tour_score">{data.side1.semifinals[0].user1.score}</div>
                                 <div
                                     className={`placeholder_image_sm ${
                                         data.side1.semifinals[0].user1.status ? '' : 'garyscaleimg'
@@ -175,12 +184,13 @@ const TournamentSmall: React.FC<TournamentData> = (data: TournamentData) => {
                                         alt={data.side1.semifinals[0].user1.name}
                                     />
                                 </div>
-                                <h2>{data.side1.semifinals[0].user1.name}</h2>
+                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side1.semifinals[0].user1.name}</marquee>
                             </div>
                             <div className="user_hr">
                                 <h1 className="vs">VS</h1>
                             </div>
                             <div className="user_sm">
+                                <div className="tour_score">{data.side1.semifinals[0].user2.score}</div>
                                 <div
                                     className={`placeholder_image_sm ${
                                         data.side1.semifinals[0].user2.status ? '' : 'garyscaleimg'
@@ -191,11 +201,12 @@ const TournamentSmall: React.FC<TournamentData> = (data: TournamentData) => {
                                         alt={data.side1.semifinals[0].user2.name}
                                     />
                                 </div>
-                                <h2>{data.side1.semifinals[0].user2.name}</h2>
+                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side1.semifinals[0].user2.name}</marquee>
                             </div>
                         </div>
                         <div className="match">
                             <div className="user_sm">
+                                <div className="tour_score">{data.side2.semifinals[0].user1.score}</div>
                                 <div
                                     className={`placeholder_image_sm ${
                                         data.side2.semifinals[0].user1.status ? '' : 'garyscaleimg'
@@ -206,12 +217,13 @@ const TournamentSmall: React.FC<TournamentData> = (data: TournamentData) => {
                                         alt={data.side2.semifinals[0].user1.name}
                                     />
                                 </div>
-                                <h2>{data.side2.semifinals[0].user1.name}</h2>
+                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side2.semifinals[0].user1.name}</marquee>
                             </div>
                             <div className="user_hr">
                                 <h1 className="vs">VS</h1>
                             </div>
                             <div className="user_sm">
+                                <div className="tour_score">{data.side2.semifinals[0].user2.score}</div>
                                 <div
                                     className={`placeholder_image_sm ${
                                         data.side2.semifinals[0].user2.status ? '' : 'garyscaleimg'
@@ -222,7 +234,7 @@ const TournamentSmall: React.FC<TournamentData> = (data: TournamentData) => {
                                         alt={data.side2.semifinals[0].user2.name}
                                     />
                                 </div>
-                                <h2>{data.side2.semifinals[0].user2.name}</h2>
+                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side2.semifinals[0].user2.name}</marquee>
                             </div>
                         </div>
                     </div>
@@ -233,6 +245,7 @@ const TournamentSmall: React.FC<TournamentData> = (data: TournamentData) => {
                     <div className="teams_sm">
                         <div className="match">
                             <div className="user_sm">
+                                <div className="tour_score">{data.side1.finals[0].user1.score}</div>
                                 <div
                                     className={`placeholder_image_sm ${
                                         data.side1.finals[0].user1.status ? '' : 'garyscaleimg'
@@ -243,12 +256,13 @@ const TournamentSmall: React.FC<TournamentData> = (data: TournamentData) => {
                                         alt={data.side1.finals[0].user1.name}
                                     />
                                 </div>
-                                <h2>{data.side1.finals[0].user1.name}</h2>
+                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side1.finals[0].user1.name}</marquee>
                             </div>
                             <div className="user_hr">
                                 <h1 className="vs">VS</h1>
                             </div>
                             <div className="user_sm">
+                                <div className="tour_score">{data.side2.finals[0].user1.score}</div>
                                 <div
                                     className={`placeholder_image_sm ${
                                         data.side2.finals[0].user1.status ? '' : 'garyscaleimg'
@@ -259,7 +273,7 @@ const TournamentSmall: React.FC<TournamentData> = (data: TournamentData) => {
                                         alt={data.side2.finals[0].user1.name}
                                     />
                                 </div>
-                                <h2>{data.side2.finals[0].user1.name}</h2>
+                                <marquee style={{width: '100px', marginTop: "15px" }}>{data.side2.finals[0].user1.name}</marquee>
                             </div>
                         </div>
                     </div>
