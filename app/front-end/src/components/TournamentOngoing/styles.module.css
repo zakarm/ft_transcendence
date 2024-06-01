@@ -1,0 +1,83 @@
+/* 
+  --clr-red: #ff4755;
+  --clr-ldark: #161625;
+  --clr--white: #ffebeb;
+  --clr-dark: #111111;
+  --clr--green: #27b299;
+  --clr--grey: #2c3143;
+ */
+
+.live_wrapper {
+    height: 45vh;
+    min-width: 300px;
+    border-radius: 25px;
+}
+
+.liveMatchContainer {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.liveMatchBackground {
+    background-image: url("../../../public/back.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 25px;
+    filter: blur(2px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.liveMatchInfo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    text-align: center;
+}
+
+.upcoming_match {
+    border-radius: 25px;
+    background-color: var(--clr-ldark);
+    height: 160px;
+    max-width: 650px;
+    min-width: 320px;
+}
+
+.navbar {
+    height: 70px;
+}
+
+.player_image {
+    border-radius: 25px;
+    box-shadow: 0 0 25px 0px var(--clr--white);
+    /* min-width: 200px; */
+}
+
+/* .player_name {
+    font-size: 1rem;
+} */
+
+.vs_text {
+    font-size: clamp(1rem, 0.895rem + 0.561vw, 3rem);
+}
+
+.match_score {
+    font-size: clamp(2rem, 1.75rem + 0.667vw, 3rem);
+}
+
+.match_title {
+    font-size: clamp(1rem, 0.5rem + 1.333vw, 3rem)
+}
+@media screen and (max-width : 576px) {
+    .player_image {
+        width: 120px !important;
+    }
+}

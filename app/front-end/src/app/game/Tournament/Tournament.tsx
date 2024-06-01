@@ -7,6 +7,7 @@ import NavBar from '@/components/NavBar/NavBar';
 import { TournamentsData } from '@/app/api/testTournament/route';
 import { RemoteTournamentForm } from '@/components/TournamentForm/remoteForm';
 import { LocalTournamentForm } from '@/components/TournamentForm/localForm';
+import TournamentOngoing from '@/components/TournamentOngoing/tournamentOngoing'
 
 interface LocalPlayersProps {
     [key: string]:
@@ -70,6 +71,8 @@ const Tournament: React.FC = () => {
     const [localTournaments, setLocalTournaments] = useState<React.JSX.Element[]>([]);
     const [prevLocalStorageLength, setPrevLocalStorageLength] = useState<number>(localStorage.length);
     const [rerender, setRerender] = useState<boolean>(false);
+    const leftStyle : string = "col-12 col-xl-5 col-xxl-7 order-2 order-xl-1 d-flex flex-wrap justify-content-center";
+    const rightStyle : string = "col-12 col-xl-5 order-1 order-xl-2 d-flex justify-content-center";
 
     useEffect(() => {
         const data = async () => {
@@ -131,28 +134,39 @@ const Tournament: React.FC = () => {
             <div className="Tournament_nav_bar">
                 <NavBar options={NavBarOptions} setChoosenTab={setChoosenTab} />
             </div>
-            <section className="row Tournament_section p-0 m-0">
-                {choosenTab === 'My Tournament' ? (
+            <section className="row Tournament_section p-0  m-0">
+                {choosenTab === 'My Tournament' ?
                     <>
-                        <div className="col-12 col-xl-5 col-xxl-7 order-2 order-xl-1 d-flex flex-wrap justify-content-center">
-                            {tournamentsToRender}
+                        <div className={ leftStyle }>
+                            { tournamentsToRender }
                         </div>
-                        <div className="col-12 col-xl-4 order-1 order-xl-2 d-flex justify-content-center">
+                        <div className={ rightStyle }>
                             <RemoteTournamentForm />
                         </div>
                     </>
-                ) : choosenTab === 'Local' ? (
+                : choosenTab === 'Local' ?
                     <>
-                        <div className="col-12 col-xl-5 col-xxl-7 order-2 order-xl-1 d-flex flex-wrap justify-content-center">
-                            {localTournaments}
+                        <div className={ leftStyle }>
+                            { localTournaments }
                         </div>
-                        <div className="col-12 col-xl-5 order-1 order-xl-2 d-flex justify-content-center">
-                            <LocalTournamentForm setRerender={setRerender} />
+                        <div className={ rightStyle }>
+                            <LocalTournamentForm setRerender={ setRerender } />
                         </div>
                     </>
-                ) : (
-                    <div className="col d-flex flex-wrap justify-content-center ">{tournamentsToRender}</div>
-                )}
+                : choosenTab === 'Ongoing' ?
+                    <>
+                        <div className={`col-12 col-xl-7 col-xxl-7 order-1 p-0 m-0`}>
+                            <TournamentOngoing />
+                        </div>
+                        <div className={`${ rightStyle } flex-wrap`}>
+                            { tournamentsToRender }
+                        </div>
+                    </>
+                : 
+                    <div className="col d-flex flex-wrap justify-content-center">
+                        { tournamentsToRender }
+                    </div>
+                }
             </section>
         </div>
     );
