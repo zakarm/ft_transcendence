@@ -24,7 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('authentication.urls')),
     path('api/', include('dashboards.urls')),
-    path('', include('game.urls')),
+    path('api/', include('game.urls')),
     path('api/token', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/refresh', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/verify', TokenVerifyView.as_view(), name='token_verify'),
