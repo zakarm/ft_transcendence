@@ -1,4 +1,4 @@
-Mushigarou :
+ Mushigarou :
     ----------------------------------------------------------------------------------
     Bugs :
         - Change typo error in "11-0"
@@ -9,6 +9,7 @@ Mushigarou :
         - Handle cases of when color cookies are delete or invalid
         - SignOut view returns 200 when refresh token looks like "l;fd", "fdsf;;;;;", ";;fs;;"...
             while it returns 400 for tokens that looks like "gfsgfs", "fdsfdsfdsf", "jkkhbdfs8*(&*(&*(YHEIILEUWHIKN @!92u821h2"
+        - validate access token in signout view (permissions & auth)
     
     ----------------------------------------------------------------------------------
     Feat :
