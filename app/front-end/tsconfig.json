@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "sourceMap": false,
         "noImplicitAny": true,
         "strictNullChecks": true,
         "strictFunctionTypes": true,

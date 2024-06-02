@@ -4,35 +4,8 @@ import React, { useState, ChangeEvent, FormEvent } from 'react';
 import styles from './localForm.module.css';
 import { notificationStyle } from '../ToastProvider';
 import { toast } from 'react-toastify';
-
-function getFormattedDateTime(): string {
-    const date: Date = new Date();
-    const optionsDate: Intl.DateTimeFormatOptions = {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-    };
-    const optionsTime: Intl.DateTimeFormatOptions = {
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true,
-    };
-    const formattedDate: string = date.toLocaleDateString('en-US', optionsDate);
-    const formattedTime: string = date.toLocaleTimeString('en-US', optionsTime);
-    const formattedDateTime: string = `${formattedDate}, ${formattedTime}`;
-    return formattedDateTime;
-}
-
-interface LocalPlayersProps {
-    [key: string]:
-        | string
-        | number
-        | {
-              [key: string]: {
-                  [key: string]: { [key: string]: { [key: string]: string | number } };
-              };
-          };
-}
+import getFormattedDateTime from '@/utils/getFormattedDateTime';
+import { LocalTournamentProps } from '@/types/game/Tournament';
 
 interface getInputProps {
     type: string;
@@ -46,27 +19,26 @@ interface getInputProps {
 function InputRange({ id, updatePlayersList }: { id: string; updatePlayersList: (key: string, val: string) => void }) {
     return (
         <>
-        <div className={`row justify-content-center ${styles.slidecontainer} p-0 m-0`}>
-            <div className={`row p-0 m-0 ${styles.rangeTitle}`}>
-                <label
-                    className={`col itim-font text-left p-1  p-0 m-0`}
-                    htmlFor="myRange">
+            <div className={`row justify-content-center ${styles.slidecontainer} p-0 m-0`}>
+                <div className={`row p-0 m-0 ${styles.rangeTitle}`}>
+                    <label className={`col itim-font text-left p-1  p-0 m-0`} htmlFor="myRange">
                         Game Difficulty
-                </label>
-            </div>
-            <div className={`row p-0 m-0 d-flex justify-content-center p-0 m-0 ${styles.rangeTitle}`}>
-                <div className="col">
-
-                <input type="range"
-                    min="0"
-                    max="2"
-                    step="1"
-                    className={`${styles.slider}`}
-                    onChange={ (e : ChangeEvent<HTMLInputElement>) => updatePlayersList(id, e.target.value) }
-                    id="myRange"/>
+                    </label>
                 </div>
-            </div>
-            <div className={`row p-0 m-0 justify-content-center ${styles.rangeTitle}`}>
+                <div className={`row p-0 m-0 d-flex justify-content-center p-0 m-0 ${styles.rangeTitle}`}>
+                    <div className="col">
+                        <input
+                            type="range"
+                            min="0"
+                            max="2"
+                            step="1"
+                            className={`${styles.slider}`}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => updatePlayersList(id, e.target.value)}
+                            id="myRange"
+                        />
+                    </div>
+                </div>
+                <div className={`row p-0 m-0 justify-content-center ${styles.rangeTitle}`}>
                     <div className="col-4 ">
                         <p className={`itim-font`}>Easy</p>
                     </div>
@@ -76,42 +48,40 @@ function InputRange({ id, updatePlayersList }: { id: string; updatePlayersList: 
                     <div className="col-4 d-flex justify-content-end">
                         <p className={`itim-font`}>Hard</p>
                     </div>
+                </div>
             </div>
-        </div>
         </>
-    )
+    );
 }
 
-function GetInput({
-    type,
-    id,
-    label,
-    updatePlayersList,
-    inputClassName,
-    inputLength = 20,
-}: getInputProps) {
+function GetInput({ type, id, label, updatePlayersList, inputClassName, inputLength = 20 }: getInputProps) {
     return (
         <>
-        <div className={`  row ${styles.input_holder} justify-content-center p-0 m-0`}>
-            <div className="col-12  p-0 m-0">
-                <label htmlFor={id} className={`itim-font text-left p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`}>{ label }</label>
+            <div className={`  row ${styles.input_holder} justify-content-center p-0 m-0`}>
+                <div className="col-12  p-0 m-0">
+                    <label
+                        htmlFor={id}
+                        className={`itim-font text-left p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`}
+                    >
+                        {label}
+                    </label>
+                </div>
+                <div className={`col-12 ${styles.input_holder} row justify-content-center p-0 m-1 `}>
+                    <input
+                        type={type}
+                        className={`${inputClassName} ${styles.input_text} p-3`}
+                        maxLength={inputLength}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => updatePlayersList(id, e.target.value)}
+                        required
+                    />
+                </div>
             </div>
-            <div className={`col-12 ${styles.input_holder} row justify-content-center p-0 m-1 `}>
-                <input
-                    type        = { type }
-                    className   = {`${inputClassName} ${styles.input_text} p-3`}
-                    maxLength   = { inputLength }
-                    onChange    = { (e : ChangeEvent<HTMLInputElement>) => updatePlayersList(id, e.target.value) }
-                    required
-                />
-            </div>
-        </div>
         </>
-    )
+    );
 }
 
 function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<React.SetStateAction<boolean>> }) {
-    const [players, setPlayers] = useState<LocalPlayersProps>({
+    const [players, setPlayers] = useState<LocalTournamentProps>({
         tournament_name: '',
         tournamentImage: '/Ping_Pong_Battle_4.png',
         player_1: '',
@@ -128,34 +98,43 @@ function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<Reac
         data: {
             quatre_final: {
                 match1: {
-                    user1: { name: '', photoUrl: '/yoru.jpeg', score: 0 },
-                    user2: { name: '', photoUrl: '/yoru.jpeg', score: 0 },
+                    user1: { name: '', photoUrl: '/assets/images/gameProfiles/yoru.jpeg', score: 0, status: true },
+                    user2: { name: '', photoUrl: '/assets/images/gameProfiles/sova.jpeg', score: 0, status: true },
                 },
                 match2: {
-                    user1: { name: '', photoUrl: '/yoru.jpeg', score: 0 },
-                    user2: { name: '', photoUrl: '/yoru.jpeg', score: 0 },
+                    user1: { name: '', photoUrl: '/assets/images/gameProfiles/raze.jpeg', score: 0, status: true },
+                    user2: { name: '', photoUrl: '/assets/images/gameProfiles/Phoenix.jpeg', score: 0, status: true },
                 },
                 match3: {
-                    user1: { name: '', photoUrl: '/yoru.jpeg', score: 0 },
-                    user2: { name: '', photoUrl: '/yoru.jpeg', score: 0 },
+                    user1: { name: '', photoUrl: '/assets/images/gameProfiles/omen.jpeg', score: 0, status: true },
+                    user2: { name: '', photoUrl: '/assets/images/gameProfiles/harbor.jpeg', score: 0, status: true },
                 },
                 match4: {
-                    user1: { name: '', photoUrl: '/yoru.jpeg', score: 0 },
-                    user2: { name: '', photoUrl: '/yoru.jpeg', score: 0 },
+                    user1: { name: '', photoUrl: '/assets/images/gameProfiles/cypher.jpeg', score: 0, status: true },
+                    user2: { name: '', photoUrl: '/assets/images/gameProfiles/chamber.jpeg', score: 0, status: true },
                 },
             },
             semi_final: {
-                match1: { user1: { name: '', photoUrl: '', score: 0 }, user2: { name: '', photoUrl: '', score: 0 } },
-                match2: { user1: { name: '', photoUrl: '', score: 0 }, user2: { name: '', photoUrl: '', score: 0 } },
+                match1: {
+                    user1: { name: '', photoUrl: '', score: 0, status: true },
+                    user2: { name: '', photoUrl: '', score: 0, status: true },
+                },
+                match2: {
+                    user1: { name: '', photoUrl: '', score: 0, status: true },
+                    user2: { name: '', photoUrl: '', score: 0, status: true },
+                },
             },
             final: {
-                match1: { user1: { name: '', photoUrl: '', score: 0 }, user2: { name: '', photoUrl: '', score: 0 } },
+                match1: {
+                    user1: { name: '', photoUrl: '', score: 0, status: true },
+                    user2: { name: '', photoUrl: '', score: 0, status: true },
+                },
             },
         },
     });
 
-    const   isPlayerNameDuplicate : () => boolean = () => {
-        const   playersName = Object.entries(players).filter(([key]) => /^player_\d+$/.test(key));
+    const isPlayerNameDuplicate: () => boolean = () => {
+        const playersName = Object.entries(players).filter(([key]) => /^player_\d+$/.test(key));
 
         for (const i in playersName) {
             if (playersName[i]) {
@@ -172,14 +151,16 @@ function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<Reac
             }
         }
         return true;
-    }
+    };
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!isPlayerNameDuplicate()) { return; }
+        if (!isPlayerNameDuplicate()) {
+            return;
+        }
         const data = localStorage.getItem('tournaments');
-        let tournaments: LocalPlayersProps[] = [];
+        let tournaments: LocalTournamentProps[] = [];
 
         if (data) {
             try {
@@ -208,136 +189,93 @@ function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<Reac
     };
 
     const updatePlayersList: (key: string, val: string) => void = (key: string, val: string) => {
-        const newValues = { ...players };
-        newValues[key] = val;
-        setPlayers(newValues);
+        if ((key.match(/player_\d+/) || key.match(/tournament_name/)) && typeof val === 'string') {
+            setPlayers((prevPlayers) => ({
+                ...prevPlayers,
+                [key]: val,
+            }));
+        }
     };
-
     const inputData = [
         {
             type: 'text',
             id: 'tournament_name',
             label: 'Tournament name',
         },
-        {
+        ...Array.from({ length: 8 }, (_, i) => ({
             type: 'text',
-            id: 'player_1',
-            label: 'player 1',
-        },
-        {
-            type: 'text',
-            id: 'player_2',
-            label: 'player 2',
-        },
-        {
-            type: 'text',
-            id: 'player_3',
-            label: 'player 3',
-        },
-        {
-            type: 'text',
-            id: 'player_4',
-            label: 'player 4',
-        },
-        {
-            type: 'text',
-            id: 'player_5',
-            label: 'player 5',
-        },
-        {
-            type: 'text',
-            id: 'player_6',
-            label: 'player 6',
-        },
-        {
-            type: 'text',
-            id: 'player_7',
-            label: 'player 7',
-        },
-        {
-            type: 'text',
-            id: 'player_8',
-            label: 'player 8',
-        },
+            id: `player_${i + 1}`,
+            label: `player ${i + 1}`,
+        })),
     ];
+
     return (
-        <form className={`row p-0 m-0 ${styles.formWrapper}`} onSubmit={ handleSubmit }>
-        <span className={`row justify-content-center m-0 p-0 mt-4 ${styles.formTitle}`}>
-            <legend className={`col-12 valo-font align-self-center text-center flex-nowrap`}>CREATE LOCAL TOURNAMENT</legend>
-        </span>
-        <fieldset className="row justify-content-center p-0 m-0">
-
-            <div className="col-12 d-flex flex-column align-items-center flex-wrap">
-                <div className=" w-100 d-flex justify-content-center">
-                    <GetInput
-                        type = {inputData[0].type}
-                        label = { inputData[0].label }
-                        id = {inputData[0].id}
-                        inputLength={30}
-                        updatePlayersList={ updatePlayersList }
+        <form className={`row p-0 m-0 ${styles.formWrapper}`} onSubmit={handleSubmit}>
+            <span className={`row justify-content-center m-0 p-0 mt-4 ${styles.formTitle}`}>
+                <legend className={`col-12 valo-font align-self-center text-center flex-nowrap`}>
+                    CREATE LOCAL TOURNAMENT
+                </legend>
+            </span>
+            <fieldset className="row justify-content-center p-0 m-0">
+                <div className="col-12 d-flex flex-column align-items-center flex-wrap">
+                    <div className=" w-100 d-flex justify-content-center">
+                        <GetInput
+                            type={inputData[0].type}
+                            label={inputData[0].label}
+                            id={inputData[0].id}
+                            inputLength={30}
+                            updatePlayersList={updatePlayersList}
                         />
+                    </div>
                 </div>
-            </div>
 
-            <div className="row p-0 m-0 flex-column align-items-center flex-wrap">
-                    <InputRange
-                        id = "difficulty"
-                        updatePlayersList={ updatePlayersList }
-                    ></InputRange>
-            </div>
+                <div className="row p-0 m-0 flex-column align-items-center flex-wrap">
+                    <InputRange id="difficulty" updatePlayersList={updatePlayersList}></InputRange>
+                </div>
 
-            <div className="col-6 d-flex flex-column align-items-center flex-wrap">
-                {
-                    <>
+                <div className="col-6 d-flex flex-column align-items-center flex-wrap">
                     {
-                        inputData.slice(1, 5).map((elem) => (
-                            <div key={elem.id} className=" w-100 d-flex justify-content-center">
-                                <GetInput
-                                type = {elem.type}
-                                label = { elem.label }
-                                id = {elem.id}
-                                inputLength={20}
-                                updatePlayersList={ updatePlayersList }
-                                />
-                            </div>
-                        ))
+                        <>
+                            {inputData.slice(1, 5).map((elem) => (
+                                <div key={elem.id} className=" w-100 d-flex justify-content-center">
+                                    <GetInput
+                                        type={elem.type}
+                                        label={elem.label}
+                                        id={elem.id}
+                                        inputLength={20}
+                                        updatePlayersList={updatePlayersList}
+                                    />
+                                </div>
+                            ))}
+                        </>
                     }
-                    </>
-                }
-            </div>
+                </div>
 
-            <div className="col-6 d-flex flex-column align-items-center flex-wrap">
-                {
-                    <>
+                <div className="col-6 d-flex flex-column align-items-center flex-wrap">
                     {
-                        inputData.slice(5, 9).map((elem) => (
-                            <div key={elem.id} className=" w-100 d-flex justify-content-center">
-                                <GetInput
-                                type = {elem.type}
-                                label = { elem.label }
-                                id = {elem.id}
-                                inputLength={20}
-                                updatePlayersList={ updatePlayersList }
-                                />
-                            </div>
-                        ))
+                        <>
+                            {inputData.slice(5, 9).map((elem) => (
+                                <div key={elem.id} className=" w-100 d-flex justify-content-center">
+                                    <GetInput
+                                        type={elem.type}
+                                        label={elem.label}
+                                        id={elem.id}
+                                        inputLength={20}
+                                        updatePlayersList={updatePlayersList}
+                                    />
+                                </div>
+                            ))}
+                        </>
                     }
-                    </>
-                }
-            </div>
+                </div>
 
-
-            <div className="col-12 d-flex flex-row justify-content-center">
-                <button
-                    className={`  valo-font my-4 ${styles.create_button}`}
-                    type="submit"
-                    >
+                <div className="col-12 d-flex flex-row justify-content-center">
+                    <button className={`  valo-font my-4 ${styles.create_button}`} type="submit">
                         CREATE
-                </button>
-            </div>
-
-        </fieldset>
-    </form>
+                    </button>
+                </div>
+            </fieldset>
+        </form>
     );
 }
 
