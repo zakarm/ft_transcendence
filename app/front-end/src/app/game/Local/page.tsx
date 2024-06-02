@@ -1,5 +1,6 @@
 import PongGameLocal from "@/components/PongGame/PongGameLocal";
 
 export default function () {
-  return <PongGameLocal />;
+  return <div/>;
+//   return <PongGameLocal />;
 }

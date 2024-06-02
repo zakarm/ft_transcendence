@@ -44,6 +44,7 @@ const initialTournamentData = {
 const LocalTournamentPage: NextPage = () => {
     const [LocaltournamentData, setLocalTournamentData] = useState<LocalTournamentProps | null>(null);
     const [filteredTournamentData, setFilteredTournamentData] = useState<TournamentData>(initialTournamentData);
+    const [pageState, setPageState] = useState<string>('Tournamentlobby');
     const pathname = usePathname();
     const router = useRouter();
     useEffect(() => {
@@ -150,7 +151,9 @@ const LocalTournamentPage: NextPage = () => {
     return (
         <div className="container-fluid vh-100 p-0 m-0" style={{ overflow: 'auto' }}>
             <div>
-                <TournamentLobby {...filteredTournamentData} />
+                <button onClick={() => setPageState('TournamentGame')}>Tournament Game</button>
+                {pageState === 'Tournamentlobby' && <TournamentLobby {...filteredTournamentData} />}
+                {pageState === 'TournamentGame' && <PongGameLocal />}
             </div>
             <Test setScore={setScore} promoteWinner={promoteWinner} />
             <div className="container-fluid d-flex ">
@@ -170,6 +173,7 @@ const LocalTournamentPage: NextPage = () => {
 export default LocalTournamentPage;
 
 import React from 'react';
+import PongGameLocal from '@/components/PongGame/PongGameLocal';
 
 type SetScore = (
     side: 'side1' | 'side2',

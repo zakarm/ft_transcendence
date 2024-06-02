@@ -20,7 +20,8 @@ const PongGameLocal: React.FC = () => {
     const animateIdRef = useRef<number | null>(null);
     const [user1score, setUser1Score] = useState<number>(0);
     const [user2score, setUser2Score] = useState<number>(0);
-
+    // const [gameStatus, setGameStatus] = useState<string>('loading');
+    var gameStatus = 'loading';
     useEffect(() => {
         const { current: container } = containerRef;
         if (!container) return;
@@ -72,7 +73,7 @@ const PongGameLocal: React.FC = () => {
             x: targetPosition.x,
             y: targetPosition.y,
             z: targetPosition.z,
-            duration: 5,
+            duration: 3,
             onUpdate: () => {
                 camera.lookAt(new THREE.Vector3(0, 0, 0));
             },
@@ -192,7 +193,13 @@ const PongGameLocal: React.FC = () => {
         document.addEventListener('keyup', handleKeyUp);
         window.addEventListener('resize', handleResize);
 
+        setTimeout(() => {
+            gameStatus = 'playing';
+        }, 3000);
         const animate = () => {
+            animateIdRef.current = requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+            if (gameStatus !== 'playing') return;
             ball.intersect(wall1, wall2, paddle1, paddle2);
             ball.ballUpdate();
             paddle1.paddleUpdate();
@@ -203,18 +210,26 @@ const PongGameLocal: React.FC = () => {
                 ball.mesh.position.set(0, 0.1, z);
                 paddle1.mesh.position.set(-4.8, 0.15, 0);
                 paddle2.mesh.position.set(4.8, 0.15, 0);
-                setUser1Score((prevScore: number) => prevScore + 1);
+                setUser1Score((prevScore: number) => {
+                    const newscore = prevScore + 1;
+                    if (newscore === 7)  gameStatus = 'gameover';
+                    return newscore;
+                });
+                console.log(user1score);
             }
             if (ball.mesh.position.x > 5) {
                 ball.Velocityx *= -1;
                 ball.mesh.position.set(0, 0.1, z);
                 paddle1.mesh.position.set(-4.8, 0.15, 0);
                 paddle2.mesh.position.set(4.8, 0.15, 0);
-                setUser2Score((prevScore: number) => prevScore + 1);
+                setUser2Score((prevScore: number) => {
+                    const newscore = prevScore + 1;
+                    if (newscore === 7) gameStatus = 'gameover';
+                    return newscore;
+                });
+                console.log(user2score);
             }
             light.position.copy(ball.mesh.position);
-            animateIdRef.current = requestAnimationFrame(animate);
-            renderer.render(scene, camera);
         };
         animate();
 
