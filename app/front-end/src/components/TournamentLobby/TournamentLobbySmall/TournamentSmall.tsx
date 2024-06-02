@@ -1,7 +1,12 @@
 import React from 'react';
 import './TournamentSmall.css';
 import SafeImage from '../../../components/SafeImage/SafeImage';
-import { TournamentData, TournamentMatchProps, TournamentStageProps, TournamentUserProps } from '@/types/game/Tournament';
+import {
+    TournamentData,
+    TournamentMatchProps,
+    TournamentStageProps,
+    TournamentUserProps,
+} from '@/types/game/Tournament';
 
 const User: React.FC<TournamentUserProps> = ({ user }: TournamentUserProps) => {
     return (
@@ -15,7 +20,6 @@ const User: React.FC<TournamentUserProps> = ({ user }: TournamentUserProps) => {
     );
 };
 
-
 const Match: React.FC<TournamentMatchProps> = ({ match }: TournamentMatchProps) => {
     return (
         <div className="match">
@@ -27,7 +31,6 @@ const Match: React.FC<TournamentMatchProps> = ({ match }: TournamentMatchProps) 
         </div>
     );
 };
-
 
 const Stage: React.FC<TournamentStageProps> = ({ title, matches }: TournamentStageProps) => {
     return (
@@ -43,23 +46,27 @@ const Stage: React.FC<TournamentStageProps> = ({ title, matches }: TournamentSta
 };
 
 const TournamentSmall: React.FC<TournamentData> = (data: TournamentData) => {
-    const res = [
+    const final = [
         {
             user1: data.side1.finals[0].user1,
             user2: data.side2.finals[0].user1,
         },
     ];
+    const Quarterfinals  = data.side1.quarterfinals.concat(data.side2.quarterfinals) as TournamentStageProps['matches'] ;
+    const Semifinals= data.side1.semifinals.concat(
+        data.side2.semifinals,
+    ) as TournamentStageProps['matches'];
     return (
         <div className="container_sm">
             <div className="Tournament_container_sm">
                 <div className="Tournament_name" style={{ height: '100px', width: '100%' }}>
                     {data.TournamentName}
                 </div>
-                <Stage title="Quarterfinals" matches={data.side1.quarterfinals.concat(data.side2.quarterfinals)} />
+                <Stage title="Quarterfinals" matches={Quarterfinals} />
                 <hr style={{ width: '70%', height: '5px', margin: 'auto', backgroundColor: 'white' }} />
-                <Stage title="Semifinals" matches={data.side1.semifinals.concat(data.side2.semifinals)} />
+                <Stage title="Semifinals" matches={Semifinals} />
                 <hr style={{ width: '70%', height: '5px', margin: 'auto', backgroundColor: 'white' }} />
-                <Stage title="Finals" matches={res} />
+                <Stage title="Finals" matches={final} />
             </div>
         </div>
     );

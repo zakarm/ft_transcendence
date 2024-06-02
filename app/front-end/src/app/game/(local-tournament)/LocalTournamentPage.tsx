@@ -91,11 +91,15 @@ const LocalTournamentPage: NextPage = () => {
         userIndex: 0 | 1,
     ) => {
         setFilteredTournamentData((prevState: TournamentData) => {
-			const newTournamentData: TournamentData = { ...prevState };
-			const winnerindex: string = "user" + (userIndex + 1);
-			const loserindex: string = "user" + (userIndex === 0 ? 2 : 1);
+            const newTournamentData: TournamentData = { ...prevState };
+            const winnerindex: string = 'user' + (userIndex + 1);
+            const loserindex: string =
+                round === 'finals' ? 'user' + (userIndex + 1) : 'user' + (userIndex === 0 ? 2 : 1);
             const winner: TournamentData_User = newTournamentData[side][round][matchIndex][winnerindex];
-            const loser: TournamentData_User = newTournamentData[side][round][matchIndex][loserindex];
+            const loser: TournamentData_User =
+                newTournamentData[round === 'finals' ? (side == 'side1' ? 'side2' : 'side1') : side][round][matchIndex][
+                    loserindex
+                ];
             winner.status = true;
             loser.status = false;
             if (round === 'quarterfinals') {
@@ -108,6 +112,8 @@ const LocalTournamentPage: NextPage = () => {
                 newTournamentData[side].finals[0][`user${matchIndex + 1}`].photoUrl = winner.photoUrl;
                 newTournamentData[side].finals[0][`user${matchIndex + 1}`].status = true;
                 newTournamentData[side].finals[0][`user${matchIndex + 1}`].score = 0;
+            } else if (round === 'finals') {
+                console.log('winner', winner);
             }
             return newTournamentData;
         });
@@ -115,29 +121,29 @@ const LocalTournamentPage: NextPage = () => {
 
     useEffect(() => {
         if (LocaltournamentData) {
-			setFilteredTournamentData((prevState: any) => ({
-				...prevState,
-				TournamentName: LocaltournamentData.tournament_name,
-				difficulty: LocaltournamentData.difficulty,
-				side1: {
-					...prevState.side1,
-					quarterfinals: [
-						LocaltournamentData.data.quatre_final.match1,
-						LocaltournamentData.data.quatre_final.match2,
-					],
-					semifinals: [LocaltournamentData.data.semi_final.match1],
-					finals: [{ ...prevState.side1.finals[0], user1: LocaltournamentData.data.final.match1.user1 }],
-				},
-				side2: {
-					...prevState.side2,
-					quarterfinals: [
-						LocaltournamentData.data.quatre_final.match3,
-						LocaltournamentData.data.quatre_final.match4,
-					],
-					semifinals: [LocaltournamentData.data.semi_final.match2],
-					finals: [{ ...prevState.side2.finals[0], user1: LocaltournamentData.data.final.match1.user2 }],
-				},
-			}));
+            setFilteredTournamentData((prevState: any) => ({
+                ...prevState,
+                TournamentName: LocaltournamentData.tournament_name,
+                difficulty: LocaltournamentData.difficulty,
+                side1: {
+                    ...prevState.side1,
+                    quarterfinals: [
+                        LocaltournamentData.data.quatre_final.match1,
+                        LocaltournamentData.data.quatre_final.match2,
+                    ],
+                    semifinals: [LocaltournamentData.data.semi_final.match1],
+                    finals: [{ ...prevState.side1.finals[0], user1: LocaltournamentData.data.final.match1.user1 }],
+                },
+                side2: {
+                    ...prevState.side2,
+                    quarterfinals: [
+                        LocaltournamentData.data.quatre_final.match3,
+                        LocaltournamentData.data.quatre_final.match4,
+                    ],
+                    semifinals: [LocaltournamentData.data.semi_final.match2],
+                    finals: [{ ...prevState.side2.finals[0], user1: LocaltournamentData.data.final.match1.user2 }],
+                },
+            }));
         }
     }, [LocaltournamentData]);
 
@@ -146,7 +152,7 @@ const LocalTournamentPage: NextPage = () => {
             <div>
                 <TournamentLobby {...filteredTournamentData} />
             </div>
-            {/* <Test setScore={setScore} promoteWinner={promoteWinner} /> */}
+            <Test setScore={setScore} promoteWinner={promoteWinner} />
             <div className="container-fluid d-flex ">
                 <div className="conatiner_t">
                     <h1>Local Tournament Page</h1>
@@ -163,64 +169,69 @@ const LocalTournamentPage: NextPage = () => {
 
 export default LocalTournamentPage;
 
-// import React from 'react';
+import React from 'react';
 
-// type ScoreFunction = (
-//     side: 'side1' | 'side2',
-//     stage: 'quarterfinals' | 'semifinals' | 'finals',
-//     score1: number,
-//     score2: number,
-// ) => void;
-// type PromoteFunction = (
-//     side: 'side1' | 'side2',
-//     stage: 'quarterfinals' | 'semifinals',
-//     score1: number,
-//     score2: number,
-// ) => void;
+type SetScore = (
+    side: 'side1' | 'side2',
+    round: 'quarterfinals' | 'semifinals' | 'finals',
+    matchIndex: number,
+    userIndex: 0 | 1,
+) => void;
 
-// interface TestProps {
-//     setScore: ScoreFunction;
-//     promoteWinner: PromoteFunction;
-// }
+type PromoteWinner = (
+    side: 'side1' | 'side2',
+    round: 'quarterfinals' | 'semifinals' | 'finals',
+    matchIndex: number,
+    userIndex: 0 | 1,
+) => void;
 
-// const Test: React.FC<TestProps> = ({ setScore, promoteWinner }: TestProps) => {
-//     return (
-//         <div>
-//             <p>quarterfinals score</p>
-//             <button onClick={() => setScore('side1', 'quarterfinals', 0, 0)}>Set Score</button>
-//             <button onClick={() => setScore('side1', 'quarterfinals', 0, 1)}>Set Score</button>
-//             <button onClick={() => setScore('side1', 'quarterfinals', 1, 0)}>Set Score</button>
-//             <button onClick={() => setScore('side1', 'quarterfinals', 1, 1)}>Set Score</button>
-//             <button onClick={() => setScore('side2', 'quarterfinals', 0, 0)}>Set Score</button>
-//             <button onClick={() => setScore('side2', 'quarterfinals', 0, 1)}>Set Score</button>
-//             <button onClick={() => setScore('side2', 'quarterfinals', 1, 0)}>Set Score</button>
-//             <button onClick={() => setScore('side2', 'quarterfinals', 1, 1)}>Set Score</button>
-//             <hr></hr>
-//             <p>quarterfinals winner</p>
-//             <button onClick={() => promoteWinner('side1', 'quarterfinals', 0, 0)}>Promote Winner</button>
-//             <button onClick={() => promoteWinner('side1', 'quarterfinals', 0, 1)}>Promote Winner</button>
-//             <button onClick={() => promoteWinner('side1', 'quarterfinals', 1, 0)}>Promote Winner</button>
-//             <button onClick={() => promoteWinner('side1', 'quarterfinals', 1, 1)}>Promote Winner</button>
-//             <button onClick={() => promoteWinner('side2', 'quarterfinals', 0, 0)}>Promote Winner</button>
-//             <button onClick={() => promoteWinner('side2', 'quarterfinals', 0, 1)}>Promote Winner</button>
-//             <button onClick={() => promoteWinner('side2', 'quarterfinals', 1, 0)}>Promote Winner</button>
-//             <button onClick={() => promoteWinner('side2', 'quarterfinals', 1, 1)}>Promote Winner</button>
-//             <hr></hr>
-//             <p>semifinals score</p>
-//             <button onClick={() => setScore('side1', 'semifinals', 0, 0)}>Set Score</button>
-//             <button onClick={() => setScore('side1', 'semifinals', 0, 1)}>Set Score</button>
-//             <button onClick={() => setScore('side2', 'semifinals', 0, 0)}>Set Score</button>
-//             <button onClick={() => setScore('side2', 'semifinals', 0, 1)}>Set Score</button>
-//             <hr></hr>
-//             <p>semifinals winner</p>
-//             <button onClick={() => promoteWinner('side1', 'semifinals', 0, 0)}>Promote Winner</button>
-//             <button onClick={() => promoteWinner('side1', 'semifinals', 0, 1)}>Promote Winner</button>
-//             <button onClick={() => promoteWinner('side2', 'semifinals', 0, 0)}>Promote Winner</button>
-//             <button onClick={() => promoteWinner('side2', 'semifinals', 0, 1)}>Promote Winner</button>
-//             <hr></hr>
-//             <p>finals score</p>
-//             <button onClick={() => setScore('side1', 'finals', 0, 0)}>Set Score</button>
-//             <button onClick={() => setScore('side2', 'finals', 0, 0)}>Set Score</button>
-//         </div>
-//     );
-// };
+interface TestProps {
+    setScore: SetScore;
+    promoteWinner: PromoteWinner;
+}
+
+const Test: React.FC<TestProps> = ({ setScore, promoteWinner }: TestProps) => {
+    return (
+        <div>
+            <p>quarterfinals score</p>
+            <button onClick={() => setScore('side1', 'quarterfinals', 0, 0)}>Set Score</button>
+            <button onClick={() => setScore('side1', 'quarterfinals', 0, 1)}>Set Score</button>
+            <button onClick={() => setScore('side1', 'quarterfinals', 1, 0)}>Set Score</button>
+            <button onClick={() => setScore('side1', 'quarterfinals', 1, 1)}>Set Score</button>
+            <button onClick={() => setScore('side2', 'quarterfinals', 0, 0)}>Set Score</button>
+            <button onClick={() => setScore('side2', 'quarterfinals', 0, 1)}>Set Score</button>
+            <button onClick={() => setScore('side2', 'quarterfinals', 1, 0)}>Set Score</button>
+            <button onClick={() => setScore('side2', 'quarterfinals', 1, 1)}>Set Score</button>
+            <hr></hr>
+            <p>quarterfinals winner</p>
+            <button onClick={() => promoteWinner('side1', 'quarterfinals', 0, 0)}>Promote Winner</button>
+            <button onClick={() => promoteWinner('side1', 'quarterfinals', 0, 1)}>Promote Winner</button>
+            <button onClick={() => promoteWinner('side1', 'quarterfinals', 1, 0)}>Promote Winner</button>
+            <button onClick={() => promoteWinner('side1', 'quarterfinals', 1, 1)}>Promote Winner</button>
+            <button onClick={() => promoteWinner('side2', 'quarterfinals', 0, 0)}>Promote Winner</button>
+            <button onClick={() => promoteWinner('side2', 'quarterfinals', 0, 1)}>Promote Winner</button>
+            <button onClick={() => promoteWinner('side2', 'quarterfinals', 1, 0)}>Promote Winner</button>
+            <button onClick={() => promoteWinner('side2', 'quarterfinals', 1, 1)}>Promote Winner</button>
+            <hr></hr>
+            <p>semifinals score</p>
+            <button onClick={() => setScore('side1', 'semifinals', 0, 0)}>Set Score</button>
+            <button onClick={() => setScore('side1', 'semifinals', 0, 1)}>Set Score</button>
+            <button onClick={() => setScore('side2', 'semifinals', 0, 0)}>Set Score</button>
+            <button onClick={() => setScore('side2', 'semifinals', 0, 1)}>Set Score</button>
+            <hr></hr>
+            <p>semifinals winner</p>
+            <button onClick={() => promoteWinner('side1', 'semifinals', 0, 0)}>Promote Winner</button>
+            <button onClick={() => promoteWinner('side1', 'semifinals', 0, 1)}>Promote Winner</button>
+            <button onClick={() => promoteWinner('side2', 'semifinals', 0, 0)}>Promote Winner</button>
+            <button onClick={() => promoteWinner('side2', 'semifinals', 0, 1)}>Promote Winner</button>
+            <hr></hr>
+            <p>finals score</p>
+            <button onClick={() => setScore('side1', 'finals', 0, 0)}>Set Score</button>
+            <button onClick={() => setScore('side2', 'finals', 0, 0)}>Set Score</button>
+            <hr></hr>
+            <p>finals winner</p>
+            <button onClick={() => promoteWinner('side1', 'finals', 0, 0)}>Promote Winner</button>
+            <button onClick={() => promoteWinner('side2', 'finals', 0, 0)}>Promote Winner</button>
+        </div>
+    );
+};

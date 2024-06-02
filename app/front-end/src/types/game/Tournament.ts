@@ -88,8 +88,5 @@ export interface TournamentMatchProps {
 }
 export interface TournamentStageProps {
     title: string;
-    // matches: TournamentMatchProps['match'][];
-    matches: {
-        [key: string]: TournamentUserProps['user'];
-    }[];
+    matches: TournamentMatchProps['match'][];
 }
