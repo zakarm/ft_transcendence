@@ -19,7 +19,8 @@ class Tournaments(models.Model):
     tournament_id = models.AutoField(primary_key=True)
     tournament_name = models.CharField(max_length=30)
     tournament_start = models.DateTimeField()
-    tournament_end = models.DateTimeField()
+    tournament_end = models.DateTimeField(blank=True, null=True)
+    crated_by_me = models.BooleanField(default=False)
     class Meta:
         db_table = 'Tournaments'
 
@@ -27,6 +28,7 @@ class Tournamentsmatches(models.Model):
     tournament = models.OneToOneField(Tournaments, models.DO_NOTHING, primary_key=True)
     match = models.ForeignKey(Match, models.DO_NOTHING)
     tournament_round = models.CharField(max_length=30)
+    image_url = models.CharField(max_length=200)
     class Meta:
         db_table = 'TournamentsMatches'
         unique_together = (('tournament', 'match'),)
