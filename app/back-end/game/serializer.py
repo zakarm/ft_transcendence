@@ -100,6 +100,6 @@ class UserAchievementsSerializer(serializers.ModelSerializer):
         ai = {
             'challenger': True if challenger else False,
             'rivalry': True if rivalry else False,
-            'king': True if legend else False,
+            'legend': True if legend else False,
         }
         return ai
