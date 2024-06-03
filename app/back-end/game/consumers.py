@@ -361,4 +361,4 @@ class GameConsumer(AsyncWebsocketConsumer):
             await self.message({"message": {"action": "created"}})
             return new_room_name, new_room
         except Exception as e:
-            print(f"An error occurred in find_or_create_room: {e}", file=sys.stderr)
+            print(f"An error occurred in zfind_or_create_room: {e}", file=sys.stderr)
