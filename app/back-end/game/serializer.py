@@ -1,15 +1,18 @@
 from rest_framework import serializers
-from .models import Tournaments, Tournamentsmatches, Match
+from django.db.models import Q, F
+from django.core.exceptions import ObjectDoesNotExist
+from dashboards.serializer import (MatchSerializer,
+                                   UserSerializer)
+from .models import (Tournaments,
+                     Tournamentsmatches,
+                     Match,
+                     Achievements,
+                     UserAchievements
+                    )
 from authentication.models import User
-
-class MatchSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Match
-        fields = '__all__'
 
 class TournamentsmatchesSerializer(serializers.ModelSerializer):
     match = MatchSerializer()
-    
     class Meta:
         model = Tournamentsmatches
         fields = '__all__'
@@ -47,3 +50,56 @@ class UserTournamentsSerializer(serializers.ModelSerializer):
         )
         serializer = TournamentsSerializer(tournaments, many=True)
         return serializer.data
+
+class UserAchievementsSerializer(serializers.ModelSerializer):
+    tournament = serializers.SerializerMethodField()
+    match = serializers.SerializerMethodField()
+    ai = serializers.SerializerMethodField()
+    class Meta:
+        model = User
+        fields = ('username', 'id', 'tournament', 'match', 'ai')
+    
+    def get_tournament(self, obj):
+        type = 'tournament'
+        early = UserAchievements.objects.filter(user=obj, achievement__achievement_type=type,
+                                                 achievement__achievement_name='early')
+        triple = UserAchievements.objects.filter(user=obj, achievement__achievement_type=type,
+                                                 achievement__achievement_name='triple')
+        front = UserAchievements.objects.filter(user=obj, achievement__achievement_type=type,
+                                                 achievement__achievement_name='front')
+        tournament = {
+            'early': True if early else False,
+            'triple': True if triple else False,
+            'front': True if front else False,
+        }
+        return tournament
+
+    def get_match(self, obj):
+        type = 'match'
+        speedy = UserAchievements.objects.filter(user=obj, achievement__achievement_type=type,
+                                                 achievement__achievement_name='speedy')
+        last = UserAchievements.objects.filter(user=obj, achievement__achievement_type=type,
+                                                 achievement__achievement_name='last')
+        king = UserAchievements.objects.filter(user=obj, achievement__achievement_type=type,
+                                                 achievement__achievement_name='king')
+        match = {
+            'speedy': True if speedy else False,
+            'last': True if last else False,
+            'king': True if king else False,
+        }
+        return match
+    
+    def get_ai(self, obj):
+        type = 'ai'
+        challenger = UserAchievements.objects.filter(user=obj, achievement__achievement_type=type,
+                                                 achievement__achievement_name='challenger')
+        rivalry = UserAchievements.objects.filter(user=obj, achievement__achievement_type=type,
+                                                 achievement__achievement_name='rivalry')
+        legend = UserAchievements.objects.filter(user=obj, achievement__achievement_type=type,
+                                                 achievement__achievement_name='legend')
+        ai = {
+            'challenger': True if challenger else False,
+            'rivalry': True if rivalry else False,
+            'legend': True if legend else False,
+        }
+        return ai
