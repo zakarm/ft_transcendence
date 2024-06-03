@@ -14,5 +14,7 @@ app/back-end/dashboards/__pycache__
 app/front-end/node_modules
 app/front-end/.next
 .venv
-# .env
 .DS_Store
+venv
+# .env
+

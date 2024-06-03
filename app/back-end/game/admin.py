@@ -1,5 +1,9 @@
 from django.contrib import admin
-from .models import Match, Tournaments, Tournamentsmatches
+from .models import (Match,
+                     Tournaments,
+                     Tournamentsmatches,
+                     Achievements,
+                     UserAchievements)
 
 class UserAdmin(admin.ModelAdmin):
     "Class for user display in admin page"
@@ -13,3 +17,5 @@ class UserAdmin(admin.ModelAdmin):
 admin.site.register(Match, UserAdmin)
 admin.site.register(Tournamentsmatches)
 admin.site.register(Tournaments)
+admin.site.register(Achievements)
+admin.site.register(UserAchievements)
