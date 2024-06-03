@@ -16,10 +16,10 @@ class Notification(models.Model):
     notification_id = models.AutoField(primary_key=True)
     user = models.ForeignKey('authentication.User', models.DO_NOTHING,
                                   db_column='user')
-    image_url = models.CharField(max_length=200, blank=True)
-    message = models.CharField(max_length=200, blank=True)
-    title = models.CharField(max_length=50, blank=True)
-    link = models.CharField(max_length=200, blank=True)
+    image_url = models.CharField(max_length=200)
+    message = models.CharField(max_length=200)
+    title = models.CharField(max_length=50)
+    link = models.CharField(max_length=200)
 
     class Meta:
         db_table = 'Notification'
