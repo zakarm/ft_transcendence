@@ -22,6 +22,8 @@ class Tournaments(models.Model):
     tournament_end = models.DateTimeField(blank=True, null=True)
     crated_by_me = models.BooleanField(default=False)
     image_url = models.CharField(max_length=200, null=True, blank=True)
+    player_username = models.CharField(max_length=30, unique=True, blank=True, null=True)
+    game_difficulty = models.IntegerField(blank=True, null=True)
     class Meta:
         db_table = 'Tournaments'
 
