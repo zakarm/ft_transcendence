@@ -1,10 +1,17 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import Tournaments
-from .serializer import TournamentsSerializer, UserTournamentsSerializer
+from .serializer import (TournamentsSerializer,
+                         UserTournamentsSerializer,
+                         UserAchievementsSerializer)
 from django.utils import timezone
 
 class TournamentsDataView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         user = request.user
 
@@ -21,3 +28,12 @@ class TournamentsDataView(APIView):
         }
 
         return Response(data)
+
+class AchievementsDataViews(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        serializer = UserAchievementsSerializer(instance=user)
+        return Response(serializer.data)
