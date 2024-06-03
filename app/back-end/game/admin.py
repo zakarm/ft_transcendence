@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Match
+from .models import Match, Tournaments, Tournamentsmatches
 
 class UserAdmin(admin.ModelAdmin):
     "Class for user display in admin page"
@@ -11,3 +11,5 @@ class UserAdmin(admin.ModelAdmin):
     fieldsets = ()
 
 admin.site.register(Match, UserAdmin)
+admin.site.register(Tournamentsmatches)
+admin.site.register(Tournaments)

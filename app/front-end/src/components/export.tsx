@@ -39,31 +39,26 @@ interface ExportCSVProps {
     filename?: string;
 }
   
-const ExportCSV: React.FC<ExportCSVProps> = ({ data, filename = 'data.csv' }) => {
-    const handleExport = useCallback(() => {
-      if (!data || data.length === 0) {
-        console.error('No data to export');
-        return;
-    }
-  
-    const csvData = convertToCSV(data);
-    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
+export const ExportCSV = ( data: GameData[], filename: string = 'data.csv' ) => {
+  // const handleExport = useCallback(() => {
+  if (!data || Object.keys(data).length === 0) {
+    console.error('No data to export');
+    return;
+  }
+  // }
 
-    link.setAttribute('href', url);
-    link.setAttribute('download', filename);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    }, [data, filename]);
-  
-    return (
-      <div>
-        <button onClick={handleExport}>Export to CSV</button>
-      </div>
-    );
-  };
-  
-  export default ExportCSV;
+  const csvData = convertToCSV(data);
+  const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+
+  link.setAttribute('href', url);
+  link.setAttribute('download', filename);
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  // }, [data, filename]);
+
+
+};

@@ -13,6 +13,8 @@
     border-radius: 25px;
     background-color: var(--clr-ldark);
     width : 100%;
+    max-width : 800px;
+
 }
 
 

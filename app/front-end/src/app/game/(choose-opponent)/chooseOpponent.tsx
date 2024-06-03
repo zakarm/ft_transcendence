@@ -7,7 +7,7 @@ interface Props {
   imageSrc?: string;
 }
 
-function OptionCard({ cardTitle, imageSrc, setPageId }: Props) {
+function OptionCard({ cardTitle, imageSrc }: Props) {
   return (
     <>
       <div className={`${styles.image_container} responsive_image row`}>
@@ -22,7 +22,7 @@ function OptionCard({ cardTitle, imageSrc, setPageId }: Props) {
   );
 }
 
-function ChooseOpponent({ setPageId }: Props) {
+function ChooseOpponent() {
   return (
     <div className={`container-fluid p-0 m-0`}>
       <div
@@ -35,7 +35,6 @@ function ChooseOpponent({ setPageId }: Props) {
             <OptionCard
               cardTitle="TOURNAMENT"
               imageSrc="/back.png"
-              setPageId={setPageId}
             ></OptionCard>
           </Link>
         </div>
@@ -47,7 +46,6 @@ function ChooseOpponent({ setPageId }: Props) {
             <OptionCard
               cardTitle="MATCH GAME"
               imageSrc="/back3.png"
-              setPageId={setPageId}
             ></OptionCard>
           </Link>
         </div>
@@ -59,7 +57,6 @@ function ChooseOpponent({ setPageId }: Props) {
             <OptionCard
               cardTitle="AI BOT GAME"
               imageSrc="/back2.png"
-              setPageId={setPageId}
             ></OptionCard>
           </Link>
         </div>

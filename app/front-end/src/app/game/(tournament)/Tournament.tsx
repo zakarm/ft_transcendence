@@ -2,22 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import './Tournament.css';
-import TournamentCard from '../../../components/TournamentCard/TournamentCard';
 import NavBar from '@/components/NavBar/NavBar';
 import { TournamentsData } from '@/app/api/testTournament/route';
 import { RemoteTournamentForm } from '@/components/TournamentForm/remoteForm';
 import { LocalTournamentForm } from '@/components/TournamentForm/localForm';
-
-interface LocalPlayersProps {
-    [key: string]:
-        | string
-        | number
-        | {
-              [key: string]: {
-                  [key: string]: { [key: string]: { [key: string]: string | number } };
-              };
-          };
-}
+import TournamentCard from '@/components/TournamentCard/TournamentCard';
+import { LocalTournamentProps } from '@/types/game/Tournament';
+import TournamentOngoing from '@/components/TournamentOngoing/tournamentOngoing';
 
 async function fetchTournamentsData(currentTab: string, NavBarOptions: string[]): Promise<TournamentsData | null> {
     const getData = async () => {
@@ -70,6 +61,8 @@ const Tournament: React.FC = () => {
     const [localTournaments, setLocalTournaments] = useState<React.JSX.Element[]>([]);
     const [prevLocalStorageLength, setPrevLocalStorageLength] = useState<number>(localStorage.length);
     const [rerender, setRerender] = useState<boolean>(false);
+    const leftStyle: string = 'col-12 col-xl-5 col-xxl-7 order-2 order-xl-1 d-flex flex-wrap justify-content-center';
+    const rightStyle: string = 'col-12 col-xl-5 order-1 order-xl-2 d-flex justify-content-center';
 
     useEffect(() => {
         const data = async () => {
@@ -83,14 +76,13 @@ const Tournament: React.FC = () => {
     useEffect(() => {
         const tournamentCards: React.JSX.Element[] = [];
         const data = localStorage.getItem('tournaments');
-        let tournaments: LocalPlayersProps[] = [];
+        let tournaments: LocalTournamentProps[] = [];
 
         if (data) {
             try {
                 tournaments = JSON.parse(data);
             } catch (error) {
                 console.error('Error parsing JSON data from localStorage:', error);
-                // Handle the error appropriately, e.g., by setting tournaments to an empty array
                 tournaments = [];
             }
         }
@@ -122,40 +114,43 @@ const Tournament: React.FC = () => {
         window.addEventListener<'storage'>('storage', test);
     }, [rerender]);
 
-    return (
-        <div className="containerTournament">
-            <div className="Tournament_title">TOURNAMENT</div>
-            <div className="Tournament_search">
-                <input className="ps-3" type="search" name="" id="" placeholder="Search Tournament" />
-            </div>
-            <div className="Tournament_nav_bar">
-                <NavBar options={NavBarOptions} setChoosenTab={setChoosenTab} />
-            </div>
-            <section className="row Tournament_section p-0 m-0">
-                {choosenTab === 'My Tournament' ? (
-                    <>
-                        <div className="col-12 col-xl-5 col-xxl-7 order-2 order-xl-1 d-flex flex-wrap justify-content-center">
-                            {tournamentsToRender}
-                        </div>
-                        <div className="col-12 col-xl-4 order-1 order-xl-2 d-flex justify-content-center">
-                            <RemoteTournamentForm />
-                        </div>
-                    </>
-                ) : choosenTab === 'Local' ? (
-                    <>
-                        <div className="col-12 col-xl-5 col-xxl-7 order-2 order-xl-1 d-flex flex-wrap justify-content-center">
-                            {localTournaments}
-                        </div>
-                        <div className="col-12 col-xl-5 order-1 order-xl-2 d-flex justify-content-center">
-                            <LocalTournamentForm setRerender={setRerender} />
-                        </div>
-                    </>
-                ) : (
-                    <div className="col d-flex flex-wrap justify-content-center ">{tournamentsToRender}</div>
-                )}
-            </section>
+return (
+    <div className="containerTournament">
+        <div className="Tournament_title">TOURNAMENT</div>
+        <div className="Tournament_search">
+            <input className="ps-3" type="search" name="" id="" placeholder="Search Tournament" />
         </div>
-    );
+        <div className="Tournament_nav_bar">
+            <NavBar options={NavBarOptions} setChoosenTab={setChoosenTab} />
+        </div>
+        <section className="row Tournament_section p-0  m-0">
+            {choosenTab === 'My Tournament' ? (
+                <>
+                    <div className={leftStyle}>{tournamentsToRender}</div>
+                    <div className={rightStyle}>
+                        <RemoteTournamentForm />
+                    </div>
+                </>
+            ) : choosenTab === 'Local' ? (
+                <>
+                    <div className={leftStyle}>{localTournaments}</div>
+                    <div className={rightStyle}>
+                        <LocalTournamentForm setRerender={setRerender} />
+                    </div>
+                </>
+            ) : choosenTab === 'Ongoing' ? (
+                <>
+                    <div className={`col-12 col-xl-7 col-xxl-7 order-1 p-0 m-0`}>
+                        <TournamentOngoing />
+                    </div>
+                    <div className={`${rightStyle} flex-wrap`}>{tournamentsToRender}</div>
+                </>
+            ) : (
+                <div className="col d-flex flex-wrap justify-content-center">{tournamentsToRender}</div>
+            )}
+        </section>
+    </div>
+);
 };
 
 export default Tournament;

@@ -1,4 +1,4 @@
-import Ai from "./Ai";
+import Ai from "../(Ai)/Ai";
 
 export default function () {
   return <Ai />;
