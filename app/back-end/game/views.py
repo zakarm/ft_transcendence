@@ -7,34 +7,44 @@ from .models import Tournaments
 from rest_framework import status
 from authentication.models import User
 from .serializer import (TournamentsSerializer,
+                         TournamentCreationSerializer,
                          UserTournamentsSerializer,
                          UserAchievementsSerializer)
+from drf_spectacular.utils import extend_schema
 from django.utils import timezone
 
 class TournamentsDataView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(
+        description="Retrieve tournament data",
+        responses={
+            200: UserTournamentsSerializer(),
+            401: "Authentication credentials were not provided"
+        },
+        tags=["Tournaments"]
+    )
+
     def get(self, request, *args, **kwargs):
         user = request.user
+        serializer = UserTournamentsSerializer(instance=user)
+        return Response(serializer.data)
 
-        all_tournaments = Tournaments.objects.all()
-        ongoing_tournaments = all_tournaments.filter(tournament_end__isnull=True)
-        completed_tournaments = all_tournaments.filter(tournament_end__isnull=False)
-        my_tournaments = all_tournaments.filter(crated_by_me=True)
-
-        data = {
-            "All": TournamentsSerializer(all_tournaments, many=True).data,
-            "Ongoing": TournamentsSerializer(ongoing_tournaments, many=True).data,
-            "Completed": TournamentsSerializer(completed_tournaments, many=True).data,
-            "My Tournament": TournamentsSerializer(my_tournaments, many=True).data,
-        }
-
-        return Response(data)
 
 class AchievementsDataViews(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+        description="Retrieve user achievements",
+        request=None,  # There is no request body for a GET request
+        responses={
+            200: UserAchievementsSerializer(many=False),
+            401: "Authentication credentials were not provided",
+        },
+        tags=["Achievements"]
+    )
 
     def get(self, request):
         user = request.user
@@ -45,18 +55,20 @@ class CreateTournament(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(
+        description="Create a new tournament",
+        request = TournamentCreationSerializer,
+        responses={
+            200: {'description': 'Tournament created', 'content': {'application/json': {}}},
+            400: {'description': 'Bad request', 'content': {'application/json': {}}}
+        },
+        tags=["Tournaments"]
+    )
+
     def post(self, request):
-        user = request.user
-        try:
-            user_data = User.objects.get(id=user.id)
-        except User.DoesNotExist:
-            return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
-        username = request.get('username')
-        tournament_name = request.get('tournament_name')
-        image_url  = request.get('tournament_image')
-        game_difficulty = request.get('game_difficulty')
-        tour = Tournaments.objects.create(tournament_name = tournament_name, image_url = image_url,
-                                   game_difficulty = game_difficulty, tournament_start = datetime.now(),
-                                   crated_by_me=True, player_tournament = username)
-        tour.save()
-        
+        serializer = TournamentCreationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'success': 'Tournament created'}, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -21,9 +21,9 @@ class Tournaments(models.Model):
     tournament_start = models.DateTimeField()
     tournament_end = models.DateTimeField(blank=True, null=True)
     crated_by_me = models.BooleanField(default=False)
-    image_url = models.CharField(max_length=200, null=True, blank=True)
-    player_username = models.CharField(max_length=30, unique=True, blank=True, null=True)
-    game_difficulty = models.IntegerField(blank=True, null=True)
+    image_url = models.URLField(max_length=350)
+    player_username = models.CharField(max_length=30, unique=True)
+    game_difficulty = models.IntegerField()
     class Meta:
         db_table = 'Tournaments'
 
@@ -31,7 +31,6 @@ class Tournamentsmatches(models.Model):
     tournament = models.OneToOneField(Tournaments, models.DO_NOTHING, primary_key=True)
     match = models.ForeignKey(Match, models.DO_NOTHING)
     tournament_round = models.CharField(max_length=30)
-    
     class Meta:
         db_table = 'TournamentsMatches'
         unique_together = (('tournament', 'match'),)
@@ -47,7 +46,7 @@ class Achievements(models.Model):
 class UserAchievements(models.Model):
     user = models.OneToOneField('authentication.User', models.DO_NOTHING, primary_key=True)
     achievement = models.ForeignKey(Achievements, models.DO_NOTHING)
-    achive_date = models.DateTimeField(blank=True, null=True)
+    achive_date = models.DateTimeField()
     class Meta:
         db_table = 'UserAchievements'
         unique_together = (('user', 'achievement'),)

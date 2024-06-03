@@ -16,6 +16,10 @@ class UsersSignUpSerializer(serializers.ModelSerializer):
         password = validated_data.pop('password')
         user = User.objects.create(**validated_data)
         user.set_password(password)
+        if not user.image_url:
+            user.image_url = 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Aatrox_0.jpg'
+        if not user.username:
+            user.username = user.email.split('@')[0]
         user.save()
         return user
 
@@ -79,11 +83,15 @@ class SocialAuthSerializer(serializers.Serializer):
                 user, created = User.objects.get_or_create(email=email)
                 if created:
                     user.email = email
-                    if user_info.get('name'):
+                    if user_info.get('name') and ' ' in  user_info.get('name'):
                         user.first_name = user_info.get('name').split()[0]
                         user.last_name = user_info.get('name').split()[1]
+                    else :
+                        user.first_name = user_info.get('name')
+                        user.last_name = ''
                     user.username = user_info.get('login')
-                    user.image_url = user_info.get('avatar_url')
+                    data_img = user_info.get('avatar_url')
+                    user.image_url = data_img if data_img else 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Aatrox_0.jpg'
                     user.location = user_info.get('location')
                     user.save()
                 data['email'] = email
@@ -107,6 +115,7 @@ class SocialAuthSerializer(serializers.Serializer):
                     user.first_name = firstname
                     user.last_name = lastname
                     user.image_url = image_url
+                    user.username = user.email.split('@')[0]
                     user.save()
                 data['email'] = email
                 return data
