@@ -3,7 +3,6 @@ import styles from './styles/chat_friends.module.css';
 import Image from 'next/image';
 import { InputGroup } from 'react-bootstrap';
 import UserChat from './user_chat';
-import friends from '@/components/friends.json';
 import Form from 'react-bootstrap/Form';
 import User from './user';
 import { CiSearch } from "react-icons/ci";
@@ -13,23 +12,70 @@ interface Props{
     setAbout: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+interface User {
+    id: number;
+    username: string;
+    image_url: string;
+  }
+
 export default function ChatFriends( {setShow , setAbout}: Props ) {
 
-    const friendsData = friends.sort((usr1, usr2) => {
-        if (usr1.connected && !usr2.connected) {
-            return -1;
-        }
-          // Sort disconnected users second
-        if (!usr1.connected && usr2.connected) {
-            return 1;
-        }
-          // Sort by ID if isConnected flag is the same
-        return usr1.id - usr2.id;
-    })
-    // .slice(0, 5)
-    .map((user, index) => 
-        <User key={index} src={user.image_url} isConnected={user.connected}/>
-    );
+  const   [chatUsers, setChatUsers] = useState<User[]>([]);
+  const   [friendsData, setFriendsData] = useState(null);
+
+  console.log('test');
+
+  const fetchUsersData = async () => {
+      const access = Cookies.get('access');
+          if (access)
+          {
+            try {
+              const res = await fetch('http://localhost:8000/api/friends', {
+                headers: { Authorization: `Bearer ${access}` },
+              });
+  
+              if (!res.ok)
+                throw new Error('Failed to fetch data');
+  
+              const data = await res.json();
+              const transData = data.friends.map((friend: User) => ({
+                  id: friend.id,
+                  username: friend.username,
+                  image_url: friend.image_url,
+              }));
+  
+              setChatUsers(transData);
+            } catch (error) {
+                console.error('Error fetching data: ', error);
+            }
+          }
+          else
+            console.log('Access token is undefined or falsy');
+  }
+
+  useEffect(() => {
+    fetchUsersData();
+  }, []);
+
+  useEffect(() => {
+      const sortedData = chatUsers.sort((usr1, usr2) => {
+          if (usr1.connected && !usr2.connected) {
+              return -1;
+          }
+            // Sort disconnected users second
+          if (!usr1.connected && usr2.connected) {
+              return 1;
+          }
+            // Sort by ID if isConnected flag is the same
+          return usr1.id - usr2.id;
+      })
+      // .slice(0, 5)
+      .map((user: User, index: number) => 
+          <User key={index} src={user.image_url} isConnected={user.connected}/>
+      );
+
+      setFriendsData(sortedData);
+  }, [chatUsers]);
 
     const handleShow = () => setAbout(true);
 
