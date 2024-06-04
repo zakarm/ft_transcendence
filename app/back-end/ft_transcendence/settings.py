@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'channels',
     'djangochannelsrestframework',
-    'channels_redis'
+    'channels_redis',
+    'drf_spectacular'
 ]
 
 MIDDLEWARE = [
@@ -106,6 +107,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'PAGE_SIZE': 50,
 }
 
@@ -220,10 +222,26 @@ ASGI_APPLICATION = 'ft_transcendence.asgi.application'
 
 
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    # "default": {
+    #     "BACKEND": "channels.layers.InMemoryChannelLayer",
+    # },
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],
+        },
     },
 }
+
+# settings.py
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'ft_transcendence',
+    'DESCRIPTION': 'ft_transcendence project by 42 network',
+    'VERSION': '1.0.0',
+    # Add more settings as needed
+}
+
 
 FRONTEND_HOST = os.environ.get('FRONTEND_HOST')
 

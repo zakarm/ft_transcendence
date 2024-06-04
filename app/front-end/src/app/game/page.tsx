@@ -1,10 +1,5 @@
-import ChooseOpponent from "./(choose-opponent)/chooseOpponent";
+import ChooseOpponent from './(choose-opponent)/chooseOpponent';
 
-export default function()
-{
-    return (
-        <>
-            <ChooseOpponent></ChooseOpponent>
-        </>
-    );
+export default function () {
+    return <ChooseOpponent />;
 }

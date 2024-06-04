@@ -1,0 +1,54 @@
+.containerTournament {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+}
+.Tournament_title {
+  font-size: 3rem;
+  color: #feebeb;
+  text-transform: uppercase;
+  font-family: valorax;
+}
+
+.Tournament_title,
+.Tournament_search,
+.Tournament_nav_bar,
+.Tournament_nav_bar_sm {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 20px;
+  width: calc(100% - 22px);
+  /* border: 1px solid #feebeb; */
+  height: 80px;
+}
+.Tournament_search input {
+  width: 500px;
+  height: 50px;
+  border-radius: 25px;
+  border: 0;
+  background-color: #161625;
+  padding-left: 10px;
+  font-size: 20px;
+  outline: none;
+}
+
+.Tournament_section {
+  overflow: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  width: calc(100% - 2px);
+  height: calc(100% - 240px);
+}
+
+@media (max-width: 850px) {
+  .Tournament_search input {
+    width: 300px;
+  }
+  .Tournament_title {
+    font-size: 2rem;
+  }
+}

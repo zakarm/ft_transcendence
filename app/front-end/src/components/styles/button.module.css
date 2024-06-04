@@ -10,9 +10,15 @@
 } */
 
 .submit_button {
-    border : none;
-    border-radius : 25px;
-    background-color : #FF4755;
-    color : #111111;
-    font-size : clamp(14px, 1.5vw, 40px);
-  }
+  border: none;
+  border-radius: 15px;
+  background-color: #ff4755;
+  color: #111111;
+  font-size: clamp(14px, 1.5vw, 40px);
+  transition: all 0.5s ease;
+}
+
+.submit_button:hover {
+  background-color: white;
+  color: #111111;
+}

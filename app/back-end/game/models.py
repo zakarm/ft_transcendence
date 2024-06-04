@@ -17,9 +17,13 @@ class Match(models.Model):
 
 class Tournaments(models.Model):
     tournament_id = models.AutoField(primary_key=True)
-    tournament_name = models.CharField(max_length=30)
+    tournament_name = models.CharField(max_length=30, unique=True)
     tournament_start = models.DateTimeField()
-    tournament_end = models.DateTimeField()
+    tournament_end = models.DateTimeField(blank=True, null=True)
+    crated_by_me = models.BooleanField(default=False)
+    image_url = models.URLField(max_length=350)
+    player_username = models.CharField(max_length=30, unique=True)
+    game_difficulty = models.IntegerField()
     class Meta:
         db_table = 'Tournaments'
 
@@ -32,22 +36,20 @@ class Tournamentsmatches(models.Model):
         unique_together = (('tournament', 'match'),)
 
 
-# class Achievements(models.Model):
-#     achievement_id = models.AutoField(primary_key=True)
-#     achiev_name = models.CharField(max_length=45)
-#     xp_to_get = models.FloatField()
-#     class Meta:
-#         managed = False
-#         db_table = 'Achievements'
+class Achievements(models.Model):
+    achievement_id = models.AutoField(primary_key=True)
+    achievement_name = models.CharField(max_length=45)
+    achievement_type = models.CharField(max_length=45)
+    class Meta:
+        db_table = 'Achievements'
 
-# class Userachievements(models.Model):
-#     user = models.OneToOneField('Users', models.DO_NOTHING, primary_key=True)
-#     achivement = models.ForeignKey(Achievements, models.DO_NOTHING)
-#     achive_date = models.DateTimeField()
-#     class Meta:
-#         managed = False
-#         db_table = 'UserAchievements'
-#         unique_together = (('user', 'achivement'),)
+class UserAchievements(models.Model):
+    user = models.OneToOneField('authentication.User', models.DO_NOTHING, primary_key=True)
+    achievement = models.ForeignKey(Achievements, models.DO_NOTHING)
+    achive_date = models.DateTimeField()
+    class Meta:
+        db_table = 'UserAchievements'
+        unique_together = (('user', 'achievement'),)
 
 class GameTable(models.Model):
     game_table = models.AutoField(primary_key=True)

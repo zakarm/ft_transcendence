@@ -33,6 +33,10 @@ body {
   color: #ffebeb;
 }
 
+input[type="file"].imageInput {
+  display: none;
+}
+
 *::-webkit-scrollbar {
   width: 10px;
 }

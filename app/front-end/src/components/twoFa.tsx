@@ -62,7 +62,7 @@ export default function TwoFa({ value = '', email }: QrCode) {
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
       }}
     >
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <Modal.Dialog>
         <Modal.Header>
           <Modal.Title>Two Factor Authentication</Modal.Title>

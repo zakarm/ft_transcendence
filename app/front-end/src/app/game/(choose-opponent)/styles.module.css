@@ -5,18 +5,19 @@ h1.cards {
   background-color: var(--clr-ldark);
   border-bottom-left-radius: 25px;
   border-bottom-right-radius: 25px;
+  width: 300px;
 }
 
 .wrapper {
-  gap: 20px 5%;
+  gap: 20px 50px;
   overflow: auto;
 }
 
 div.option {
-  width: 250px;
+  width: 300px;
   height: 500px;
   cursor: pointer;
-  transition: all 0.5s ease;
+  transition: all 1s ease;
   filter: grayscale(80%);
   border-radius: 25px;
 }
@@ -31,4 +32,5 @@ img.cards {
   border-top-right-radius: 25px;
   border-top-left-radius: 25px;
   height: 400px;
+    width: 300px;
 }

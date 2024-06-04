@@ -5,6 +5,7 @@ class RoomObject:
         self.game_ended = False
         self.reconect = False
         self.room_is_full = False
+        self.game_paused = False
 
         # ball
         self.ball_radius = 0.1
@@ -24,6 +25,7 @@ class RoomObject:
         self.reconect_user = ""
         self.Original_users = {
             "user1": {
+                "number_of_pause": 0,
                 "joined": 0,
                 "user_id": "",
                 "user_data": {"user_img": "", "username": ""},
@@ -31,6 +33,7 @@ class RoomObject:
                 "channel_name": "",
             },
             "user2": {
+                "number_of_pause": 0,
                 "joined": 0,
                 "user_id": "",
                 "user_data": {"user_img": "", "username": ""},
@@ -63,6 +66,14 @@ class RoomObject:
     def is_reconecting(self):
         return self.reconect
 
+    def set_game_pause(self):
+        self.game_paused = True
+
+    def set_game_resume(self):
+        self.game_paused = False
+
+    def is_paused(self):
+        return self.game_paused
     # ------------------------> user <------------------------
     def get_winner(self):
         if self.score["user1"] == 7:
@@ -163,6 +174,17 @@ class RoomObject:
         elif self.Original_users["user2"]["user_id"] == user_id:
             self.score["user2"] = 7
 
+    def set_user_pause(self, user_id):
+        if self.Original_users["user1"]["user_id"] == user_id:
+            self.Original_users["user1"]["number_of_pause"] += 1
+        elif self.Original_users["user2"]["user_id"] == user_id:
+            self.Original_users["user2"]["number_of_pause"] += 1
+
+    def get_user_pause(self, user_id):
+        if self.Original_users["user1"]["user_id"] == user_id:
+            return self.Original_users["user1"]["number_of_pause"]
+        elif self.Original_users["user2"]["user_id"] == user_id:
+            return self.Original_users["user2"]["number_of_pause"]
     # ------------------------> ball <------------------------
     def set_ball_position(self, x, z):
         self.ball_position["x"] = x
@@ -283,6 +305,14 @@ class RoomObject:
             self.ball_velocity["velocity_z"] *= -1
 
     # ------------------------> paddle <------------------------
+    def bot(self):
+        if self.ball_position["x"] < 0 and self.ball_position["z"] > self.paddle1_position["z"]:
+            self.paddle1_speed = 0.1
+        elif self.ball_position["x"] < 0 and self.ball_position["z"] < self.paddle1_position["z"]:
+            self.paddle1_speed = -0.1
+        else:
+            self.paddle1_speed = 0
+
     def paddle_update(self):
         newPosition1 = self.paddle1_position["z"] + self.paddle1_speed
         if newPosition1 < -2.5 + self.paddle_depth / 2:

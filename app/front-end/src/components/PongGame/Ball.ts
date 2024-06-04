@@ -36,10 +36,9 @@ export default class Ball {
     );
     this.material = new THREE.MeshStandardMaterial({ color: this.color });
     this.mesh = new THREE.Mesh(this.geometry, this.material);
-    // this.mesh.position.set(...this.positions);
-		  this.mesh.position.x = this.positions[0];
-      this.mesh.position.y = this.positions[1];
-      this.mesh.position.z = this.positions[2];
+    this.mesh.position.x = this.positions[0];
+    this.mesh.position.y = this.positions[1];
+    this.mesh.position.z = this.positions[2];
   }
 
   update(
@@ -52,6 +51,74 @@ export default class Ball {
     this.mesh.position.z = ball_position_z;
     this.Velocityx = ball_velocity_x;
     this.Velocityz = ball_velocity_z;
+  }
+
+  ballUpdate() {
+    this.mesh.position.x += this.Velocityx;
+    this.mesh.position.z += this.Velocityz;
+    this.Velocityx *= 1.00005;
+    this.Velocityz *= 1.00005;
+  }
+
+  intersect(
+    wall1: { mesh: THREE.Mesh },
+    wall2: { mesh: THREE.Mesh },
+    paddle1: { mesh: THREE.Mesh; depth: number; width: number },
+    paddle2: { mesh: THREE.Mesh; depth: number; width: number }
+  ) {
+    const ballSphere = new THREE.Sphere(this.mesh.position, this.radius);
+    const wall1Box = new THREE.Box3().setFromObject(wall1.mesh);
+    const wall2Box = new THREE.Box3().setFromObject(wall2.mesh);
+    const paddle1Box = new THREE.Box3().setFromObject(paddle1.mesh);
+    const paddle2Box = new THREE.Box3().setFromObject(paddle2.mesh);
+    if (paddle1Box.intersectsSphere(ballSphere)) {
+      if (
+        this.mesh.position.z > paddle1.mesh.position.z + paddle1.depth / 2 &&
+        this.mesh.position.x < paddle1.mesh.position.x + paddle1.width / 2
+      ) {
+        this.mesh.position.z =
+          paddle1.mesh.position.z + paddle1.depth / 2 + this.radius + 0.05;
+        this.Velocityz *= -1;
+      } else if (
+        this.mesh.position.z < paddle1.mesh.position.z - paddle1.depth / 2 &&
+        this.mesh.position.x < paddle1.mesh.position.x + paddle1.width / 2
+      ) {
+        this.mesh.position.z =
+          paddle1.mesh.position.z - paddle1.depth / 2 - this.radius - 0.05;
+        this.Velocityz *= -1;
+      } else {
+        this.mesh.position.x =
+          paddle1.mesh.position.x + paddle1.width / 2 + this.radius + 0.05;
+        this.Velocityx *= -1;
+      }
+    }
+    if (paddle2Box.intersectsSphere(ballSphere)) {
+      if (
+        this.mesh.position.z > paddle2.mesh.position.z + paddle2.depth / 2 &&
+        this.mesh.position.x > paddle2.mesh.position.x - paddle2.width / 2
+      ) {
+        this.mesh.position.z =
+          paddle2.mesh.position.z + paddle2.depth / 2 + this.radius + 0.05;
+        this.Velocityz *= -1;
+      } else if (
+        this.mesh.position.z < paddle2.mesh.position.z - paddle2.depth / 2 &&
+        this.mesh.position.x > paddle2.mesh.position.x - paddle2.width / 2
+      ) {
+        this.mesh.position.z =
+          paddle2.mesh.position.z - paddle2.depth / 2 - this.radius - 0.05;
+        this.Velocityz *= -1;
+      } else {
+        this.mesh.position.x =
+          paddle2.mesh.position.x - paddle2.width / 2 - this.radius - 0.05;
+        this.Velocityx *= -1;
+      }
+    }
+    if (
+      wall1Box.intersectsSphere(ballSphere) ||
+      wall2Box.intersectsSphere(ballSphere)
+    ) {
+      this.Velocityz *= -1;
+    }
   }
 
   addToScene(scene: THREE.Scene) {

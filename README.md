@@ -22,6 +22,7 @@
 - [Supported & Unsupported Features](#supported--unsupported-features)
 - [1. Unified Modeling Language](#1-unified-modeling-language)
 - [2. Merise](#2-merise)
+- [3. Ressources](#3-ressources)
 
 <br><hr>
 
@@ -509,3 +510,9 @@ Columns:
 [⬆️ Back To Features](#supported--unsupported-features)
 
 
+## 3. Ressources
+
+### Frontend
+
+- [NextJS and Cloudinary — App Router Integration](https://medium.com/@varchasvipandey/nextjs-and-cloudinary-app-router-integration-ad7fd2e0fdb2)
+- [NextJS 13 API Routes: Better Than Expected!](https://www.youtube.com/watch?v=vrR4MlB7nBI&ab_channel=Joshtriedcoding)

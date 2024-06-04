@@ -55,7 +55,7 @@ export default function SignUp() {
 
   return (
     <div className="container">
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <div className={`${styles.flexx}`}>
         <div className={`${styles.main_card} shadow row`}>
           <div

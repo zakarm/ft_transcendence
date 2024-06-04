@@ -15,7 +15,8 @@ import { ChartOptions, ChartData } from 'chart.js';
 import { LineController } from 'chart.js/auto';
 import { useRouter } from 'next/navigation'
 import { Dropdown } from 'react-bootstrap';
-import ExportCSV from '@/components/export';
+// import ExportCSV from '@/components/export';
+import { ExportCSV } from '../../components/export';
 import { CategoryScale,
     LinearScale,
     Title,
@@ -74,7 +75,6 @@ export default function Dashboard() {
         const fetchData = async () =>
         {
             const access = Cookies.get('access');
-
             if (access) {
                 try {
                     const response = await fetch('http://localhost:8000/api/dashboard', {
@@ -96,38 +96,6 @@ export default function Dashboard() {
             }
             };
         fetchData();
-
-        const fetchDataForCsv = async () => {
-            const access = Cookies.get('access');
-            if (access)
-            {
-                try {
-                    const period = 'year';
-                    const response = await fetch('http://localhost:8000/api/game-stats-report', {
-                        method: 'POST',
-                        headers:
-                        {
-                            Authorization: `Bearer ${access}` ,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ period }),
-                    });
-                    if (response.ok) {
-                        const data = await response.json();
-                        console.log(data)
-                        setCsvData(data);
-                    } else if (response.status === 401) {
-                        console.log('Unauthorized');
-                    } else {
-                        console.error('An unexpected error happened:', response.status);
-                    }
-                }
-                catch (error) {
-                    console.error('An unexpected error happened:', error);
-                }
-            }
-        }
-        fetchDataForCsv()
     }, []);
 
     if (dashboardData) {
@@ -149,25 +117,64 @@ export default function Dashboard() {
             });
         });
     }
-    if (csvData){
-        csvData.matches_as_user_one.forEach((match) => {
-            gameCsv.push({
-            player: csvData.username,
-            score: match.score_user_one,
-            date: match.match_start,
-            result: match.score_user_one > match.score_user_two ? 'WIN' : 'LOSS',
-            });
-        });
 
-        csvData.matches_as_user_two.forEach((match) => {
-            gameCsv.push({
-            player: csvData.username,
-            score: match.score_user_two,
-            date: match.match_start,
-            result: match.score_user_two > match.score_user_one ? 'WIN' : 'LOSS',
+    const fetchDataForCsv = async (period: string) => {
+      const access = Cookies.get('access');
+      if (!access) return;
+
+      try {
+            const response = await fetch('http://localhost:8000/api/game-stats-report', {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${access}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ period }),
             });
-        });
-    }
+            if (response.ok) {
+                const data = await response.json();
+                // console.log(data);
+                return data;
+                // setCsvData(data);
+            } else if (response.status === 401) {
+                console.log('Unauthorized');
+            } else {
+                console.error('An unexpected error happened:', response.status);
+            }
+            return null;
+        } catch (error) {
+            console.error('An unexpected error happened:', error);
+        }
+
+    };
+
+    const handleDropdownSelect = async (value: string) => {
+      const data : UserData = await fetchDataForCsv(value);
+      console.log('data :', data);
+      if (data){
+          data.matches_as_user_one.forEach((match) => {
+              gameCsv.push({
+              player: data.username,
+              score: match.score_user_one,
+              date: match.match_start,
+              result: match.score_user_one > match.score_user_two ? 'WIN' : 'LOSS',
+              });
+          });
+
+          data.matches_as_user_two.forEach((match) => {
+              gameCsv.push({
+              player: data.username,
+              score: match.score_user_two,
+              date: match.match_start,
+              result: match.score_user_two > match.score_user_one ? 'WIN' : 'LOSS',
+              });
+          });
+      }
+      // setCsvData(data);
+      console.log('game : ' + gameCsv);
+      ExportCSV(gameCsv, 'game_history_'+value+'.csv');
+      toggleDropdown();
+    };
 
     function clickButton(){
         router.push('/game');
@@ -217,7 +224,6 @@ export default function Dashboard() {
 
     return (
       <div className={`container-fluid ${styles.page_body} vh-100`}>
-        {/* {csvData && <ExportCSV data={gameCsv} filename="game_history.csv"></ExportCSV>} */}
         <div className="row m-0 mt-5">
           <div className="col-12 mt-5">
             <div className={`row ${styles.card} m-1`}>
@@ -258,6 +264,7 @@ export default function Dashboard() {
                     src="/dashboard_char.png"
                     width={350}
                     height={350}
+                    style={{ width: "auto", height: "auto" }}
                     alt="anime charachter"
                     priority
                   />
@@ -278,6 +285,9 @@ export default function Dashboard() {
                       </p>
                     </div>
                     <div className="col-6 d-flex align-items-end justify-content-end">
+
+                  
+    
                       <Dropdown onClick={toggleDropdown}>
                         <Dropdown.Toggle
                           variant="dark"
@@ -286,23 +296,22 @@ export default function Dashboard() {
                         >
                           ALL
                         </Dropdown.Toggle>
-
                         <Dropdown.Menu show={dropdownOpen}>
                           <Dropdown.Item
-                            href="#/action-1"
                             className="itim-font"
+                            onClick={() => handleDropdownSelect('day')}
                           >
                             This Day
                           </Dropdown.Item>
                           <Dropdown.Item
-                            href="#/action-2"
                             className="itim-font"
+                            onClick={() => handleDropdownSelect('month')}
                           >
                             This Month
                           </Dropdown.Item>
                           <Dropdown.Item
-                            href="#/action-3"
                             className="itim-font"
+                            onClick={() => handleDropdownSelect('year')}
                           >
                             This Year
                           </Dropdown.Item>

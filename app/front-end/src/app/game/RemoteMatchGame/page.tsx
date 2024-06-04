@@ -1,9 +1,5 @@
-import RemoteMatchGame from "./RemoteMatchGame";
+import RemoteMatchGame from '../(remote-match-game)/RemoteMatchGame';
 
 export default function () {
-  return (
-    <>
-      <RemoteMatchGame></RemoteMatchGame>
-    </>
-  );
+    return <RemoteMatchGame />;
 }

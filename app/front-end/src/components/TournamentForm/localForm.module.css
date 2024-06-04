@@ -1,0 +1,148 @@
+/* --clr-red: #FF4755;
+--clr-ldark : #161625;
+--clr--white: #FFEBEB;
+--clr-dark: #111111;
+--clr--green : #27B299;
+--clr--grey : #2C3143; */
+
+.formWrapper {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 10px;
+    height: 700px;
+    border-radius: 25px;
+    background-color: var(--clr-ldark);
+    width : 100%;
+    max-width : 800px;
+
+}
+
+
+.inputTitle {
+    width: 450px;
+}
+
+.rangeTitle,
+.inputTitle {
+    color: var(--clr--grey);
+    width : 450px;
+    max-width: 100%;
+}
+
+.input_holder, .inputTitle {
+    width : 450px;
+    max-width: 100%;
+}
+
+.input_text {
+    outline: none;
+    border: none;
+    border-radius: 25px;
+    height: 50px;
+    color: #565a69;
+    width: 100%;
+    background-color: var(--clr--grey);
+}
+
+.input_text:focus {
+    color: var(--clr--white);
+}
+
+.slider {
+    appearance: none;
+    width: 100%;
+    height: 15px;
+    border-radius: 25px;
+    background: var(--clr--grey);
+    outline: none;
+    -webkit-transition: 0.2s;
+    transition: opacity 0.2s;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: var(--clr-red);
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: var(--clr-red);
+    cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb:hover {
+    scale: 1.01;
+    color: var(--clr-dark);
+    background-color: var(--clr--white);
+}
+
+.create_button {
+    width: 200px;
+    height: 50px;
+    border: none;
+    border-radius: 15px;
+    background-color: #ff4755;
+    color: var(--clr--white);
+    font-size: clamp(1rem, 0.953rem + 0.253vw, 1.9rem);
+}
+
+.input_holder:hover {
+    scale: 1.01;
+}
+.create_button:hover,
+.slider::-webkit-slider-thumb:hover {
+    scale: 1.01;
+    color: var(--clr-dark);
+    background-color: var(--clr--white);
+}
+
+/* @media only screen and (max-width: 530px) {
+    .inputTitle,
+    .input_holder {
+        width: 290px;
+    }
+    .formWrapper {
+        width: 300px;
+        min-width: 300px;
+    }
+} */
+
+
+@media only screen and (max-width: 1600px) {
+
+    .formWrapper {
+        width : 430px;
+    }
+}
+
+@media only screen and (max-width: 776px) {
+
+    .formTitle {
+        font-size: 1.5rem;
+    }
+    .create_button {
+        height : 50px;
+    }
+
+    .formWrapper {
+        width : 400px;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+
+    .formTitle {
+        font-size: 1rem;
+    }
+
+    .formWrapper {
+        width : 300px;
+    }
+}

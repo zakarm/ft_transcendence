@@ -271,7 +271,7 @@ export default function InviteFriend( {show, close}: Props) {
 
   return (
       <>
-        <ToastContainer 
+        {/* <ToastContainer 
           position="top-right"
           autoClose={2000}
           hideProgressBar={false}
@@ -283,7 +283,7 @@ export default function InviteFriend( {show, close}: Props) {
           pauseOnHover
           theme="colored"
           transition={Zoom}
-        />
+        /> */}
         <Modal contentClassName={`${styles.friend_modal}`} show={show} aria-labelledby="add_friend" centered>
                 <Tabs
                   defaultActiveKey="friends"

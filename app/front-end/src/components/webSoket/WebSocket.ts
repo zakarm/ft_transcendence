@@ -50,28 +50,28 @@ const useWebSocket = (url: string) => {
       }
 
       if (data.message.action === "connection_ack") {
-        setConnectionInfo((prev: any) => ({
-          ...prev,
-          index: data.message.index,
-          roomName: data.message.Room_name,
-          user: data.message.User,
-          user_image: data.message.image_url,
-          username: data.message.username,
-        }));
+		setConnectionInfo((prev: ConnectionInfo) => ({
+			...prev,
+			index: data.message.index,
+			roomName: data.message.Room_name,
+			user: data.message.User,
+			user_image: data.message.image_url,
+			username: data.message.username,
+		}));
         console.log("-> Connection Acknowledged", data.message);
       }
 
       if (data.message.action === "opponents") {
         setGameState("opponentFound");
-        setConnectionInfo((prev: any) => ({
-          ...prev,
-          user1: data.message.user1,
-          user1_image: data.message.user1_image_url,
-          username1: data.message.user1_username,
-          user2: data.message.user2,
-          user2_image: data.message.user2_image_url,
-          username2: data.message.user2_username,
-        }));
+		setConnectionInfo((prev: ConnectionInfo) => ({
+			...prev,
+			user1: data.message.user1,
+			user1_image: data.message.user1_image_url,
+			username1: data.message.user1_username,
+			user2: data.message.user2,
+			user2_image: data.message.user2_image_url,
+			username2: data.message.user2_username,
+		}));
         console.log("-> opponents", data.message);
       }
 
@@ -87,7 +87,10 @@ const useWebSocket = (url: string) => {
       }
       if (data.message.action === "reconnecting") {
         setGameState("reconnecting");
-      }
+	  }
+		if (data.message.action === "pause") {
+      setGameState("pause");
+    }
       if (data.message.action === "end_game") {
         if (data.message.status === "winner") setGameState("winner");
         else setGameState("loser");

@@ -8,10 +8,10 @@ interface PlayerProps {
   id: number;
   image: string;
   isConnected: boolean;
-} 
+}
 
-export default function Player({ nickname, id, image, isConnected }: PlayerProps) {
-  
+export default function Splayer({ nickname, id, image, isConnected }: PlayerProps) {
+
   return (
     <div className={`${styles.usr_class1} row-inline`}>
       <div className="d-flex flex-column align-items-center justify-content-center">
