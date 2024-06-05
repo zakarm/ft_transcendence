@@ -58,6 +58,6 @@ class GameTable(models.Model):
     table_color = models.CharField(max_length=10, blank=True)
     ball_color = models.CharField(max_length=10, blank=True)
     paddle_color = models.CharField(max_length=10, blank=True)
-    ball_color = models.IntegerField(blank=True)
+    game_difficulty = models.IntegerField()
     class Meta:
         db_table= 'GameTable'

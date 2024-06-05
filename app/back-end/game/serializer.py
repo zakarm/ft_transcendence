@@ -8,9 +8,11 @@ from .models import (Tournaments,
                      Tournamentsmatches,
                      Match,
                      Achievements,
+                     GameTable,
                      UserAchievements
                     )
 from authentication.models import User
+import sys
 
 class TournamentsmatchesSerializer(serializers.ModelSerializer):
     match = MatchSerializer()
@@ -134,3 +136,76 @@ class UserAchievementsSerializer(serializers.ModelSerializer):
 
     def get_ai(self, obj):
         return self.get_achievement(obj, 'ai', ['challenger', 'rivalry', 'legend'])
+
+
+"""
+first_name: 'Mushigarou',
+last_name: 'HobaHoba',
+nickname: 'saba',
+email: 'hey@hey.com',
+country: 'Morocco',
+city: '',
+image: 'profile.jpeg',
+new_password: '',
+repeat_password: '',
+is_two_fact: false,
+two_fact_secret: '',
+table_color: '#161625',
+ball_color: '#ffffff',
+paddle_color: '#ff4655',
+table_position: 'default',
+current_table_view: '6,8,0',
+game_difficulty: '2',
+"""
+
+class GameTableSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GameTable
+        fields = '__all__'
+
+class GameSettingsSerializer(serializers.ModelSerializer):
+    country = serializers.SerializerMethodField()
+    city = serializers.SerializerMethodField()
+    game_table = serializers.SerializerMethodField()
+    new_password = serializers.CharField(write_only=True, required=False)
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'username', 'image_url', 'is_2fa_enabled', 'two_fa_secret_key',
+                  'email', 'country', 'city', 'game_table', 'new_password')
+    
+    def validate_email(self, value):
+        user = self.instance
+        if User.objects.filter(email=value).exclude(id=user.id).exists():
+            raise serializers.ValidationError("User with this email already exists.")
+        return value
+    
+    def get_city(self, obj):
+        if obj.location:
+            if '/' in obj.location:
+                return obj.location.split('/')[1]
+            else :
+                return "NaN"
+        else: return "NaN"
+
+    def get_country(self, obj):
+        if obj.location:
+            if '/' in obj.location:
+                return obj.location.split('/')[0]
+            else :
+                return obj.location
+        else: return "NaN"
+    
+    def get_game_table(self, obj):
+        game_table = GameTable.objects.filter(user=obj).first()
+        if game_table:
+            return GameTableSerializer(instance=game_table).data
+        else:
+            return None
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        game_table_representation = representation.pop('game_table', {})
+        if game_table_representation:
+            for key, value in game_table_representation.items():
+                representation[key] = value
+        return representation
