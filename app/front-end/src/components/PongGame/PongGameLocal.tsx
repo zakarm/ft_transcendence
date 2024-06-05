@@ -37,9 +37,10 @@ interface LocalGame {
         matchIndex: number;
         user1Index: 0 | 1;
         user2Index: 0 | 1;
-        setScore: SetScore;
-        promoteWinner: PromoteWinner;
-        setPageState_: SetPageState;
+        setScore: SetScore | null;
+        promoteWinner: PromoteWinner | null;
+        setPageState_: SetPageState | null;
+        usesetter: 0 | 1;
     };
 }
 
@@ -148,7 +149,7 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
             boundary.addToScene(scene);
         });
 
-        const ball = new Ball(0.1, 46, 46, 0xffffff, [0, 0.1, 0], 0.05, 0.05);
+        const ball = new Ball(0.1, 46, 46, 0xffffff, [0, 0.1, 0], 0.5, 0.5);
         ball.addToScene(scene);
 
         const wall1 = new Wall(10, 0.5, 0.1, 0x161625, [0, 0.2, 2.6]);
@@ -272,7 +273,8 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
         let pageStateSet = false;
 
         const handleGameOver = () => {
-            if (!pageStateSet) {
+            if (data.usesetter === 0) return;
+            if (!pageStateSet && data.setPageState_ !== null) {
                 data.setPageState_('Tournamentlobby');
                 pageStateSet = true;
             }
@@ -309,12 +311,16 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
     }, []);
 
     useEffect(() => {
+        if (data.usesetter === 0) return;
         let intervalId1: NodeJS.Timeout;
         let intervalId2: NodeJS.Timeout;
+
         setUser1Score((prevScore: number) => {
             intervalId1 = setInterval(() => {
-                data.setScore(data.side, data.round, data.matchIndex, data.user1Index, prevScore);
-                if (prevScore === 7) data.promoteWinner(data.side, data.round, data.matchIndex, data.user1Index);
+                if (data.setScore !== null && data.promoteWinner !== null) {
+                    data.setScore(data.side, data.round, data.matchIndex, data.user1Index, prevScore);
+                    if (prevScore === 7) data.promoteWinner(data.side, data.round, data.matchIndex, data.user1Index);
+                }
             }, 0);
             return prevScore;
         });
@@ -322,8 +328,10 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
             intervalId2 = setInterval(() => {
                 const side = data.round != 'finals' ? data.side : 'side2';
                 const userIndex = data.round != 'finals' ? data.user2Index : data.user1Index;
-                data.setScore(side, data.round, data.matchIndex, userIndex, prevScore);
-                if (prevScore === 7) data.promoteWinner(side, data.round, data.matchIndex, userIndex);
+                if (data.setScore !== null && data.promoteWinner !== null) {
+                    data.setScore(side, data.round, data.matchIndex, userIndex, prevScore);
+                    if (prevScore === 7) data.promoteWinner(side, data.round, data.matchIndex, userIndex);
+                }
             }, 0);
             return prevScore;
         });
