@@ -8,13 +8,18 @@ import { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 
+import { PiChatsFill } from "react-icons/pi";
+
 export default function ()
 {
   const [show, setShow] = useState(false);
   
   const [showAbout, setAbout] = useState(false);
 
+  const [selectedChat, setSelectedChat] = useState<string>('none');
+
   const handleClose = () => setAbout(false);
+
 
   const [fullscreen, setFullscreen] = useState((window.innerWidth <= 768) ? true : false);
 
@@ -42,17 +47,24 @@ export default function ()
               {
                 (fullscreen) ?
                 (<ChatFriends setShow={setShow} setAbout={setAbout}/>) :
-                (<ChatFriendsResp setAbout={setAbout}/>)
+                (<ChatFriendsResp setSelectedChat={setSelectedChat} setAbout={setAbout}/>)
               }
               &nbsp;
             </div>
             <div className={`col-xl-5 col-md-6 p-0 m-0 ${styles.chat}`}>
-              <ChatMessages />
+              {
+                (selectedChat === 'none') ? 
+                (<div className='vh-100 d-flex flex-column align-items-center justify-content-center border border-dark'>
+                  <div><PiChatsFill className='mx-2' size='1.8em' color='#FF4755'/></div>
+                  <div><span style={{fontFamily: 'itim', color: 'white'}}>Please chose a conversation to start chatting!</span></div>
+                </div>):
+                (<ChatMessages selectedChat={selectedChat}/>)
+              }
               <Modal contentClassName={`${styles.chat_modal}`} show={show} fullscreen="md-down" onHide={() => setShow(false)} animation>
                 <Modal.Header closeButton closeVariant='white'>
 
                 </Modal.Header>
-                <ChatMessages/>
+                <ChatMessages selectedChat={selectedChat}/>
               </Modal>
               <Offcanvas className={`${styles.canvas}`} show={showAbout} onHide={handleClose} backdrop={false}>
                 <Offcanvas.Body className={`p-0 m-0`}>
