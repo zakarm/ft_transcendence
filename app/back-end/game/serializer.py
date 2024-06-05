@@ -137,27 +137,6 @@ class UserAchievementsSerializer(serializers.ModelSerializer):
     def get_ai(self, obj):
         return self.get_achievement(obj, 'ai', ['challenger', 'rivalry', 'legend'])
 
-
-"""
-first_name: 'Mushigarou',
-last_name: 'HobaHoba',
-nickname: 'saba',
-email: 'hey@hey.com',
-country: 'Morocco',
-city: '',
-image: 'profile.jpeg',
-new_password: '',
-repeat_password: '',
-is_two_fact: false,
-two_fact_secret: '',
-table_color: '#161625',
-ball_color: '#ffffff',
-paddle_color: '#ff4655',
-table_position: 'default',
-current_table_view: '6,8,0',
-game_difficulty: '2',
-"""
-
 class GameTableSerializer(serializers.ModelSerializer):
     class Meta:
         model = GameTable

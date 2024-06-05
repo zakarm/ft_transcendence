@@ -78,11 +78,28 @@ class GameSettingsView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(
+        description="Retrieve game settings for the authenticated user.",
+        responses={
+            200: GameSettingsSerializer,
+            401: "Authentication credentials were not provided"
+        },
+        tags=["Settings"]
+    )
     def get(self, request):
         user = request.user
         serializer = GameSettingsSerializer(instance=user)
         return Response(serializer.data)
-
+    
+    @extend_schema(
+        description="Update game settings for the authenticated user.",
+        request=GameSettingsSerializer,
+        responses={
+            200: {'description': 'Settings updated successfully'},
+            400: {'description': 'Bad request', 'content': {'application/json': {}}}
+        },
+        tags=["Settings"]
+    )
     def put(self, request):
         user = request.user
         serializer = GameSettingsSerializer(instance=user, data=request.data)
