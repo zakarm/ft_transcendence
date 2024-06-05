@@ -15,6 +15,13 @@ class Match(models.Model):
     class Meta:
         db_table = 'Matches'
 
+    def get_winner(self):
+        if self.score_user_one > self.score_user_two:
+            return self.user_one
+        elif self.score_user_two > self.score_user_one:
+            return self.user_two
+        return None
+
 class Tournaments(models.Model):
     tournament_id = models.AutoField(primary_key=True)
     tournament_name = models.CharField(max_length=30, unique=True)
@@ -58,6 +65,6 @@ class GameTable(models.Model):
     table_color = models.CharField(max_length=10, blank=True)
     ball_color = models.CharField(max_length=10, blank=True)
     paddle_color = models.CharField(max_length=10, blank=True)
-    ball_color = models.IntegerField(blank=True)
+    game_difficulty = models.IntegerField()
     class Meta:
         db_table= 'GameTable'

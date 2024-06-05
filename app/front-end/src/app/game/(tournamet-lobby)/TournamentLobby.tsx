@@ -11,7 +11,7 @@ const TournamentLobby: React.FC<TournamentData> = (data: TournamentData) => {
         setIsSmall(window.innerWidth < 1000);
     });
     return (
-        <div className="container-fluid vh-100 p-0 m-0" style={{ overflow: 'auto' }}>
+        <div className="container-fluid vh-100 p-0 m-0" style={{ overflow: 'auto', width: '100%' }}>
             {isSmall ? <TournamentSmall {...data} /> : <TournamentLarge {...data} />}
         </div>
     );
