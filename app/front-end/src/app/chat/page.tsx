@@ -16,7 +16,7 @@ export default function ()
   
   const [showAbout, setAbout] = useState(false);
 
-  const [selectedChat, setSelectedChat] = useState('none');
+  const [selectedChat, setSelectedChat] = useState<string>('none');
 
   const handleClose = () => setAbout(false);
 
@@ -47,7 +47,7 @@ export default function ()
               {
                 (fullscreen) ?
                 (<ChatFriends setShow={setShow} setAbout={setAbout}/>) :
-                (<ChatFriendsResp setAbout={setAbout}/>)
+                (<ChatFriendsResp setSelectedChat={setSelectedChat} setAbout={setAbout}/>)
               }
               &nbsp;
             </div>
@@ -58,13 +58,13 @@ export default function ()
                   <div><PiChatsFill className='mx-2' size='1.8em' color='#FF4755'/></div>
                   <div><span style={{fontFamily: 'itim', color: 'white'}}>Please chose a conversation to start chatting!</span></div>
                 </div>):
-                (<ChatMessages />)
+                (<ChatMessages selectedChat={selectedChat}/>)
               }
               <Modal contentClassName={`${styles.chat_modal}`} show={show} fullscreen="md-down" onHide={() => setShow(false)} animation>
                 <Modal.Header closeButton closeVariant='white'>
 
                 </Modal.Header>
-                <ChatMessages/>
+                <ChatMessages selectedChat={selectedChat}/>
               </Modal>
               <Offcanvas className={`${styles.canvas}`} show={showAbout} onHide={handleClose} backdrop={false}>
                 <Offcanvas.Body className={`p-0 m-0`}>
