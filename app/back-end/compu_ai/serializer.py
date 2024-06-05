@@ -2,9 +2,6 @@ from rest_framework import serializers
 from authentication.models import User
 from game.models import Match, UserAchievements, Achievements
 from django.db.models import Count, F, Q, Avg
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.preprocessing import StandardScaler
 from datetime import datetime
 import numpy as np
 import pandas as pd
