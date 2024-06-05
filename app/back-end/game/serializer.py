@@ -8,9 +8,11 @@ from .models import (Tournaments,
                      Tournamentsmatches,
                      Match,
                      Achievements,
+                     GameTable,
                      UserAchievements
                     )
 from authentication.models import User
+import sys
 
 class TournamentsmatchesSerializer(serializers.ModelSerializer):
     match = MatchSerializer()
@@ -134,3 +136,55 @@ class UserAchievementsSerializer(serializers.ModelSerializer):
 
     def get_ai(self, obj):
         return self.get_achievement(obj, 'ai', ['challenger', 'rivalry', 'legend'])
+
+class GameTableSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GameTable
+        fields = '__all__'
+
+class GameSettingsSerializer(serializers.ModelSerializer):
+    country = serializers.SerializerMethodField()
+    city = serializers.SerializerMethodField()
+    game_table = serializers.SerializerMethodField()
+    new_password = serializers.CharField(write_only=True, required=False)
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'username', 'image_url', 'is_2fa_enabled', 'two_fa_secret_key',
+                  'email', 'country', 'city', 'game_table', 'new_password')
+    
+    def validate_email(self, value):
+        user = self.instance
+        if User.objects.filter(email=value).exclude(id=user.id).exists():
+            raise serializers.ValidationError("User with this email already exists.")
+        return value
+    
+    def get_city(self, obj):
+        if obj.location:
+            if '/' in obj.location:
+                return obj.location.split('/')[1]
+            else :
+                return "NaN"
+        else: return "NaN"
+
+    def get_country(self, obj):
+        if obj.location:
+            if '/' in obj.location:
+                return obj.location.split('/')[0]
+            else :
+                return obj.location
+        else: return "NaN"
+    
+    def get_game_table(self, obj):
+        game_table = GameTable.objects.filter(user=obj).first()
+        if game_table:
+            return GameTableSerializer(instance=game_table).data
+        else:
+            return None
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        game_table_representation = representation.pop('game_table', {})
+        if game_table_representation:
+            for key, value in game_table_representation.items():
+                representation[key] = value
+        return representation

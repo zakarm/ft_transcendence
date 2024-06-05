@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, use } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import Surface from './Surface';
@@ -11,7 +11,40 @@ import './PongGame.css';
 import BoardItem from '../BoardItem/BoardItem';
 import gsap from 'gsap';
 
-const PongGameLocal: React.FC = () => {
+type SetScore = (
+    side: 'side1' | 'side2',
+    round: 'quarterfinals' | 'semifinals' | 'finals',
+    matchIndex: number,
+    userIndex: 0 | 1,
+    newscore: number,
+) => void;
+
+type PromoteWinner = (
+    side: 'side1' | 'side2',
+    round: 'quarterfinals' | 'semifinals' | 'finals',
+    matchIndex: number,
+    userIndex: 0 | 1,
+) => void;
+type SetPageState = (pageState: string) => void;
+interface LocalGame {
+    data: {
+        user1name: string;
+        user2name: string;
+        user1image: string;
+        user2image: string;
+        side: 'side1' | 'side2';
+        round: 'quarterfinals' | 'semifinals' | 'finals';
+        matchIndex: number;
+        user1Index: 0 | 1;
+        user2Index: 0 | 1;
+        setScore: SetScore | null;
+        promoteWinner: PromoteWinner | null;
+        setPageState_: SetPageState | null;
+        usesetter: 0 | 1;
+    };
+}
+
+const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
     const sceneRef = useRef<THREE.Scene | null>(null);
@@ -20,8 +53,10 @@ const PongGameLocal: React.FC = () => {
     const animateIdRef = useRef<number | null>(null);
     const [user1score, setUser1Score] = useState<number>(0);
     const [user2score, setUser2Score] = useState<number>(0);
-
     useEffect(() => {
+        var gameStatus = 'loading';
+        setUser1Score(0);
+        setUser2Score(0);
         const { current: container } = containerRef;
         if (!container) return;
 
@@ -72,7 +107,7 @@ const PongGameLocal: React.FC = () => {
             x: targetPosition.x,
             y: targetPosition.y,
             z: targetPosition.z,
-            duration: 5,
+            duration: 3,
             onUpdate: () => {
                 camera.lookAt(new THREE.Vector3(0, 0, 0));
             },
@@ -114,7 +149,7 @@ const PongGameLocal: React.FC = () => {
             boundary.addToScene(scene);
         });
 
-        const ball = new Ball(0.1, 46, 46, 0xffffff, [0, 0.1, 0], 0.025, 0.025);
+        const ball = new Ball(0.1, 46, 46, 0xffffff, [0, 0.1, 0], 0.5, 0.5);
         ball.addToScene(scene);
 
         const wall1 = new Wall(10, 0.5, 0.1, 0x161625, [0, 0.2, 2.6]);
@@ -192,7 +227,17 @@ const PongGameLocal: React.FC = () => {
         document.addEventListener('keyup', handleKeyUp);
         window.addEventListener('resize', handleResize);
 
+        setTimeout(() => {
+            gameStatus = 'playing';
+        }, 4000);
         const animate = () => {
+            animateIdRef.current = requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+            if (gameStatus === 'gameover') {
+                handleGameOver();
+                cancelAnimationFrame(animateIdRef.current);
+            }
+            if (gameStatus !== 'playing') return;
             ball.intersect(wall1, wall2, paddle1, paddle2);
             ball.ballUpdate();
             paddle1.paddleUpdate();
@@ -203,21 +248,37 @@ const PongGameLocal: React.FC = () => {
                 ball.mesh.position.set(0, 0.1, z);
                 paddle1.mesh.position.set(-4.8, 0.15, 0);
                 paddle2.mesh.position.set(4.8, 0.15, 0);
-                setUser1Score((prevScore: number) => prevScore + 1);
+                setUser1Score((prevScore: number) => {
+                    const newscore = prevScore + 1;
+                    if (newscore === 7 && gameStatus != 'gameover') gameStatus = 'gameover';
+                    if (newscore > 7) return prevScore;
+                    return newscore;
+                });
             }
             if (ball.mesh.position.x > 5) {
                 ball.Velocityx *= -1;
                 ball.mesh.position.set(0, 0.1, z);
                 paddle1.mesh.position.set(-4.8, 0.15, 0);
                 paddle2.mesh.position.set(4.8, 0.15, 0);
-                setUser2Score((prevScore: number) => prevScore + 1);
+                setUser2Score((prevScore: number) => {
+                    const newscore = prevScore + 1;
+                    if (newscore === 7 && gameStatus != 'gameover') gameStatus = 'gameover';
+                    if (newscore > 7) return prevScore;
+                    return newscore;
+                });
             }
             light.position.copy(ball.mesh.position);
-            animateIdRef.current = requestAnimationFrame(animate);
-            renderer.render(scene, camera);
         };
         animate();
+        let pageStateSet = false;
 
+        const handleGameOver = () => {
+            if (data.usesetter === 0) return;
+            if (!pageStateSet && data.setPageState_ !== null) {
+                data.setPageState_('Tournamentlobby');
+                pageStateSet = true;
+            }
+        };
         return () => {
             console.log('PongGameLocal unmounted');
             document.removeEventListener('keydown', handleKeyDown);
@@ -249,20 +310,51 @@ const PongGameLocal: React.FC = () => {
         };
     }, []);
 
+    useEffect(() => {
+        if (data.usesetter === 0) return;
+        let intervalId1: NodeJS.Timeout;
+        let intervalId2: NodeJS.Timeout;
+
+        setUser1Score((prevScore: number) => {
+            intervalId1 = setInterval(() => {
+                if (data.setScore !== null && data.promoteWinner !== null) {
+                    data.setScore(data.side, data.round, data.matchIndex, data.user1Index, prevScore);
+                    if (prevScore === 7) data.promoteWinner(data.side, data.round, data.matchIndex, data.user1Index);
+                }
+            }, 0);
+            return prevScore;
+        });
+        setUser2Score((prevScore: number) => {
+            intervalId2 = setInterval(() => {
+                const side = data.round != 'finals' ? data.side : 'side2';
+                const userIndex = data.round != 'finals' ? data.user2Index : data.user1Index;
+                if (data.setScore !== null && data.promoteWinner !== null) {
+                    data.setScore(side, data.round, data.matchIndex, userIndex, prevScore);
+                    if (prevScore === 7) data.promoteWinner(side, data.round, data.matchIndex, userIndex);
+                }
+            }, 0);
+            return prevScore;
+        });
+        return () => {
+            clearInterval(intervalId1);
+            clearInterval(intervalId2);
+        };
+    }, [user1score, user2score]);
+
     return (
         <div className="Pong_Game_container">
             <div className="board">
                 <BoardItem
-                    championName={'Player 1'}
+                    championName={data.user1name}
                     hashtag="#TheHacker007"
                     score={user1score}
-                    imageSrc={'/Def_pfp.png'}
+                    imageSrc={data.user1image}
                 />
                 <BoardItem
-                    championName={'Player 2'}
+                    championName={data.user2name}
                     hashtag="#TheHacker007"
                     score={user2score}
-                    imageSrc={'/Def_pfp.png'}
+                    imageSrc={data.user2image}
                 />
             </div>
             <div className="canvas_div" ref={containerRef} />

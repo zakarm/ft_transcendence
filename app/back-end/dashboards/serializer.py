@@ -80,7 +80,7 @@ class FriendshipSerializer(serializers.ModelSerializer):
     blocked = serializers.SerializerMethodField()
     class Meta:
         model = Friendship
-        fields = ('user', 'is_accepted', 'blocked', 'is_user_from')
+        fields = ('user', 'freindship_id', 'is_accepted', 'blocked', 'is_user_from')
 
     def get_user(self, obj):
         if obj.user_from.id == self.context['id']:

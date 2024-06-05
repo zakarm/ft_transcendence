@@ -1,5 +1,5 @@
-import PongGameLocal from "@/components/PongGame/PongGameLocal";
+import Local from '../(Local)/Local';
 
 export default function () {
-  return <PongGameLocal />;
+    return <Local />;
 }
