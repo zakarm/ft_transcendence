@@ -21,6 +21,16 @@ class Match(models.Model):
         elif self.score_user_two > self.score_user_one:
             return self.user_two
         return None
+    
+    def get_match_result(self, player):
+        winner = self.get_winner()
+        if winner is None:
+            return 'Draw'
+        elif winner == player:
+            return 'Win'
+        return 'Lose'
+    
+    
 
 class Tournaments(models.Model):
     tournament_id = models.AutoField(primary_key=True)
