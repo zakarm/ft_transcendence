@@ -53,8 +53,6 @@ def database_connection():
 def migrate_and_run_server():
 
     logging.info("Applying migrations...")
-    make_migrations_cmd = "pip install numpy pandas prophet"
-    subprocess.run(make_migrations_cmd.split(), check=True)
     make_migrations_cmd = "python manage.py makemigrations authentication"
     subprocess.run(make_migrations_cmd.split(), check=True)
     make_migrations_cmd = "python manage.py makemigrations compu_ai"

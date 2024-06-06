@@ -6,6 +6,7 @@ from dashboards.serializer import (MatchSerializer,
                                    UserSerializer)
 from .models import (Tournaments,
                      Tournamentsmatches,
+                     TournamentsUsernames,
                      Match,
                      Achievements,
                      GameTable,
@@ -87,7 +88,7 @@ class TournamentCreationSerializer(serializers.Serializer):
     game_difficulty = serializers.IntegerField()
 
     def validate_username(self, value):
-        if Tournaments.objects.filter(player_username=value).exists():
+        if TournamentsUsernames.objects.filter(user_display_name=value).exists():
             raise serializers.ValidationError("User with this username already exists.")
         return value
 
@@ -102,14 +103,15 @@ class TournamentCreationSerializer(serializers.Serializer):
         return value
     
     def create(self, validated_data):
-        return Tournaments.objects.create(
+        tour_data =  Tournaments.objects.create(
             tournament_name=validated_data['tournament_name'],
-            image_url=validated_data['tournament_image'],
+            image_url=validated_data.get('tournament_image', 'https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468'),
             game_difficulty=validated_data['game_difficulty'],
             tournament_start=datetime.now(),
             crated_by_me=True,
-            player_username=validated_data['username']
         )
+        TournamentsUsernames.objects.create(tournament = tour_data, user = self.context['request'].user, user_display_name = validated_data['username'])
+        return tour_data
 
 class UserAchievementsSerializer(serializers.ModelSerializer):
     tournament = serializers.SerializerMethodField()

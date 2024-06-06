@@ -67,7 +67,7 @@ class CreateTournament(APIView):
     )
 
     def post(self, request):
-        serializer = TournamentCreationSerializer(data=request.data)
+        serializer = TournamentCreationSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response({'success': 'Tournament created'}, status=status.HTTP_201_CREATED)

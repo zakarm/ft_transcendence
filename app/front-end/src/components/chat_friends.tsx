@@ -58,13 +58,13 @@ export default function ChatFriends( {setShow , setAbout}: Props ) {
 		fetchUsersData();
 	}, []);
 
-	useEffect(() => {
-			sortedData = chatUsers.map((user: User, index: number) => 
-					<User key={index} src={user.image_url} isConnected={true}/>
-			);
+	// useEffect(() => {
+	// 		sortedData = chatUsers.map((user: User, index: number) => 
+	// 				<User key={index} src={user.image_url} isConnected={true}/>
+	// 		);
 
-			// setFriendsData(sortedData);
-	}, [chatUsers]);
+	// 		// setFriendsData(sortedData);
+	// }, [chatUsers]);
 
 		const handleShow = () => setAbout(true);
 
