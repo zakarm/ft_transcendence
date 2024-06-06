@@ -6,13 +6,17 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import StandardScaler
 from datetime import datetime
+from datetime import timedelta
+from prophet import Prophet
+from django.utils import timezone
+from dashboards.utils import (get_lose_games,
+                              get_win_games,
+                              get_tackles,
+                              get_scores)
 import numpy as np
 import pandas as pd
-from prophet import Prophet
 import sys
-from django.utils import timezone
 import random
-from datetime import timedelta
 
 class AchievementSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,9 +28,14 @@ class StatisticsSerializer(serializers.ModelSerializer):
     avg_score = serializers.SerializerMethodField()
     last_achiev = serializers.SerializerMethodField()
     future_predictions = serializers.SerializerMethodField()
+    loses = serializers.SerializerMethodField()
+    wins = serializers.SerializerMethodField()
+    scores = serializers.SerializerMethodField()
+    tackles = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ('id', 'username', 'top_player', 'avg_score', 'last_achiev', 'future_predictions')
+        fields = ('id', 'username', 'top_player', 'avg_score', 'last_achiev', 'future_predictions', 
+                  'loses', 'wins', 'scores', 'tackles')
     
     def get_top_player(self, obj):
         users_with_wins = User.objects.annotate(
@@ -56,32 +65,22 @@ class StatisticsSerializer(serializers.ModelSerializer):
             return AchievementSerializer(instance=Achievements.objects.get(achievement_id=last_achievement.achievement_id)).data
         else :
             return None
-
-
     
-    def get_future_predictions(self, obj):
-        for _ in range(100):
-            # Generate a random start date from now to 6 months in the past
-            match_start = timezone.now() - timedelta(days=random.randint(0, 30*6))
-            match_end = match_start + timedelta(hours=random.randint(1, 3))
-            user_one_score = random.randint(0, 7)
-            user_two_score = random.randint(0, 7) if user_one_score < 7 else 7
-            match = Match.objects.create(
-                user_one_id=1,  # Replace with the actual user ID
-                user_two_id=2,  # Replace with the actual user ID
-                score_user_one=user_one_score,
-                score_user_two=user_two_score,
-                match_start=match_start.strftime("%Y-%m-%d %H:%M:%S"),
-                match_end=match_end.strftime("%Y-%m-%d %H:%M:%S"),
-                tackle_user_one=random.randint(0, 10),
-                tackle_user_two=random.randint(0, 10)
-            )
-            match.save()
-        # Filter matches for the specified user
-        user_matches = Match.objects.filter(Q(user_one=obj) | Q(user_two=obj))
+    def get_loses(self, obj):
+        return get_lose_games(obj)
 
+    def get_wins(self, obj):
+        return get_win_games(obj)
+
+    def get_tackles(self, obj):
+        return get_tackles(obj)
+
+    def get_scores(self, obj):
+        return get_scores(obj)
+
+    def get_future_predictions(self, obj):
+        user_matches = Match.objects.filter(Q(user_one=obj) | Q(user_two=obj))
         if user_matches.exists():
-            # Prepare the data for Prophet
             data = []
             for match in user_matches:
                 if match.user_one == obj:
@@ -90,24 +89,16 @@ class StatisticsSerializer(serializers.ModelSerializer):
                     data.append({'ds': match.match_start, 'y': match.score_user_two})
 
             df = pd.DataFrame(data)
-
-            # Ensure the 'ds' column is in datetime format and remove timezone
             df['ds'] = pd.to_datetime(df['ds']).dt.tz_localize(None)
 
-            print(df, file = sys.stderr)
-            # Initialize and fit the model
             model = Prophet()
             model.fit(df)
 
-            # Create a dataframe with future dates
             future_dates = pd.DataFrame({
                 'ds': pd.to_datetime(['2024-06-13', '2024-06-14'])
             })
 
-            # Make predictions
             forecast = model.predict(future_dates)
-            
-            # Clamp the predictions to be within the range [0, 7]
             future_predictions_with_dates = [
                 {
                     "date": row['ds'].strftime('%Y-%m-%d'),
@@ -115,7 +106,5 @@ class StatisticsSerializer(serializers.ModelSerializer):
                 }
                 for _, row in forecast.iterrows()
             ]
-
             return future_predictions_with_dates
-
         return None

@@ -1,11 +1,23 @@
 from datetime import datetime, timedelta
 from game.models import Match
-from django.db.models import F, Q
+from django.db.models import F, Q, Sum
 
 def get_total_games(obj):
     user_matches_as_one = Match.objects.filter(user_one=obj)
     user_matches_as_two = Match.objects.filter(user_two=obj)
     return user_matches_as_one.count() + user_matches_as_two.count()
+
+def get_tackles(obj):
+    tackles_as_user_one = Match.objects.filter(user_one=obj).aggregate(Sum('tackle_user_one'))['tackle_user_one__sum']
+    tackles_as_user_two = Match.objects.filter(user_two=obj).aggregate(Sum('tackle_user_two'))['tackle_user_two__sum']
+    return (tackles_as_user_one or 0) + (tackles_as_user_two or 0)
+
+
+def get_scores(obj):
+    scores_as_user_one = Match.objects.filter(user_one=obj).aggregate(Sum('score_user_one'))['score_user_one__sum']
+    scores_as_user_two = Match.objects.filter(user_two=obj).aggregate(Sum('score_user_two'))['score_user_two__sum']
+
+    return (scores_as_user_one or 0) + (scores_as_user_two or 0)
 
 def get_win_games(obj):
     win_matches_as_one = Match.objects.filter(user_one =
