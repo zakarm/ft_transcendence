@@ -12,6 +12,7 @@ import InviteFriend from "./inviteFriend";
 import { useGlobalContext } from "./webSocket";
 import Spinner from 'react-bootstrap/Spinner'
 import Cookies from 'js-cookie';
+import { usePathname, useRouter } from "next/navigation";
 
 interface FriendSocket {
 	id: number;
@@ -112,7 +113,6 @@ export default function MainContainer({ children }: { children: React.ReactNode 
 					});
 					if (response.ok){
 						const data = await response.json();
-						console.log('yess', data);
 						const transformedData = data.friends
 						.filter((friend: Friend) => friend.is_accepted == true)
 						.map((friend: Friend) => ({
@@ -146,7 +146,6 @@ export default function MainContainer({ children }: { children: React.ReactNode 
 					});
 					if (response.ok){
 						const data = await response.json();
-						console.log('nooo', data);
 						const notificationFetch = data.notifications
 						.map((notification: Notification) => ({
 							notification_id: notification.notification_id,

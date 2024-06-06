@@ -32,6 +32,8 @@ import { MdRoundaboutRight } from "react-icons/md";
 import { ChartOptions, ChartData } from 'chart.js';
 import { LineController } from 'chart.js/auto';
 import Cookies from 'js-cookie';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface MonthlyStats {
     months: string[];
@@ -59,9 +61,23 @@ interface MonthlyStats {
     summary: MonthlyStats;
   }
 
+  interface User {
+    id: number;
+    username: string;
+    image_url: string;
+  }
+  
+  interface Friend_ {
+    user: User;
+    is_accepted: boolean;
+    is_user_from: boolean;
+    blocked: boolean;
+  }
+
 export default function ({ params }: { params: { username: string } })
 {
     const [profile, setProfile] = useState<ProfileData | null>(null);
+    const [user, setUser] = useState<Friend_ | undefined>(undefined);
 
     const fetchProfileData = async () => {
         const access = Cookies.get('access');
@@ -76,19 +92,125 @@ export default function ({ params }: { params: { username: string } })
                     throw new Error('Failed to fetch data');
     
                 const data = await res.json();
-                console.log(data);
                 setProfile(data);
             } catch (error) {
                 console.error('Error fetching data: ', error);
             }
         }
         else
-            console.log('Access token is undefined or falsy');
+        console.log('Access token is undefined or falsy');
+}
+
+const fetchUser = async () => {
+    const access = Cookies.get('access');
+    if (access)
+        {
+            try {
+                const res = await fetch('http://localhost:8000/api/friends', {
+                    headers: { Authorization: `Bearer ${access}` },
+                });
+                
+                if (!res.ok)
+                    throw new Error('Failed to fetch data');
+                
+                const data = await res.json();
+            if (!profile)
+                return ;
+            const transData = data.friends.filter((user: Friend_) => user.user.username === profile.username).map((friend: Friend_) => ({
+              user: {
+                  id: friend.user.id,
+                  username: friend.user.username,
+                  image_url: friend.user.image_url,
+              },
+              is_accepted: friend.is_accepted,
+              is_user_from: friend.is_user_from,
+              blocked: friend.blocked
+            }));
+            if (transData)
+                setUser(transData[0]);
+          } catch (error) {
+              console.error('Error fetching data: ', error);
+          }
+        }
+        else
+          console.log('Access token is undefined or falsy');
     }
 
+    const fetchUserState = async (api: string, message: string, username: string) => {
+        const access = Cookies.get('access');
+        
+        if (access)
+        {
+          try {
+    
+            const res = await fetch(`http://localhost:8000/api/${api}`, {
+              method: 'POST',
+              headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access}`
+              },
+              body: JSON.stringify({ username: username })
+            });
+    
+            if (!res.ok)
+            {
+              if (res.status === 400)
+                return toast.error('Action not allowed');
+              else
+                throw new Error('Failed to fetch data');
+            }
+    
+            const data = await res.json();
+            if (data)
+            {
+              if (api === 'friends-remove' || api === 'friends-add')
+              {
+                if (api === 'friends-remove' && user)
+                    setUser(undefined);
+                else
+                {
+                    setUser({
+                      user: {
+                        id: 0,
+                        username: '',
+                        image_url: ''
+                      },
+                      is_user_from: true,
+                      is_accepted: false,
+                      blocked: false // assuming this property is also part of Friend_
+                    });
+                }
+              }
+              else if (api === 'friends-accept' && user)
+              {
+                setUser({
+                    user: {
+                      id: user.user.id,
+                      username: user.user.username,
+                      image_url: user.user.image_url
+                    },
+                    is_user_from: false,
+                    is_accepted: true,
+                    blocked: false
+                  });
+              }
+              toast.success(message);
+            }
+          } catch (error) {
+              console.error('Error fetching data: ', error);
+          }
+        }
+        else
+          console.log('Access token is undefined or falsy');
+      }
+
     useEffect(() => {
-            fetchProfileData();
+        fetchProfileData();
     }, []);
+    
+    useEffect(() => {
+        fetchUser();
+    }, [profile]);
 
     const [modalShow, setModalShow] = useState<boolean>(false);
 
@@ -162,6 +284,8 @@ export default function ({ params }: { params: { username: string } })
     
     const parag: string =   "Hey there! I'm Snake07, a dedicated ping pong gamer. From lightning-fast reflexes to strategic plays, I'm all about dominating the virtual table. Join me as we smash our way to victory, one pixel at a time!";
     
+    
+
     return (
         <>
         {profile && (
@@ -179,8 +303,26 @@ export default function ({ params }: { params: { username: string } })
                                 <Image className={`${styles.profile_img}`} width={200   } height={200  } src={profile?.image_url ?? '/char3.png'} alt='Profile'/>
                                 <div><span className='valo-font' style={{color: '#FFEBEB', fontSize: '1.5em'}}>{profile.username}</span></div>
                                 <div className={`${styles.action} row d-flex justify-content-center`}>
-                                    <div className={`col-md-5 col-8 ${styles.btn}`}><button>Message</button></div>
-                                    <div className={`col-md-5 col-8 ${styles.btn}`}><button>invite</button></div>
+                                    
+                                    {
+                                        user ? 
+                                        (
+                                            user.is_accepted ? (
+                                                <div className='row d-flex justify-content-center'>
+                                                    <div className={`col-md-5 col-8 ${styles.btn}`}><button>Message</button></div>
+                                                    <div className={`col-md-5 col-8 ${styles.btn}`}><button onClick={() => fetchUserState('friends-remove', 'Removed from friends', params.username)}>Remove</button></div>
+                                                </div>
+                                            ) : (
+                                                user.is_user_from ? (
+                                                    <div className={`col-md-5 col-8 ${styles.btn}`}><button disabled>Waiting</button></div>
+                                                ) : (
+                                                    <div className={`col-md-5 col-8 ${styles.btn}`}><button onClick={() => fetchUserState('friends-accept', 'added to friends', params.username)}>Accept</button></div>
+                                                )
+                                            )
+                                        ) : (
+                                            <div className={`col-md-5 col-8 ${styles.btn}`}><button onClick={() => fetchUserState('friends-add', 'Friend Request Sent', params.username)}>Invite</button></div>
+                                        )
+                                    }
                                 </div>
                             </div> 
                             <div className='col-xl-4 order-xl-3 my-3'>

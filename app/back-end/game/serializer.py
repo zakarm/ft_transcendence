@@ -6,11 +6,14 @@ from dashboards.serializer import (MatchSerializer,
                                    UserSerializer)
 from .models import (Tournaments,
                      Tournamentsmatches,
+                     TournamentsUsernames,
                      Match,
                      Achievements,
+                     GameTable,
                      UserAchievements
                     )
 from authentication.models import User
+import sys
 
 class TournamentsmatchesSerializer(serializers.ModelSerializer):
     match = MatchSerializer()
@@ -85,7 +88,7 @@ class TournamentCreationSerializer(serializers.Serializer):
     game_difficulty = serializers.IntegerField()
 
     def validate_username(self, value):
-        if Tournaments.objects.filter(player_username=value).exists():
+        if TournamentsUsernames.objects.filter(user_display_name=value).exists():
             raise serializers.ValidationError("User with this username already exists.")
         return value
 
@@ -100,14 +103,15 @@ class TournamentCreationSerializer(serializers.Serializer):
         return value
     
     def create(self, validated_data):
-        return Tournaments.objects.create(
+        tour_data =  Tournaments.objects.create(
             tournament_name=validated_data['tournament_name'],
-            image_url=validated_data['tournament_image'],
+            image_url=validated_data.get('tournament_image', 'https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg?t=1639029468'),
             game_difficulty=validated_data['game_difficulty'],
             tournament_start=datetime.now(),
             crated_by_me=True,
-            player_username=validated_data['username']
         )
+        TournamentsUsernames.objects.create(tournament = tour_data, user = self.context['request'].user, user_display_name = validated_data['username'])
+        return tour_data
 
 class UserAchievementsSerializer(serializers.ModelSerializer):
     tournament = serializers.SerializerMethodField()
@@ -134,3 +138,55 @@ class UserAchievementsSerializer(serializers.ModelSerializer):
 
     def get_ai(self, obj):
         return self.get_achievement(obj, 'ai', ['challenger', 'rivalry', 'legend'])
+
+class GameTableSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GameTable
+        fields = '__all__'
+
+class GameSettingsSerializer(serializers.ModelSerializer):
+    country = serializers.SerializerMethodField()
+    city = serializers.SerializerMethodField()
+    game_table = serializers.SerializerMethodField()
+    new_password = serializers.CharField(write_only=True, required=False)
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'username', 'image_url', 'is_2fa_enabled', 'two_fa_secret_key',
+                  'email', 'country', 'city', 'game_table', 'new_password')
+    
+    def validate_email(self, value):
+        user = self.instance
+        if User.objects.filter(email=value).exclude(id=user.id).exists():
+            raise serializers.ValidationError("User with this email already exists.")
+        return value
+    
+    def get_city(self, obj):
+        if obj.location:
+            if '/' in obj.location:
+                return obj.location.split('/')[1]
+            else :
+                return "NaN"
+        else: return "NaN"
+
+    def get_country(self, obj):
+        if obj.location:
+            if '/' in obj.location:
+                return obj.location.split('/')[0]
+            else :
+                return obj.location
+        else: return "NaN"
+    
+    def get_game_table(self, obj):
+        game_table = GameTable.objects.filter(user=obj).first()
+        if game_table:
+            return GameTableSerializer(instance=game_table).data
+        else:
+            return None
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        game_table_representation = representation.pop('game_table', {})
+        if game_table_representation:
+            for key, value in game_table_representation.items():
+                representation[key] = value
+        return representation

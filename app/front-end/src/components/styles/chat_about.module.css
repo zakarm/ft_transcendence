@@ -5,7 +5,7 @@
     border: 2px solid #27B299;
 }
 
-@media (min-width: 1200px){
+@media (min-width: 1198px){
     .close_btn{
         display: none;
     }

@@ -80,7 +80,7 @@ export default function SrightBar({webSocketNotifications, notifications_data, u
         return usr1.id - usr2.id;
     })
     .map((user: Friend, index: number) =>
-        <Splayer  nickname={user.username} id={user.id} image={user.image_url} isConnected={user.connected}/>
+        <Splayer key={index}  nickname={user.username} id={user.id} image={user.image_url} isConnected={user.connected}/>
     );
 
     const router = useRouter();

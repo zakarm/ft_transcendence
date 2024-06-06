@@ -15,6 +15,13 @@ class Match(models.Model):
     class Meta:
         db_table = 'Matches'
 
+    def get_winner(self):
+        if self.score_user_one > self.score_user_two:
+            return self.user_one
+        elif self.score_user_two > self.score_user_one:
+            return self.user_two
+        return None
+
 class Tournaments(models.Model):
     tournament_id = models.AutoField(primary_key=True)
     tournament_name = models.CharField(max_length=30, unique=True)
@@ -22,7 +29,6 @@ class Tournaments(models.Model):
     tournament_end = models.DateTimeField(blank=True, null=True)
     crated_by_me = models.BooleanField(default=False)
     image_url = models.URLField(max_length=350)
-    player_username = models.CharField(max_length=30, unique=True)
     game_difficulty = models.IntegerField()
     class Meta:
         db_table = 'Tournaments'
@@ -35,6 +41,13 @@ class Tournamentsmatches(models.Model):
         db_table = 'TournamentsMatches'
         unique_together = (('tournament', 'match'),)
 
+class TournamentsUsernames(models.Model):
+    tournament = models.OneToOneField(Tournaments, models.DO_NOTHING, primary_key=True)
+    user = models.ForeignKey('authentication.User', models.DO_NOTHING)
+    user_display_name = models.CharField(max_length=30, unique=True)
+    class Meta:
+        db_table = 'TournamentsUsernames'
+        unique_together = (('tournament', 'user'),)
 
 class Achievements(models.Model):
     achievement_id = models.AutoField(primary_key=True)
@@ -58,6 +71,6 @@ class GameTable(models.Model):
     table_color = models.CharField(max_length=10, blank=True)
     ball_color = models.CharField(max_length=10, blank=True)
     paddle_color = models.CharField(max_length=10, blank=True)
-    ball_color = models.IntegerField(blank=True)
+    game_difficulty = models.IntegerField()
     class Meta:
         db_table= 'GameTable'
