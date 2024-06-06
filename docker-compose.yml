@@ -11,7 +11,7 @@ services:
         depends_on:
             - data-base
         ports:
-            - "8000:8000"
+            - '8000:8000'
         env_file:
             - .env
         volumes:
@@ -30,7 +30,7 @@ services:
         depends_on:
             - back-end
         ports:
-            - "3000:3000"
+            - '3000:3000'
         env_file:
             - .env
         volumes:
@@ -48,11 +48,23 @@ services:
             dockerfile: Dockerfile
         restart: always
         ports:
-            - "5432:5432"
+            - '5432:5432'
         env_file:
             - .env
         volumes:
             - v_data-base:/var/lib/postgresql/data
+        networks:
+            - ft_transcendence
+
+    adminer:
+        container_name: adminer
+        image: adminer:42
+        build:
+            context: ./services/adminer
+            dockerfile: Dockerfile
+        restart: always
+        ports:
+            - 8080:8080
         networks:
             - ft_transcendence
 
@@ -66,7 +78,7 @@ services:
         depends_on:
             - back-end
         ports:
-            - "6379:6379"
+            - '6379:6379'
         env_file:
             - .env
         networks:
