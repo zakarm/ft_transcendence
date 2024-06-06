@@ -4,7 +4,8 @@ from .models import (Match,
                      Tournamentsmatches,
                      Achievements,
                      UserAchievements,
-                     GameTable)
+                     GameTable,
+                     TournamentsUsernames)
 
 class UserAdmin(admin.ModelAdmin):
     "Class for user display in admin page"
@@ -21,3 +22,4 @@ admin.site.register(Tournaments)
 admin.site.register(Achievements)
 admin.site.register(UserAchievements)
 admin.site.register(GameTable)
+admin.site.register(TournamentsUsernames)

@@ -1,37 +1,77 @@
-
+"use client";
 import styles from './styles/chat_friends.module.css';
 import Image from 'next/image';
 import { InputGroup } from 'react-bootstrap';
-import friends from '@/components/friends.json';
 import Form from 'react-bootstrap/Form';
 import User from '@/components/user';
-
+import Cookies from 'js-cookie';
 import { CiSearch } from "react-icons/ci";
-import UserChatResp from './user_chat_resp';
+import { useEffect, useState } from 'react';
 
 interface Props{
     setAbout: React.Dispatch<React.SetStateAction<boolean>>;
+    setSelectedChat: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function ChatFriendsResp( { setAbout }: Props ) {
+interface User {
+    id: number;
+    username: string;
+    image_url: string;
+  }
+  
+  interface Friend_ {
+    user: User;
+    is_accepted: boolean;
+    is_user_from: boolean;
+    blocked: boolean;
+  }
 
-    const friendsData = friends.sort((usr1, usr2) => {
-        if (usr1.connected && !usr2.connected) {
-            return -1;
-        }
-          // Sort disconnected users second
-        if (!usr1.connected && usr2.connected) {
-            return 1;
-        }
-          // Sort by ID if isConnected flag is the same
-        return usr1.id - usr2.id;
-    })
-    // .slice(0, 5)
-    .map((user, index) => 
-        <User key={index} src={user.image_url} isConnected={user.connected}/>
-    );
+export default function ChatFriendsResp( { setSelectedChat,  setAbout }: Props ) {
 
+    const [chatUsers, setChatUsers] = useState<User[]>([]);
+    const [friendsData, setFriendsData] = useState<JSX.Element[]>([]);
+    const [friendsChat, setFriendsChat] = useState<JSX.Element[]>([]);
+    
     const handleShow = () => setAbout(true);
+    const handleChat = (username: string) => setSelectedChat(username);
+
+    const fetchUsersData = async () => {
+        const access = Cookies.get('access');
+        if (access) {
+            try {
+                const res = await fetch('http://localhost:8000/api/friends', {
+                    headers: { Authorization: `Bearer ${access}` },
+                });
+
+                if (!res.ok) throw new Error('Failed to fetch data');
+
+                const data = await res.json();
+
+                const friendsArray = data.friends.map((friend: Friend_) => ({
+                    id: friend.user.id,
+                    username: friend.user.username,
+                    image_url: friend.user.image_url,
+                }));
+                setChatUsers(friendsArray);
+            } catch (error) {
+                console.error('Error fetching data: ', error);
+            }
+        } else {
+            console.log('Access token is undefined or falsy');
+        }
+    };
+
+    useEffect(() => {
+        fetchUsersData();
+    }, []);
+
+    useEffect(() => {
+        const sortedData = chatUsers.map((friend: User, index: number) => 
+            <div key={friend.id}><User id={friend.id} src={friend.image_url} isConnected={true} username={friend.username} handleChat={handleChat} 
+                    friendsChat={friendsChat} setFriendsChat={setFriendsChat} handleShow={handleShow}/></div>
+        );
+        setFriendsData(sortedData);
+    }, [chatUsers])
 
     return (
         <>
@@ -57,21 +97,7 @@ export default function ChatFriendsResp( { setAbout }: Props ) {
                   <hr className="mt-1" style={{color: '#FFEBEB', borderWidth: '2px'}}/>
               </div>
               <div className={`${styles.chat_container} p-2 flex-grow-1`}>
-                      <UserChatResp handleShow={handleShow}/>
-                      <UserChatResp handleShow={handleShow}/>
-                      <UserChatResp handleShow={handleShow}/>
-                      <UserChatResp handleShow={handleShow}/>
-                      <UserChatResp handleShow={handleShow}/>
-                      <UserChatResp handleShow={handleShow}/>
-                      <UserChatResp handleShow={handleShow}/>
-                      <UserChatResp handleShow={handleShow}/>
-                      <UserChatResp handleShow={handleShow}/>
-                      <UserChatResp handleShow={handleShow}/>
-                      <UserChatResp handleShow={handleShow}/>
-                      <UserChatResp handleShow={handleShow}/>
-                      <UserChatResp handleShow={handleShow}/>
-                      <UserChatResp handleShow={handleShow}/>
-                      <UserChatResp handleShow={handleShow}/>
+                    {friendsChat}
               </div>
             </div>
         </>

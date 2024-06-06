@@ -11,6 +11,8 @@ app/back-end/game/__pycache__
 app/back-end/game/migrations
 app/back-end/dashboards/migrations
 app/back-end/dashboards/__pycache__
+app/back-end/compu_ai/migrations
+app/back-end/compu_ai/__pycache__
 app/front-end/node_modules
 app/front-end/.next
 .venv
