@@ -6,6 +6,7 @@ from datetime import datetime
 from datetime import timedelta
 from prophet import Prophet
 from django.utils import timezone
+from dashboards.serializer import MatchSerializer
 from dashboards.utils import (get_lose_games,
                               get_win_games,
                               get_tackles,
@@ -31,10 +32,11 @@ class StatisticsSerializer(serializers.ModelSerializer):
     scores = serializers.SerializerMethodField()
     tackles = serializers.SerializerMethodField()
     win_rate = serializers.SerializerMethodField()
+    player_matches = serializers.SerializerMethodField()
     class Meta:
         model = User
         fields = ('id', 'username', 'top_player', 'avg_score', 'last_achiev', 'future_predictions', 
-                  'loses', 'wins', 'scores', 'tackles', 'win_rate')
+                  'loses', 'wins', 'scores', 'tackles', 'win_rate', 'player_matches')
 
     def get_top_player(self, obj):
         users_with_wins = User.objects.annotate(
@@ -81,6 +83,8 @@ class StatisticsSerializer(serializers.ModelSerializer):
 
     def get_future_predictions(self, obj):
         user_matches = Match.objects.filter(Q(user_one=obj) | Q(user_two=obj))
+        if user_matches.count() < 2:
+            return ({'Not enough match data to generate future predictions'})
         if user_matches.exists():
             data = []
             for match in user_matches:
@@ -95,11 +99,9 @@ class StatisticsSerializer(serializers.ModelSerializer):
             model = Prophet()
             model.fit(df)
 
-            future_dates = pd.DataFrame({
-                'ds': pd.to_datetime(['2024-06-13', '2024-06-14'])
-            })
-
-            forecast = model.predict(future_dates)
+            future = model.make_future_dataframe(30)
+            forecast = model.predict(future)
+            forecast['yhat'] = forecast['yhat'].clip(lower=0, upper=7)
             future_predictions_with_dates = [
                 {
                     "date": row['ds'].strftime('%Y-%m-%d'),
@@ -109,3 +111,26 @@ class StatisticsSerializer(serializers.ModelSerializer):
             ]
             return future_predictions_with_dates
         return None
+    
+    def get_player_matches(self, obj):
+        matches = Match.objects.filter(Q(user_one=obj) | Q(user_two=obj))
+        match_data = []
+        for match in matches:
+            if match.user_one == obj:
+                opponent = match.user_two
+                player_score = match.score_user_one
+                opponent_score = match.score_user_two
+            else:
+                opponent = match.user_one
+                player_score = match.score_user_two
+                opponent_score = match.score_user_one
+            
+            match_data.append({
+                'date': match.match_start.strftime('%Y-%m-%d'),
+                'player_name': obj.username,
+                'opponent_name': opponent.username,
+                'player_score': player_score,
+                'opponent_score': opponent_score,
+                'result': match.get_match_result(obj)
+            })
+        return match_data
