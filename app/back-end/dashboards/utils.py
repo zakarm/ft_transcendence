@@ -16,9 +16,16 @@ def get_tackles(obj):
 def get_scores(obj):
     scores_as_user_one = Match.objects.filter(user_one=obj).aggregate(Sum('score_user_one'))['score_user_one__sum']
     scores_as_user_two = Match.objects.filter(user_two=obj).aggregate(Sum('score_user_two'))['score_user_two__sum']
-
     return (scores_as_user_one or 0) + (scores_as_user_two or 0)
 
+def get_win_rate(obj):
+    total_games = get_total_games(obj)
+    wins = get_win_games(obj)
+    if total_games > 0:
+        return (wins / total_games) * 100
+    else:
+        return 0
+    
 def get_win_games(obj):
     win_matches_as_one = Match.objects.filter(user_one =
                                               obj).filter(score_user_one__gt =

@@ -9,7 +9,8 @@ from django.utils import timezone
 from dashboards.utils import (get_lose_games,
                               get_win_games,
                               get_tackles,
-                              get_scores)
+                              get_scores,
+                              get_win_rate)
 import numpy as np
 import pandas as pd
 import sys
@@ -29,11 +30,12 @@ class StatisticsSerializer(serializers.ModelSerializer):
     wins = serializers.SerializerMethodField()
     scores = serializers.SerializerMethodField()
     tackles = serializers.SerializerMethodField()
+    win_rate = serializers.SerializerMethodField()
     class Meta:
         model = User
         fields = ('id', 'username', 'top_player', 'avg_score', 'last_achiev', 'future_predictions', 
-                  'loses', 'wins', 'scores', 'tackles')
-    
+                  'loses', 'wins', 'scores', 'tackles', 'win_rate')
+
     def get_top_player(self, obj):
         users_with_wins = User.objects.annotate(
             wins_as_user_one=Count('match_user_one_set', filter=Q(match_user_one_set__score_user_one__gt=F('match_user_one_set__score_user_two'))),
@@ -57,7 +59,6 @@ class StatisticsSerializer(serializers.ModelSerializer):
     
     def get_last_achiev(self, obj):
         last_achievement = UserAchievements.objects.filter(user_id=obj.id).order_by('-achive_date').first()
-        print(last_achievement.achievement_id, file=sys.stderr)
         if last_achievement:
             return AchievementSerializer(instance=Achievements.objects.get(achievement_id=last_achievement.achievement_id)).data
         else :
@@ -74,6 +75,9 @@ class StatisticsSerializer(serializers.ModelSerializer):
 
     def get_scores(self, obj):
         return get_scores(obj)
+    
+    def get_win_rate(self, obj):
+        return get_win_rate(obj)
 
     def get_future_predictions(self, obj):
         user_matches = Match.objects.filter(Q(user_one=obj) | Q(user_two=obj))
