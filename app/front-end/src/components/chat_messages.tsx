@@ -11,6 +11,8 @@ import { ImUserMinus } from 'react-icons/im';
 import { IoIosSend } from "react-icons/io";
 import { useEffect, useState } from 'react';
 
+import { CgHello } from "react-icons/cg";
+
 interface Props{
   selectedChat: string;
 }
@@ -68,10 +70,6 @@ export default function ChatMessages( { selectedChat }: Props ) {
     fetchSearchUser();
   }, [selectedChat]);
 
-  useEffect(() => {
-    console.log(searchedChat);
-  }, [searchedChat]);
-
   return (
       <>
         <div className='vh-100 d-flex flex-column border border-dark' >
@@ -85,7 +83,7 @@ export default function ChatMessages( { selectedChat }: Props ) {
                   {
                     (searchedChat) ?
                     ((searchedChat.is_online) ? (<span>Online</span>) : (<span>Offline</span>)) :
-                    ((<span>Offlinee</span>))
+                    ((<span>Offline</span>))
                   }
                   </div>
               </div>
@@ -94,7 +92,9 @@ export default function ChatMessages( { selectedChat }: Props ) {
                 <ImUserMinus className='mx-2' size='1.8em' style={{cursor: 'pointer'}}/>
               </div>
           </div>
-          <div className='flex-grow-1 valo-font d-flex justify-content-center align-items-center'>CHAT</div>
+          <div className='flex-grow-1 valo-font d-flex justify-content-center align-items-center text-center border'>
+            <div>Be the first to start this conversation! <CgHello className='mx-2' size='1.8em' color='#FF4755'/></div>
+          </div>
           <div className='p-4 mx-2' style={{backgroundColor: '#181B20', borderTopRightRadius: '25px', borderTopLeftRadius: '25px'}}> 
             <InputGroup size="lg" style={{fontFamily: 'itim'}}>
               <Form.Control

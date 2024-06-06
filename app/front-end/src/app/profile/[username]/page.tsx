@@ -32,9 +32,8 @@ import { MdRoundaboutRight } from "react-icons/md";
 import { ChartOptions, ChartData } from 'chart.js';
 import { LineController } from 'chart.js/auto';
 import Cookies from 'js-cookie';
-import { ToastContainer, Zoom, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Spinner } from 'react-bootstrap';
 
 interface MonthlyStats {
     months: string[];
