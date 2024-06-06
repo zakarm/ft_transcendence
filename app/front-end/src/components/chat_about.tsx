@@ -7,16 +7,77 @@ import styles from './styles/chat_about.module.css';
 import Chart from 'chart.js/auto';
 import { ChartOptions, ChartData, RadarController } from 'chart.js';
 import { IoCloseCircleSharp } from "react-icons/io5";
+import { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
 
 interface Props{
     handleClose: () => void;
+    selectedChat: string;
 }
 
-export default function ChatAbout({handleClose}: Props)
+interface MonthlyStats {
+    months: string[];
+    win: number[];
+    lose: number[];
+  }
+
+interface ProfileData {
+    id: number;
+    username: string;
+    email: string;
+    first_name: string | null;
+    last_name: string | null;
+    intro: string | null;
+    quote: string | null;
+    rank: string | null;
+    level: number | null;
+    score: number | null;
+    cover_url: string | null;
+    location: string | null;
+    total_games: number;
+    win_games: number;
+    lose_games: number;
+    image_url: string | null;
+    summary: MonthlyStats;
+  }
+
+export default function ChatAbout({handleClose , selectedChat}: Props)
 {
     Chart.register(
         RadarController
     );
+
+    const [profile, setProfile] = useState<ProfileData | undefined>(undefined);
+
+    const fetchProfileData = async () => {
+        const access = Cookies.get('access');
+        if (access)
+        {
+            try {
+                const res = await fetch(`http://localhost:8000/api/profile/${selectedChat}` , {
+                    headers: { Authorization: `Bearer ${access}` },
+                });
+        
+                if (!res.ok)
+                    throw new Error('Failed to fetch data');
+    
+                const data = await res.json();
+                setProfile(data);
+            } catch (error) {
+                console.error('Error fetching data: ', error);
+            }
+        }
+        else
+        console.log('Access token is undefined or falsy');
+    }
+
+    useEffect(() => {
+        fetchProfileData();
+    }, []);
+
+    useEffect(() => {
+        fetchProfileData();
+    }, [selectedChat]);
 
     const data: ChartData<'radar'> = {
         labels: [
@@ -28,7 +89,7 @@ export default function ChatAbout({handleClose}: Props)
         ],
         datasets: [{
             label: 'My First Dataset',
-            data: [65, 59, 90, 81, 150],
+            data: [profile?.win_games ?? 0, profile?.lose_games ?? 0, profile?.score ?? 0, 81, profile?.total_games ?? 0],
             fill: true,
             pointBackgroundColor: '#FFFFFF',
             pointBorderColor: 'rgba(0, 255, 0)',
@@ -36,7 +97,6 @@ export default function ChatAbout({handleClose}: Props)
             pointHoverBorderColor: 'rgb(255, 99, 132)',
             backgroundColor: 'rgba(255, 99, 132, 0.2)', // Example dataset background color
             borderColor: '#FE4755', // Example dataset border color
-            //   tickColor: '#FFFFFF'
         }]
     };
 
@@ -76,19 +136,19 @@ export default function ChatAbout({handleClose}: Props)
                     <div className='text-end' style={{cursor: 'pointer'}} onClick={handleClose}><IoCloseCircleSharp color='white' size='1.5em'/></div>
                 </div>
                 <div className='flex-grow-1 d-flex flex-column align-items-center justify-content-evenly'>
-                    <div><Image className={`${styles.about_img}`} width={200} height={200} src="/profile.jpeg" alt='welcome' /></div>
+                    <div><Image className={`${styles.about_img}`} width={200} height={200} src={profile?.image_url ?? '/Def_pfp.png'} alt='welcome' /></div>
                     <div className='d-flex flex-column text-center'>
-                        <span className='valo-font display-6'>OTHMAN NOUAKCHI</span>
-                        <span className='h2' style={{ color: '#A6A0A0' }}>Casablanca, Morocco</span>
-                        <span className='h2' style={{ color: '#A6A0A0' }}>Game on! 🎮 Play hard, level up! 💪</span>
+                        <span className='valo-font display-6'>{profile?.first_name} {profile?.last_name}</span>
+                        <span className='h2' style={{ color: '#A6A0A0' }}>{profile?.location}</span>
+                        <span className='h2' style={{ color: '#A6A0A0' }}>{profile?.quote}</span>
                     </div>
                     <div className='col-12 p-0 m-0'><Radar className='itim-font' options={options} data={data} />&nbsp;</div>
                 </div>
                 <div className='d-flex flex-column p-4 pt-0' style={{color: '#FFEBEB', fontFamily: "itim"}}>
                     <hr className="m-3" style={{color: '#FFEBEB', borderWidth: '2px'}}/>
                     <div className='row m-0 text-center'>
-                        <span className='col'>High score: 1337</span>
-                        <span className='col'>Rank: 90135</span>
+                        <span className='col'>High score: {profile?.score}</span>
+                        <span className='col'>Rank: {profile?.rank}</span>
                     </div>
                     <span>Matches</span>
                     <div className='row m-0 p-2'>

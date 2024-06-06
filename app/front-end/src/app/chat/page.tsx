@@ -7,6 +7,8 @@ import ChatMessages from '@/components/chat_messages';
 import { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Offcanvas from 'react-bootstrap/Offcanvas';
+import Spinner from 'react-bootstrap/Spinner';
+import { GiAmericanFootballPlayer } from "react-icons/gi";
 
 import { PiChatsFill } from "react-icons/pi";
 
@@ -46,8 +48,8 @@ export default function ()
             <div className="col-xl-4 col-md-6 col-sm-12">
               {
                 (fullscreen) ?
-                (<ChatFriends setShow={setShow} setAbout={setAbout}/>) :
-                (<ChatFriendsResp setSelectedChat={setSelectedChat} setAbout={setAbout}/>)
+                (<ChatFriends setSelectedChat={setSelectedChat} setShow={setShow} setAbout={setAbout} fullscreen={fullscreen}/>) :
+                (<ChatFriendsResp setSelectedChat={setSelectedChat} setAbout={setAbout} setShow={setShow} fullscreen={fullscreen}/>)
               }
               &nbsp;
             </div>
@@ -68,12 +70,19 @@ export default function ()
               </Modal>
               <Offcanvas className={`${styles.canvas}`} show={showAbout} onHide={handleClose} backdrop={false}>
                 <Offcanvas.Body className={`p-0 m-0`}>
-                  <ChatAbout handleClose={handleClose}/>
+                  <ChatAbout selectedChat={selectedChat} handleClose={handleClose}/>
                 </Offcanvas.Body>
               </Offcanvas>
             </div>
             <div className={`${styles.about_container} ${styles.about} col-xl-3 p-0 m-0`}>
-              <ChatAbout handleClose={handleClose}/>
+              {
+                (selectedChat === 'none') ? 
+                (<div className='vh-100 d-flex flex-column align-items-center justify-content-center border border-dark'>
+                  <div><GiAmericanFootballPlayer className='mx-2' size='2em' color='#FF4755'/></div>
+                  <div><Spinner  variant="danger"/></div>
+                </div>):
+                (<ChatAbout selectedChat={selectedChat} handleClose={handleClose}/>)
+              }
             </div>
           </div>
       </>

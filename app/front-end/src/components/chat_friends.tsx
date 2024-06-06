@@ -12,6 +12,8 @@ import Cookies from 'js-cookie';
 interface Props{
 		setShow: React.Dispatch<React.SetStateAction<boolean>>;
 		setAbout: React.Dispatch<React.SetStateAction<boolean>>;
+		setSelectedChat: React.Dispatch<React.SetStateAction<string>>;
+		fullscreen: boolean;
 }
 
 interface User {
@@ -20,53 +22,60 @@ interface User {
 		image_url: string;
 	}
 
-export default function ChatFriends( {setShow , setAbout}: Props ) {
+	interface Friend_ {
+		user: User;
+		is_accepted: boolean;
+		is_user_from: boolean;
+		blocked: boolean;
+	  }
 
-	const   [chatUsers, setChatUsers] = useState<User[]>([]);
-	let		sortedData = null;
-	// const   [friendsData, setFriendsData] = useState<User[]>([]);
+export default function ChatFriends( {setSelectedChat , setShow , setAbout , fullscreen}: Props ) {
 
-	const fetchUsersData = async () => {
-			const access = Cookies.get('access');
-					if (access)
-					{
-						try {
-							const res = await fetch('http://localhost:8000/api/friends', {
-								headers: { Authorization: `Bearer ${access}` },
-							});
-	
-							if (!res.ok)
-								throw new Error('Failed to fetch data');
-	
-							const data = await res.json();
-							const transData = data.friends.map((friend: User) => ({
-									id: friend.id,
-									username: friend.username,
-									image_url: friend.image_url,
-							}));
-	
-							setChatUsers(transData);
-						} catch (error) {
-								console.error('Error fetching data: ', error);
-						}
-					}
-					else
-						console.log('Access token is undefined or falsy');
-	}
+	const [chatUsers, setChatUsers] = useState<User[]>([]);
+    const [friendsData, setFriendsData] = useState<JSX.Element[]>([]);
+    const [friendsChat, setFriendsChat] = useState<JSX.Element[]>([]);
+    
+    const handleAbout = () => setAbout(true);
+    const handleShow = () => setShow(true);
+    const handleChat = (username: string) => setSelectedChat(username);
 
-	useEffect(() => {
-		fetchUsersData();
-	}, []);
+    const fetchUsersData = async () => {
+        const access = Cookies.get('access');
+        if (access) {
+            try {
+                const res = await fetch('http://localhost:8000/api/friends', {
+                    headers: { Authorization: `Bearer ${access}` },
+                });
 
-	// useEffect(() => {
-	// 		sortedData = chatUsers.map((user: User, index: number) => 
-	// 				<User key={index} src={user.image_url} isConnected={true}/>
-	// 		);
+                if (!res.ok) throw new Error('Failed to fetch data');
 
-	// 		// setFriendsData(sortedData);
-	// }, [chatUsers]);
+                const data = await res.json();
 
-		const handleShow = () => setAbout(true);
+                const friendsArray = data.friends.map((friend: Friend_) => ({
+                    id: friend.user.id,
+                    username: friend.user.username,
+                    image_url: friend.user.image_url,
+                }));
+                setChatUsers(friendsArray);
+            } catch (error) {
+                console.error('Error fetching data: ', error);
+            }
+        } else {
+            console.log('Access token is undefined or falsy');
+        }
+    };
+
+    useEffect(() => {
+        fetchUsersData();
+    }, []);
+
+    useEffect(() => {
+        const sortedData = chatUsers.map((friend: User, index: number) => 
+            <div key={friend.id}><User id={friend.id} src={friend.image_url} isConnected={true} username={friend.username} handleChat={handleChat} 
+                    setFriendsChat={setFriendsChat} handleShow={handleShow} handleAbout={handleAbout} fullscreen={fullscreen}/></div>
+        );
+        setFriendsData(sortedData);
+    }, [chatUsers])
 
 		return (
 				<>
@@ -87,15 +96,12 @@ export default function ChatFriends( {setShow , setAbout}: Props ) {
 											</InputGroup>
 									</div>
 									<div className={`${styles.usr_container} d-flex overflow-auto`}>
-											{sortedData}
+											{friendsData}
 									</div>
 									<hr className="mt-1" style={{color: '#FFEBEB', borderWidth: '2px'}}/>
 							</div>
 							<div className={`${styles.chat_container} p-2 flex-grow-1`}>
-											<UserChat setShow={setShow} handleShow={handleShow}/>
-											<UserChat setShow={setShow} handleShow={handleShow}/>
-											<UserChat setShow={setShow} handleShow={handleShow}/>
-											<UserChat setShow={setShow} handleShow={handleShow}/>
+								{friendsChat}
 							</div>
 						</div>
 				</>

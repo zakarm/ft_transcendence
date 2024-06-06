@@ -10,7 +10,9 @@ import { useEffect, useState } from 'react';
 
 interface Props{
     setAbout: React.Dispatch<React.SetStateAction<boolean>>;
+    setShow: React.Dispatch<React.SetStateAction<boolean>>;
     setSelectedChat: React.Dispatch<React.SetStateAction<string>>;
+    fullscreen: boolean;
 }
 
 interface User {
@@ -26,13 +28,14 @@ interface User {
     blocked: boolean;
   }
 
-export default function ChatFriendsResp( { setSelectedChat,  setAbout }: Props ) {
+export default function ChatFriendsResp( { setSelectedChat,  setAbout, setShow, fullscreen }: Props ) {
 
     const [chatUsers, setChatUsers] = useState<User[]>([]);
     const [friendsData, setFriendsData] = useState<JSX.Element[]>([]);
     const [friendsChat, setFriendsChat] = useState<JSX.Element[]>([]);
     
-    const handleShow = () => setAbout(true);
+    const handleAbout = () => setAbout(true);
+    const handleShow = () => setShow(true);
     const handleChat = (username: string) => setSelectedChat(username);
 
     const fetchUsersData = async () => {
@@ -68,7 +71,7 @@ export default function ChatFriendsResp( { setSelectedChat,  setAbout }: Props )
     useEffect(() => {
         const sortedData = chatUsers.map((friend: User, index: number) => 
             <div key={friend.id}><User id={friend.id} src={friend.image_url} isConnected={true} username={friend.username} handleChat={handleChat} 
-                    friendsChat={friendsChat} setFriendsChat={setFriendsChat} handleShow={handleShow}/></div>
+                    setFriendsChat={setFriendsChat} handleAbout={handleAbout} handleShow={handleShow} fullscreen={fullscreen}/></div>
         );
         setFriendsData(sortedData);
     }, [chatUsers])
