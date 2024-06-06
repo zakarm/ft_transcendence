@@ -24,9 +24,17 @@ interface User {
   is_online: number;
 }
 
+interface Message{
+  text: string;
+  user: boolean;
+}
+
 export default function ChatMessages( { selectedChat }: Props ) {
 
   const [searchedChat, setSearchedChat] = useState<User | undefined>(undefined);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputValue, setInputValue] = useState('');
+  const [currentUser, setCurrentUser] = useState(true);
 
   const fetchSearchUser = async () => {
     const access = Cookies.get('access');
@@ -70,6 +78,14 @@ export default function ChatMessages( { selectedChat }: Props ) {
     fetchSearchUser();
   }, [selectedChat]);
 
+  const sendMessage = () => {
+    if (inputValue.trim() !== '') {
+      setMessages([...messages, { text: inputValue, user: currentUser }]);
+      setInputValue('');
+      setCurrentUser(!currentUser);
+    }
+  };
+
   return (
       <>
         <div className='vh-100 d-flex flex-column border border-dark' >
@@ -92,8 +108,33 @@ export default function ChatMessages( { selectedChat }: Props ) {
                 <ImUserMinus className='mx-2' size='1.8em' style={{cursor: 'pointer'}}/>
               </div>
           </div>
-          <div className='flex-grow-1 valo-font d-flex justify-content-center align-items-center text-center border'>
-            <div>Be the first to start this conversation! <CgHello className='mx-2' size='1.8em' color='#FF4755'/></div>
+          
+          <div className='flex-grow-1 valo-font d-flex row p-0 m-0 py-3 align-items-end' style={{overflow: 'auto'}}>
+            {
+              (messages.length) ? 
+              (
+                <div>
+                  {messages.map((message, index) => (
+                    <div className='' key={index} style={{ textAlign: message.user ? 'right' : 'left' }}>
+                      {
+                        (message.user) ?
+                        (
+                          <div className='m-1' style={{fontFamily: 'itim'}}>
+                            <span style={{backgroundColor: '#181b20', padding: '10px', borderRadius: '15px'}}>{message.text}</span>
+                          </div>
+                        ) :
+                        (
+                          <div className='m-1' style={{fontFamily: 'itim'}}>
+                            <span style={{backgroundColor: '#222a38', padding: '10px', borderRadius: '15px'}}>{message.text}</span>
+                          </div>
+                        )
+                      }
+                    </div>
+                  ))}
+                </div>
+              ) : 
+              (<div className='justify-content-center text-center'>Be the first to start this conversation! <CgHello className='mx-2' size='1.8em' color='#FF4755'/></div>)
+            }
           </div>
           <div className='p-4 mx-2' style={{backgroundColor: '#181B20', borderTopRightRadius: '25px', borderTopLeftRadius: '25px'}}> 
             <InputGroup size="lg" style={{fontFamily: 'itim'}}>
@@ -101,8 +142,15 @@ export default function ChatMessages( { selectedChat }: Props ) {
                 placeholder="Type..."
                 aria-label="Type..."
                 aria-describedby="basic-addon2"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyUp={(e) => {
+                  if (e.key === 'Enter') {
+                      sendMessage();
+                  }
+              }}
               />
-              <Button variant="outline-secondary" id="button-addon2">
+              <Button variant="outline-secondary" id="button-addon2" onClick={sendMessage}>
                 <IoIosSend className='mx-2' size='1.8em' color='#FF4755' style={{cursor: 'pointer'}}/>
               </Button>
             </InputGroup>
