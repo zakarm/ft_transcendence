@@ -46,8 +46,8 @@ export default function ()
             <div className="col-xl-4 col-md-6 col-sm-12">
               {
                 (fullscreen) ?
-                (<ChatFriends setShow={setShow} setAbout={setAbout}/>) :
-                (<ChatFriendsResp setSelectedChat={setSelectedChat} setAbout={setAbout}/>)
+                (<ChatFriends setSelectedChat={setSelectedChat} setShow={setShow} setAbout={setAbout} fullscreen={fullscreen}/>) :
+                (<ChatFriendsResp setSelectedChat={setSelectedChat} setAbout={setAbout} setShow={setShow} fullscreen={fullscreen}/>)
               }
               &nbsp;
             </div>

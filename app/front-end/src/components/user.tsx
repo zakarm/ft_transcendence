@@ -1,9 +1,8 @@
-"use client";
 import Image from 'next/image';
 import styles from './styles/user.module.css'
 import React from "react";
 import UserChatResp from './user_chat_resp';
-import { useEffect } from 'react';
+import UserChat from './user_chat';
 
 interface UserProps{
     id: number;
@@ -11,19 +10,24 @@ interface UserProps{
     isConnected: boolean;
     handleChat: (username: string) => void;
     handleShow: () => void;
+    handleAbout: () => void;
     username: string;
-    friendsChat: JSX.Element[];
+    fullscreen: boolean;
     setFriendsChat: React.Dispatch<React.SetStateAction<JSX.Element[]>>;
 }
 
-export default function User({ id, src, isConnected, handleChat, username, friendsChat, setFriendsChat , handleShow }: UserProps) {
+export default function User({ id, src, isConnected, handleChat, username, handleAbout, fullscreen, setFriendsChat , handleShow }: UserProps) {
 
     const updateChat = () => {
         handleChat(username);
 
         const newFriendComponent = (
             <div key={id}>
-                <UserChatResp username={username} image_url={src} handleShow={handleShow} handleChat={handleChat} />
+                {
+                    (fullscreen) ? 
+                    (<UserChat handleChat={handleChat} username={username} image_url={src} handleShow={handleShow} handleAbout={handleAbout} />) :
+                    (<UserChatResp  username={username} image_url={src} handleChat={handleChat} handleAbout={handleAbout} handleShow={handleShow}/>)
+                }
             </div>
         );
 
@@ -32,7 +36,7 @@ export default function User({ id, src, isConnected, handleChat, username, frien
 
     return (
         <>
-            <div onClick={updateChat} style={{ cursor: 'pointer' }}>
+            <div onClick={updateChat}>
                 <Image
                     className={`${styles.user_img} m-2`}
                     src={src}
