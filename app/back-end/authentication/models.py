@@ -33,17 +33,19 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(auto_now_add=True)
     is_superuser = models.BooleanField(default=False)
     last_login = models.DateTimeField(auto_now=True)
-    image_url = models.CharField(max_length=200, blank=True, null=True)
-    cover_url = models.CharField(max_length=200, blank=True, null=True)
-    location = models.CharField(max_length=100, blank=True, null=True)
+    image_url = models.URLField(max_length=200, blank=True, null=True, 
+                                default='/omen.jpeg')
+    cover_url = models.URLField(max_length=200, blank=True, null=True)
+    location = models.CharField(max_length=100, blank=True, null=True, default="Morocco/Khouribga")
     is_2fa_enabled = models.BooleanField(default=False)
     is_email_verified = models.BooleanField(default=False)
     two_fa_secret_key = models.CharField(max_length=200, blank=True, null=True)
-    score = models.IntegerField(blank = True, null = True)
-    level = models.FloatField(blank = True, null = True)
-    rank = models.IntegerField(blank = True, null = True)
-    quote = models.CharField(max_length = 100, blank = True, null = True)
-    intro = models.CharField(max_length = 100, blank = True, null = True)
+    score = models.IntegerField(blank = True, null = True, default=0.0)
+    level = models.FloatField(blank = True, null = True, default=0.0)
+    rank = models.IntegerField(blank = True, null = True, default=0)
+    quote = models.CharField(max_length = 100, blank = True, null = True, 
+                             default="Hello A7ssan ft_transcendence")
+    intro = models.CharField(max_length = 100, blank = True, null = True, default="This is my bio")
 
     objects = UserManager()
     USERNAME_FIELD = 'email'

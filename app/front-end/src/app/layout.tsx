@@ -12,9 +12,11 @@ export default function RootLayout({children}: {children: React.ReactNode})
 {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/LOGO.svg" sizes="any" />
+      </head>
       <body>
-      <ToastProvider children={children} />
-      {/* </ToastProvider> */}
+        <ToastProvider children={children} />
       </body>
     </html>
   )
