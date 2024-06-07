@@ -6,7 +6,7 @@ import { ImUserPlus } from "react-icons/im";
 import Player from "./Player";
 import Notification from "./Notification";
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import React, { forwardRef, useState, useEffect } from 'react';
+import React, { forwardRef, useState } from 'react';
 import styles from './styles/rightBar.module.css';
 import Image from 'next/image';
 
@@ -63,8 +63,6 @@ CustomToggle.displayName = 'CustomToggle';
 export default function RightBar({webSocketNotifications, notifications_data, userdata, friends_data, setShow, show, handleClose, toggleShow, setfriendModal} : Props) {
 
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
-
     const filteredFriends = friends_data
     .filter((friend: Friend) => friend.username.toLowerCase().startsWith(searchTerm.toLowerCase()))
     .sort((usr1: Friend, usr2: Friend) => {
@@ -89,13 +87,6 @@ export default function RightBar({webSocketNotifications, notifications_data, us
     const searchOnlineFriends = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
     }
-
-    useEffect(() => {
-        console.log(webSocketNotifications.length);
-        if (webSocketNotifications.length > 0) {
-            setDropdownVisible(true);
-        }
-    }, [webSocketNotifications]);
     
     return (
         <Offcanvas className={`${styles.offcanvas} border-0`}  show={show} onHide={handleClose} placement='end' scroll={true} backdrop={false} >
@@ -112,7 +103,7 @@ export default function RightBar({webSocketNotifications, notifications_data, us
                                 <div className="flex-grow-2">
                                     <div className="row-inline">
                                          <div className="col">
-                                            <Dropdown show={dropdownVisible} onToggle={() => setDropdownVisible(!dropdownVisible)}>
+                                            <Dropdown>
                                                 <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
                                                   <div className={`${styles.notification}`}>
                                                      <div>
