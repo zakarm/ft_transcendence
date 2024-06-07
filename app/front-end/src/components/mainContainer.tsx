@@ -82,8 +82,6 @@ export default function MainContainer({ children }: { children: React.ReactNode 
       }
 
     useEffect(() => {
-        // const socket = useGlobalContext()
-        // const newSocket = new WebSocket('ws://localhost:8000/ws/user_data');
         console.log(socket);
         if (socket == null)
             return ;

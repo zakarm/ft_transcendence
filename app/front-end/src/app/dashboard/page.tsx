@@ -4,7 +4,6 @@ import styles from './style.module.css'
 import Image from 'next/image';
 import { FaHistory } from "react-icons/fa";
 import { BiStats } from "react-icons/bi";
-import { FaChevronDown } from "react-icons/fa";
 import GameHistoryCard from '../../components/table';
 import ButtonValo from '../../components/button'
 import { Line } from 'react-chartjs-2';
@@ -15,8 +14,8 @@ import { ChartOptions, ChartData } from 'chart.js';
 import { LineController } from 'chart.js/auto';
 import { useRouter } from 'next/navigation'
 import { Dropdown } from 'react-bootstrap';
-// import ExportCSV from '@/components/export';
 import { ExportCSV } from '../../components/export';
+import { ToastContainer, toast } from 'react-toastify';
 import { CategoryScale,
     LinearScale,
     Title,
@@ -84,15 +83,15 @@ export default function Dashboard() {
                         const data = await response.json();
                         setDashboardData(data);
                     } else if (response.status === 401) {
-                        console.log('Unauthorized');
+                        toast.error('Unauthorized');
                     } else {
-                        console.error('An unexpected error happened:', response.status);
+                      console.error('An unexpected error happened:', response.status);
                     }
                 } catch (error) {
-                    console.error('An unexpected error happened:', error);
+                  console.error('An unexpected error happened:', error);
                 }
             } else {
-                console.log('Access token is undefined or false');
+                toast.error('Unauthorized');
             }
             };
         fetchData();
@@ -133,24 +132,20 @@ export default function Dashboard() {
             });
             if (response.ok) {
                 const data = await response.json();
-                // console.log(data);
                 return data;
-                // setCsvData(data);
             } else if (response.status === 401) {
-                console.log('Unauthorized');
+                toast.error('Unauthorized');
             } else {
-                console.error('An unexpected error happened:', response.status);
+              console.error('An unexpected error happened:', response.status);
             }
             return null;
         } catch (error) {
-            console.error('An unexpected error happened:', error);
+          console.error('An unexpected error happened:', error);
         }
-
     };
 
     const handleDropdownSelect = async (value: string) => {
       const data : UserData = await fetchDataForCsv(value);
-      console.log('data :', data);
       if (data){
           data.matches_as_user_one.forEach((match) => {
               gameCsv.push({
@@ -160,7 +155,6 @@ export default function Dashboard() {
               result: match.score_user_one > match.score_user_two ? 'WIN' : 'LOSS',
               });
           });
-
           data.matches_as_user_two.forEach((match) => {
               gameCsv.push({
               player: data.username,
@@ -170,8 +164,6 @@ export default function Dashboard() {
               });
           });
       }
-      // setCsvData(data);
-      console.log('game : ' + gameCsv);
       ExportCSV(gameCsv, 'game_history_'+value+'.csv');
       toggleDropdown();
     };
@@ -221,7 +213,6 @@ export default function Dashboard() {
             },
         ],
     };
-
     return (
       <div className={`container-fluid ${styles.page_body} vh-100`}>
         <div className="row m-0 mt-5">
@@ -276,8 +267,7 @@ export default function Dashboard() {
             <div className="row">
               <div className="col-12 col-lg-6">
                 <div
-                  className={`d-flex flex-column p-3 ${styles.card} ${styles.buttom_cards} m-1`}
-                >
+                  className={`d-flex flex-column p-3 ${styles.card} ${styles.buttom_cards} m-1`}>
                   <div className="row">
                     <div className="col-6 d-flex align-items-start justify-content-start">
                       <p className={`itim-font ${styles.med_titles}`}>
@@ -285,34 +275,27 @@ export default function Dashboard() {
                       </p>
                     </div>
                     <div className="col-6 d-flex align-items-end justify-content-end">
-
-                  
-    
                       <Dropdown onClick={toggleDropdown}>
                         <Dropdown.Toggle
                           variant="dark"
                           id="dropdown-basic"
-                          className={`itim-font ${styles.all_down}`}
-                        >
+                          className={`itim-font ${styles.all_down}`}>
                           ALL
                         </Dropdown.Toggle>
                         <Dropdown.Menu show={dropdownOpen}>
                           <Dropdown.Item
                             className="itim-font"
-                            onClick={() => handleDropdownSelect('day')}
-                          >
+                            onClick={() => handleDropdownSelect('day')}>
                             This Day
                           </Dropdown.Item>
                           <Dropdown.Item
                             className="itim-font"
-                            onClick={() => handleDropdownSelect('month')}
-                          >
+                            onClick={() => handleDropdownSelect('month')}>
                             This Month
                           </Dropdown.Item>
                           <Dropdown.Item
                             className="itim-font"
-                            onClick={() => handleDropdownSelect('year')}
-                          >
+                            onClick={() => handleDropdownSelect('year')}>
                             This Year
                           </Dropdown.Item>
                         </Dropdown.Menu>
@@ -331,8 +314,7 @@ export default function Dashboard() {
               </div>
               <div className={`col-12 col-lg-6 ${styles.chart_grid}`}>
                 <div
-                  className={`d-flex flex-column p-3 ${styles.card} ${styles.buttom_cards} m-1`}
-                >
+                  className={`d-flex flex-column p-3 ${styles.card} ${styles.buttom_cards} m-1`}>
                   <div className="row">
                     <div className="col-6 d-flex align-items-start justify-content-start">
                       <p className={`itim-font ${styles.med_titles}`}>
@@ -344,28 +326,24 @@ export default function Dashboard() {
                         <Dropdown.Toggle
                           variant="dark"
                           id="dropdown-basic"
-                          className={`itim-font ${styles.all_down}`}
-                        >
+                          className={`itim-font ${styles.all_down}`}>
                           ALL
                         </Dropdown.Toggle>
 
                         <Dropdown.Menu show={dropdownOpenGameStats}>
                           <Dropdown.Item
                             href="#/action-1"
-                            className="itim-font"
-                          >
+                            className="itim-font">
                             This Month
                           </Dropdown.Item>
                           <Dropdown.Item
                             href="#/action-2"
-                            className="itim-font"
-                          >
+                            className="itim-font">
                             3 Months
                           </Dropdown.Item>
                           <Dropdown.Item
                             href="#/action-3"
-                            className="itim-font"
-                          >
+                            className="itim-font">
                             1 Year
                           </Dropdown.Item>
                         </Dropdown.Menu>
