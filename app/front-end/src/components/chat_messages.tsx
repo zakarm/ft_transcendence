@@ -9,7 +9,7 @@ import Cookies from 'js-cookie';
 import { FaTableTennisPaddleBall } from 'react-icons/fa6';
 import { ImUserMinus } from 'react-icons/im';
 import { IoIosSend } from "react-icons/io";
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { CgHello } from "react-icons/cg";
 
@@ -26,15 +26,16 @@ interface User {
 
 interface Message{
   text: string;
-  user: boolean;
+  user: string;
 }
 
 export default function ChatMessages( { selectedChat }: Props ) {
 
   const [searchedChat, setSearchedChat] = useState<User | undefined>(undefined);
+  const chatLogRef = useRef<HTMLDivElement | null>(null);
+  const chatSocketRef = useRef<WebSocket | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [inputValue, setInputValue] = useState('');
-  const [currentUser, setCurrentUser] = useState(true);
+  const [inputValue, setInputValue] = useState<string>('');
 
   const fetchSearchUser = async () => {
     const access = Cookies.get('access');
@@ -53,10 +54,10 @@ export default function ChatMessages( { selectedChat }: Props ) {
           throw new Error('Failed to fetch data');
 
         const data = await res.json();
-        console.log('Fetched data:', data); // Log the fetched data for debugging
+        console.log('Fetched data:', data);
 
         if (Array.isArray(data) && data.length > 0) {
-          const user = data[0]; // Assuming the first user is the desired one
+          const user = data[0];
           setSearchedChat({
             id: user.id,
             username: user.username,
@@ -74,17 +75,41 @@ export default function ChatMessages( { selectedChat }: Props ) {
     }
   }
 
-  useEffect(() => {
-    fetchSearchUser();
-  }, [selectedChat]);
-
-  const sendMessage = () => {
-    if (inputValue.trim() !== '') {
-      setMessages([...messages, { text: inputValue, user: currentUser }]);
-      setInputValue('');
-      setCurrentUser(!currentUser);
-    }
-  };
+    useEffect(() => {
+      const chatSocket = new WebSocket(`ws://127.0.0.1:8080/ws/chat/lobby/`);
+    
+      chatSocket.onmessage = (e: MessageEvent) => {
+        const data = JSON.parse(e.data);
+        setMessages((prevMessages) => [...prevMessages, {text: data.message, user: data.user}]);
+      };
+    
+      chatSocket.onclose = () => {
+        console.error('Chat socket closed unexpectedly');
+      };
+    
+      chatSocketRef.current = chatSocket;
+    
+      return () => {
+        chatSocket.close();
+      };
+    }, []);
+  
+    useEffect(() => {
+      if (chatLogRef.current) {
+        chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight;
+      }
+    }, [inputValue]);
+  
+    useEffect(() => {
+      fetchSearchUser();
+    }, [selectedChat]);
+  
+    const sendMessage = () => {
+      if (inputValue.trim() !== '') {
+        chatSocketRef.current?.send(JSON.stringify({ 'message': inputValue, 'user': selectedChat }));
+        setInputValue('');
+      }
+    };
 
   return (
       <>
@@ -115,16 +140,16 @@ export default function ChatMessages( { selectedChat }: Props ) {
               (
                 <div>
                   {messages.map((message, index) => (
-                    <div className='' key={index} style={{ textAlign: message.user ? 'right' : 'left' }}>
+                    <div className='' key={index} style={{ textAlign: (message.user === selectedChat) ? 'right' : 'left' }}>
                       {
-                        (message.user) ?
+                        (message.user === selectedChat) ?
                         (
-                          <div className='m-1' style={{fontFamily: 'itim'}}>
+                          <div className='my-4' style={{fontFamily: 'itim'}}>
                             <span style={{backgroundColor: '#181b20', padding: '10px', borderRadius: '15px'}}>{message.text}</span>
                           </div>
                         ) :
                         (
-                          <div className='m-1' style={{fontFamily: 'itim'}}>
+                          <div className='my-4' style={{fontFamily: 'itim'}}>
                             <span style={{backgroundColor: '#222a38', padding: '10px', borderRadius: '15px'}}>{message.text}</span>
                           </div>
                         )
