@@ -20,8 +20,6 @@ export default function TwoFa({ value = '', email }: QrCode) {
     const fetchData = async () => {
       try {
         if (otp && otp.length === 6) {
-          console.log(`Email: ${email}`);
-          console.log(`OTP: ${otp}`);
           const response = await fetch('http://localhost:8000/api/two-fa', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
