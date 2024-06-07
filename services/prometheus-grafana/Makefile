@@ -15,7 +15,7 @@ build:
 	docker-compose build
 
 # Restart the Docker Compose services
-restart:
+re:
 	docker-compose down
 	docker-compose up -d
 
