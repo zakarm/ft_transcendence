@@ -1,3 +1,5 @@
+"use client";
+
 import React, { createContext, useEffect, useState, ReactNode, useContext } from 'react';
 import Cookies from 'js-cookie';
 
