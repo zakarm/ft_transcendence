@@ -12,7 +12,6 @@ import InviteFriend from "./inviteFriend";
 import { useGlobalContext } from "./webSocket";
 import Spinner from 'react-bootstrap/Spinner'
 import Cookies from 'js-cookie';
-import { usePathname, useRouter } from "next/navigation";
 
 interface FriendSocket {
 	id: number;
@@ -82,14 +81,10 @@ export default function MainContainer({ children }: { children: React.ReactNode 
       }
 
     useEffect(() => {
-        // const socket = useGlobalContext()
-        // const newSocket = new WebSocket('ws://localhost:8000/ws/user_data');
-        console.log(socket);
         if (socket == null)
             return ;
         socket.onmessage = (event) => {
           const data = JSON.parse(event.data);
-          console.log(data);
           switch (data.type) {
             case 'notification':
                 setWebSocketNotifications((prevNotifications) => [...prevNotifications, data]);
@@ -149,7 +144,7 @@ export default function MainContainer({ children }: { children: React.ReactNode 
 						const notificationFetch = data.notifications
 						.map((notification: Notification) => ({
 							notification_id: notification.notification_id,
-							message_url: notification.message,
+							message: notification.message,
 							image_url: notification.image_url,
 							title: notification.title,
 							link: notification.link

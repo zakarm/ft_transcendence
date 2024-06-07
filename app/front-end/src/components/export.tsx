@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 
 interface GameData {
   player: string;
@@ -17,10 +18,8 @@ const convertToCSV = (data: GameData[]) => {
   const headers = ['Player', 'Score', 'Date', 'Result'];
   const csvRows = [];
 
-  // Add headers
   csvRows.push(headers.join(','));
 
-  // Add data rows
   for (const row of data) {
     const values = [
       row.player,
@@ -40,12 +39,10 @@ interface ExportCSVProps {
 }
   
 export const ExportCSV = ( data: GameData[], filename: string = 'data.csv' ) => {
-  // const handleExport = useCallback(() => {
   if (!data || Object.keys(data).length === 0) {
-    console.error('No data to export');
+    toast.error('No data to export !');
     return;
   }
-  // }
 
   const csvData = convertToCSV(data);
   const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
@@ -58,7 +55,4 @@ export const ExportCSV = ( data: GameData[], filename: string = 'data.csv' ) => 
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-  // }, [data, filename]);
-
-
 };

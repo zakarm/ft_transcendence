@@ -119,7 +119,6 @@ export default function RightBar({webSocketNotifications, notifications_data, us
                                                 {notifications_data && 
                                                     notifications_data.map((key: Notification, index: number) => 
                                                         <Dropdown.Item key={index} eventKey={index}><Notification notification={key}/></Dropdown.Item>
-                                                        // <hr className="dropdown-divider" />
                                                     )
                                                 }
                                                 </Dropdown.Menu>
