@@ -125,10 +125,11 @@ test-images: ## Run tests for the images
 
 nodelink: ## Link node modules
 	@echo "$(YELLOW)Linking node modules...$(RESET)"
-	@mkdir -p /tmp/front
-	@cp -r ./app/front-end/package*.json /tmp/front/
-	@npm install --prefix /tmp/front
-	@ln -s /tmp/front/node_modules ./app/front-end/node_modules
+	# @mkdir -p /tmp/front
+	@mkdir -p ${HOME}/goinfre/front
+	@cp -r ./app/front-end/package*.json ${HOME}/goinfre/front
+	@npm install --prefix ${HOME}/goinfre/front
+	@ln -s ${HOME}/goinfre/front/node_modules ./app/front-end/node_modules
 	@echo "$(GREEN)Node modules linked!$(RESET)"
 
 prune: ## Remove all stopped containers, dangling images, and unused networks and volumes
