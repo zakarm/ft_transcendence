@@ -10,6 +10,7 @@ interface TournamentCardProps {
   imageUrl: string;
   pageUrl?: string;
   buttonText : string;
+  setTournamentID ?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const TournamentCard: React.FC<TournamentCardProps> = ({
@@ -18,7 +19,8 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
   participantsJoined,
   imageUrl,
   pageUrl="",
-  buttonText="JOIN"
+  buttonText="JOIN",
+  setTournamentID=()=>{}
 } : TournamentCardProps) => {
   return (
     <div className="Tournament_card">
@@ -32,7 +34,7 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
       <hr />
       <div className="Tournament_card_info_row mt-3">
         <Link href={pageUrl}>
-          <button>{buttonText}</button>
+          <button onClick={() => setTournamentID(pageUrl)}>{buttonText}</button>
         </Link>
         <div className="Tournament_card_participants">
           <p>Participants joined</p>

@@ -49,7 +49,7 @@
 .upcoming_match {
     border-radius: 25px;
     background-color: var(--clr-ldark);
-    height: 150px;
+    height: 140px;
     max-width: 650px;
     min-width: 320px;
 }
