@@ -144,7 +144,7 @@ export default function MainContainer({ children }: { children: React.ReactNode 
 						const notificationFetch = data.notifications
 						.map((notification: Notification) => ({
 							notification_id: notification.notification_id,
-							message_url: notification.message,
+							message: notification.message,
 							image_url: notification.image_url,
 							title: notification.title,
 							link: notification.link
