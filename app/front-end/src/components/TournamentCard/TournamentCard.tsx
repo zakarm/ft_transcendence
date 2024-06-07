@@ -8,7 +8,8 @@ interface TournamentCardProps {
   date: string;
   participantsJoined: number;
   imageUrl: string;
-  pageUrl: string;
+  pageUrl?: string;
+  buttonText : string;
 }
 
 const TournamentCard: React.FC<TournamentCardProps> = ({
@@ -16,7 +17,8 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
   date,
   participantsJoined,
   imageUrl,
-  pageUrl,
+  pageUrl="",
+  buttonText="JOIN"
 } : TournamentCardProps) => {
   return (
     <div className="Tournament_card">
@@ -30,7 +32,7 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
       <hr />
       <div className="Tournament_card_info_row mt-3">
         <Link href={pageUrl}>
-          <button>JOIN</button>
+          <button>{buttonText}</button>
         </Link>
         <div className="Tournament_card_participants">
           <p>Participants joined</p>

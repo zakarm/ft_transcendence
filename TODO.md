@@ -10,7 +10,8 @@
         - SignOut view returns 200 when refresh token looks like "l;fd", "fdsf;;;;;", ";;fs;;"...
             while it returns 400 for tokens that looks like "gfsgfs", "fdsfdsfdsf", "jkkhbdfs8*(&*(&*(YHEIILEUWHIKN @!92u821h2"
         - validate access token in signout view (permissions & auth)
-    
+        - Compare time to only shows tournament that aren't completed yet
+
     ----------------------------------------------------------------------------------
     Feat :
         - Add WebSocket logic to "Ongoing" tab
@@ -29,6 +30,10 @@
         - GET achivements data
         - GET tournament cards data
 
+api/ tournaments [name='tournaments']
+api/ achievements [name='achievements']
+api/ create-tournament [name='create-tournament']
+api/ game-settings [name='game-settings']
 
 
 ----------------------------------------------------------
