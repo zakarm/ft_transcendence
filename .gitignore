@@ -19,3 +19,5 @@ app/front-end/.next
 .DS_Store
 venv
 # .env
+services/prometheus-grafana/prometheus/data
+services/prometheus-grafana/grafana/data

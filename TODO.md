@@ -10,7 +10,12 @@
         - SignOut view returns 200 when refresh token looks like "l;fd", "fdsf;;;;;", ";;fs;;"...
             while it returns 400 for tokens that looks like "gfsgfs", "fdsfdsfdsf", "jkkhbdfs8*(&*(&*(YHEIILEUWHIKN @!92u821h2"
         - validate access token in signout view (permissions & auth)
-    
+        - Compare time to only shows tournament that aren't completed yet
+        - Browser Issues in tournament Form's input and label (id)
+        - to Change (wait PageUrl) and Ongoing matches
+            - <LiveTournamentMatches user1={data.data.final.match1.user1} user2={data.data.final.match1.user2}/>
+ 
+
     ----------------------------------------------------------------------------------
     Feat :
         - Add WebSocket logic to "Ongoing" tab
@@ -29,6 +34,10 @@
         - GET achivements data
         - GET tournament cards data
 
+api/ tournaments [name='tournaments']
+api/ achievements [name='achievements']
+api/ create-tournament [name='create-tournament']
+api/ game-settings [name='game-settings']
 
 
 ----------------------------------------------------------
