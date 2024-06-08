@@ -24,10 +24,10 @@ function GenerateInputFields() {
       inputLength: 20,
     },
     {
-      inputId: "nickname",
-      labelText: "Nickname",
+      inputId: "username",
+      labelText: "Username",
       inputType : "text",
-      placeholder: valuesToPost["nickname"],
+      placeholder: valuesToPost["username"],
       inputLength: 20,
     },
     {
@@ -70,6 +70,9 @@ function GenerateInputFields() {
 function AccountTab() {
   const { updateField, accountValues } = useContext<SettingsProps>(FormContext);
 
+  const handleImageError = (event : ChangeEvent<HTMLImageElement>) => {
+    event.target.src = "Rectangle.png"
+  }
   return (
     <>
       <fieldset className="col-12 col-xxl-6 p-0 m-0 d-flex justify-content-center align-items-center h-100">
@@ -77,9 +80,10 @@ function AccountTab() {
           <label htmlFor="file_input" className={`${styles.image_container}`}>
             <img
               id = {`profile_pic`}
-              src={`${accountValues['image']}`}
+              src={`${accountValues['image_url']}`}
               alt="profile"
               className={`${styles.profilePic}`}
+              onError={handleImageError}
             />
             <img
               src="camera.png"
