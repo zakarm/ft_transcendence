@@ -34,7 +34,7 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
       <hr />
       <div className="Tournament_card_info_row mt-3">
         <Link href={pageUrl}>
-          <button onClick={() => setTournamentID(pageUrl)}>{buttonText}</button>
+          <button onClick={() => setTournamentID(pageUrl)} style={{fontSize : '100%'}}>{buttonText}</button>
         </Link>
         <div className="Tournament_card_participants">
           <p>Participants joined</p>

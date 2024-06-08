@@ -168,7 +168,7 @@ const Tournament: React.FC = () => {
             };
             data();
         }
-    }, []);
+    }, [choosenTab]);
 
     /* handles Local Tournament in Session Storage */
     useEffect(() => {

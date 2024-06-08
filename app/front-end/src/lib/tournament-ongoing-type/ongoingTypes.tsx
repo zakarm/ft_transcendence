@@ -1,17 +1,16 @@
+import React from 'react'
 
 // **********************************************************************
 
+interface   UserInfoTypes {
+    name : string;
+    photoUrl : string;
+    score : number;
+}
+
 interface   UserTypes {
-    user1 : {
-        name : string;
-        photoUrl : string;
-        score : number;
-    }
-    user2 : {
-        name : string;
-        photoUrl : string;
-        score : number;
-    }
+    user1 : UserInfoTypes
+    user2 : UserInfoTypes
 }
 
 interface   QuarterFinalMatchTypes {
@@ -37,7 +36,8 @@ interface   FinalMatchTypes {
 interface   LiveMatchesTypes {
     action : string;
     data : {
-        quatre_final : QuarterFinalMatchTypes;
+        [key : string] : QuarterFinalMatchTypes | SemiFinalMatchTypes | FinalMatchTypes;
+        quarter_final : QuarterFinalMatchTypes;
         semi_final : SemiFinalMatchTypes;
         final : FinalMatchTypes;
     }
@@ -52,6 +52,13 @@ interface GetPlayerImageTitleTypes{
     imgHeight : string;
     fontSize ?: string;
     imageSrc ?: string;
+    setIsImageValid ?: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+
+interface   RenderUpcomingMatchesTypes {
+    round : QuarterFinalMatchTypes | SemiFinalMatchTypes |  FinalMatchTypes;
+    setmatchToRenderLive : React.Dispatch<React.SetStateAction<string>>;
 }
 
 // **********************************************************************
@@ -62,5 +69,7 @@ export type {
     GetPlayerImageTitleTypes as GetPlayerImageTitleTypes,
     QuarterFinalMatchTypes as QuarterFinalMatchTypes,
     SemiFinalMatchTypes as SemiFinalMatchTypes,
-    FinalMatchTypes as FinalMatchTypes
+    FinalMatchTypes as FinalMatchTypes,
+    UserInfoTypes as UserInfoTypes,
+    RenderUpcomingMatchesTypes as RenderUpcomingMatchesTypes
 }

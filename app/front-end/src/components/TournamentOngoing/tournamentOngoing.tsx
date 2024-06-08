@@ -8,28 +8,31 @@ import {
     LiveMatchesTypes, 
     QuarterFinalMatchTypes, 
     SemiFinalMatchTypes,
-    FinalMatchTypes }
+    FinalMatchTypes,
+    UserTypes,
+    UserInfoTypes,
+    RenderUpcomingMatchesTypes}
 from '@/lib/tournament-ongoing-type/ongoingTypes'
 
 let data :  LiveMatchesTypes = {
     action :"update_live",
     data: {
-        quatre_final: {
+        quarter_final: {
             match1: {
                 user1: { name: 'chabakro', photoUrl: '/yoru.jpeg', score: 0 },
-                user2: { name: 'lah', photoUrl: '/yoru.jpeg', score: 0 },
+                user2: { name: 'lah', photoUrl: '/profile.jpeg', score: 2 },
             },
             match2: {
-                user1: { name: 'lah', photoUrl: '/yoru.jpeg', score: 1 },
-                user2: { name: 'chabakro', photoUrl: '/yoru.jpeg', score: 0 },
+                user1: { name: 'lah', photoUrl: '/yor.jpeg', score: 1 },
+                user2: { name: 'chabakro', photoUrl: '/LOGO.svg', score: 0 },
             },
             match3: {
-                user1: { name: 'chbeg', photoUrl: '/yoru.jpeg', score: 0 },
-                user2: { name: 'rbeg', photoUrl: '/yoru.jpeg', score: 0 },
+                user1: { name: 'chbeg', photoUrl: '/omen.jpeg', score: 2 },
+                user2: { name: 'rbeg', photoUrl: '/yoru.jpeg', score: 3 },
             },
             match4: {
-                user1: { name: 'chabakro', photoUrl: '/yoru.jpeg', score: 0 },
-                user2: { name: 'lah lah', photoUrl: '/yoru.jpeg', score: 0 },
+                user1: { name: 'chabakro', photoUrl: '/eagle.jpg', score: 1 },
+                user2: { name: 'lah lah', photoUrl: '/yoru.jpeg', score: 4 },
             },
         },
         semi_final: {
@@ -76,30 +79,33 @@ function    connectToSocket({ pageUrl } : { pageUrl : string }) {
     }
 }
 
-function UpcomingMatch({ p1, p2 }: {p1 : string, p2 : string}) {
+function UpcomingMatch({ p1, p2 }: {p1 : UserInfoTypes, p2 : UserInfoTypes}) {
     return (
         <div className={`row p-0 m-1 justify-content-center ${styles.upcoming_match}`}>
             <div className="col-4 d-flex align-items-center justify-content-center">
-                <GetPlayerImageTitle p1={p1} imgWidth='90px' imgHeight="90px"/>
+                <GetPlayerImageTitle p1={p1.name} imgWidth='90px' imgHeight="90px" imageSrc={p1.photoUrl}/>
             </div>
             <div className="col-2 valo-font align-self-center text-center m-2 p-1">
                 <span className={`${styles.vs_text}`}>VS</span>
             </div>
             <div className="col-4 d-flex align-items-center justify-content-center">
-                <GetPlayerImageTitle p1={p2} imgWidth='90px' imgHeight="90px"/>
+                <GetPlayerImageTitle p1={p2.name} imgWidth='90px' imgHeight="90px" imageSrc={p2.photoUrl}/>
             </div>
         </div>
     );
 }
 
-function    RenderUpcomingMatches(round : QuarterFinalMatchTypes | SemiFinalMatchTypes |  FinalMatchTypes) : JSX.Element
+function    RenderUpcomingMatches({round, setmatchToRenderLive}: RenderUpcomingMatchesTypes) : JSX.Element
 {
     return (
         <>
         {
             Object.keys(round).map((key) => (
-                <div key={key} className="row col-xxl-6 justify-content-center p-2 m-0">
-                    <UpcomingMatch p1={round[key].user1.name} p2={round[key].user2.name} />
+                <div
+                    key={key}
+                    onClick={() => setmatchToRenderLive(key)}
+                    className={`row col-xxl-6 justify-content-center p-2 m-0`}>
+                    <UpcomingMatch p1={round[key].user1} p2={round[key].user2} />
                 </div>
             ))   
         }
@@ -110,6 +116,8 @@ function    RenderUpcomingMatches(round : QuarterFinalMatchTypes | SemiFinalMatc
 function TournamentOngoing(pageUrl : {pageUrl : string}) : JSX.Element {
     const   options = ['Quarter Final', 'Semi Final', 'Final'];
     const   [currentOptionTab, setcurrentOptionTab] = useState<string>('Quarter Final');
+    const   [matchToRenderLive, setmatchToRenderLive] = useState<string>("match1");
+    let     key : string = "quarter_final";
     const MatchBackgroundStyle : CSSProperties = {
         backgroundImage : `url("/back.png")`,
         backgroundPosition : "center",
@@ -139,7 +147,14 @@ function TournamentOngoing(pageUrl : {pageUrl : string}) : JSX.Element {
                         <div
                             className={`${styles.liveMatchInfo} row w-100 p-0 m-0 justify-content-center valo-font`}
                         >
-                            <LiveTournamentMatches user1={data.data.final.match1.user1} user2={data.data.final.match1.user2}/>
+                            <LiveTournamentMatches
+                                user1={data.data[(currentOptionTab as string).replace(' ', "_").toLowerCase()][matchToRenderLive] ?
+                                    data.data[(currentOptionTab as string).replace(' ', "_").toLowerCase()][matchToRenderLive].user1 :
+                                    data.data[(currentOptionTab as string).replace(' ', "_").toLowerCase()]['match1'].user1 }
+                                user2={data.data[(currentOptionTab as string).replace(' ', "_").toLowerCase()][matchToRenderLive] ?
+                                    data.data[(currentOptionTab as string).replace(' ', "_").toLowerCase()][matchToRenderLive].user2 :
+                                    data.data[(currentOptionTab as string).replace(' ', "_").toLowerCase()]['match1'].user2 }
+                            />
                         </div>
                     </div>
                 </section>
@@ -152,13 +167,16 @@ function TournamentOngoing(pageUrl : {pageUrl : string}) : JSX.Element {
                     <>
                         {
                             currentOptionTab === "Quarter Final" ?
-                                RenderUpcomingMatches(data.data["quatre_final"])
+                                <RenderUpcomingMatches round={data.data["quarter_final"]}
+                                setmatchToRenderLive={setmatchToRenderLive} />
 
                             : currentOptionTab === "Semi Final" ?
-                                RenderUpcomingMatches(data.data["semi_final"])
+                                <RenderUpcomingMatches round={data.data["semi_final"]}
+                                setmatchToRenderLive={setmatchToRenderLive} />
 
                             : currentOptionTab === "Final" ?
-                                RenderUpcomingMatches(data.data["final"])
+                                <RenderUpcomingMatches round={data.data["final"]}
+                                setmatchToRenderLive={setmatchToRenderLive} />
                             :
                                 <></>
                         }
