@@ -58,8 +58,6 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
     async def send_notification(self, event):
         await self.send(text_data=json.dumps({
             'type': 'notification',
-            'message': event['message'],
-            'title': event['title'],
-            'user': event['user'],
-            'image_url': event['image_url']
+            'notification_id': event['notification_id'],
+            'count': event['count']
         }))

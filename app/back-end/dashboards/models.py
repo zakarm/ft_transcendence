@@ -20,6 +20,12 @@ class Notification(models.Model):
     message = models.CharField(max_length=200)
     title = models.CharField(max_length=50)
     link = models.CharField(max_length=200)
+    is_chat_notif = models.BooleanField(default=False)
+    is_friend_notif = models.BooleanField(default=False)
+    is_tourn_notif = models.BooleanField(default=False)
+    is_match_notif = models.BooleanField(default=False)
+    action_by = models.CharField(default="")
+    
 
     class Meta:
         db_table = 'Notification'
