@@ -15,7 +15,7 @@ interface Props{
     fullscreen: boolean;
 }
 
-interface User {
+  interface User {
     id: number;
     username: string;
     image_url: string;
