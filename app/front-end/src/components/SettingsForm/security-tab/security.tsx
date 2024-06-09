@@ -19,12 +19,12 @@ function GenerateInputFields() {
     },
     {
       inputType: "checkbox",
-      inputId: "is_two_fact",
+      inputId: "is_2fa_enabled",
       labelText: "Enable 2FA",
-      placeholder: valuesToPost["is_two_fact"],
+      placeholder: valuesToPost["is_2fa_enabled"],
     },
     {
-      inputId: "two_fact_secret",
+      inputId: "two_fa_secret_key",
       labelText: "2FA Secret Pass",
       inputLength: 200,
     },
@@ -89,7 +89,7 @@ function SecurityTab() {
       <fieldset className="col-12 col-xxl-6 p-0 m-0 d-flex justify-content-center align-items-center h-100">
         <div
           className={`${
-            Boolean(accountValues["is_two_fact"]) ? "" : styles.qr_image
+            Boolean(accountValues["is_2fa_enabled"]) ? "" : styles.qr_image
           } my-3`}
         >
           <img src="qr_code.png" alt="" className={`${styles.qr_code}`} />

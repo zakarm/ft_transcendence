@@ -156,9 +156,13 @@ class BlockedFriendsSerializer(serializers.ModelSerializer):
 
 
 class NotificationSerializer(serializers.ModelSerializer):
+    count = serializers.SerializerMethodField()
     class Meta:
         model = Notification
-        fields = ('notification_id', 'image_url', 'message', 'title', 'link')
+        fields = '__all__'
+    
+    def get_count(self, obj):
+        return Notification.objects.filter(user = self.context.get('user')).count()
 
 class NotificationUserSerializer(serializers.ModelSerializer):
     notifications = serializers.SerializerMethodField()
@@ -168,8 +172,9 @@ class NotificationUserSerializer(serializers.ModelSerializer):
 
     def get_notifications(self, obj):
         notifications_data = Notification.objects.filter(user = obj)
-        serializer = NotificationSerializer(notifications_data, many = True)
+        serializer = NotificationSerializer(notifications_data, many = True, context={'user': obj})
         return serializer.data
+
 
 class GameHistorySerializer(serializers.ModelSerializer):
     matches_as_user_one = serializers.SerializerMethodField()

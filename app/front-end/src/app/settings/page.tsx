@@ -3,15 +3,48 @@
 import React, { ChangeEvent, useState, useEffect, useRef, MutableRefObject } from 'react';
 import Cookies from 'js-cookie';
 import styles from './styles.module.css';
-import AccountTab from '@/components/SettingsForm/account-tab/accountTab';
-import SecurityTab from '@/components/SettingsForm/security-tab/security';
-import { FormContext, SettingsProps } from '@/components/SettingsForm/form-components/formContext';
 import { toast } from 'react-toastify';
 import { notificationStyle } from '@/components/ToastProvider';
+import AccountTab from '@/components/SettingsForm/account-tab/accountTab';
+import SecurityTab from '@/components/SettingsForm/security-tab/security';
 import GameTab from '@/components/SettingsForm/GameTab/gameTab';
 import NavBar from '@/components/NavBar/NavBar';
-// import GameTab from "@/components/SettingsForm/Game-tab/gametab";
 import handleImageUpload from '@/components/UploadImageBase64ToCloudinary/uploadToCloudinary';
+import { FormContext } from '@/components/SettingsForm/form-components/formContext';
+import { SettingsProps, UserInfoTypes } from '@/lib/settings-types/gameSettingsTypes';
+
+function    checkData(dataAPI : UserInfoTypes)
+{
+    const shouldExist : UserInfoTypes = {
+        first_name: '',
+        last_name: '',
+        username: '',
+        email: '',
+        country: '',
+        city: '',
+        image_url: '',
+        new_password: '',
+        repeat_password: '',
+        is_2fa_enabled: false,
+        two_fa_secret_key: '',
+        table_color: '#161625',
+        ball_color: '#ffffff',
+        paddle_color: '#ff4655',
+        table_position: 'default',
+        current_table_view: '6,8,0',
+        game_difficulty: '1',
+    }
+
+    Object.keys(shouldExist).map((key) => {
+        if (dataAPI[key]) {
+            if (typeof dataAPI[key] === 'string' && dataAPI[key] != 'NaN')
+                shouldExist[key] = dataAPI[key];
+            else if (typeof dataAPI[key] !== 'string')
+                shouldExist[key] = dataAPI[key];
+        }
+    })
+    return shouldExist
+}
 
 async function getInitialData({
     setValuesToPost,
@@ -21,13 +54,14 @@ async function getInitialData({
     setAccountValues: SettingsProps['setAccountValues'];
 }) {
     try {
-        // const access = Cookies.get("access");
-        // const response = await fetch("", {
-        //   method: "GET",
-        //   headers: { Authorization: `Bearer ${access}` },
-        // });
+        const access = Cookies.get("access");
+        const response = await fetch("http://localhost:8000/api/game-settings", {
+          method: "GET",
+          headers: { Authorization: `Bearer ${access}` },
+        });
 
-        // const data = await response.json();
+        let data = await response.json();
+        data = checkData(data);
 
         Cookies.set('pos_default', '6,8,0');
         Cookies.set('pos_horizantal', '0,10,0');
@@ -41,45 +75,8 @@ async function getInitialData({
         Cookies.set('ball_color', '#ffffff');
         Cookies.set('paddle_color', '#ff4655');
 
-        setValuesToPost({
-            first_name: 'Mushigarou',
-            last_name: 'HobaHoba',
-            nickname: 'saba',
-            email: 'hey@hey.com',
-            country: 'Morocco',
-            city: '',
-            image: 'profile.jpeg',
-            new_password: '',
-            repeat_password: '',
-            is_two_fact: false,
-            two_fact_secret: '',
-            table_color: '#161625',
-            ball_color: '#ffffff',
-            paddle_color: '#ff4655',
-            table_position: 'default',
-            current_table_view: '6,8,0',
-            game_difficulty: '2',
-        });
-
-        setAccountValues({
-            first_name: 'Mushigarou',
-            last_name: 'HobaHoba',
-            nickname: 'saba',
-            email: 'hey@hey.com',
-            country: 'Morocco',
-            city: '',
-            image: 'profile.jpeg',
-            new_password: '',
-            repeat_password: '',
-            is_two_fact: false,
-            two_fact_secret: '',
-            table_color: '#161625',
-            ball_color: '#ffffff',
-            paddle_color: '#ff4655',
-            table_position: 'default',
-            current_table_view: '6,8,0',
-            game_difficulty: '2',
-        });
+        setValuesToPost(data);
+        setAccountValues(data);
     } catch (error) {
         console.error('Unexpected error : ', error);
     }
@@ -125,10 +122,10 @@ const postFormData = async ({
 }) => {
     if (isFormChanged.current && validateInput(valuesToPost)) {
         const changeImageURL = async () => {
-            if (typeof valuesToPost['image'] === 'string') {
-                const promise = await handleImageUpload(valuesToPost['image']);
+            if (typeof valuesToPost['image_url'] === 'string') {
+                const promise = await handleImageUpload(valuesToPost['image_url']);
                 if (promise !== null && typeof promise === 'string') {
-                    valuesToPost['image'] = promise;
+                    valuesToPost['image_url'] = promise;
                 } else {
                     toast.error('Error : cannot upload image', notificationStyle);
                 }
@@ -140,8 +137,8 @@ const postFormData = async ({
             console.log('------> JSON To Post', JSON.stringify(valuesToPost));
             isFormChanged.current = false;
             const access = Cookies.get('access');
-            const res = await fetch('', {
-                method: 'POST',
+            const res = await fetch('http://localhost:8000/api/game-settings', {
+                method: 'PUT',
                 headers: {
                     'content-type': 'application/json',
                     Authorization: `Bearer ${access}`,
@@ -157,6 +154,8 @@ const postFormData = async ({
                 Cookies.set('paddle_color', valuesToPost['paddle_color'] as string);
 
                 /* .... updates form placeholders */
+            } else {
+                console.log(res);
             }
         };
 

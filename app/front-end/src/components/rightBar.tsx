@@ -41,6 +41,12 @@ interface Notification{
 	message: string;
 	title: string;
 	link: string;
+    count: number;
+    is_chat_notif: boolean;
+	is_friend_notif: boolean;
+	is_tourn_notif: boolean;
+	is_match_notif: boolean;
+    action_by: string;
 }
 
 interface Friend {
@@ -61,7 +67,6 @@ const CustomToggle = forwardRef<HTMLDivElement, CustomToggleProps>(
 CustomToggle.displayName = 'CustomToggle';
 
 export default function RightBar({webSocketNotifications, notifications_data, userdata, friends_data, setShow, show, handleClose, toggleShow, setfriendModal} : Props) {
-
     const [searchTerm, setSearchTerm] = useState<string>('');
     const filteredFriends = friends_data
     .filter((friend: Friend) => friend.username.toLowerCase().startsWith(searchTerm.toLowerCase()))
@@ -109,13 +114,10 @@ export default function RightBar({webSocketNotifications, notifications_data, us
                                                      <div>
                                                          <RiNotification4Fill color="#FF4755" size='1.5em'/>
                                                      </div>
-                                                      <span className={`${styles.badge}`}>5</span>
+                                                     <span className={`${styles.badge}`}>{notifications_data.length > 0 ? notifications_data[notifications_data.length - 1].count : 0}</span>
                                                   </div>
                                                 </Dropdown.Toggle>
                                                 <Dropdown.Menu className={`${styles.drop_class}`}>
-                                                {webSocketNotifications.map((key: Notification, index:number) => (
-                                                    <Dropdown.Item key={index} eventKey={index}><Notification notification={key} /></Dropdown.Item>
-                                                ))}
                                                 {notifications_data && 
                                                     notifications_data.map((key: Notification, index: number) => 
                                                         <Dropdown.Item key={index} eventKey={index}><Notification notification={key}/></Dropdown.Item>
