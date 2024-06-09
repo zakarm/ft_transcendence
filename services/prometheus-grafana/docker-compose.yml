@@ -87,6 +87,17 @@ services:
             - .env
         networks:
             - ft_transcendence
+    elasticsearch-exporter:
+        image: quay.io/prometheuscommunity/elasticsearch-exporter:latest
+        container_name: elasticsearch_exporter
+        command:
+          - '--es.uri=https://elastic:${ELASTIC_PASSWORD}@elasticsearch:9200'
+          - '--es.ssl-skip-verify'
+          - '--es.all'
+        ports:
+          - "9114:9114"
+        networks:
+          - ft_transcendence
 
 networks:
     ft_transcendence:

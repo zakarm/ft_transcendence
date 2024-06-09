@@ -20,3 +20,6 @@ scrape_configs:
   - job_name: 'django'
     static_configs:
       - targets: ['back-end:8000']
+  - job_name: 'elasticsearch'
+    static_configs:
+      - targets: ['elasticsearch-exporter:9114']
