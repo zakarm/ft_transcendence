@@ -67,7 +67,7 @@ class CreateTournament(APIView):
     )
 
     def post(self, request):
-        serializer = TournamentCreationSerializer(data=request.data)
+        serializer = TournamentCreationSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response({'success': 'Tournament created'}, status=status.HTTP_201_CREATED)
@@ -107,7 +107,7 @@ class GameSettingsView(APIView):
             user_data = User.objects.get(id=user.id)
             user_data.first_name = request.data.get('first_name', user_data.first_name )
             user_data.last_name = request.data.get('last_name', user_data.last_name )
-            user_data.username = request.data.get('nick_name', user_data.username )
+            user_data.username = request.data.get('username', user_data.username )
             user_data.image_url = request.data.get('image_url', user_data.image_url )
             user_data.is_2fa_enabled = request.data.get('is_2fa_enabled', user_data.is_2fa_enabled )
             user_data.two_fa_secret_key = request.data.get('two_fa_secret_key', user_data.two_fa_secret_key)

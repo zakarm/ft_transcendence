@@ -1,3 +1,6 @@
+numpy
+pandas
+prophet
 social-auth-app-django
 social-auth-core
 timedelta
@@ -24,3 +27,4 @@ asgi_redis
 channels_redis
 django-channels-jwt-auth-middleware
 drf-spectacular
+plotly

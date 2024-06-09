@@ -32,6 +32,7 @@ import { MdRoundaboutRight } from "react-icons/md";
 import { ChartOptions, ChartData } from 'chart.js';
 import { LineController } from 'chart.js/auto';
 import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 interface MonthlyStats {
     months: string[];
@@ -63,6 +64,13 @@ export default function ()
 {
     const [profile, setProfile] = useState<ProfileData | null>(null);
 
+    const [modalShow, setModalShow] = useState<boolean>(false);
+
+    const [country, setCountry] = useState<string>('');
+    const [region, setRegion] = useState<string>('');
+
+    const router = useRouter();
+
     const fetchProfileData = async () => {
         const access = Cookies.get('access');
         if (access)
@@ -76,7 +84,6 @@ export default function ()
                     throw new Error('Failed to fetch data');
     
                 const data = await res.json();
-                console.log(data);
                 setProfile(data);
             } catch (error) {
                 console.error('Error fetching data: ', error);
@@ -90,10 +97,6 @@ export default function ()
             fetchProfileData();
     }, []);
 
-    const [modalShow, setModalShow] = useState<boolean>(false);
-
-    const [country, setCountry] = useState<string>('');
-    const [region, setRegion] = useState<string>('');
 
     const selectCountry = (val: string) => {
         setCountry(val);
@@ -179,8 +182,8 @@ export default function ()
                                 <Image className={`${styles.profile_img}`} width={200   } height={200  } src={profile?.image_url ?? '/char3.png'} alt='Profile'/>
                                 <div><span className='valo-font' style={{color: '#FFEBEB', fontSize: '1.5em'}}>{profile.username}</span></div>
                                 <div className={`${styles.action} row d-flex justify-content-center`}>
-                                    <div className={`col-md-5 col-8 ${styles.btn}`}><button>Message</button></div>
-                                    <div className={`col-md-5 col-8 ${styles.btn}`}><button>invite</button></div>
+                                        <div className={`col-md-5 col-8 ${styles.btn}`}><button onClick={() => router.push('/game')}>Play</button></div>
+                                        <div className={`col-md-5 col-8 ${styles.btn_delete}`}><button>Delete</button></div>
                                 </div>
                             </div> 
                             <div className='col-xl-4 order-xl-3 my-3'>

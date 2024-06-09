@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { notificationStyle } from '../ToastProvider';
 import handleImageUpload from '../UploadImageBase64ToCloudinary/uploadToCloudinary';
+import Cookies from 'js-cookie'
 
 interface InputEventProps {
     e: ChangeEvent<HTMLInputElement>;
@@ -223,19 +224,29 @@ function RemoteTournamentForm() {
         const isValid: boolean = await formValidation();
         if (!isValid) return;
 
+        const   access = Cookies.get("access");
         console.log(JSON.stringify(ValuesToPost));
         try {
-            // const response = await fetch('', {
-            //     method : "POST",
-            //     headers : {"content-type" : "application/json"},
-            //     body : JSON.stringify(ValuesToPost)
-            // });
-            // if (response.ok){
-            toast.success('To be saved...', notificationStyle);
-            // let data =  await response.json()
-            // }
+            const response = await fetch('http://localhost:8000/api/create-tournament', {
+                method : "POST",
+                headers : {
+                    "content-type" : "application/json",
+                    Authorization : `Bearer ${access}`
+                },
+                body : JSON.stringify(ValuesToPost)
+            });
+            const   data : Record<string, string> =  await response.json()
+            if (response.ok){
+                toast.success(data.success, notificationStyle);
+            } else {
+                Object.values(data).map((v) => {
+                    if (v[0] && typeof v[0] === "string") {
+                        toast.error(v[0], notificationStyle);
+                    }
+                })
+            }
         } catch (error) {
-            console.error('Error : ', error);
+            // console.error('Error : ', error);
         }
     };
 

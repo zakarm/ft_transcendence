@@ -4,7 +4,7 @@ import "./NavBar.css";
 
 interface TournamentProps {
   options : string[];
-  setChoosenTab ?: (s : string) => void;
+  setChoosenTab ?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const NavBar: React.FC<TournamentProps> = ({ options, setChoosenTab = () : void => {} }: TournamentProps) => {

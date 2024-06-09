@@ -33,6 +33,12 @@ interface Notification{
 	message: string;
 	title: string;
 	link: string;
+    count: number;
+    is_chat_notif: boolean;
+	is_friend_notif: boolean;
+	is_tourn_notif: boolean;
+	is_match_notif: boolean;
+    action_by: string;
 }
 
 interface Props
@@ -69,7 +75,6 @@ const CustomToggle = forwardRef<HTMLDivElement, CustomToggleProps>(
 CustomToggle.displayName = 'CustomToggle';
 
 export default function SrightBar({webSocketNotifications, notifications_data, userdata, toggleShow, setfriendModal, friends_data} : Props) {
-
     const data = friends_data.sort((usr1: any, usr2: any) => {
         if (usr1.connected && !usr2.connected) {
             return -1;
@@ -80,7 +85,7 @@ export default function SrightBar({webSocketNotifications, notifications_data, u
         return usr1.id - usr2.id;
     })
     .map((user: Friend, index: number) =>
-        <Splayer  nickname={user.username} id={user.id} image={user.image_url} isConnected={user.connected}/>
+        <Splayer key={index}  nickname={user.username} id={user.id} image={user.image_url} isConnected={user.connected}/>
     );
 
     const router = useRouter();
@@ -94,12 +99,9 @@ export default function SrightBar({webSocketNotifications, notifications_data, u
                                        <Dropdown>
                                             <Image className={`${styles.img_class1}`} width={60} height={60} src={userdata.image_url || "/Def_pfp.png"} alt='Profile' onClick={() => router.push('/profile')}/>
                                            <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
-                                                <span className={`${styles.badge1}`}>3</span>
+                                                <span className={`${styles.badge1}`}>{notifications_data.length > 0 ? notifications_data[notifications_data.length - 1].count : 0}</span>
                                            </Dropdown.Toggle>
                                            <Dropdown.Menu className="drop-class">
-                                           {webSocketNotifications.map((key: Notification, index:number) => (
-                                                    <Dropdown.Item key={index} eventKey={index}><Notification notification={key} /></Dropdown.Item>
-                                            ))}
                                             {notifications_data &&
                                                 notifications_data.map((key: Notification, index: number) =>
                                                     <Dropdown.Item key={index} eventKey={index}><Notification notification={key} /></Dropdown.Item>

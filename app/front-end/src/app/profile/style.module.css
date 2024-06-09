@@ -77,8 +77,21 @@
     cursor: pointer;
 }
 
-.action button:hover{
-    background-color: #27B299;
+.btn_delete{
+    border: 1px solid #27B299;
+    border-radius: 25px;
+    margin: 5px;
+    padding: 5px;
+}
+
+.btn_delete:hover{
+    border: 1px solid #FFEBEB;
+    background-color: #FF4755;
+    cursor: pointer;
+}
+
+.btn_delete button:hover{
+    background-color: #FF4755;
 }
 
 .flag{
@@ -128,6 +141,7 @@
     background-color: transparent;
     color: #000000;
 }
+
 
 .rank{
     position: absolute;

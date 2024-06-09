@@ -170,29 +170,13 @@ const Achievements: React.FC<AchivProps> = React.memo(({ choosenTab, achievement
     useEffect(() => {
         const getAchievements = async () => {
             try {
-                const response = await fetch('', {
+                const response = await fetch('http://localhost:8000/api/achievements', {
                     method: 'GET',
                     headers: { Authorization: `Bearer ${access}` },
                 });
 
-                // const data = await response.json();
-                setAchievements({
-                    tournament: {
-                        early: false,
-                        triple: true,
-                        front: false,
-                    },
-                    match: {
-                        speedy: false,
-                        last: true,
-                        king: true,
-                    },
-                    ai: {
-                        challenger: true,
-                        rivalry: true,
-                        legend: false,
-                    },
-                });
+                const data = await response.json();
+                setAchievements(data);
             } catch (error) {
                 console.log('An unexpected error happened:', error);
             }
