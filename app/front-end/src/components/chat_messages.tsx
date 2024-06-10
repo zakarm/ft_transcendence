@@ -13,8 +13,17 @@ import { useEffect, useRef, useState } from 'react';
 
 import { CgHello } from "react-icons/cg";
 
+interface Users {
+  id: number;
+  username: string;
+  image_url: string;
+  message_waiting: boolean;
+}
+
 interface Props{
   selectedChat: string;
+  chatUsers: Users[];
+  setChatUsers: React.Dispatch<React.SetStateAction<Users[]>>;
 }
 
 interface Friend {
@@ -47,7 +56,7 @@ interface Message{
   timestamp: string;
 }
 
-export default function ChatMessages( { selectedChat }: Props ) {
+export default function ChatMessages( { selectedChat, chatUsers, setChatUsers }: Props ) {
   
   const [searchedChat, setSearchedChat] = useState<Friend | undefined>(undefined);
   const chatLogRef = useRef<HTMLDivElement | null>(null);
@@ -100,35 +109,31 @@ const startChatting = () => {
     chatSocket.onmessage = (e: MessageEvent) => {
       const data = JSON.parse(e.data);
       setNewMessage({ chat_id: data.chat_id, text: data.message, user: data.user, timestamp: data.timestamp});
-      console.log("message received");
-      // console.log("message",messages.at(messages.length - 1)?.text, "=> ", messages.at(0)?.timestamp, "-", newMessage.timestamp);
+      if (data.user === selectedChat)
+      {
+        setChatUsers(prevUsers =>
+          prevUsers.map(user =>
+            user.username === data.user ? { ...user, message_waiting: true } : user
+          )
+        );
+      }
+     };
 
-        
-      //   if (messages?.length === 0 || messages?.at(messages.length - 1)?.timestamp !== newMessage?.timestamp)
-      //     setMessages((prevMessages) => [...prevMessages, newMessage]);
-      };
-
-      chatSocket.onclose = () => {
-        console.log('Chat socket closed');
-      };
-      
-      chatSocketRef.current = chatSocket;
-      
-      return () => {
-        chatSocket.close();
-      };
+     chatSocket.onclose = () => {
+       console.log('Chat socket closed');
+     };
+     
+     chatSocketRef.current = chatSocket;
+     
+     return () => {
+       chatSocket.close();
+     };
 }
 
 useEffect(() => {
   if (newMessage && (messages?.length === 0 || messages?.at(messages.length - 1)?.timestamp !== newMessage?.timestamp))
         setMessages((prevMessages) => [...prevMessages, newMessage]);
 }, [newMessage]);
-
-useEffect(() => {
-  console.log(messages);
-  // console.log(selectedChat);
-}, [messages]);
-
 
 useEffect(() => {
   if (chatLogRef.current) {
@@ -150,6 +155,11 @@ useEffect(() => {
 const sendMessage = () => {
   if (inputValue.trim() !== '') {
     chatSocketRef.current?.send(JSON.stringify({'chat_id': searchedChat?.freindship_id ?? -1, 'message': inputValue, 'user': me, timestamp: new Date().toISOString()}));
+    setChatUsers(prevUsers =>
+      prevUsers.map(user =>
+        user.username === selectedChat ? { ...user, message_waiting: false } : user
+      )
+    );
     setInputValue('');
   }
 };

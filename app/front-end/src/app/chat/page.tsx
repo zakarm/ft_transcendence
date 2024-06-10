@@ -12,6 +12,13 @@ import { GiAmericanFootballPlayer } from "react-icons/gi";
 
 import { PiChatsFill } from "react-icons/pi";
 
+interface Users {
+  id: number;
+  username: string;
+  image_url: string;
+  message_waiting: boolean;
+}
+
 export default function ()
 {
   const [show, setShow] = useState(false);
@@ -19,6 +26,8 @@ export default function ()
   const [showAbout, setAbout] = useState(false);
 
   const [selectedChat, setSelectedChat] = useState<string>('none');
+
+  const [chatUsers, setChatUsers] = useState<Users[]>([]);
 
   const handleClose = () => setAbout(false);
 
@@ -48,8 +57,8 @@ export default function ()
             <div className="col-xl-4 col-md-6 col-sm-12">
               {
                 (fullscreen) ?
-                (<ChatFriends setSelectedChat={setSelectedChat} setShow={setShow} setAbout={setAbout} fullscreen={fullscreen}/>) :
-                (<ChatFriendsResp setSelectedChat={setSelectedChat} setAbout={setAbout} setShow={setShow} fullscreen={fullscreen}/>)
+                (<ChatFriends setSelectedChat={setSelectedChat} setShow={setShow} setAbout={setAbout} fullscreen={fullscreen} chatUsers={chatUsers} setChatUsers={setChatUsers}/>) :
+                (<ChatFriendsResp setSelectedChat={setSelectedChat} setAbout={setAbout} setShow={setShow} fullscreen={fullscreen} chatUsers={chatUsers} setChatUsers={setChatUsers}/>)
               }
               &nbsp;
             </div>
@@ -60,13 +69,13 @@ export default function ()
                   <div><PiChatsFill className='mx-2' size='1.8em' color='#FF4755'/></div>
                   <div><span style={{fontFamily: 'itim', color: 'white'}}>Please chose a conversation to start chatting!</span></div>
                 </div>):
-                (<ChatMessages selectedChat={selectedChat}/>)
+                (<ChatMessages selectedChat={selectedChat} chatUsers={chatUsers} setChatUsers={setChatUsers}/>)
               }
               <Modal contentClassName={`${styles.chat_modal}`} show={show} fullscreen="md-down" onHide={() => setShow(false)} animation>
                 <Modal.Header closeButton closeVariant='white'>
 
                 </Modal.Header>
-                <ChatMessages selectedChat={selectedChat}/>
+                <ChatMessages selectedChat={selectedChat} chatUsers={chatUsers} setChatUsers={setChatUsers}/>
               </Modal>
               <Offcanvas className={`${styles.canvas}`} show={showAbout} onHide={handleClose} backdrop={false}>
                 <Offcanvas.Body className={`p-0 m-0`}>
