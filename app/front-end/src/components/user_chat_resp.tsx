@@ -3,23 +3,43 @@ import React from 'react';
 import styles from './styles/user_chat.module.css';
 import Image from 'next/image';
 
+import Spinner from 'react-bootstrap/Spinner';
+
+interface Users {
+    id: number;
+    username: string;
+    image_url: string;
+    message_waiting: boolean;
+  }
+
 interface Props{
     handleChat: (username: string) => void;
     handleAbout: () => void;
-    handleShow: () => void;
+    setChatUsers: React.Dispatch<React.SetStateAction<Users[]>>;
     username: string;
     image_url: string;
+    waiting_msg: boolean;
 }
 
-export default function UserChatResp ({handleChat, username, image_url, handleAbout, handleShow}: Props)
+export default function UserChatResp ({handleChat, username, image_url, handleAbout , setChatUsers, waiting_msg}: Props)
 {
+    const updateState = () => {
+        handleChat(username);
+
+        setChatUsers(prevUsers =>
+            prevUsers.map(user =>
+              user.username === username ? { ...user, message_waiting: false } : user
+            )
+          );
+    }
     const expandAbout = () => {
         if (window.innerWidth < 1200)
             handleAbout();
     }
+
     return (
         <>
-            <div className={`${styles.message_container} row m-2 p-2`} onClick={() => handleChat(username)}>
+            <div className={`${styles.message_container} row m-2 p-2`} onClick={updateState}>
                 <div className={`${styles.img_holder} col-2 d-flex justify-content-center align-items-center`}>
                     <div>
                         <Image className={`${styles.profile_img}`} src={image_url} height={200} width={200} alt='profile_image' onClick={expandAbout}/>
@@ -30,7 +50,13 @@ export default function UserChatResp ({handleChat, username, image_url, handleAb
                     <span style={{color: '#bebebe'}}>Hey, do you wanna play, i dare you to win.</span>
                 </div>
                 <div className='col-2 text-end'>
-                    <span>now</span>
+                <span>
+                    {
+                        (waiting_msg) ? 
+                        (<Spinner animation="grow" variant="danger" />) :
+                        ('now')
+                    }
+                </span>
                 </div>
             </div>
         </>
