@@ -18,7 +18,7 @@ import {    CategoryScale,
 import Modal from 'react-bootstrap/Modal'
 import { useEffect, useState } from 'react';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
-
+import { ToastContainer, toast } from 'react-toastify';
 import { FaUserEdit } from "react-icons/fa";
 import { SlUser } from "react-icons/sl";
 import { GrFlag } from "react-icons/gr";
@@ -32,7 +32,6 @@ import { MdRoundaboutRight } from "react-icons/md";
 import { ChartOptions, ChartData } from 'chart.js';
 import { LineController } from 'chart.js/auto';
 import Cookies from 'js-cookie';
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 interface MonthlyStats {
@@ -98,7 +97,7 @@ export default function ({ params }: { params: { username: string } })
             }
         }
         else
-        console.log('Access token is undefined or falsy');
+            console.log('Access token is undefined or falsy');
 }
 
 const fetchUser = async () => {
@@ -133,7 +132,7 @@ const fetchUser = async () => {
           }
         }
         else
-          console.log('Access token is undefined or falsy');
+          toast.error('Unauthorized');
     }
 
     const fetchUserState = async (api: string, message: string, username: string) => {
@@ -197,11 +196,11 @@ const fetchUser = async () => {
               toast.success(message);
             }
           } catch (error) {
-              console.error('Error fetching data: ', error);
+            console.error('Error fetching data: ', error);
           }
         }
         else
-          console.log('Access token is undefined or falsy');
+          toast.error('Unauthorized');
       }
 
     useEffect(() => {

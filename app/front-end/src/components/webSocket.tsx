@@ -1,3 +1,5 @@
+"use client";
+
 import React, { createContext, useEffect, useState, ReactNode, useContext } from 'react';
 import Cookies from 'js-cookie';
 
@@ -21,10 +23,8 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
 
   useEffect(() => {
     const access = Cookies.get('access');
-    console.log(access);
     const newSocket = new WebSocket(`ws://localhost:8000/ws/user_data?token=${access}`);
     newSocket.onopen = () => {
-      console.log('WebSocket connection opened');
       setIsLoading(false);
     };
     setSocket(newSocket);

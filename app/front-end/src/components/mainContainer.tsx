@@ -12,7 +12,6 @@ import InviteFriend from "./inviteFriend";
 import { useGlobalContext } from "./webSocket";
 import Spinner from 'react-bootstrap/Spinner'
 import Cookies from 'js-cookie';
-import { usePathname, useRouter } from "next/navigation";
 
 interface FriendSocket {
 	id: number;
@@ -39,6 +38,12 @@ interface Notification{
 	message: string;
 	title: string;
 	link: string;
+	count: number;
+	is_chat_notif: boolean;
+	is_friend_notif: boolean;
+	is_tourn_notif: boolean;
+	is_match_notif: boolean;
+	action_by: string;
 }
 
 interface Friend {
@@ -82,14 +87,10 @@ export default function MainContainer({ children }: { children: React.ReactNode 
       }
 
     useEffect(() => {
-        // const socket = useGlobalContext()
-        // const newSocket = new WebSocket('ws://localhost:8000/ws/user_data');
-        console.log(socket);
         if (socket == null)
             return ;
         socket.onmessage = (event) => {
           const data = JSON.parse(event.data);
-          console.log(data);
           switch (data.type) {
             case 'notification':
                 setWebSocketNotifications((prevNotifications) => [...prevNotifications, data]);
@@ -149,10 +150,16 @@ export default function MainContainer({ children }: { children: React.ReactNode 
 						const notificationFetch = data.notifications
 						.map((notification: Notification) => ({
 							notification_id: notification.notification_id,
-							message_url: notification.message,
+							message: notification.message,
 							image_url: notification.image_url,
 							title: notification.title,
-							link: notification.link
+							link: notification.link,
+							count: notification.count,
+							is_chat_notif: notification.is_chat_notif,
+							is_friend_notif: notification.is_friend_notif,
+							is_tourn_notif: notification.is_tourn_notif,
+							is_match_notif: notification.is_match_notif,
+							action_by: notification.action_by
 						}));
 						setNotificationFetch(notificationFetch);
 					} else if (response.status === 401) {
@@ -167,7 +174,7 @@ export default function MainContainer({ children }: { children: React.ReactNode 
 			}
 		}
 		fetchNotifications();
-	}, [friendModal]);
+	}, [webSocketNotifications]);
 
 	return (
 		<div className="container-fluid p-0 vh-100" style={{backgroundColor: '#000000', overflow: 'hidden'}}>

@@ -3,7 +3,7 @@ Module providing urls utils
 """
 from django.urls import path, re_path
 from .views import (SignIn2Fa, SignInView, SocialAuthExchangeView,
-                    SocialAuthRedirectView, SignUpView, SignOutView)
+                    SocialAuthRedirectView, SignUpView, SignOutView, VerifyTokenView)
 
 urlpatterns = [
     path("sign-up", SignUpView.as_view(), name="sign-up"),
@@ -11,6 +11,7 @@ urlpatterns = [
     path("sign-out", SignOutView.as_view(), name="sign-out"),
 
     path('two-fa', SignIn2Fa.as_view(), name="two-fa"),
+    path('verify', VerifyTokenView.as_view(), name="verify"),
     re_path(r'^social/(?P<platform>(github|42|google))/redirect$',
             SocialAuthRedirectView.as_view(), name='social-redirect'),
     re_path(r'^social/(?P<platform>(github|42|google))/callback$',

@@ -27,3 +27,5 @@ asgi_redis
 channels_redis
 django-channels-jwt-auth-middleware
 drf-spectacular
+plotly
+django-prometheus

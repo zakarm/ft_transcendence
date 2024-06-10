@@ -143,20 +143,23 @@ class AddFriendshipView(APIView):
             notification = Notification.objects.create(user=user_add,
                                                        title='New friend !',
                                                        message=f"{user_from.username} sent you a friend request.",
-                                                       image_url="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Aatrox_0.jpg")
+                                                       image_url=user_from.image_url,
+                                                       link = f"http://localhost:3000/profile/{user_from.username}", 
+                                                       is_friend_notif = True, 
+                                                       action_by = user_from.username)
             channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(
                 f"room_{user_add.id}",
                 {
                     "type": "send_notification",
                     "notification_id": notification.notification_id,
-                    "message": notification.message,
-                    "user": serialize_user(user_from),
-                    "title": notification.title,
-                    "image_url": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Aatrox_0.jpg"
+                    "count": Notification.objects.filter(user = user_add).count(),
+                    "is_chat_notif": notification.is_chat_notif,
+                    "is_friend_notif": notification.is_friend_notif,
+                    "is_tourn_notif": notification.is_tourn_notif,
+                    "is_match_notif": notification.is_match_notif,
                 },
             )
-
             return Response({'success': 'Friendship Added'}, status=status.HTTP_200_OK)
         except Friendship.DoesNotExist:
             return Response({'error': 'Friendship does not exist'}, status=status.HTTP_400_BAD_REQUEST)

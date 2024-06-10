@@ -49,9 +49,13 @@
 .upcoming_match {
     border-radius: 25px;
     background-color: var(--clr-ldark);
-    height: 150px;
+    height: 140px;
     max-width: 650px;
     min-width: 320px;
+}
+.upcoming_match:hover {
+    scale: 1.01;
+    cursor: pointer;
 }
 
 .navbar {
@@ -75,12 +79,25 @@
 .match_title {
     font-size: clamp(1.5rem, 0.5rem + 1.333vw, 3rem)
 }
+
+.live_match_text {
+    height: 15%;
+}
+.live_players_match {
+    height: 75%;
+}
+.live_player_container {
+    height: 270px;
+}
 @media screen and (max-width : 576px) {
     .player_image {
         width: 130px !important;
         height: 130px !important;
     }
 
+    .live_player_container {
+        height: 200px;
+    }
     .live_wrapper {
         height: 53vh;
     }

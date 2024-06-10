@@ -1,18 +1,33 @@
-import urllib.parse
 from django.conf import settings
 from django.shortcuts import redirect
 from django.http import HttpResponseRedirect
 from requests.exceptions import HTTPError
-import requests
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import AccessToken
 from .models import User
 from .serializer import (UsersSignUpSerializer,
                          UserSignInSerializer,
                          User2FASerializer,
                          SocialAuthSerializer)
+import urllib.parse
+import requests
+import sys
+
+class VerifyTokenView(APIView):
+    def post(self, request, *args, **kwargs):
+        try:
+            token = request.data.get('token')
+            access_token = AccessToken(token)
+            user_id = access_token['user_id']
+            if User.objects.filter(id=user_id).exists():
+                return Response({'detail': 'Token is valid'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'detail': 'User not found'}, status=status.HTTP_401_UNAUTHORIZED)
+        except Exception as e:
+            return Response({'detail': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
 
 class SignUpView(APIView):
     serializer_class = UsersSignUpSerializer

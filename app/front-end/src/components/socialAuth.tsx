@@ -13,7 +13,6 @@ export default function SocialAuth({ className, platform }: Props) {
   const handleAuthRedirect = async () => {
       try {
             window.location.href = `http://localhost:8000/api/social/${platform}/redirect`;
-            console.log(window.location.href );
       } catch (error) {
           console.error('Error:', error);
       }

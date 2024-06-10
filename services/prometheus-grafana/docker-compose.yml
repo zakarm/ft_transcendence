@@ -1,0 +1,105 @@
+version: '3.8'
+
+services:
+    prometheus:
+        image: prom/prometheus:latest
+        container_name: prometheus
+        restart: unless-stopped
+        volumes:
+            - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+            - ./prometheus/alert_rules.yml:/etc/prometheus/alert_rules.yml
+        ports:
+            - '9090:9090'
+        networks:
+            - ft_transcendence
+
+    grafana:
+        image: grafana/grafana:latest
+        container_name: grafana
+        restart: unless-stopped
+        environment:
+            - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
+            - GF_SERVER_HTTP_PORT=3002
+            - GF_SECURITY_ADMIN_USER=admin
+        volumes:
+            - ./grafana/provisioning:/etc/grafana/provisioning
+            - ./grafana/dashboards:/var/lib/grafana/dashboards
+        env_file:
+            - .env
+        ports:
+            - '3002:3002'
+        networks:
+            - ft_transcendence
+
+    node-exporter:
+        image: prom/node-exporter:latest
+        container_name: node-exporter
+        restart: unless-stopped
+        user: root
+        volumes:
+            - /proc:/host/proc:ro
+            - /sys:/host/sys:ro
+            - /:/rootfs:ro
+            - /dev/disk:/dev/disk:ro
+        ports:
+            - 9100:9100
+        networks:
+            - ft_transcendence
+
+    cadvisor:
+        image: gcr.io/cadvisor/cadvisor:latest
+        container_name: cadvisor
+        restart: unless-stopped
+        volumes:
+            - /:/rootfs:ro
+            - /var/run/docker.sock:/var/run/docker.sock:rw
+            - /sys:/sys:ro
+            - /var/lib/docker/:/var/lib/docker:ro
+            - /dev/disk/:/dev/disk:ro
+        ports:
+            - 9092:9092
+        command:
+            - '-port=9092'
+        privileged: true
+        networks:
+            - ft_transcendence
+
+    redis-exporter:
+        image: oliver006/redis_exporter:latest
+        container_name: redis-exporter
+        restart: unless-stopped
+        ports:
+            - 9121:9121
+        environment:
+            - REDIS_ADDR=redis:6379
+        networks:
+            - ft_transcendence
+
+    postgres-exporter:
+        image: wrouesnel/postgres_exporter
+        container_name: postgres-exporter
+        restart: unless-stopped
+        ports:
+            - 9187:9187
+        environment:
+            - DATA_SOURCE_NAME=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable
+        env_file:
+            - .env
+        networks:
+            - ft_transcendence
+    elasticsearch-exporter:
+        image: quay.io/prometheuscommunity/elasticsearch-exporter:latest
+        container_name: elasticsearch_exporter
+        command:
+          - '--es.uri=https://elastic:${ELASTIC_PASSWORD}@elasticsearch:9200'
+          - '--es.ssl-skip-verify'
+          - '--es.all'
+        ports:
+          - "9114:9114"
+        networks:
+          - ft_transcendence
+
+networks:
+    ft_transcendence:
+        name: ft_transcendence
+        driver: bridge

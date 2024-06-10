@@ -78,7 +78,12 @@ class UserTournamentsSerializer(serializers.ModelSerializer):
             crated_by_me=True,
             tournament_id__in=Tournamentsmatches.objects.filter(match__in=matches).values_list('tournament_id', flat=True)
         )
-        serializer = TournamentsSerializer(tournaments, many=True)
+        tournaments_user = Tournaments.objects.filter(
+            crated_by_me=True,
+            tournament_id__in=TournamentsUsernames.objects.filter(user=obj).values_list('tournament__tournament_id', flat=True)
+        )
+        all_tournaments = tournaments.union(tournaments_user)
+        serializer = TournamentsSerializer(all_tournaments, many=True)
         return serializer.data
 
 class TournamentCreationSerializer(serializers.Serializer):
@@ -165,8 +170,8 @@ class GameSettingsSerializer(serializers.ModelSerializer):
             if '/' in obj.location:
                 return obj.location.split('/')[1]
             else :
-                return "NaN"
-        else: return "NaN"
+                return ""
+        else: return ""
 
     def get_country(self, obj):
         if obj.location:
@@ -174,7 +179,7 @@ class GameSettingsSerializer(serializers.ModelSerializer):
                 return obj.location.split('/')[0]
             else :
                 return obj.location
-        else: return "NaN"
+        else: return ""
     
     def get_game_table(self, obj):
         game_table = GameTable.objects.filter(user=obj).first()
