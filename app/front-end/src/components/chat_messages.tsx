@@ -41,7 +41,7 @@ interface Friends {
 }
 
 interface Message{
-  id: string;
+  chat_id: string;
   text: string;
   user: string;
   timestamp: string;
@@ -53,6 +53,7 @@ export default function ChatMessages( { selectedChat }: Props ) {
   const chatLogRef = useRef<HTMLDivElement | null>(null);
   const chatSocketRef = useRef<WebSocket | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [newMessage, setNewMessage] = useState<Message | undefined>(undefined);
   const [inputValue, setInputValue] = useState<string>('');
   const [me, setMe] = useState<string>('');
   
@@ -89,26 +90,39 @@ export default function ChatMessages( { selectedChat }: Props ) {
 };
 
 const startChatting = () => {
-  const chatSocket = new WebSocket(`ws://127.0.0.1:8080/ws/chat/${searchedChat?.freindship_id ?? -1}/`);
+
+  // if (chatSocketRef.current) {
+    //   // chatSocketRef.current.close();
+  // }
     
-      chatSocket.onmessage = (e: MessageEvent) => {
-        const data = JSON.parse(e.data);
-        const newMessage = { id: data.id, text: data.message, user: data.user, timestamp: data.timestamp};
+    const chatSocket = new WebSocket(`ws://127.0.0.1:8080/ws/chat/${searchedChat?.freindship_id ?? -1}/`);
+    
+    chatSocket.onmessage = (e: MessageEvent) => {
+      const data = JSON.parse(e.data);
+      setNewMessage({ chat_id: data.chat_id, text: data.message, user: data.user, timestamp: data.timestamp});
+      console.log("message received");
+      // console.log("message",messages.at(messages.length - 1)?.text, "=> ", messages.at(0)?.timestamp, "-", newMessage.timestamp);
+
         
-        if (!messages.filter((msg: Message) => msg.timestamp === newMessage.timestamp).length)
-          setMessages((prevMessages) => [...prevMessages, newMessage]);
+      //   if (messages?.length === 0 || messages?.at(messages.length - 1)?.timestamp !== newMessage?.timestamp)
+      //     setMessages((prevMessages) => [...prevMessages, newMessage]);
       };
-    
+
       chatSocket.onclose = () => {
-        console.error('Chat socket closed unexpectedly');
+        console.log('Chat socket closed');
       };
-    
+      
       chatSocketRef.current = chatSocket;
-    
+      
       return () => {
         chatSocket.close();
       };
 }
+
+useEffect(() => {
+  if (newMessage && (messages?.length === 0 || messages?.at(messages.length - 1)?.timestamp !== newMessage?.timestamp))
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+}, [newMessage]);
 
 useEffect(() => {
   console.log(messages);
@@ -135,7 +149,7 @@ useEffect(() => {
   
 const sendMessage = () => {
   if (inputValue.trim() !== '') {
-    chatSocketRef.current?.send(JSON.stringify({'id': searchedChat?.freindship_id ?? -1, 'message': inputValue, 'user': me, timestamp: new Date().toISOString()}));
+    chatSocketRef.current?.send(JSON.stringify({'chat_id': searchedChat?.freindship_id ?? -1, 'message': inputValue, 'user': me, timestamp: new Date().toISOString()}));
     setInputValue('');
   }
 };
@@ -170,7 +184,7 @@ return (
             (
               <div>
                 {messages
-                .filter((message: Message) => (message.user === selectedChat || message.user === me))
+                .filter((message: Message) => (Number(message.chat_id) === searchedChat?.freindship_id ?? -1))
                 .map((message, index) => (
                   <div className='' key={index} style={{ textAlign: (message.user === me) ? 'right' : 'left' }}>
                     {
