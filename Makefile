@@ -82,6 +82,7 @@ clean: down remove-volumes remove-data-dir ## Clean up build artifacts and tempo
 	@rm -rf ./app/back-end/compu_ai/migrations
 	@rm -rf ./app/back-end/game/migrations
 	@rm -rf ./app/back-end/dashboards/migrations
+	@rm -rf ./app/back-end/chat/migrations
 
 re: clean start ## Clean and start Docker containers
 
