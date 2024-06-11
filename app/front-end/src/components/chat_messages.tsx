@@ -103,31 +103,38 @@ const startChatting = () => {
   // if (chatSocketRef.current) {
     //   // chatSocketRef.current.close();
   // }
-    
-    const chatSocket = new WebSocket(`ws://127.0.0.1:8080/ws/chat/${searchedChat?.freindship_id ?? -1}/`);
-    
-    chatSocket.onmessage = (e: MessageEvent) => {
-      const data = JSON.parse(e.data);
-      setNewMessage({ chat_id: data.chat_id, text: data.message, user: data.user, timestamp: data.timestamp});
-      if (data.user === selectedChat)
-      {
-        setChatUsers(prevUsers =>
-          prevUsers.map(user =>
-            user.username === data.user ? { ...user, message_waiting: true } : user
-          )
-        );
+    const access = Cookies.get('access');
+    if (access) {
+      try {
+                const chatSocket = new WebSocket(`ws://127.0.0.1:8000/ws/chat/${searchedChat?.freindship_id ?? -1}?token=${access}`);
+              
+            chatSocket.onmessage = (e: MessageEvent) => {
+              const data = JSON.parse(e.data);
+              setNewMessage({ chat_id: data.chat_id, text: data.message, user: data.user, timestamp: data.timestamp});
+              if (data.user === selectedChat)
+              {
+                setChatUsers(prevUsers =>
+                  prevUsers.map(user =>
+                    user.username === data.user ? { ...user, message_waiting: true } : user
+                  )
+                );
+              }
+             };
+           
+             chatSocket.onclose = () => {
+               console.log('Chat socket closed');
+             };
+             
+             chatSocketRef.current = chatSocket;
+             
+             return () => {
+               chatSocket.close();
+             };
       }
-     };
-
-     chatSocket.onclose = () => {
-       console.log('Chat socket closed');
-     };
-     
-     chatSocketRef.current = chatSocket;
-     
-     return () => {
-       chatSocket.close();
-     };
+      catch (error) {
+        console.error('Error fetching data: ', error);
+      }
+    }
 }
 
 useEffect(() => {
