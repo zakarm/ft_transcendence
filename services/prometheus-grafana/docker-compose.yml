@@ -31,6 +31,17 @@ services:
         networks:
             - ft_transcendence
 
+    alertmanager:
+        image: prom/alertmanager:latest
+        container_name: alertmanager
+        restart: unless-stopped
+        volumes:
+            - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+        ports:
+            - '9093:9093'
+        networks:
+            - ft_transcendence
+
     node-exporter:
         image: prom/node-exporter:latest
         container_name: node-exporter
@@ -91,13 +102,13 @@ services:
         image: quay.io/prometheuscommunity/elasticsearch-exporter:latest
         container_name: elasticsearch_exporter
         command:
-          - '--es.uri=https://elastic:${ELASTIC_PASSWORD}@elasticsearch:9200'
-          - '--es.ssl-skip-verify'
-          - '--es.all'
+            - '--es.uri=https://elastic:${ELASTIC_PASSWORD}@elasticsearch:9200'
+            - '--es.ssl-skip-verify'
+            - '--es.all'
         ports:
-          - "9114:9114"
+            - '9114:9114'
         networks:
-          - ft_transcendence
+            - ft_transcendence
 
 networks:
     ft_transcendence:
