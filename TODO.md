@@ -5,11 +5,14 @@
         - Remove console.log, console.error from all code
         - Remove type "any" from all code
         - Check data before using it or casting the type
-        - Prevent "cannot upload the image when "
+        - Prevent "cannot upload the image" in settings
         - Handle cases of when color cookies are delete or invalid
         - validate access token in signout view (permissions & auth)
         - Browser Issues in tournament Form's input and label (id)
         - (wait PageUrl) in tournaments cards api
+        - set "Your Colors" to colors coming from backend (settings)
+        - page/profile ==> refresh on save
+        - valid range of game difficulty [0-2]
 
     ----------------------------------------------------------------------------------
     Feat :

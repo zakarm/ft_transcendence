@@ -3,6 +3,12 @@ const nextConfig = {
     compress: true,
     images: {
         remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'res.cloudinary.com',
+                // port: '',
+                // pathname: '/dv1i5yh71/image/upload/**',
+            },
             { hostname: 'cdn.cloudflare.steamstatic.com' },
             { hostname: 'ddragon.leagueoflegends.com' },
             { hostname: 'lh3.googleusercontent.com' },
