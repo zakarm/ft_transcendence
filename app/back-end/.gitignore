@@ -13,6 +13,7 @@ ft_transcendence/__pycache__/
 game/__pycache__/
 dashboards/__pycache__/
 compu_ai/__pycache__/
+chat/__pycache__/
 
 # Migrations
 migrations/
@@ -20,6 +21,7 @@ authentication/migrations/
 game/migrations/
 dashboards/migrations/
 compu_ai/migrations/
+chat/migrations/
 
 # macOS specific files
 .DS_Store
