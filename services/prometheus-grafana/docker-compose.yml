@@ -8,6 +8,7 @@ services:
         volumes:
             - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
             - ./prometheus/alert_rules.yml:/etc/prometheus/alert_rules.yml
+            - ./prometheus/data:/prometheus/data
         ports:
             - '9090:9090'
         networks:
@@ -24,6 +25,7 @@ services:
         volumes:
             - ./grafana/provisioning:/etc/grafana/provisioning
             - ./grafana/dashboards:/var/lib/grafana/dashboards
+            - ./grafana/data:/var/lib/grafana
         env_file:
             - .env
         ports:
@@ -37,6 +39,7 @@ services:
         restart: unless-stopped
         volumes:
             - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+            - ./alertmanager/data:/alertmanager/data
         ports:
             - '9093:9093'
         networks:

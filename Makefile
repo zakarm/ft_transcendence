@@ -77,9 +77,7 @@ clean: down remove-volumes remove-data-dir ## Clean up build artifacts and tempo
 	@echo "$(YELLOW)Cleaning up build artifacts and temporary files...$(RESET)"
 	@rm -rf ./app/front-end/node_modules
 	@rm -rf ./app/front-end/.next
-	@rm -rf ./app/back-end/__pycache__
-	@find . -type f -name '*.pyc' -delete
-	@find . -type d -name '__pycache__' -delete
+	@find . -type d -name '__pycache__' -exec rm -rf {} +
 	@rm -rf ./app/back-end/authentication/migrations
 	@rm -rf ./app/back-end/compu_ai/migrations
 	@rm -rf ./app/back-end/game/migrations
