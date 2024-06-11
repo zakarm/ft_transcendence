@@ -1,6 +1,7 @@
 groups:
   - name: example
     rules:
+      # General instance down alert
       - alert: InstanceDown
         expr: up == 0
         for: 1m
@@ -9,3 +10,82 @@ groups:
         annotations:
           summary: "Instance {{ $labels.instance }} down"
           description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute."
+
+      # cAdvisor alerts
+      - alert: HighContainerCPUUsage
+        expr: (sum(rate(container_cpu_usage_seconds_total{name!=""}[3m])) BY (instance, name) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage in container {{ $labels.name }}"
+          description: "Container {{ $labels.name }} is using more than 80% CPU."
+
+      - alert: HighContainerMemoryUsage
+        expr: (sum(container_memory_usage_bytes{name!=""}) BY (instance, name)) > 2000000000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage in container {{ $labels.name }}"
+          description: "Container {{ $labels.name }} is using more than 2GB of memory."
+
+      # # PostgreSQL alerts
+      # - alert: HighPostgresConnections
+      #   expr: pg_stat_activity_count{state="active"} > 100
+      #   for: 5m
+      #   labels:
+      #     severity: warning
+      #   annotations:
+      #     summary: "High number of active PostgreSQL connections on {{ $labels.instance }}"
+      #     description: "PostgreSQL instance {{ $labels.instance }} has more than 100 active connections."
+
+      # # Redis alerts
+      # - alert: HighRedisMemoryUsage
+      #   expr: redis_memory_usage_bytes > 1000000000
+      #   for: 5m
+      #   labels:
+      #     severity: warning
+      #   annotations:
+      #     summary: "High Redis memory usage on {{ $labels.instance }}"
+      #     description: "Redis instance {{ $labels.instance }} is using more than 1GB of memory."
+
+
+      # # Elasticsearch alerts (continued)
+      # - alert: ElasticsearchClusterRed
+      #   expr: elasticsearch_cluster_health_status == "red"
+      #   for: 1m
+      #   labels:
+      #     severity: critical
+      #   annotations:
+      #     summary: "Elasticsearch cluster is in red status"
+      #     description: "The Elasticsearch cluster is in a critical state (red)."
+
+      # - alert: ElasticsearchUnavailableNodes
+      #   expr: elasticsearch_nodes_unavailable > 0
+      #   for: 1m
+      #   labels:
+      #     severity: warning
+      #   annotations:
+      #     summary: "Elasticsearch nodes unavailable"
+      #     description: "There are unavailable nodes in the Elasticsearch cluster."
+
+      # # High request latency alert
+      # - alert: HighRequestLatency
+      #   expr: http_request_duration_seconds_sum{job="django"} / http_request_duration_seconds_count{job="django"} > 2
+      #   for: 5m
+      #   labels:
+      #     severity: warning
+      #   annotations:
+      #     summary: "High request latency on Django server"
+      #     description: "Average request latency is too high on the Django server."
+
+      # # High number of 5xx responses alert
+      # - alert: High5xxResponses
+      #   expr: rate(http_requests_total{job="django", status_code=~"5.."}[5m]) > 1
+      #   for: 5m
+      #   labels:
+      #     severity: critical
+      #   annotations:
+      #     summary: "High number of 5xx responses from Django server"
+      #     description: "The Django server is returning a high number of 5xx responses."
