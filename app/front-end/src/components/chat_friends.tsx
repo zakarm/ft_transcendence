@@ -9,11 +9,20 @@ import User from './user';
 import { CiSearch } from "react-icons/ci";
 import Cookies from 'js-cookie';
 
+interface Users {
+    id: number;
+    username: string;
+    image_url: string;
+    message_waiting: boolean;
+  }
+
 interface Props{
 		setShow: React.Dispatch<React.SetStateAction<boolean>>;
 		setAbout: React.Dispatch<React.SetStateAction<boolean>>;
 		setSelectedChat: React.Dispatch<React.SetStateAction<string>>;
 		fullscreen: boolean;
+		chatUsers: Users[];
+    	setChatUsers: React.Dispatch<React.SetStateAction<Users[]>>;
 }
 
 interface User {
@@ -29,9 +38,8 @@ interface User {
 		blocked: boolean;
 	  }
 
-export default function ChatFriends( {setSelectedChat , setShow , setAbout , fullscreen}: Props ) {
+export default function ChatFriends( {setSelectedChat , setShow , setAbout , fullscreen, chatUsers, setChatUsers}: Props ) {
 
-	const [chatUsers, setChatUsers] = useState<User[]>([]);
     const [friendsData, setFriendsData] = useState<JSX.Element[]>([]);
     const [friendsChat, setFriendsChat] = useState<JSX.Element[]>([]);
     
@@ -55,6 +63,7 @@ export default function ChatFriends( {setSelectedChat , setShow , setAbout , ful
                     id: friend.user.id,
                     username: friend.user.username,
                     image_url: friend.user.image_url,
+					message_waiting: false
                 }));
                 setChatUsers(friendsArray);
             } catch (error) {
@@ -70,9 +79,9 @@ export default function ChatFriends( {setSelectedChat , setShow , setAbout , ful
     }, []);
 
     useEffect(() => {
-        const sortedData = chatUsers.map((friend: User, index: number) => 
+        const sortedData = chatUsers.map((friend: Users, index: number) => 
             <div key={friend.id}><User id={friend.id} src={friend.image_url} isConnected={true} username={friend.username} handleChat={handleChat} 
-                    setFriendsChat={setFriendsChat} handleShow={handleShow} handleAbout={handleAbout} fullscreen={fullscreen}/></div>
+                    setFriendsChat={setFriendsChat} handleShow={handleShow} handleAbout={handleAbout} fullscreen={fullscreen} waiting_msg={friend.message_waiting} setChatUsers={setChatUsers}/></div>
         );
         setFriendsData(sortedData);
     }, [chatUsers])
