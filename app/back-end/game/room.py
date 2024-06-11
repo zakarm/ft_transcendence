@@ -1,4 +1,5 @@
 from datetime import datetime
+
 class RoomObject:
     def __init__(self):
         # game state
@@ -27,22 +28,24 @@ class RoomObject:
         self.reconect_user = ""
         self.Original_users = {
             "user1": {
-                "id" : None,
+                "id": None,
                 "number_of_pause": 0,
                 "joined": 0,
                 "user_id": "",
                 "user_data": {"user_img": "", "username": ""},
                 "index": 1,
                 "channel_name": "",
+                "tackle": 0,
             },
             "user2": {
-                "id" : None,
+                "id": None,
                 "number_of_pause": 0,
                 "joined": 0,
                 "user_id": "",
                 "user_data": {"user_img": "", "username": ""},
                 "index": 2,
                 "channel_name": "",
+                "tackle": 0,
             },
         }
         self.score = {"user1": 0, "user2": 0}
@@ -81,6 +84,7 @@ class RoomObject:
 
     def get_start_date(self):
         return self.start_date
+
     # ------------------------> user <------------------------
     def get_winner(self):
         if self.score["user1"] == 7:
@@ -200,6 +204,13 @@ class RoomObject:
             return self.Original_users["user1"]["id"]
         elif user_index == 2:
             return self.Original_users["user2"]["id"]
+
+    def get_tackles(self, user_index):
+        if user_index == 1:
+            return self.Original_users["user1"]["tackle"]
+        elif user_index == 2:
+            return self.Original_users["user2"]["tackle"]
+
     # ------------------------> ball <------------------------
     def set_ball_position(self, x, z):
         self.ball_position["x"] = x
@@ -270,6 +281,7 @@ class RoomObject:
                     + 0.05
                 )
                 self.ball_velocity["velocity_x"] *= -1
+            self.Original_users["user2"]["tackle"] += 1
         # Check collision with paddle 2
         if (
             self.ball_position["z"] - self.ball_radius
@@ -313,6 +325,7 @@ class RoomObject:
                     - 0.05
                 )
                 self.ball_velocity["velocity_x"] *= -1
+            self.Original_users["user1"]["tackle"] += 1
         if (
             self.ball_position["z"] - self.ball_radius >= 2.3
             or self.ball_position["z"] + self.ball_radius <= -2.3
@@ -321,9 +334,15 @@ class RoomObject:
 
     # ------------------------> paddle <------------------------
     def bot(self):
-        if self.ball_position["x"] < 0 and self.ball_position["z"] > self.paddle1_position["z"]:
+        if (
+            self.ball_position["x"] < 0
+            and self.ball_position["z"] > self.paddle1_position["z"]
+        ):
             self.paddle1_speed = 0.1
-        elif self.ball_position["x"] < 0 and self.ball_position["z"] < self.paddle1_position["z"]:
+        elif (
+            self.ball_position["x"] < 0
+            and self.ball_position["z"] < self.paddle1_position["z"]
+        ):
             self.paddle1_speed = -0.1
         else:
             self.paddle1_speed = 0
