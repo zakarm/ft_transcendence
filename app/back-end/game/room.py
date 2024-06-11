@@ -1,3 +1,4 @@
+from datetime import datetime
 class RoomObject:
     def __init__(self):
         # game state
@@ -6,6 +7,7 @@ class RoomObject:
         self.reconect = False
         self.room_is_full = False
         self.game_paused = False
+        self.start_date = datetime.now()
 
         # ball
         self.ball_radius = 0.1
@@ -25,6 +27,7 @@ class RoomObject:
         self.reconect_user = ""
         self.Original_users = {
             "user1": {
+                "id" : None,
                 "number_of_pause": 0,
                 "joined": 0,
                 "user_id": "",
@@ -33,6 +36,7 @@ class RoomObject:
                 "channel_name": "",
             },
             "user2": {
+                "id" : None,
                 "number_of_pause": 0,
                 "joined": 0,
                 "user_id": "",
@@ -74,6 +78,9 @@ class RoomObject:
 
     def is_paused(self):
         return self.game_paused
+
+    def get_start_date(self):
+        return self.start_date
     # ------------------------> user <------------------------
     def get_winner(self):
         if self.score["user1"] == 7:
@@ -139,6 +146,7 @@ class RoomObject:
                 "username": user_data.username,
             }
             self.Original_users["user1"]["joined"] = 1
+            self.Original_users["user1"]["id"] = user_data
         elif self.Original_users["user2"]["joined"] == 0:
             self.Original_users["user2"]["channel_name"] = channel_name
             self.Original_users["user2"]["user_id"] = user_id
@@ -147,6 +155,7 @@ class RoomObject:
                 "username": user_data.username,
             }
             self.Original_users["user2"]["joined"] = 1
+            self.Original_users["user2"]["id"] = user_data
             self.room_is_full = True
 
     def reconecting_user(self, channel_name, user_id):
@@ -185,6 +194,12 @@ class RoomObject:
             return self.Original_users["user1"]["number_of_pause"]
         elif self.Original_users["user2"]["user_id"] == user_id:
             return self.Original_users["user2"]["number_of_pause"]
+
+    def get_user_id(self, user_index):
+        if user_index == 1:
+            return self.Original_users["user1"]["id"]
+        elif user_index == 2:
+            return self.Original_users["user2"]["id"]
     # ------------------------> ball <------------------------
     def set_ball_position(self, x, z):
         self.ball_position["x"] = x
