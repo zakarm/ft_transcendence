@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'chat.apps.ChatConfig',
     'game.apps.GameConfig',
     'compu_ai.apps.CompuAiConfig',
     'django.contrib.sessions',

@@ -12,6 +12,7 @@ import django
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
 from dashboards import routing as dashboard_routing
+from chat import routing as chat_routing
 from game import routing as game_routing
 from django_channels_jwt_auth_middleware.auth import JWTAuthMiddlewareStack
 
@@ -26,6 +27,8 @@ application = ProtocolTypeRouter({
                 dashboard_routing.websocket_urlpatterns
                 +
                 game_routing.websocket_urlpatterns
+                +
+                chat_routing.websocket_urlpatterns
             )
     )
 })
