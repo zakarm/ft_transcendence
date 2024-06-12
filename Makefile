@@ -130,6 +130,13 @@ nodelink: ## Link node modules
 	@ln -s ${HOME}/goinfre/front/node_modules ./app/front-end/node_modules
 	@echo "$(GREEN)Node modules linked!$(RESET)"
 
+venvlink: ## Link venv modules
+	@echo "$(YELLOW)Linking venv...$(RESET)"
+	@mkdir -p ${HOME}/goinfre/back
+	@python3 -m venv ${HOME}/goinfre/back/venv
+	@ln -s ${HOME}/goinfre/back/venv ./app/back-end
+	@echo "$(GREEN)Venv linked!$(RESET)"
+
 prune: ## Remove all stopped containers, dangling images, and unused networks and volumes
 	@echo "$(YELLOW)Pruning Docker system...$(RESET)"
 	@docker system prune -a -f --volumes
