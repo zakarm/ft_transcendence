@@ -1,12 +1,15 @@
+from drf_spectacular.utils import extend_schema_view, extend_schema
 from django.conf import settings
 from django.shortcuts import redirect
 from django.http import HttpResponseRedirect
 from requests.exceptions import HTTPError
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 from rest_framework import status
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from rest_framework_simplejwt.tokens import AccessToken
+from ft_transcendence.utils import *
 from .models import User
 from .serializer import (UsersSignUpSerializer,
                          UserSignInSerializer,
@@ -16,7 +19,12 @@ import urllib.parse
 import requests
 import sys
 
+
+@extend_schema_view(
+    post=extend_schema(summary="Verify Token", tags=["Authentication"])
+)
 class VerifyTokenView(APIView):
+    serializer_class = None
     def post(self, request, *args, **kwargs):
         try:
             token = request.data.get('token')
@@ -29,13 +37,24 @@ class VerifyTokenView(APIView):
         except Exception as e:
             return Response({'detail': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
 
+@extend_schema_view(
+    post=extend_schema(
+        summary="Sign Up",
+        request=UsersSignUpSerializer,
+        responses={
+            200: signup_response_schema,
+            400: error_response_schema,
+            401: error_response_schema,
+        },
+        tags=["Authentication"])
+)
 class SignUpView(APIView):
     serializer_class = UsersSignUpSerializer
     def post(self, request):
         if User.objects.filter(email=request.data['email']).exists():
-            return Response({"error": "Email already exists"}, status=status.HTTP_409_CONFLICT)
+            return Response({"error": {"Email already exists"}}, status=status.HTTP_409_CONFLICT)
         if User.objects.filter(username=request.data['username']).exists():
-            return Response({"error": "Username already exists"}, status=status.HTTP_409_CONFLICT)
+            return Response({"error": {"Username already exists"}}, status=status.HTTP_409_CONFLICT)
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
@@ -45,8 +64,21 @@ class SignUpView(APIView):
         data["access"] = str(token.access_token)
         return Response(data, status=status.HTTP_201_CREATED)
 
+@extend_schema_view(
+    post=extend_schema(
+        summary="Sign In",
+        description="Endpoint to sign in a user. Returns user information and authentication tokens.",
+        request=UserSignInSerializer,
+        responses={
+            200: signin_response_schema,
+            400: error_response_schema,
+            401: error_response_schema,
+        },
+        tags=["Authentication"])
+)
 class SignInView(APIView):
     serializer_class = UserSignInSerializer
+
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
@@ -64,6 +96,9 @@ class SignInView(APIView):
             return Response(response_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
 
+@extend_schema_view(
+    post=extend_schema(summary="Sign In 2FA", tags=["Authentication"])
+)
 class SignIn2Fa(APIView):
     serializer_class = User2FASerializer
     def post(self, request):
@@ -80,19 +115,32 @@ class SignIn2Fa(APIView):
             }, status = status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
 
+@extend_schema_view(
+    post=extend_schema(summary="Sign Out", tags=["Authentication"])
+)
 class SignOutView(APIView):
     def post(self, request):
-        """Post function"""
-        try :
-            refresh_token = request.data.get('refresh')
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-            return Response({'message:', 'Successfully logged out'}, status=status.HTTP_200_OK)
-        except :
+        """Post function for logging out"""
+        refresh_token = request.data.get('refresh')
+        
+        if refresh_token is None:
             return Response({'error': 'Refresh token is required'}, status=status.HTTP_400_BAD_REQUEST)
 
+        try:
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response({'message': 'Successfully logged out'}, status=status.HTTP_200_OK)
+        except TokenError as e:
+            return Response({'error': 'Invalid or expired refresh token'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': 'An unexpected error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@extend_schema_view(
+    get=extend_schema(summary="Social Auth Exchange", tags=["Authentication"])
+)
 class SocialAuthExchangeView(APIView):
     serializer_class = SocialAuthSerializer
+
     def get(self, request, platform):
         code = request.GET.get('code')
         platform = platform.lower()
@@ -150,8 +198,12 @@ class SocialAuthExchangeView(APIView):
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
-
+@extend_schema_view(
+    get=extend_schema(summary="Social Auth Redirect", tags=["Authentication"])
+)
 class SocialAuthRedirectView(APIView):
+    serializer_class = None
+
     def get(self, request, platform):
         platform = platform.lower()
         if platform == 'github':

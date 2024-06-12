@@ -11,6 +11,8 @@ class Friendship(models.Model):
     u_two_is_blocked_u_one = models.BooleanField(default=False)
     class Meta:
         db_table = 'Friendship'
+        unique_together = (('user_from', 'user_to'),)
+
 
 class Notification(models.Model):
     notification_id = models.AutoField(primary_key=True)

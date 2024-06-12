@@ -1,0 +1,4 @@
+# Prometheus and Grafana data
+prometheus/data
+grafana/data
+alertmanager/data

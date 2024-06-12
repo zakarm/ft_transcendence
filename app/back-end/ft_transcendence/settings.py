@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'chat.apps.ChatConfig',
     'game.apps.GameConfig',
     'compu_ai.apps.CompuAiConfig',
     'django.contrib.sessions',
@@ -52,10 +53,12 @@ INSTALLED_APPS = [
     'channels',
     'djangochannelsrestframework',
     'channels_redis',
-    'drf_spectacular'
+    'drf_spectacular',
+    'django_prometheus'
 ]
 
 MIDDLEWARE = [
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -65,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
 ROOT_URLCONF = 'ft_transcendence.urls'
@@ -93,7 +97,8 @@ WSGI_APPLICATION = 'ft_transcendence.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django_prometheus.db.backends.postgresql',
+        # 'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get('POSTGRES_DB'),
         'USER': os.environ.get('POSTGRES_USER'),
         'HOST': os.environ.get('POSTGRES_HOST'),
@@ -199,7 +204,7 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['back-end', 'localhost', '127.0.0.1']
 
 # CORS_ALLOW_ALL_ORIGINS = True
 
@@ -208,6 +213,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     'http://localhost:3001',
     "http://127.0.0.1:3001",
+    'http://localhost:9090',
+    "http://127.0.0.1:9090",
 ]
 
 CORS_ALLOW_METHODS = [
@@ -255,7 +262,8 @@ GOOGLE_CLIENT_SECRET=os.environ.get('GOOGLE_CLIENT_SECRET')
 GITHUB_CLIENT_ID = os.environ.get('GITHUB_CLIENT_ID')
 GITHUB_CLIENT_SECRET = os.environ.get('GITHUB_CLIENT_SECRET')
 GITHUB_REDIRECT_URI = os.environ.get('GITHUB_REDIRECT_URI')
-
 FORTYTWO_CLIENT_ID = os.environ.get('FORTYTWO_CLIENT_ID')
 FORTYTWO_CLIENT_SECRET = os.environ.get('FORTYTWO_CLIENT_SECRET')
 FORTYTWO_REDIRECT_URI = os.environ.get('FORTYTWO_REDIRECT_URI')
+
+PROMETHEUS_EXPORT_MIGRATIONS = os.environ.get("PROMETHEUS_EXPORT_MIGRATIONS", False)

@@ -5,12 +5,15 @@ from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.db import IntegrityError
 from .models import User
+from rest_framework_simplejwt.tokens import RefreshToken
 
 class UsersSignUpSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(max_length=55, min_length=8, allow_blank=False)
+    password = serializers.CharField(write_only=True, max_length=100, min_length=8,
+                                     required = True)
     class Meta:
         model = User
         fields = ('email', 'password', 'first_name', 'last_name', 'username')
-        extra_kwargs = {'password': {'required': True}}
 
     def create(self, validated_data):
         password = validated_data.pop('password')
@@ -22,12 +25,13 @@ class UsersSignUpSerializer(serializers.ModelSerializer):
         return user
 
 class UserSignInSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    password = serializers.CharField(write_only=True)
+    email = serializers.EmailField(max_length=55, min_length=8, allow_blank=False)
+    password = serializers.CharField(write_only=True, max_length=100, min_length=8,
+                                     required = True)
     def validate(self, data):
         user = authenticate(email=data.get('email'), password=data.get('password'))
         if not user:
-            raise serializers.ValidationError("Incorrect email or password.")
+            raise serializers.ValidationError({"error": "Unauthorized. Invalid credentials provided."})
         user.save()
         if user.is_2fa_enabled:
             user.two_fa_secret_key = pyotp.random_base32()

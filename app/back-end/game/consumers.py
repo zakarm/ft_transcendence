@@ -3,6 +3,7 @@ import asyncio
 import json
 import random
 import sys
+from datetime import datetime, timedelta
 
 # Third-party imports
 from channels.db import database_sync_to_async
@@ -10,11 +11,10 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from django.utils import timezone
-from asgiref.sync import sync_to_async
-from channels.layers import get_channel_layer
 
 # Local application/library specific imports
 from .room import RoomObject
+from .models import Match
 
 User = get_user_model()
 
@@ -87,6 +87,30 @@ def increment_room_index():
         Room_index += 1
     except Exception as e:
         print(f"An error occurred in increment_room_index: {e}", file=sys.stderr)
+
+
+@database_sync_to_async
+def add_match(
+    user_one,
+    user_two,
+    score_user_one,
+    score_user_two,
+    match_start,
+    match_end,
+    tackle_user_one,
+    tackle_user_two,
+):
+    Match.objects.create(
+        user_one=user_one,
+        user_two=user_two,
+        score_user_one=score_user_one,
+        score_user_two=score_user_two,
+        match_start=match_start,
+        match_end=match_end,
+        tackle_user_one=tackle_user_one,
+        tackle_user_two=tackle_user_two,
+    )
+    print(f"Match created", file=sys.stderr)
 
 
 class GameConsumer(AsyncWebsocketConsumer):
@@ -281,6 +305,16 @@ class GameConsumer(AsyncWebsocketConsumer):
                     await self.broadcast_message(message)
                     if room.is_winner():
                         room.end_game()
+                        await add_match(
+                            room.get_user_id(1),
+                            room.get_user_id(2),
+                            room.getScores()["user1"],
+                            room.getScores()["user2"],
+                            room.get_start_date(),
+                            datetime.now(),
+                            room.get_tackles(1),
+                            room.get_tackles(2),
+                        )
                         winner, loser = room.get_winner()
                         await self.send_winner_message(winner)
                         # delete_room(self.room_name)

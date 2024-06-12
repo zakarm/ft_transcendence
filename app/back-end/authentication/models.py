@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser, BaseUserManager
+from django.core.validators import RegexValidator
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -22,9 +23,15 @@ class UserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(max_length=150)
-    email = models.EmailField(max_length=254, unique=True)
-    password = models.CharField(max_length=128)
+    username = models.CharField(max_length=30, validators=[
+        RegexValidator(
+            regex='^[a-zA-Z0-9_ ]*$',
+            message='Username can only contain alphanumeric characters and underscores.',
+            code='invalid_username'
+        ),
+    ])
+    email = models.EmailField(max_length=55, unique=True)
+    password = models.CharField(max_length=100)
     first_name = models.CharField(max_length=30, blank=True, null=True)
     last_name = models.CharField(max_length=30, blank=True, null=True)
     is_staff = models.BooleanField(default=False)
@@ -33,9 +40,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(auto_now_add=True)
     is_superuser = models.BooleanField(default=False)
     last_login = models.DateTimeField(auto_now=True)
-    image_url = models.URLField(max_length=200, blank=True, null=True, 
+    image_url = models.URLField(max_length=350, blank=True, null=True, 
                                 default='/omen.jpeg')
-    cover_url = models.URLField(max_length=200, blank=True, null=True)
+    cover_url = models.URLField(max_length=350, blank=True, null=True)
     location = models.CharField(max_length=100, blank=True, null=True, default="Morocco/Khouribga")
     is_2fa_enabled = models.BooleanField(default=False)
     is_email_verified = models.BooleanField(default=False)

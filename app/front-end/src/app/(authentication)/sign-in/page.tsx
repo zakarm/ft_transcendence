@@ -24,14 +24,18 @@ export default function SignInPage() {
             const form = new FormData(event.currentTarget);
             const email = form.get('email') as string;
             const password = form.get('password') as string;
-            const response = await fetch('http://localhost:8000/api/sign-in', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-              })
+            const response = await fetch(
+				'http://localhost:8000/api/sign-in', 
+				{
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ email, password }),
+				}
+			)
+            const data = await response.json();
+            console.log(data);
             if (response.ok)
             {
-                const data = await response.json();
                 const {access, refresh, is_2fa_enabled, email} = data;
                 if (is_2fa_enabled == 'True')
                 {
@@ -46,27 +50,32 @@ export default function SignInPage() {
                     router.push('/dashboard')
                 }
             }
-            else if (response.status === 401){
-                toast.error('Invalid email or password !');
-            }
-            else if (response.status === 500){
-                toast.error('Server error !');
+            else
+            {
+              const errors = data;
+              for (const key in errors) 
+              {
+                if (errors.hasOwnProperty(key)) 
+                {
+                  errors[key].forEach((errorMessage: string) => {
+                    toast.error(`${key}: ${errorMessage}`);
+                  });
+                }
+              }
             }
         }
         catch (error) {
-            console.error('An unexpected error happened:', error);
+            toast.error("No response received from server.");
         }
     }
     return (
       <div className={`container`}>
-        {/* <ToastContainer /> */}
         {twoFaData && <TwoFa value={twoFaData.value} email={twoFaData.email} />}
         <div className={`${styles.flexx}`}>
           <div className={`${styles.main_card} shadow row`}>
             <div
               className={`col-lg-6 ${styles.main_img}`}
-              style={{ position: "relative", minHeight: "400px" }}
-            >
+              style={{ position: "relative", minHeight: "400px" }}>
               <NextImage
                 fill={true}
                 sizes="100%"
@@ -74,8 +83,7 @@ export default function SignInPage() {
                 src="/pong_background.png"
                 alt="Sign"
                 className={`${styles.main_img}`}
-                priority={true}
-              />
+                priority={true}/>
             </div>
             <div className={`col-lg-6 mb-5`}>
               <div className={`d-flex align-items-center flex-column`}>

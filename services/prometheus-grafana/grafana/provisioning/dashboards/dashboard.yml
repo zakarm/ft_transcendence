@@ -1,7 +1,7 @@
 apiVersion: 1
 providers:
   - name: "default"
-    folder: ""
+    folder: "dashboards"
     type: file
     updateIntervalSeconds: 30
     options:

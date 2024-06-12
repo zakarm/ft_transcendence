@@ -4,9 +4,9 @@ import { LiveTournamentMatches, GetPlayerImageTitle } from '@/components/Tournam
 import styles from '@/components/TournamentOngoing/styles.module.css';
 import { CSSProperties } from 'react';
 import Cookies from 'js-cookie'
-import { 
-    LiveMatchesTypes, 
-    QuarterFinalMatchTypes, 
+import {
+    LiveMatchesTypes,
+    QuarterFinalMatchTypes,
     SemiFinalMatchTypes,
     FinalMatchTypes,
     UserTypes,
@@ -14,25 +14,25 @@ import {
     RenderUpcomingMatchesTypes}
 from '@/lib/tournament-ongoing-type/ongoingTypes'
 
-let data :  LiveMatchesTypes = {
-    action :"update_live",
+let data: LiveMatchesTypes = {
+    action: 'update_live',
     data: {
         quarter_final: {
             match1: {
-                user1: { name: 'chabakro', photoUrl: '/yoru.jpeg', score: 0 },
-                user2: { name: 'lah', photoUrl: '/profile.jpeg', score: 2 },
+                user1: { name: 'yoru', photoUrl: '/assets/images/gameProfiles/yoru.jpeg', score: 0 },
+                user2: { name: 'sova', photoUrl: '/assets/images/gameProfiles/sova.jpeg', score: 2 },
             },
             match2: {
-                user1: { name: 'lah', photoUrl: '/yor.jpeg', score: 1 },
-                user2: { name: 'chabakro', photoUrl: '/LOGO.svg', score: 0 },
+                user1: { name: 'raze', photoUrl: '/assets/images/gameProfiles/raze.jpeg', score: 1 },
+                user2: { name: 'Phoenix', photoUrl: '/assets/images/gameProfiles/Phoenix.jpeg', score: 0 },
             },
             match3: {
-                user1: { name: 'chbeg', photoUrl: '/omen.jpeg', score: 2 },
-                user2: { name: 'rbeg', photoUrl: '/yoru.jpeg', score: 3 },
+                user1: { name: 'omen', photoUrl: '/assets/images/gameProfiles/omen.jpeg', score: 2 },
+                user2: { name: 'harbor', photoUrl: '/assets/images/gameProfiles/harbor.jpeg', score: 3 },
             },
             match4: {
-                user1: { name: 'chabakro', photoUrl: '/eagle.jpg', score: 1 },
-                user2: { name: 'lah lah', photoUrl: '/yoru.jpeg', score: 4 },
+                user1: { name: 'cypher', photoUrl: '/assets/images/gameProfiles/cypher.jpeg', score: 1 },
+                user2: { name: 'chamber', photoUrl: '/assets/images/gameProfiles/chamber.jpeg', score: 4 },
             },
         },
         semi_final: {
@@ -42,8 +42,8 @@ let data :  LiveMatchesTypes = {
         final: {
             match1: { user1: { name: '', photoUrl: '', score: 0 }, user2: { name: '', photoUrl: '', score: 0 } },
         },
-    }
-}
+    },
+};
 
 let wss : WebSocket | null = null;
 
@@ -52,13 +52,13 @@ function    connectToSocket({ pageUrl } : { pageUrl : string }) {
     const   access : string | undefined = Cookies.get("access");
     if (tournamentID && access) {
         try {
-            
+
             if (wss) {
                 wss.close();
                 wss = null;
             };
             wss = new WebSocket(`ws://localhost:8000/ws/data/tournament/${tournamentID}?token=${access}&spect=true`);
-            
+
             wss.onopen = () => {
                 console.log("connected to socket successfully");
             }
@@ -107,7 +107,7 @@ function    RenderUpcomingMatches({round, setmatchToRenderLive}: RenderUpcomingM
                     className={`row col-xxl-6 justify-content-center p-2 m-0`}>
                     <UpcomingMatch p1={round[key].user1} p2={round[key].user2} />
                 </div>
-            ))   
+            ))
         }
         </>
     )
@@ -141,7 +141,7 @@ function TournamentOngoing(pageUrl : {pageUrl : string}) : JSX.Element {
             <>
                 <section className={`row p-0 m-0 justify-content-center align-content-center ${styles.live_wrapper}`}>
                     <div className={`${styles.liveMatchContainer}`}>
-                        <div className={`${styles.liveMatchBackground}`} 
+                        <div className={`${styles.liveMatchBackground}`}
                             style={MatchBackgroundStyle}
                         />
                         <div

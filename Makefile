@@ -77,13 +77,12 @@ clean: down remove-volumes remove-data-dir ## Clean up build artifacts and tempo
 	@echo "$(YELLOW)Cleaning up build artifacts and temporary files...$(RESET)"
 	@rm -rf ./app/front-end/node_modules
 	@rm -rf ./app/front-end/.next
-	@rm -rf ./app/back-end/__pycache__
-	@find . -type f -name '*.pyc' -delete
-	@find . -type d -name '__pycache__' -delete
+	@find . -type d -name '__pycache__' -exec rm -rf {} +
 	@rm -rf ./app/back-end/authentication/migrations
 	@rm -rf ./app/back-end/compu_ai/migrations
 	@rm -rf ./app/back-end/game/migrations
 	@rm -rf ./app/back-end/dashboards/migrations
+	@rm -rf ./app/back-end/chat/migrations
 
 re: clean start ## Clean and start Docker containers
 
@@ -130,6 +129,13 @@ nodelink: ## Link node modules
 	@npm install --prefix ${HOME}/goinfre/front
 	@ln -s ${HOME}/goinfre/front/node_modules ./app/front-end/node_modules
 	@echo "$(GREEN)Node modules linked!$(RESET)"
+
+venvlink: ## Link venv modules
+	@echo "$(YELLOW)Linking venv...$(RESET)"
+	@mkdir -p ${HOME}/goinfre/back
+	@python3 -m venv ${HOME}/goinfre/back/venv
+	@ln -s ${HOME}/goinfre/back/venv ./
+	@echo "$(GREEN)Venv linked!$(RESET)"
 
 prune: ## Remove all stopped containers, dangling images, and unused networks and volumes
 	@echo "$(YELLOW)Pruning Docker system...$(RESET)"
