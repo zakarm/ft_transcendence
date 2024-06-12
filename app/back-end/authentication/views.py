@@ -7,15 +7,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
 from rest_framework import status
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from rest_framework_simplejwt.tokens import AccessToken
 from ft_transcendence.utils import *
 from .models import User
 from .serializer import (UsersSignUpSerializer,
                          UserSignInSerializer,
                          User2FASerializer,
-                         SocialAuthSerializer,
-                         SignOutSerializer)
+                         SocialAuthSerializer)
 import urllib.parse
 import requests
 import sys
@@ -120,20 +119,21 @@ class SignIn2Fa(APIView):
     post=extend_schema(summary="Sign Out", tags=["Authentication"])
 )
 class SignOutView(APIView):
-    serializer_class = SignOutSerializer
-
     def post(self, request):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            refresh_token = serializer.validated_data['refresh']
-            try:
-                token = RefreshToken(refresh_token)
-                token.blacklist()
-                return Response({'message': 'Successfully logged out'}, status=status.HTTP_200_OK)
-            except Exception as e:
-                return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        """Post function for logging out"""
+        refresh_token = request.data.get('refresh')
+        
+        if refresh_token is None:
+            return Response({'error': 'Refresh token is required'}, status=status.HTTP_400_BAD_REQUEST)
 
+        try:
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response({'message': 'Successfully logged out'}, status=status.HTTP_200_OK)
+        except TokenError as e:
+            return Response({'error': 'Invalid or expired refresh token'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': 'An unexpected error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @extend_schema_view(
     get=extend_schema(summary="Social Auth Exchange", tags=["Authentication"])

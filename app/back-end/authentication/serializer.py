@@ -5,6 +5,7 @@ from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.db import IntegrityError
 from .models import User
+from rest_framework_simplejwt.tokens import RefreshToken
 
 class UsersSignUpSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=55, min_length=8, allow_blank=False)
@@ -149,13 +150,3 @@ class SocialAuthSerializer(serializers.Serializer):
                 raise serializers.ValidationError("Email already exists") from e
         else :
             return None
-
-class SignOutSerializer(serializers.Serializer):
-    refresh = serializers.CharField()
-
-    def validate_refresh(self, value):
-        try:
-            token = RefreshToken(value)
-        except Exception as e:
-            raise serializers.ValidationError(f"Invalid token: {str(e)}")
-        return value

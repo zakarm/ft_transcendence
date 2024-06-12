@@ -25,7 +25,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=30, validators=[
         RegexValidator(
-            regex='^[a-zA-Z0-9_]*$',
+            regex='^[a-zA-Z0-9_ ]*$',
             message='Username can only contain alphanumeric characters and underscores.',
             code='invalid_username'
         ),
