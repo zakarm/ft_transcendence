@@ -134,7 +134,7 @@ venvlink: ## Link venv modules
 	@echo "$(YELLOW)Linking venv...$(RESET)"
 	@mkdir -p ${HOME}/goinfre/back
 	@python3 -m venv ${HOME}/goinfre/back/venv
-	@ln -s ${HOME}/goinfre/back/venv ./app/back-end
+	@ln -s ${HOME}/goinfre/back/venv ./
 	@echo "$(GREEN)Venv linked!$(RESET)"
 
 prune: ## Remove all stopped containers, dangling images, and unused networks and volumes

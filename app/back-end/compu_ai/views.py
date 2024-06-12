@@ -10,8 +10,9 @@ from rest_framework import status
 class StatisticsView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+    serializer_class = StatisticsSerializer
 
     def get(self, request):
         user = request.user
-        serializer = StatisticsSerializer(instance=user)
+        serializer = self.serializer_class(instance=user)
         return Response(serializer.data)

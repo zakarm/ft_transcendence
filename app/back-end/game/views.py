@@ -12,6 +12,7 @@ from .serializer import (TournamentsSerializer,
                          UserTournamentsSerializer,
                          UserAchievementsSerializer)
 from drf_spectacular.utils import extend_schema
+from drf_spectacular.types import OpenApiTypes
 from django.utils import timezone
 
 class TournamentsDataView(APIView):
@@ -22,7 +23,7 @@ class TournamentsDataView(APIView):
         description="Retrieve tournament data",
         responses={
             200: UserTournamentsSerializer(),
-            401: "Authentication credentials were not provided"
+            401: OpenApiTypes.OBJECT,
         },
         tags=["Tournaments"]
     )
@@ -39,10 +40,10 @@ class AchievementsDataViews(APIView):
 
     @extend_schema(
         description="Retrieve user achievements",
-        request=None,  # There is no request body for a GET request
+        request=None,
         responses={
             200: UserAchievementsSerializer(many=False),
-            401: "Authentication credentials were not provided",
+            401: OpenApiTypes.OBJECT,
         },
         tags=["Achievements"]
     )
@@ -61,7 +62,8 @@ class CreateTournament(APIView):
         request = TournamentCreationSerializer,
         responses={
             200: {'description': 'Tournament created', 'content': {'application/json': {}}},
-            400: {'description': 'Bad request', 'content': {'application/json': {}}}
+            400: {'description': 'Bad request', 'content': {'application/json': {}}},
+            401: OpenApiTypes.OBJECT,
         },
         tags=["Tournaments"]
     )
@@ -82,7 +84,7 @@ class GameSettingsView(APIView):
         description="Retrieve game settings for the authenticated user.",
         responses={
             200: GameSettingsSerializer,
-            401: "Authentication credentials were not provided"
+            401: OpenApiTypes.OBJECT,
         },
         tags=["Settings"]
     )
@@ -96,7 +98,7 @@ class GameSettingsView(APIView):
         request=GameSettingsSerializer,
         responses={
             200: {'description': 'Settings updated successfully'},
-            400: {'description': 'Bad request', 'content': {'application/json': {}}}
+            401: OpenApiTypes.OBJECT,
         },
         tags=["Settings"]
     )

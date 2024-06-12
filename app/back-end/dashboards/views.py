@@ -1,4 +1,5 @@
 from rest_framework.views import APIView
+# from rest_
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -12,7 +13,7 @@ from .serializer import (MainDashboardSerializer,
 from .models import Friendship, Notification
 from authentication.models import User
 from rest_framework import status
-import sys
+from rest_framework.generics import GenericAPIView
 from django.db.models import F, Q
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
@@ -22,31 +23,34 @@ from django.contrib.auth.models import AnonymousUser
 class MainDashboardView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+    serializer_class = MainDashboardSerializer
 
     def get(self, request):
         user = request.user
-        serializer_data = MainDashboardSerializer(instance=user)
+        serializer_data = self.serializer_class(instance=user)
         return Response(serializer_data.data)
 
 
 class ProfileView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+    serializer_class = ProfileSerializer
 
     def get(self, request):
         user = request.user
-        serializer_data = ProfileSerializer(instance=user)
+        serializer_data = self.serializer_class(instance=user)
         return Response(serializer_data.data)
 
 
 class ProfileIdView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+    serializer_class = ProfileSerializer
 
     def get(self, request, username):
         try:
             user = User.objects.get(username=username)
-            serializer_data = ProfileSerializer(instance=user)
+            serializer_data = self.serializer_class(instance=user)
             return Response(serializer_data.data)
         except User.objects.model.DoesNotExist:
             return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
@@ -54,17 +58,18 @@ class ProfileIdView(APIView):
 class FriendsView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+    serializer_class = FriendsSerializer
 
     def get(self, request):
         user = request.user
-        serializer = FriendsSerializer(instance=user)
+        serializer = self.serializer_class(instance=user)
         return Response(serializer.data)
 
 class UserSearchView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
-
     serializer_class = UserSerializer
+
     def post(self, request):
         user = request.data['username_search']
         queryset = User.objects.filter(username__startswith=user)
@@ -75,6 +80,7 @@ class UserSearchView(APIView):
 class RemoveFriendshipView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+    serializer_class = FriendsSerializer
 
     def post(self, request):
         user_from = request.user
@@ -97,6 +103,7 @@ class RemoveFriendshipView(APIView):
 class AcceptFriendshipView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+    serializer_class = FriendsSerializer
 
     def post(self, request):
         user_from = request.user
@@ -121,6 +128,7 @@ class AcceptFriendshipView(APIView):
 class AddFriendshipView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+    serializer_class = FriendsSerializer
 
     def post(self, request):
         user_from = request.user
@@ -176,6 +184,7 @@ def serialize_user(user):
 class BlockFriendshipView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+    serializer_class = FriendsSerializer
 
     def block_friend(self, friendship, user_from):
         if friendship.user_from == user_from:
@@ -207,6 +216,7 @@ class BlockFriendshipView(APIView):
 class UnblockFriendshipView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+    serializer_class = FriendsSerializer
 
     def unblock_friend(self, friendship, user_from):
         if friendship.user_from == user_from:
@@ -238,26 +248,28 @@ class UnblockFriendshipView(APIView):
 class BlockedFriendsView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+    serializer_class = BlockedFriendsSerializer
 
     def get(self, request):
         user = request.user
-        serializer = BlockedFriendsSerializer(instance=user)
+        serializer = self.serializer_class(instance=user)
         return Response(serializer.data)
 
 class NotificationsView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+    serializer_class = NotificationUserSerializer
 
     def get(self, request):
         user = request.user
-        serializer = NotificationUserSerializer(instance=user)
+        serializer = self.serializer_class(instance=user)
         return Response(serializer.data)
 
 class GameHistoryReportView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
-
     serializer_class = GameHistorySerializer
+
     def post(self, request):
         user = request.user
         period = request.data.get("period")
