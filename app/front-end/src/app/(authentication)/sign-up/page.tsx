@@ -16,7 +16,7 @@ export default function SignUp() {
   const router = useRouter();
   const [qrCode, setQrCode] = useState(null);
   const signUpPost = async (event: FormEvent<HTMLFormElement>) => {
-	try 
+	try
 	{
 		event.preventDefault();
 		const form = new FormData(event.currentTarget);
@@ -26,7 +26,7 @@ export default function SignUp() {
 		const email = form.get("email") as string;
 		const password = form.get("password") as string;
 		const response = await fetch(
-			"http://localhost:8000/api/sign-up", 
+			"http://localhost:8000/api/sign-up",
 			{
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
@@ -45,21 +45,21 @@ export default function SignUp() {
 			Cookies.set("access", access);
 			Cookies.set("refresh", refresh);
 			router.push("/dashboard");
-		} 
+		}
 		else {
 			const errors = data;
-			for (const key in errors) 
+			for (const key in errors)
 			{
-				if (errors.hasOwnProperty(key)) 
+				if (errors.hasOwnProperty(key))
 				{
 					errors[key].forEach((errorMessage: string) => {
 					toast.error(`${key}: ${errorMessage}`);
 					});
 				}
 			}
-		} 
+		}
 	}
-	catch (error) 
+	catch (error : any)
 	{
 		toast.error("No response received from server.", error);
 	}
