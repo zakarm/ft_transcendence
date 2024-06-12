@@ -14,6 +14,7 @@ interface Notif {
     message: string;
     title: string;
     link: string;
+    count: number;
     is_chat_notif: boolean;
     is_friend_notif: boolean;
     is_tourn_notif: boolean;
@@ -41,17 +42,16 @@ interface Props {
 function Notification({ notification }: Props) {
     const router = useRouter();
     const [user, setUser] = useState<Friend_ | undefined>(undefined);
-
     function goToLink() {
         router.push(notification.link);
     }
 
-    const fetchUserState = async (api: string, message: string, username: string) => {
+    const fetchUserState = async (api: string, message: string, username: string, notification_id: number) => {
         const access = Cookies.get('access');
+        
 
         if (access) {
             try {
-                console.log(username);
                 const res = await fetch(`http://localhost:8000/api/${api}`, {
                     method: 'POST',
                     headers: {
@@ -98,10 +98,36 @@ function Notification({ notification }: Props) {
                     }
                     toast.success(message);
                 }
+                const notif = await fetch(`http://localhost:8000/api/notification-delete/${notification_id}`, {
+                    method: 'DELETE',
+                    headers: {
+                      'Authorization': `Bearer ${access}`,
+                      'Content-Type': 'application/json'
+                    }
+                });
+                const notif_data = await notif.json();
+                if (notif.ok)
+                {
+                    toast.success("Notification deleted");
+                }
+                else {
+                    const errors = notif_data;
+                    for (const key in errors) 
+                    {
+                        if (errors.hasOwnProperty(key)) 
+                        {
+                            errors[key].forEach((errorMessage: string) => {
+                                toast.error(`${key}: ${errorMessage}`);
+                            });
+                        }
+                    }
+                }
             } catch (error) {
-                console.error('Error fetching data: ', error);
+                toast.error("No response received from server.");
             }
-        } else toast.error('Unauthorized');
+        } else{
+            toast.error("error: Unauthorized. Invalid credentials provided.");
+        }
     };
 
     return (
@@ -127,16 +153,12 @@ function Notification({ notification }: Props) {
                         <Button
                             variant="success"
                             className="me-2"
-                            onClick={() => fetchUserState('friends-accept', 'Added to friends', notification.action_by)}
-                        >
+                            onClick={() => fetchUserState('friends-accept', 'Added to friends', notification.action_by, notification.notification_id)}>
                             <FaCheck />
                         </Button>
                         <Button
-                            variant="danger"
-                            onClick={() =>
-                                fetchUserState('friends-remove', 'Removed from friends', notification.action_by)
-                            }
-                        >
+                            variant="danger" 
+                            onClick={() =>fetchUserState('friends-remove', 'Removed from friends', notification.action_by, notification.notification_id)}>
                             <FaTimes />
                         </Button>
                     </>

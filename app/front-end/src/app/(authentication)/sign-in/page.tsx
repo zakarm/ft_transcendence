@@ -65,7 +65,7 @@ export default function SignInPage() {
             }
         }
         catch (error) {
-            toast.error("No response received from server.", error);
+            toast.error("No response received from server.");
         }
     }
     return (

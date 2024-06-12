@@ -255,16 +255,6 @@ class BlockedFriendsView(APIView):
         serializer = self.serializer_class(instance=user)
         return Response(serializer.data)
 
-class NotificationsView(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-    serializer_class = NotificationUserSerializer
-
-    def get(self, request):
-        user = request.user
-        serializer = self.serializer_class(instance=user)
-        return Response(serializer.data)
-
 class GameHistoryReportView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -276,3 +266,42 @@ class GameHistoryReportView(APIView):
         context = {"period": period}
         serializer = self.serializer_class(instance=user, context=context)
         return Response(serializer.data)
+
+
+class NotificationsView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = NotificationUserSerializer
+
+    def get(self, request):
+        user = request.user
+        serializer = self.serializer_class(instance=user)
+        return Response(serializer.data)
+
+class NotificationDetailView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, notification_id):
+        user = request.user
+        try:
+            notification = Notification.objects.get(notification_id=notification_id)
+            if notification.user != request.user:
+                return Response({'error': {'You do not have permission to delete this notification'}}, status=status.HTTP_403_FORBIDDEN)
+            notification.delete()
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                f"room_{user.id}",
+                {
+                    "type": "send_notification",
+                    "notification_id": notification.notification_id,
+                    "count": Notification.objects.filter(user = user).count(),
+                    "is_chat_notif": notification.is_chat_notif,
+                    "is_friend_notif": notification.is_friend_notif,
+                    "is_tourn_notif": notification.is_tourn_notif,
+                    "is_match_notif": notification.is_match_notif,
+                },
+            )
+            return Response({'success': {'Notification deleted'}}, status=status.HTTP_200_OK)
+        except Notification.DoesNotExist:
+            return Response({'error': {'Notification does not exist'}}, status=status.HTTP_404_NOT_FOUND)
