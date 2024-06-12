@@ -51,6 +51,7 @@ function Notification({ notification }: Props) {
         
 
         if (access) {
+
             try {
                 const res = await fetch(`http://localhost:8000/api/${api}`, {
                     method: 'POST',
@@ -63,6 +64,37 @@ function Notification({ notification }: Props) {
                 });
 
                 const data = await res.json();
+
+                try 
+                {
+                    const notif = await fetch(`http://localhost:8000/api/notification-delete/${notification_id}`, {
+                        method: 'DELETE',
+                        headers: {
+                        'Authorization': `Bearer ${access}`,
+                        'Content-Type': 'application/json'
+                        }
+                    });
+                    const notif_data = await notif.json();
+                    if (notif.ok)
+                    {
+                        toast.success("Notification deleted");
+                    }
+                    else {
+                        const errors = notif_data;
+                        for (const key in errors) 
+                        {
+                            if (errors.hasOwnProperty(key)) 
+                            {
+                                errors[key].forEach((errorMessage: string) => {
+                                    toast.error(`${key}: ${errorMessage}`);
+                                });
+                            }
+                        }
+                    }
+                } catch (error) {
+                    toast.error("No response received from server.");
+                }
+
                 if (!res.ok) {
                     if (res.status === 400) {
                         return toast.error('Action not allowed : ' + data.error);
@@ -98,33 +130,11 @@ function Notification({ notification }: Props) {
                     }
                     toast.success(message);
                 }
-                const notif = await fetch(`http://localhost:8000/api/notification-delete/${notification_id}`, {
-                    method: 'DELETE',
-                    headers: {
-                      'Authorization': `Bearer ${access}`,
-                      'Content-Type': 'application/json'
-                    }
-                });
-                const notif_data = await notif.json();
-                if (notif.ok)
-                {
-                    toast.success("Notification deleted");
-                }
-                else {
-                    const errors = notif_data;
-                    for (const key in errors) 
-                    {
-                        if (errors.hasOwnProperty(key)) 
-                        {
-                            errors[key].forEach((errorMessage: string) => {
-                                toast.error(`${key}: ${errorMessage}`);
-                            });
-                        }
-                    }
-                }
+                
             } catch (error) {
                 toast.error("No response received from server.");
             }
+            
         } else{
             toast.error("error: Unauthorized. Invalid credentials provided.");
         }
