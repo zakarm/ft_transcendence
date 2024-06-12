@@ -13,13 +13,13 @@ interface GameHistoryCardProps {
 	data: GameData[];
   }
   
-const GameHistoryCard: React.FC<GameHistoryCardProps> = ({ data }) => {
+const GameHistoryCard: React.FC<GameHistoryCardProps> = ({ data } : GameHistoryCardProps) => {
 
 	return (
 		<Table responsive className={`${styles.table}`}>
 		<thead>
 			<tr className="text-center">
-			<th className={`${styles.titles} itim-font`}>Player</th>
+			<th className={`${styles.titles} itim-font text-start ps-5`}>Player</th>
 			<th className={`${styles.titles} itim-font`}>Score</th>
 			<th className={`${styles.titles} itim-font`}>Date</th>
 			<th className={`${styles.titles} itim-font`}>Result</th>

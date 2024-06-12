@@ -37,6 +37,10 @@ input[type="file"].imageInput {
   display: none;
 }
 
+.font-color {
+  color : var(--clr--white);
+}
+
 *::-webkit-scrollbar {
   width: 10px;
 }
