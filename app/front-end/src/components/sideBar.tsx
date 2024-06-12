@@ -15,6 +15,7 @@ import { IoMdSettings } from "react-icons/io";
 import Image from 'next/image';
 import {signOut} from '@/components/sign-out/signOut';
 import { NextRouter } from 'next/router';
+import { IoStatsChart } from "react-icons/io5";
 
 export default function SideBar() {
 
@@ -27,7 +28,7 @@ export default function SideBar() {
   });
 
   useEffect(() => {
-    const pathUrls = ["/dashboard", "/game", "/chat", "/achievements", "/settings"];
+    const pathUrls = ["/dashboard", "/game", "/chat", "/achievements", "/statistics", "/settings"];
 	  const index = pathUrls.indexOf(pathname);
 	  if(index === -1) return;
     setActiveIcon(index);
@@ -60,12 +61,15 @@ export default function SideBar() {
             <Link className="" href="/achievements">
             	<FaTrophy className={`${styles.side_icon} icon_3`} color={activeIcon === 3 ? '#FF4755' : '#FFEBEB'}/>
             </Link>
+            <Link className="" href="/statistics">
+            	<IoStatsChart className={`${styles.side_icon} icon_4`} color={activeIcon === 4 ? '#FF4755' : '#FFEBEB'}/>
+            </Link>
             <Link className="" href="/settings">
-            	<IoMdSettings className={`${styles.side_icon} icon_4`} color={activeIcon === 4 ? '#FF4755' : '#FFEBEB'}/>
+            	<IoMdSettings className={`${styles.side_icon} icon_5`} color={activeIcon === 5 ? '#FF4755' : '#FFEBEB'}/>
             </Link>
 		</div>
 		<div className="flex-grow-1 d-flex align-items-end pb-3">
-			<IoMdLogOut className={`${styles.side_icon} ${styles.icon_5}`} color={activeIcon === 5 ? '#FF4755' : '#FFEBEB'} onClick={() => signOut(router)}/>
+			<IoMdLogOut className={`${styles.side_icon} ${styles.icon_5}`} color={activeIcon === 6 ? '#FF4755' : '#FFEBEB'} onClick={() => signOut(router)}/>
 		</div>
       </div>
   );

@@ -1,3 +1,11 @@
+interface   PlayerStatsTypes {
+    scores : number;
+    tackles : number;
+    win_rate : number;
+    wins : number;
+    loses : number;
+}
+
 interface   PlayerMatchesTypes {
     date :string;
     player_name :string;
@@ -37,7 +45,8 @@ export type {
     StatisticsDataTypes as StatisticsDataTypes,
     FuturePredictionsTypes as FuturePredictionsTypes,
     AchivementTypes as AchivementTypes,
-    PlayerMatchesTypes as PlayerMatchesTypes
+    PlayerMatchesTypes as PlayerMatchesTypes,
+    PlayerStatsTypes as PlayerStatsTypes
 }
 
 /*

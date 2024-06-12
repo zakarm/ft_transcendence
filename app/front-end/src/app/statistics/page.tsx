@@ -4,9 +4,13 @@ import { toast } from 'react-toastify';
 import Cookies from 'js-cookie';
 import { useLayoutEffect, useState, useEffect } from 'react'
 
-
-
-import { FuturePredictionsTypes, StatisticsDataTypes, AchivementTypes, PlayerMatchesTypes } from "@/lib/StatisticsPageTypes/StatisticsPageTypes";
+import {
+    FuturePredictionsTypes,
+    StatisticsDataTypes,
+    AchivementTypes,
+    PlayerMatchesTypes,
+    PlayerStatsTypes
+} from "@/lib/StatisticsPageTypes/StatisticsPageTypes";
 import styles from './styles.module.css'
 import { FuturePredictionGraph } from '@/components/statistics/graph'
 import { GameHistoryTable } from '@/components/statistics/historyTable'
@@ -25,7 +29,7 @@ const   achivImage : {[key : string] : string} = {
     legend: 'achiv_ai3.png'
 }
 
-async function  GetData() : Promise<StatisticsDataTypes> {
+async function  getData() : Promise<StatisticsDataTypes> {
     let   data : Partial<Promise<StatisticsDataTypes> >= {};
     const   access = Cookies.get("access");
     if (access) {
@@ -33,10 +37,31 @@ async function  GetData() : Promise<StatisticsDataTypes> {
             method : "GET",
             headers : { Authorization : `Bearer ${access}` }
         });
-        data = await response.json();
+        try {
+            data = await response.json();
+        } catch (error : any) {
+            console.log(`Error : ${error.message}`);
+        }
     }
 
     return (data as StatisticsDataTypes);
+}
+
+function    getPlayerStatsFromData(data : Partial<StatisticsDataTypes>) : PlayerStatsTypes {
+    const   stats : PlayerStatsTypes = {
+        scores : 0,
+        tackles : 0,
+        win_rate : 0,
+        wins : 0,
+        loses : 0
+    };
+
+    stats.scores = data.scores ?? 0;
+    stats.loses = data.loses ?? 0;
+    stats.tackles = data.tackles ?? 0;
+    stats.wins = data.wins ?? 0;
+    stats.win_rate = data.win_rate ?? 0;
+    return (stats);
 }
 
 function    StatisticsPage() {
@@ -45,17 +70,19 @@ function    StatisticsPage() {
     const   [playerMatches, setPlayerMatches] = useState<PlayerMatchesTypes[]>([]);
     const   [avgScore, setAvgScore] = useState<number>(0);
     const   [lastAchiv, setLastAchiv] = useState<Partial<AchivementTypes>>({});
+    const   [playerStats, setPlayerStats] = useState<Partial<PlayerStatsTypes>>({});
     
     let     data : Partial<StatisticsDataTypes> = {};
 
     useEffect(() => {
         (async () => {
-            data = await GetData();
+            data = await getData();
             setTopPlayer(data.top_player ?? "");
             setFuturePredictions(data.future_predictions ?? []);
             setAvgScore(data.avg_score ?? 0);
             setLastAchiv(data.last_achiev as AchivementTypes ?? data.last_achiev as undefined);
             setPlayerMatches(data.player_matches ?? []);
+            setPlayerStats(getPlayerStatsFromData(data));
         })();
     }, [])
 
@@ -68,51 +95,52 @@ function    StatisticsPage() {
                         STATISTICS
                     </h1>
                 </div>
-                
-                {/*  Left Side */}
-                <div className={`col-12 col-xxl-7`}>
-                
-                    <section className={`col-12`}>
-                        <FuturePredictionGraph futurePredictions={futurePredictions}/>
-                    </section>
+                <div className="row flex-xxl-nowrap">
+                    {/*  Left Side */}
+                    <div className={`col-12 col-xxl-8 order-1 order-xxl-0 m-2 row`}>
+                    
+                        <section className={`col-12 m-2 order-0`}>
+                            <FuturePredictionGraph futurePredictions={futurePredictions}/>
+                        </section>
 
-                    <section className="col-12">
-                        <div className={`row mt-3  justify-content-center justify-content-xl-between ${styles.player_card_container}`}>
-                            <div className={`col-xxl-3 m-1 ${styles.player_card}`}>
-                                <StatisticCard
-                                    title="Top Player"
-                                    body={topPlayer}
-                                    imgSrc="top_player_bg.png"
-                                />
+                        <section className="col-12 m-2 order-1 order-xxl-1 ">
+                            <div className={`row mt-3 justify-content-start flex-nowrap justify-content-xxl-between ${styles.outter_player_card_container}`}>
+                                <div className={`col-4 m-1 ${styles.player_card}`}>
+                                    <StatisticCard
+                                        title="Top Player"
+                                        body={ topPlayer }
+                                        imgSrc="top_player_bg.png"
+                                    />
+                                </div>
+                                <div className={`col-4 m-1 ${styles.player_card}`}>
+                                    <StatisticCard
+                                        title="Average Score"
+                                        body={ avgScore }
+                                        imgSrc="valorant-logo.png"
+                                    />
+                                </div>
+                                <div className={`col-4 m-1 ${styles.player_card}`}>
+                                    <StatisticCard
+                                        title="Last Achivement"
+                                        body={lastAchiv && lastAchiv.achievement_name ? lastAchiv.achievement_name : ""}
+                                        imgSrc={ lastAchiv && lastAchiv.achievement_name ? achivImage[lastAchiv.achievement_name] : ""}
+                                    />
+                                </div>
                             </div>
-                            <div className={`col-xxl-3 m-1 ${styles.player_card}`}>
-                                <StatisticCard
-                                    title="Average Score"
-                                    body={avgScore}
-                                    imgSrc="valorant-logo.png"
-                                />
-                            </div>
-                            <div className={`col-xxl-3 m-1 ${styles.player_card}`}>
-                                <StatisticCard
-                                    title="Last Achivement"
-                                    body={lastAchiv.achievement_name ?? ""}
-                                    imgSrc={ achivImage[lastAchiv.achievement_name ?? ""]}
-                                />
-                            </div>
-                        </div>
-                    </section>
+                        </section>
 
-                    <section className="col-12">
-                        <div className={`row ${styles.stats_container} mt-3`}>
-                            <PlayerStats />
-                        </div>
-                    </section>
-                
-                </div>
-                
-                {/*  Right Side */}
-                <div className={`col-12 col-xxl-5`}>
-                    <GameHistoryTable player_matches={playerMatches} />
+                        <section className="col-12 m-2 order-2 order-xxl-1 align-items-center">
+                            <div className={`row ${styles.stats_container} mt-3 `}>
+                                <PlayerStats stats={ playerStats as PlayerStatsTypes }/>
+                            </div>
+                        </section>
+
+                    </div>
+
+                    {/*  Right Side */}
+                    <div className={`col-12 col-xxl-4 order-0 order-xxl-2 m-2`}>
+                        <GameHistoryTable player_matches={ playerMatches } />
+                    </div>
                 </div>
 
             </div>

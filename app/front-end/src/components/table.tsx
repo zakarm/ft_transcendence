@@ -13,7 +13,7 @@ interface GameHistoryCardProps {
 	data: GameData[];
   }
   
-const GameHistoryCard: React.FC<GameHistoryCardProps> = ({ data }) => {
+const GameHistoryCard: React.FC<GameHistoryCardProps> = ({ data } : GameHistoryCardProps) => {
 
 	return (
 		<Table responsive className={`${styles.table}`}>

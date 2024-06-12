@@ -13,6 +13,7 @@
         - set "Your Colors" to colors coming from backend (settings)
         - page/profile ==> refresh on save
         - valid range of game difficulty [0-2]
+        - Fix bugs of when API fails
 
     ----------------------------------------------------------------------------------
     Feat :

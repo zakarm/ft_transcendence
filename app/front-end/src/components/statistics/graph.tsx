@@ -31,7 +31,6 @@ function    FuturePredictionGraph(futurePredictions : {futurePredictions : Futur
         Chart.defaults.font.family = "Itim"
         Chart.defaults.font.size = 11;
         new Chart("playerChart", {
-            // animations: true,
             type : "line",
             data : {
                 labels : labelArray,
@@ -49,14 +48,6 @@ function    FuturePredictionGraph(futurePredictions : {futurePredictions : Futur
             },
             options : {
                 maintainAspectRatio: false,
-                // animations: {
-                //     tension: {
-                //       duration: 3000,
-                //       easeInBounce: 'linear',
-                //       from: 1,
-                //       to: 0,
-                //       loop: true
-                //     }},
                 scales : {
                     x : {
                         grid : {
