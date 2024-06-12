@@ -11,6 +11,8 @@ import { ImUserMinus } from 'react-icons/im';
 import { IoIosSend } from "react-icons/io";
 import { useEffect, useRef, useState } from 'react';
 
+import { toast } from 'react-toastify';
+
 import { CgHello } from "react-icons/cg";
 
 interface Users {
@@ -22,8 +24,11 @@ interface Users {
 
 interface Props{
   selectedChat: string;
-  chatUsers: Users[];
+  chatSocket: WebSocket | null;
   setChatUsers: React.Dispatch<React.SetStateAction<Users[]>>;
+  newMessage: Message | undefined;
+  setNewMessage: React.Dispatch<React.SetStateAction<Message | undefined>>;
+  chatSocketRef: React.RefObject<WebSocket | null>;
 }
 
 interface Friend {
@@ -51,18 +56,17 @@ interface Friends {
 
 interface Message{
   chat_id: string;
-  text: string;
-  user: string;
+  message: string;
+  sender: string;
+  receiver: string;
   timestamp: string;
 }
 
-export default function ChatMessages( { selectedChat, chatUsers, setChatUsers }: Props ) {
+export default function ChatMessages( { selectedChat, chatSocket, setChatUsers, newMessage, setNewMessage, chatSocketRef }: Props ) {
   
   const [searchedChat, setSearchedChat] = useState<Friend | undefined>(undefined);
   const chatLogRef = useRef<HTMLDivElement | null>(null);
-  const chatSocketRef = useRef<WebSocket | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [newMessage, setNewMessage] = useState<Message | undefined>(undefined);
   const [inputValue, setInputValue] = useState<string>('');
   const [me, setMe] = useState<string>('');
   
@@ -98,46 +102,8 @@ export default function ChatMessages( { selectedChat, chatUsers, setChatUsers }:
     }
 };
 
-const startChatting = () => {
-
-  // if (chatSocketRef.current) {
-    //   // chatSocketRef.current.close();
-  // }
-    const access = Cookies.get('access');
-    if (access) {
-      try {
-                const chatSocket = new WebSocket(`ws://127.0.0.1:8000/ws/chat/${searchedChat?.freindship_id ?? -1}?token=${access}`);
-              
-            chatSocket.onmessage = (e: MessageEvent) => {
-              const data = JSON.parse(e.data);
-              setNewMessage({ chat_id: data.chat_id, text: data.message, user: data.user, timestamp: data.timestamp});
-              if (data.user === selectedChat)
-              {
-                setChatUsers(prevUsers =>
-                  prevUsers.map(user =>
-                    user.username === data.user ? { ...user, message_waiting: true } : user
-                  )
-                );
-              }
-             };
-           
-             chatSocket.onclose = () => {
-               console.log('Chat socket closed');
-             };
-             
-             chatSocketRef.current = chatSocket;
-             
-             return () => {
-               chatSocket.close();
-             };
-      }
-      catch (error) {
-        console.error('Error fetching data: ', error);
-      }
-    }
-}
-
 useEffect(() => {
+  console.log("got it");
   if (newMessage && (messages?.length === 0 || messages?.at(messages.length - 1)?.timestamp !== newMessage?.timestamp))
         setMessages((prevMessages) => [...prevMessages, newMessage]);
 }, [newMessage]);
@@ -152,16 +118,10 @@ useEffect(() => {
   fetchSearchUser();
 }, [selectedChat]);
 
-useEffect(() => {
-  if (searchedChat) {
-    startChatting();
-  }
-}, [searchedChat]);
-
   
 const sendMessage = () => {
   if (inputValue.trim() !== '') {
-    chatSocketRef.current?.send(JSON.stringify({'chat_id': searchedChat?.freindship_id ?? -1, 'message': inputValue, 'user': me, timestamp: new Date().toISOString()}));
+    chatSocketRef.current?.send(JSON.stringify({'chat_id': searchedChat?.freindship_id ?? -1, 'message': inputValue, 'sender': me, 'receiver': selectedChat, timestamp: new Date().toISOString()}));
     setChatUsers(prevUsers =>
       prevUsers.map(user =>
         user.username === selectedChat ? { ...user, message_waiting: false } : user
@@ -203,17 +163,17 @@ return (
                 {messages
                 .filter((message: Message) => (Number(message.chat_id) === searchedChat?.freindship_id ?? -1))
                 .map((message, index) => (
-                  <div className='' key={index} style={{ textAlign: (message.user === me) ? 'right' : 'left' }}>
+                  <div className='' key={index} style={{ textAlign: (message.sender === me) ? 'right' : 'left' }}>
                     {
-                      (message.user === selectedChat) ?
+                      (message.sender === selectedChat) ?
                       (
                         <div className='my-4' style={{fontFamily: 'itim'}}>
-                          <span style={{backgroundColor: '#181b20', padding: '10px', borderRadius: '15px'}}>{message.text}</span>
+                          <span style={{backgroundColor: '#181b20', padding: '10px', borderRadius: '15px'}}>{message.message}</span>
                         </div>
                       ) :
                       (
                         <div className='my-4' style={{fontFamily: 'itim'}}>
-                          <span style={{backgroundColor: '#222a38', padding: '10px', borderRadius: '15px'}}>{message.text}</span>
+                          <span style={{backgroundColor: '#222a38', padding: '10px', borderRadius: '15px'}}>{message.message}</span>
                         </div>
                       )
                     }
