@@ -93,8 +93,8 @@ async function getTournamentsTabData(
                         name={obj.tournament_name}
                         date={
                             currentTab === 'Completed'
-                            ? formatDate(obj.tournament_end) :
-                            formatDate(obj.tournament_start)
+                                ? formatDate(obj.tournament_end)
+                                : formatDate(obj.tournament_start)
                         }
                         participantsJoined={obj.participantsJoined}
                         imageUrl={obj.image_url}
@@ -212,17 +212,16 @@ const Tournament: React.FC = () => {
                     </>
                 ) : choosenTab === 'Ongoing' ? (
                     <>
-                        
-                        <div className={
-                            tournamentsToRender.length > 0 ?
-                                `col-12 col-xl-7 col-xxl-7 order-1 p-0 m-0` : `col-12 order-1 p-0 m-0`
+                        <div
+                            className={
+                                tournamentsToRender.length > 0
+                                    ? `col-12 col-xl-7 col-xxl-7 order-1 p-0 m-0`
+                                    : `col-12 order-1 p-0 m-0`
                             }
                         >
-                            <TournamentOngoing pageUrl={tournamentID}/>
+                            <TournamentOngoing pageUrl={tournamentID} />
                         </div>
-                        <div className={`${rightStyle} flex-wrap`}>
-                            {tournamentsToRender}
-                        </div>
+                        <div className={`${rightStyle} flex-wrap`}>{tournamentsToRender}</div>
                     </>
                 ) : (
                     <div className="col d-flex flex-wrap justify-content-center">{tournamentsToRender}</div>
