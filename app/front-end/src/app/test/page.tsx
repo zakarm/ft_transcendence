@@ -9,7 +9,7 @@ export default function Page() {
             console.log('connected');
         };
         ws.onmessage = (message) => {
-            console.log('message', message);
+            console.log(message.data);
             setData((prev: any) => prev.concat(JSON.parse(message.data)));
         };
         ws.onclose = () => {

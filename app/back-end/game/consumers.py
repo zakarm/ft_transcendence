@@ -175,20 +175,20 @@ class GameConsumer(AsyncWebsocketConsumer):
                 }
                 await self.message({"message": message})
                 if self.room.is_ready():
-                    user1, user1_data, user2, user2_data = (
-                        self.room.get_original_users()
-                    )
-                    # check the users ?//???????
-                    message = {
-                        "action": "opponents",
-                        "user1": user1,
-                        "user1_image_url": user1_data["user_img"],
-                        "user1_username": user1_data["username"],
-                        "user2": user2,
-                        "user2_image_url": user2_data["user_img"],
-                        "user2_username": user2_data["username"],
-                    }
-                    await self.broadcast_message(message)
+                    # user1, user1_data, user2, user2_data = (
+                    #     self.room.get_original_users()
+                    # )
+                    # # check the users ?//???????
+                    # message = {
+                    #     "action": "opponents",
+                    #     "user1": user1,
+                    #     "user1_image_url": user1_data["user_img"],
+                    #     "user1_username": user1_data["username"],
+                    #     "user2": user2,
+                    #     "user2_image_url": user2_data["user_img"],
+                    #     "user2_username": user2_data["username"],
+                    # }
+                    # await self.broadcast_message(message)
                     if self.room.is_started() == False:
                         asyncio.ensure_future(self.start_game())
             else:
@@ -235,6 +235,18 @@ class GameConsumer(AsyncWebsocketConsumer):
     # -----------------------> 6. start_game <-----------------------
     async def start_game(self):
         try:
+            user1, user1_data, user2, user2_data = self.room.get_original_users()
+            # check the users ?//???????
+            message = {
+                "action": "opponents",
+                "user1": user1,
+                "user1_image_url": user1_data["user_img"],
+                "user1_username": user1_data["username"],
+                "user2": user2,
+                "user2_image_url": user2_data["user_img"],
+                "user2_username": user2_data["username"],
+            }
+            await self.broadcast_message(message)
             await asyncio.sleep(5)
             await self.broadcast_message({"action": "load_game"})
             await asyncio.sleep(5)
@@ -255,6 +267,18 @@ class GameConsumer(AsyncWebsocketConsumer):
                             await self.send_winner_message(winner)
                             # delete_room(self.room_name)
                             return
+                    user1, user1_data, user2, user2_data = self.room.get_original_users()
+                    # check the users ?//???????
+                    message = {
+                        "action": "opponents",
+                        "user1": user1,
+                        "user1_image_url": user1_data["user_img"],
+                        "user1_username": user1_data["username"],
+                        "user2": user2,
+                        "user2_image_url": user2_data["user_img"],
+                        "user2_username": user2_data["username"],
+                    }
+                    await self.broadcast_message(message)
                     await self.broadcast_message({"action": "start_game"})
                     message = {
                         "action": "score",
@@ -379,7 +403,8 @@ class GameConsumer(AsyncWebsocketConsumer):
             rooms_items = get_rooms_items()
             for room_name, room in rooms_items:
                 if not room.is_ended():
-                    if room.is_ready() and room.is_user_joined(user.email):
+                    if room.is_user_joined(user.email):
+                    # if room.is_ready() and room.is_user_joined(user.email):
                         room.reconecting_user(self.channel_name, user.email)
                         await self.message({"message": {"action": "reconnected"}})
                         return room_name, room
