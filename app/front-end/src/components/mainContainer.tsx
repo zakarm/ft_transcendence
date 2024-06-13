@@ -89,12 +89,14 @@ export default function MainContainer({ children }: { children: React.ReactNode 
     useEffect(() => {
         if (socket == null)
             return ;
-        socket.onmessage = (event) => {
+        socket.onmessage = (event: any) => {
           const data = JSON.parse(event.data);
           switch (data.type) {
             case 'notification':
-                setWebSocketNotifications((prevNotifications) => [...prevNotifications, data]);
+                setWebSocketNotifications((prevNotifications: any) => [...prevNotifications, data]);
               break;
+			// case 'users_online':
+			// 	console.log(data);
           }
         };
         return () => {

@@ -14,7 +14,7 @@ const convertToCSV = (data: GameData[]) => {
     return '';
   }
 
-  const headers = ['date', 'minutes'];
+  const headers = ['day', 'month', 'minutes'];
   const csvRows = [];
 
   csvRows.push(headers.join(','));

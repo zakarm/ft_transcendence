@@ -19,7 +19,6 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.contrib.auth.models import AnonymousUser
 
- 
 class MainDashboardView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -39,7 +38,6 @@ class ProfileView(APIView):
         user = request.user
         serializer_data = self.serializer_class(instance=user)
         return Response(serializer_data.data)
-
 
 class ProfileIdView(APIView):
     authentication_classes = [JWTAuthentication]
@@ -74,7 +72,6 @@ class UserSearchView(APIView):
         queryset = User.objects.filter(username__startswith=user)
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
-
 
 class RemoveFriendshipView(APIView):
     authentication_classes = [JWTAuthentication]

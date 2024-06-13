@@ -14,7 +14,7 @@ import { ChartOptions, ChartData } from 'chart.js';
 import { LineController } from 'chart.js/auto';
 import { useRouter } from 'next/navigation';
 import { Dropdown } from 'react-bootstrap';
-import ExportMinutes from '@/components/exportMatch'
+import { ExportMinutes } from '@/components/exportMatch'
 import { ExportCSV } from '../../components/export';
 import { ToastContainer, toast } from 'react-toastify';
 import { CategoryScale, LinearScale, Title, Legend, Tooltip, PointElement, LineElement } from 'chart.js';
@@ -53,7 +53,7 @@ interface GameReport {
     last_name: string | null;
     matches_as_user_one: Matches[];
     matches_as_user_two: Matches[];
-    minutes_per_day: minutes_months[];
+    minutes_per_day: [number, number, number][];
 }
 
 interface GameData {
@@ -91,7 +91,7 @@ export default function Dashboard() {
     const router = useRouter();
     const gameData: GameData[] = [];
     const gameCsv: GameData[] = [];
-    const minutes_data: minutes_months[] = [];
+    let mappedData: minutes_months[] = [];
     useEffect(() => {
         const fetchData = async () => {
             const access = Cookies.get('access');
@@ -190,16 +190,12 @@ export default function Dashboard() {
 
     const handleDropdownSelect2 = async (value: string) => {
         const data: GameReport = await fetchDataForCsv(value);
-        if (data) {
-            data.minutes_per_day.forEach((day) => {
-                minutes_data.push({
-                    day: day.day,
-                    month: day.month,
-                    minutes: day.minutes,
-                });
-            });
-        }
-        ExportMinutes(gameCsv, 'game_stats_' + value + '.csv');
+        mappedData = data.minutes_per_day.map(([month, day, minutes]) => ({
+            day,
+            month,
+            minutes,
+        }));
+        ExportMinutes(mappedData, 'game_stats_' + value + "_" + new Date().getFullYear() + '.csv');
         toggleDropdown();
     };
 

@@ -59,7 +59,7 @@ from drf_spectacular.views import (
 from django.http import JsonResponse
 
 def default_handler(request, *args, **kwargs):
-    return JsonResponse({"detail": "Not found"}, status=404)
+    return JsonResponse({"error": ["Not found"]}, status=404)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -75,5 +75,6 @@ urlpatterns = [
     path("api/schema/swagger/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger"),
     path( "api/schema/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
     path("", include("django_prometheus.urls")),
-    re_path(r"^.*$", default_handler),
+    # re_path(r"^.*$", default_handler),
+    re_path(r'^(?!admin).*$', default_handler),
 ]
