@@ -61,7 +61,7 @@ export default function SignUp() {
 	}
 	catch (error) 
 	{
-		toast.error("No response received from server.", error);
+		toast.error("No response received from server.");
 	}
 };
 

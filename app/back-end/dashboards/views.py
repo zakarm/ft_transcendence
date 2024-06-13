@@ -30,7 +30,6 @@ class MainDashboardView(APIView):
         serializer_data = self.serializer_class(instance=user)
         return Response(serializer_data.data)
 
-
 class ProfileView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]

@@ -43,7 +43,6 @@ def get_minutes_per_day(obj, period):
             days_in_month = calendar.monthrange(current_year, month)[1]
             month_days = [(month, day) for day in range(1, days_in_month + 1)]
             minutes_periods.extend(_get_minutes_per_day_for_month_days(obj, month_days))
-
     return minutes_periods
 
 def _get_minutes_per_day_for_month_days(obj, month_days):
