@@ -34,7 +34,7 @@ async function fetchTournamentsData(): Promise<TournamentsData | null> {
     const getData = async () => {
         const access: string | undefined = Cookies.get('access');
         if (access) {
-            const promise = await fetch('http://localhost:8000/api/tournaments', {
+            const promise = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/tournaments`, {
                 method: 'GET',
                 headers: {
                     Authorization: `Bearer ${access}`,

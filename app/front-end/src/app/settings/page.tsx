@@ -13,9 +13,8 @@ import handleImageUpload from '@/components/UploadImageBase64ToCloudinary/upload
 import { FormContext } from '@/components/SettingsForm/form-components/formContext';
 import { SettingsProps, UserInfoTypes } from '@/lib/settings-types/gameSettingsTypes';
 
-function    checkData(dataAPI : UserInfoTypes)
-{
-    const shouldExist : UserInfoTypes = {
+function checkData(dataAPI: UserInfoTypes) {
+    const shouldExist: UserInfoTypes = {
         first_name: '',
         last_name: '',
         username: '',
@@ -33,17 +32,15 @@ function    checkData(dataAPI : UserInfoTypes)
         table_position: 'default',
         current_table_view: '6,8,0',
         game_difficulty: '1',
-    }
+    };
 
     Object.keys(shouldExist).map((key) => {
         if (dataAPI[key]) {
-            if (typeof dataAPI[key] === 'string' && dataAPI[key] != 'NaN')
-                shouldExist[key] = dataAPI[key];
-            else if (typeof dataAPI[key] !== 'string')
-                shouldExist[key] = dataAPI[key];
+            if (typeof dataAPI[key] === 'string' && dataAPI[key] != 'NaN') shouldExist[key] = dataAPI[key];
+            else if (typeof dataAPI[key] !== 'string') shouldExist[key] = dataAPI[key];
         }
-    })
-    return shouldExist
+    });
+    return shouldExist;
 }
 
 async function getInitialData({
@@ -54,10 +51,10 @@ async function getInitialData({
     setAccountValues: SettingsProps['setAccountValues'];
 }) {
     try {
-        const access = Cookies.get("access");
-        const response = await fetch("http://localhost:8000/api/game-settings", {
-          method: "GET",
-          headers: { Authorization: `Bearer ${access}` },
+        const access = Cookies.get('access');
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/game-settings`, {
+            method: 'GET',
+            headers: { Authorization: `Bearer ${access}` },
         });
 
         let data = await response.json();
@@ -137,7 +134,7 @@ const postFormData = async ({
             console.log('------> JSON To Post', JSON.stringify(valuesToPost));
             isFormChanged.current = false;
             const access = Cookies.get('access');
-            const res = await fetch('http://localhost:8000/api/game-settings', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/game-settings`, {
                 method: 'PUT',
                 headers: {
                     'content-type': 'application/json',

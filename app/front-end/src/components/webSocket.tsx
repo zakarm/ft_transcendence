@@ -23,7 +23,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
 
     useEffect(() => {
         const access = Cookies.get('access');
-        const newSocket = new WebSocket(`ws://localhost:8000/ws/user_data?token=${access}`);
+        const newSocket = new WebSocket(`${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/user_data?token=${access}`);
         newSocket.onopen = () => {
             setIsLoading(false);
         };

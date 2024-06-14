@@ -56,7 +56,9 @@ function connectToSocket({ pageUrl }: { pageUrl: string }) {
                 wss.close();
                 wss = null;
             }
-            wss = new WebSocket(`ws://localhost:8000/ws/data/tournament/${tournamentID}?token=${access}&spect=true`);
+            wss = new WebSocket(
+                `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/data/tournament/${tournamentID}?token=${access}&spect=true`,
+            );
 
             wss.onopen = () => {
                 console.log('connected to socket successfully');

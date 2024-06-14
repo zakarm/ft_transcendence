@@ -143,3 +143,16 @@ prune: ## Remove all stopped containers, dangling images, and unused networks an
 
 print-%: ## Print the value of a variable
 	@echo $($*)
+
+Docker-ip: ## Get the IP address of the Docker containers
+	@echo "$(YELLOW)IP addresses of the Docker containers:$(RESET)"
+	@docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(shell docker ps -q)
+
+IP_ADDRESS := $(shell ifconfig | grep inet | awk 'NR==5 {print $$2}')
+linkIp: ## Link IP address
+	@echo "$(YELLOW)Linking IP address...$(RESET)"
+	@echo "$(GREEN)IP address: $(IP_ADDRESS)$(RESET)"
+	@echo "$(GREEN)Linking IP address...$(RESET)"
+	@sed -i '' 's/localhost/${IP_ADDRESS}/g' .env
+	@echo "$(GREEN)IP address linked!$(RESET)"
+
