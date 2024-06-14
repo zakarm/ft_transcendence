@@ -4,12 +4,13 @@ import ChatAbout from '@/components/chat_about';
 import ChatFriendsResp from '@/components/chat_friend_resp';
 import ChatFriends from '@/components/chat_friends';
 import ChatMessages from '@/components/chat_messages';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Offcanvas from 'react-bootstrap/Offcanvas';
+import Cookies from 'js-cookie';
+
 import Spinner from 'react-bootstrap/Spinner';
 import { GiAmericanFootballPlayer } from "react-icons/gi";
-
 import { PiChatsFill } from "react-icons/pi";
 
 interface Users {
@@ -19,6 +20,15 @@ interface Users {
   message_waiting: boolean;
 }
 
+interface Message{
+  chat_id: string;
+  message: string;
+  sender: string;
+  receiver: string;
+  timestamp: string;
+}
+
+
 export default function ()
 {
   const [show, setShow] = useState(false);
@@ -27,14 +37,86 @@ export default function ()
 
   const [selectedChat, setSelectedChat] = useState<string>('none');
 
+  
   const [chatUsers, setChatUsers] = useState<Users[]>([]);
-
+  
   const handleClose = () => setAbout(false);
-
-
+  
+  
   const [fullscreen, setFullscreen] = useState((window.innerWidth <= 768) ? true : false);
+  
+  //////
+  const [newMessage, setNewMessage] = useState<Message | undefined>(undefined);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const chatSocketRef = useRef<WebSocket | null>(null);
+  const [me, setMe] = useState<string>('');
+
+  const fetchSearchUser = async () => {
+    const access = Cookies.get('access');
+    if (access) {
+        try {
+            const res = await fetch('http://localhost:8000/api/friends', {
+                headers: { Authorization: `Bearer ${access}` },
+            });
+
+            if (!res.ok) throw new Error('Failed to fetch data');
+            const data = await res.json();
+            setMe(data.username);
+        } catch (error) {
+            console.error('Error fetching data: ', error);
+        }
+    } else {
+        console.log('Access token is undefined or falsy');
+    }
+};
+
+  const startChatting = () => {
+
+      const access = Cookies.get('access');
+      if (access) {
+        try {
+              const newChatSocket = new WebSocket(`ws://127.0.0.1:8000/ws/chat/lobby?token=${access}`);
+                
+              newChatSocket.onmessage = (e: MessageEvent) => {
+                console.log('message received');
+                const data = JSON.parse(e.data);
+                setNewMessage({ chat_id: data.chat_id, message: data.message, sender: data.sender, receiver: data.receiver, timestamp: data.timestamp});
+                if (data.sender !== selectedChat && data.receiver === me)
+                {
+                  setChatUsers(prevUsers =>
+                    prevUsers.map(user =>
+                      user.username === data.sender ? { ...user, message_waiting: true } : user
+                    )
+                  );
+                }
+               };
+             
+               newChatSocket.onclose = () => {
+                 console.log('Chat socket closed');
+               };
+               
+               chatSocketRef.current = newChatSocket;
+               
+               return () => {
+                newChatSocket.close();
+               };
+        }
+        catch (error) {
+          console.error('Error fetching data: ', error);
+        }
+      }
+  }
 
   useEffect(() => {
+  console.log("got it => ");
+  if (newMessage && (messages?.length === 0 || messages?.at(messages.length - 1)?.timestamp !== newMessage?.timestamp))
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+}, [newMessage]);
+
+  useEffect(() => {
+
+    fetchSearchUser();
+
     const handleResize = () => {
       if (window.innerWidth <= 768)
         setFullscreen(true);
@@ -50,6 +132,9 @@ export default function ()
     };
   }, []); // Empty dependency array ensures the effect runs only once on mount
   
+  useEffect(() => {
+    startChatting();
+  }, [me]);
 
   return (
       <>
@@ -69,13 +154,13 @@ export default function ()
                   <div><PiChatsFill className='mx-2' size='1.8em' color='#FF4755'/></div>
                   <div><span style={{fontFamily: 'itim', color: 'white'}}>Please chose a conversation to start chatting!</span></div>
                 </div>):
-                (<ChatMessages selectedChat={selectedChat} chatUsers={chatUsers} setChatUsers={setChatUsers}/>)
+                (<ChatMessages selectedChat={selectedChat} setChatUsers={setChatUsers} chatSocketRef={chatSocketRef} messages={messages}/>)
               }
               <Modal contentClassName={`${styles.chat_modal}`} show={show} fullscreen="md-down" onHide={() => setShow(false)} animation>
                 <Modal.Header closeButton closeVariant='white'>
 
                 </Modal.Header>
-                <ChatMessages selectedChat={selectedChat} chatUsers={chatUsers} setChatUsers={setChatUsers}/>
+                <ChatMessages selectedChat={selectedChat} setChatUsers={setChatUsers} chatSocketRef={chatSocketRef} messages={messages} />
               </Modal>
               <Offcanvas className={`${styles.canvas}`} show={showAbout} onHide={handleClose} backdrop={false}>
                 <Offcanvas.Body className={`p-0 m-0`}>
