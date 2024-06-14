@@ -10,9 +10,6 @@ import { FaTableTennisPaddleBall } from 'react-icons/fa6';
 import { ImUserMinus } from 'react-icons/im';
 import { IoIosSend } from "react-icons/io";
 import { useEffect, useRef, useState } from 'react';
-
-import { toast } from 'react-toastify';
-
 import { CgHello } from "react-icons/cg";
 
 interface Users {
@@ -24,10 +21,8 @@ interface Users {
 
 interface Props{
   selectedChat: string;
-  chatSocket: WebSocket | null;
   setChatUsers: React.Dispatch<React.SetStateAction<Users[]>>;
-  newMessage: Message | undefined;
-  setNewMessage: React.Dispatch<React.SetStateAction<Message | undefined>>;
+  messages: Message[] | undefined;
   chatSocketRef: React.RefObject<WebSocket | null>;
 }
 
@@ -62,11 +57,10 @@ interface Message{
   timestamp: string;
 }
 
-export default function ChatMessages( { selectedChat, chatSocket, setChatUsers, newMessage, setNewMessage, chatSocketRef }: Props ) {
+export default function ChatMessages( { selectedChat, setChatUsers, messages, chatSocketRef }: Props ) {
   
   const [searchedChat, setSearchedChat] = useState<Friend | undefined>(undefined);
   const chatLogRef = useRef<HTMLDivElement | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState<string>('');
   const [me, setMe] = useState<string>('');
   
@@ -101,12 +95,6 @@ export default function ChatMessages( { selectedChat, chatSocket, setChatUsers, 
         console.log('Access token is undefined or falsy');
     }
 };
-
-useEffect(() => {
-  console.log("got it");
-  if (newMessage && (messages?.length === 0 || messages?.at(messages.length - 1)?.timestamp !== newMessage?.timestamp))
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
-}, [newMessage]);
 
 useEffect(() => {
   if (chatLogRef.current) {
@@ -157,7 +145,7 @@ return (
         
         <div className='flex-grow-1 valo-font d-flex row p-0 m-0 py-3 align-items-end' style={{overflow: 'auto'}}>
           {
-            (messages.length) ? 
+            (messages?.length) ? 
             (
               <div>
                 {messages

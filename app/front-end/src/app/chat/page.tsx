@@ -46,9 +46,8 @@ export default function ()
   const [fullscreen, setFullscreen] = useState((window.innerWidth <= 768) ? true : false);
   
   //////
-  
-  const [chatSocket, setChatSocket] = useState<WebSocket | null>(null);
   const [newMessage, setNewMessage] = useState<Message | undefined>(undefined);
+  const [messages, setMessages] = useState<Message[]>([]);
   const chatSocketRef = useRef<WebSocket | null>(null);
   const [me, setMe] = useState<string>('');
 
@@ -81,9 +80,6 @@ export default function ()
               newChatSocket.onmessage = (e: MessageEvent) => {
                 console.log('message received');
                 const data = JSON.parse(e.data);
-                // if (window.location.pathname !== '/chat')
-                //   toast.dark(data.user + ': ' + data.message);
-                console.log(data.sender , selectedChat, data.receiver, me, newMessage);
                 setNewMessage({ chat_id: data.chat_id, message: data.message, sender: data.sender, receiver: data.receiver, timestamp: data.timestamp});
                 if (data.sender !== selectedChat && data.receiver === me)
                 {
@@ -100,8 +96,6 @@ export default function ()
                };
                
                chatSocketRef.current = newChatSocket;
-
-               setChatSocket(newChatSocket);
                
                return () => {
                 newChatSocket.close();
@@ -113,7 +107,11 @@ export default function ()
       }
   }
 
-  //////
+  useEffect(() => {
+  console.log("got it => ");
+  if (newMessage && (messages?.length === 0 || messages?.at(messages.length - 1)?.timestamp !== newMessage?.timestamp))
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+}, [newMessage]);
 
   useEffect(() => {
 
@@ -156,13 +154,13 @@ export default function ()
                   <div><PiChatsFill className='mx-2' size='1.8em' color='#FF4755'/></div>
                   <div><span style={{fontFamily: 'itim', color: 'white'}}>Please chose a conversation to start chatting!</span></div>
                 </div>):
-                (<ChatMessages selectedChat={selectedChat} chatSocket={chatSocket} setChatUsers={setChatUsers} newMessage={newMessage} setNewMessage={setNewMessage} chatSocketRef={chatSocketRef}/>)
+                (<ChatMessages selectedChat={selectedChat} setChatUsers={setChatUsers} chatSocketRef={chatSocketRef} messages={messages}/>)
               }
               <Modal contentClassName={`${styles.chat_modal}`} show={show} fullscreen="md-down" onHide={() => setShow(false)} animation>
                 <Modal.Header closeButton closeVariant='white'>
 
                 </Modal.Header>
-                <ChatMessages selectedChat={selectedChat} chatSocket={chatSocket} setChatUsers={setChatUsers} newMessage={newMessage} setNewMessage={setNewMessage} chatSocketRef={chatSocketRef}/>
+                <ChatMessages selectedChat={selectedChat} setChatUsers={setChatUsers} chatSocketRef={chatSocketRef} messages={messages} />
               </Modal>
               <Offcanvas className={`${styles.canvas}`} show={showAbout} onHide={handleClose} backdrop={false}>
                 <Offcanvas.Body className={`p-0 m-0`}>
