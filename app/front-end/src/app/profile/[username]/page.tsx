@@ -7,13 +7,13 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { Line } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
-import {    CategoryScale, 
-            LinearScale, 
-            Title, 
-            Legend, 
+import {    CategoryScale,
+            LinearScale,
+            Title,
+            Legend,
             Tooltip,
-            PointElement, 
-            LineElement 
+            PointElement,
+            LineElement
         } from 'chart.js';
 import Modal from 'react-bootstrap/Modal'
 import { useEffect, useState } from 'react';
@@ -39,7 +39,7 @@ interface MonthlyStats {
     win: number[];
     lose: number[];
   }
-  
+
   interface ProfileData {
     id: number;
     username: string;
@@ -65,7 +65,7 @@ interface MonthlyStats {
     username: string;
     image_url: string;
   }
-  
+
   interface Friend_ {
     user: User;
     is_accepted: boolean;
@@ -83,13 +83,13 @@ export default function ({ params }: { params: { username: string } })
         if (access)
         {
             try {
-                const res = await fetch(`http://localhost:8000/api/profile${params ? '/' + params.username : ''}` , {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/profile${params ? '/' + params.username : ''}` , {
                     headers: { Authorization: `Bearer ${access}` },
                 });
-        
+
                 if (!res.ok)
                     throw new Error('Failed to fetch data');
-    
+
                 const data = await res.json();
                 setProfile(data);
             } catch (error) {
@@ -105,13 +105,13 @@ const fetchUser = async () => {
     if (access)
         {
             try {
-                const res = await fetch('http://localhost:8000/api/friends', {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/friends`, {
                     headers: { Authorization: `Bearer ${access}` },
                 });
-                
+
                 if (!res.ok)
                     throw new Error('Failed to fetch data');
-                
+
                 const data = await res.json();
             if (!profile)
                 return ;
@@ -137,20 +137,20 @@ const fetchUser = async () => {
 
     const fetchUserState = async (api: string, message: string, username: string) => {
         const access = Cookies.get('access');
-        
+
         if (access)
         {
           try {
-    
-            const res = await fetch(`http://localhost:8000/api/${api}`, {
+
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/${api}`, {
               method: 'POST',
-              headers: { 
+              headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${access}`
               },
               body: JSON.stringify({ username: username })
             });
-    
+
             if (!res.ok)
             {
               if (res.status === 400)
@@ -158,7 +158,7 @@ const fetchUser = async () => {
               else
                 throw new Error('Failed to fetch data');
             }
-    
+
             const data = await res.json();
             if (data)
             {
@@ -206,7 +206,7 @@ const fetchUser = async () => {
     useEffect(() => {
         fetchProfileData();
     }, []);
-    
+
     useEffect(() => {
         fetchUser();
     }, [profile]);
@@ -220,7 +220,7 @@ const fetchUser = async () => {
         setCountry(val);
         setRegion('');
       }
-    
+
     const selectRegion = (val: string) => {
       setRegion(val);
     }
@@ -280,10 +280,10 @@ const fetchUser = async () => {
           }
         }
       }
-    
+
     const parag: string =   "Hey there! I'm Snake07, a dedicated ping pong gamer. From lightning-fast reflexes to strategic plays, I'm all about dominating the virtual table. Join me as we smash our way to victory, one pixel at a time!";
-    
-    
+
+
 
     return (
         <>
@@ -302,9 +302,9 @@ const fetchUser = async () => {
                                 <Image className={`${styles.profile_img}`} width={200   } height={200  } src={profile?.image_url ?? '/char3.png'} alt='Profile'/>
                                 <div><span className='valo-font' style={{color: '#FFEBEB', fontSize: '1.5em'}}>{profile.username}</span></div>
                                 <div className={`${styles.action} row d-flex justify-content-center`}>
-                                    
+
                                     {
-                                        user ? 
+                                        user ?
                                         (
                                             user.is_accepted ? (
                                                 <div className='row d-flex justify-content-center'>
@@ -323,7 +323,7 @@ const fetchUser = async () => {
                                         )
                                     }
                                 </div>
-                            </div> 
+                            </div>
                             <div className='col-xl-4 order-xl-3 my-3'>
                                 <div className={`${styles.info} d-flex`}>
                                     <div className='col-xl-5 col-6 d-flex flex-column justify-content-end'>

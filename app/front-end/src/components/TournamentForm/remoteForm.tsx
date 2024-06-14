@@ -227,7 +227,7 @@ function RemoteTournamentForm() {
         const access = Cookies.get('access');
         console.log(JSON.stringify(ValuesToPost));
         try {
-            const response = await fetch('http://localhost:8000/api/create-tournament', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/create-tournament`, {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json',

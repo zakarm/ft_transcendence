@@ -23,7 +23,9 @@ interface Player {
 const RemoteMatchGame: React.FC = () => {
     const access = Cookies.get('access');
 
-    const { webSocket, gameState, connectionInfo } = Web_Socket(`ws://localhost:8000/ws/data/?token=${access}`);
+    const { webSocket, gameState, connectionInfo } = Web_Socket(
+        `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/data/?token=${access}`,
+    );
 
     const [MyProfile, setMyProfile] = useState<Player>({
         name: 'username',

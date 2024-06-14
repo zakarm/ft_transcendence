@@ -122,7 +122,7 @@ class SignOutView(APIView):
     def post(self, request):
         """Post function for logging out"""
         refresh_token = request.data.get('refresh')
-        
+
         if refresh_token is None:
             return Response({'error': 'Refresh token is required'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -191,7 +191,8 @@ class SocialAuthExchangeView(APIView):
         if user and user.is_active:
             refresh = RefreshToken.for_user(user)
             access_token = refresh.access_token
-            response = HttpResponseRedirect(settings.FRONTEND_HOST)
+            # response = HttpResponseRedirect(settings.FRONTEND_HOST)
+            response = HttpResponseRedirect(settings.FRONTEND_HOST + "/dashboard")
             response.set_cookie('access', access_token)
             response.set_cookie('refresh', refresh)
             return response

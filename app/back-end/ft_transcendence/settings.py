@@ -204,17 +204,17 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_HOSTS = ["back-end", "localhost", "127.0.0.1", os.environ.get('BACKEND_HOST', '*')]
+ALLOWED_HOSTS = ["back-end", "localhost", "127.0.0.1", os.environ.get("HOST_IP")]
 
 # CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
+    "http://localhost:3000",
     "http://127.0.0.1:3000",
-    'http://localhost:3001',
-    "http://127.0.0.1:3001",
-    'http://localhost:9090',
+    "http://localhost:9090",
     "http://127.0.0.1:9090",
+    f"http://{os.environ.get('HOST_IP')}:3000",
+    f"http://{os.environ.get('HOST_IP')}:9090",
 ]
 
 CORS_ALLOW_METHODS = [

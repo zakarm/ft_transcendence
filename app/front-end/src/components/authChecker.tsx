@@ -15,7 +15,7 @@ const AuthChecker = ({ children }: { children: React.ReactNode }) => {
             try {
                 const access = Cookies.get('access');
                 if (access) {
-                    const response = await fetch('http://localhost:8000/api/verify', {
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/verify`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ token: access }),

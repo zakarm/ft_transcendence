@@ -76,7 +76,7 @@ export default function Dashboard() {
             const access = Cookies.get('access');
             if (access) {
                 try {
-                    const response = await fetch('http://localhost:8000/api/dashboard', {
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/dashboard`, {
                         headers: { Authorization: `Bearer ${access}` },
                     });
                     if (response.ok) {
@@ -121,7 +121,7 @@ export default function Dashboard() {
         const access = Cookies.get('access');
         if (!access) return;
         try {
-            const response = await fetch('http://localhost:8000/api/game-stats-report', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/game-stats-report`, {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${access}`,

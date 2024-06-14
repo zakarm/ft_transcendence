@@ -4,7 +4,9 @@ import { useState, useEffect } from 'react';
 export default function Page() {
     const [data, setData] = useState<any>([]);
     useEffect(() => {
-        const ws = new WebSocket('ws://localhost:8000/ws/pingpong/tournament/15151515/?token=dccdcdcd&watch=cjncjs');
+        const ws = new WebSocket(
+            `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/pingpong/tournament/15151515/?token=dccdcdcd&watch=cjncjs`,
+        );
         ws.onopen = () => {
             console.log('connected');
         };

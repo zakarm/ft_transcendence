@@ -16,7 +16,7 @@ function signOut(router: RouterType) {
     if (refresh) {
         try {
             const postSignOut = async () => {
-                const response = await fetch('http://localhost:8000/api/sign-out', {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/sign-out`, {
                     method: 'POST',
                     headers: {
                         'content-type': 'application/json',
