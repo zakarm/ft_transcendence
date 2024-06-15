@@ -206,6 +206,7 @@ class GameHistorySerializer(serializers.ModelSerializer):
     @extend_schema_field(serializers.ListField(child=MatchSerializer()))
     def get_matches_as_user_one(self, obj) -> list:
         period = self.context['period']
+        matches = []
         if period == 'day':
             matches = Match.objects.filter(Q(user_one=obj) &
                                            Q(match_start__day=timezone.now().day))
@@ -221,6 +222,7 @@ class GameHistorySerializer(serializers.ModelSerializer):
     @extend_schema_field(serializers.ListField(child=MatchSerializer()))
     def get_matches_as_user_two(self, obj) -> list:
         period = self.context['period']
+        matches = []
         if period == 'day':
             matches = Match.objects.filter(Q(user_two=obj) &
                                            Q(match_start__day=timezone.now().day))

@@ -1,11 +1,11 @@
-"use client"
+'use client';
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
-import Spinner from 'react-bootstrap/Spinner'
-import styles from './styles/authChecker.module.css'
-
+import Spinner from 'react-bootstrap/Spinner';
+import styles from './styles/authChecker.module.css';
+import MainContainer from './mainContainer';
 
 const AuthChecker = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter();
@@ -13,24 +13,26 @@ const AuthChecker = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         const authentication = async () => {
-            const access = Cookies.get('access');
-            if (access) {
-                const response = await fetch('http://localhost:8000/api/verify', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ token: access })
-                });
-                if (response.ok) {
-                    setIsAuthenticated(true);
+            try {
+                const access = Cookies.get('access');
+                if (access) {
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/verify`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ token: access }),
+                    });
+                    if (response.ok) {
+                        setIsAuthenticated(true);
+                    } else {
+                        setIsAuthenticated(false);
+                        router.push('/sign-in');
+                    }
                 } else {
                     setIsAuthenticated(false);
                     router.push('/sign-in');
                 }
-            }
-            else
-            {
-                setIsAuthenticated(false);
-                router.push('/sign-in');
+            } catch (error: any) {
+                console.error('Error verifying token:', error);
             }
         };
         authentication();
@@ -38,10 +40,13 @@ const AuthChecker = ({ children }: { children: React.ReactNode }) => {
 
     if (isAuthenticated === null) {
         return (
-            <div className={`${styles.spinnerContainer} ${styles.darkBackground}`}>
-                <Spinner animation="border" variant="danger" />
-                <p className={`${styles.loadingMessage} valo-font`}>LOADING ...</p>
-            </div>
+            <MainContainer>
+                <div className={`${styles.spinnerContainer}`}>
+                    <Spinner animation="border" variant="danger" />
+                    <p className={`${styles.loadingMessage} valo-font`}>LOADING ...</p>
+                </div>
+            </MainContainer>
+            
         );
     }
 

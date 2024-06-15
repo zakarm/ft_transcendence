@@ -1,166 +1,178 @@
-
 .PlayerCard {
-  background-color: #161625;
-  width: 300px;
-  /* height: 600px; */
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.6);
+    background-color: #161625;
+    width: 300px;
+    /* height: 600px; */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px rgb(255, 255, 255);
 }
 
 .right {
-  animation: slideRight 1s forwards;
+    animation: slideRight 1s forwards;
 }
 
 .left {
-  animation: slideLeft 1s forwards;
+    animation: slideLeft 1s forwards;
+}
+.chart {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.PlayerCard .image {
+    margin-top: 30px;
+    width: 250px;
+    height: 250px;
+    border-radius: 10px;
+    box-shadow: 0px 10px 20px rgb(0, 0, 0);
 }
 
-.PlayerCard img {
-  margin-top: 30px;
-  width: 250px;
-  height: 250px;
-  border-radius: 10px;
-  box-shadow: 0px 10px 20px rgb(0, 0, 0);
-}
-
-.PlayerCard h2 {
-  font-family: Valorax;
-  color: white;
+.PlayerCard .name {
+    font-size: 30px;
+    margin: 10px;
+    text-transform: uppercase;
+    font-family: Valorax;
+    color: white;
 }
 
 @keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
 @keyframes slideLeft {
-  0% {
-    transform: translateX(-40%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0%);
-    opacity: 1;
-  }
+    0% {
+        transform: translateX(-40%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0%);
+        opacity: 1;
+    }
 }
 @keyframes slideLeftS {
-  0% {
-    transform: rotate(90deg) scale(0.6) translateX(20%);
-    opacity: 0;
-  }
-  100% {
-    transform: rotate(90deg) scale(0.6) translateX(100%);
-    opacity: 1;
-  }
+    0% {
+        transform: rotate(90deg) scale(0.6) translateX(20%);
+        opacity: 0;
+    }
+    100% {
+        transform: rotate(90deg) scale(0.6) translateX(100%);
+        opacity: 1;
+    }
 }
 @keyframes slideLeftSH {
-  0% {
-    transform: scale(0.6) translateX(-40%);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(0.6) translateX(0%);
-    opacity: 1;
-  }
+    0% {
+        transform: scale(0.6) translateX(-40%);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(0.6) translateX(0%);
+        opacity: 1;
+    }
 }
 @keyframes slideLeftSHH {
-  0% {
-    transform: rotate(90deg) scale(0.3) translateX(20%);
-    opacity: 0;
-  }
-  100% {
-    transform: rotate(90deg) scale(0.3) translateX(300%);
-    opacity: 1;
-  }
+    0% {
+        transform: rotate(90deg) scale(0.3) translateX(20%);
+        opacity: 0;
+    }
+    100% {
+        transform: rotate(90deg) scale(0.3) translateX(300%);
+        opacity: 1;
+    }
 }
 
 @keyframes slideRight {
-  0% {
-    transform: translateX(+40%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0%);
-    opacity: 1;
-  }
+    0% {
+        transform: translateX(+40%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0%);
+        opacity: 1;
+    }
 }
 
 @keyframes slideRightS {
-  0% {
-    transform: rotate(-90deg) scale(0.6) translateX(20%);
-    opacity: 0;
-  }
-  100% {
-    transform: rotate(-90deg) scale(0.6) translateX(100%);
-    opacity: 1;
-  }
+    0% {
+        transform: rotate(-90deg) scale(0.6) translateX(20%);
+        opacity: 0;
+    }
+    100% {
+        transform: rotate(-90deg) scale(0.6) translateX(100%);
+        opacity: 1;
+    }
 }
 
 @keyframes slideRightSH {
-  0% {
-    transform: scale(0.6) translateX(+40%);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(0.6) translateX(0%);
-    opacity: 1;
-  }
+    0% {
+        transform: scale(0.6) translateX(+40%);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(0.6) translateX(0%);
+        opacity: 1;
+    }
 }
 
 @keyframes slideRightSHH {
-  0% {
-    transform: rotate(-90deg) scale(0.3) translateX(20%);
-    opacity: 0;
-  }
-  100% {
-    transform: rotate(-90deg) scale(0.3) translateX(300%);
-    opacity: 1;
-  }
+    0% {
+        transform: rotate(-90deg) scale(0.3) translateX(20%);
+        opacity: 0;
+    }
+    100% {
+        transform: rotate(-90deg) scale(0.3) translateX(300%);
+        opacity: 1;
+    }
 }
 
 @media screen and (max-width: 1000px) {
-  .PlayerCard {
-    transform: scale(0.6);
-  }
-  .PlayerCard.left {
-    animation: slideLeftS 1s forwards;
-  }
-  .PlayerCard.right {
-    animation: slideRightS 1s forwards;
-  }
-  .PlayerCard.left img,.PlayerCard.left .chart {
-    transform: rotate(-90deg);
-  }
-  .PlayerCard.right img,.PlayerCard.right .chart{
-    transform: rotate(90deg);
-  }
+    .PlayerCard {
+        transform: scale(0.6);
+    }
+    .PlayerCard.left {
+        animation: slideLeftS 1s forwards;
+    }
+    .PlayerCard.right {
+        animation: slideRightS 1s forwards;
+    }
+    .PlayerCard.left img,
+    .PlayerCard.left .chart {
+        transform: rotate(-90deg);
+    }
+    .PlayerCard.right img,
+    .PlayerCard.right .chart {
+        transform: rotate(90deg);
+    }
 }
 
-@media screen and (max-width: 1000px) and (max-height: 700px){
-  .PlayerCard {
-    transform: scale(0.3);
-  }
-  .PlayerCard.left {
-    animation: slideLeftSHH 1s forwards;
-  }
-  .PlayerCard.right {
-    animation: slideRightSHH 1s forwards;
-  }
-  .PlayerCard.left img,.PlayerCard.left .chart {
-    transform: rotate(-90deg);
-  }
-  .PlayerCard.right img,.PlayerCard.right .chart{
-    transform: rotate(90deg);
-  }
+@media screen and (max-width: 1000px) and (max-height: 700px) {
+    .PlayerCard {
+        transform: scale(0.3);
+    }
+    .PlayerCard.left {
+        animation: slideLeftSHH 1s forwards;
+    }
+    .PlayerCard.right {
+        animation: slideRightSHH 1s forwards;
+    }
+    .PlayerCard.left img,
+    .PlayerCard.left .chart {
+        transform: rotate(-90deg);
+    }
+    .PlayerCard.right img,
+    .PlayerCard.right .chart {
+        transform: rotate(90deg);
+    }
 }
 
 /* @media screen and (max-width: 500px){
@@ -181,14 +193,14 @@
   }
 } */
 
-@media screen and (max-height: 700px) and (min-width: 1000px){
-  .PlayerCard {
-    transform: scale(0.6);
-  }
-  .PlayerCard.left {
-     animation: slideLeftSH 1s forwards;
+@media screen and (max-height: 700px) and (min-width: 1000px) {
+    .PlayerCard {
+        transform: scale(0.6);
+    }
+    .PlayerCard.left {
+        animation: slideLeftSH 1s forwards;
     }
     .PlayerCard.right {
-    animation: slideRightSH 1s forwards;
-  }
+        animation: slideRightSH 1s forwards;
+    }
 }

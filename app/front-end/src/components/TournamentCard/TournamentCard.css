@@ -74,7 +74,6 @@
 
 .Tournament_card_name{
   font-size: clamp(1rem, 0.9rem + 1.6vw, 1.6rem);
-  font-weight: bold;
   color: #feebeb;
   line-height: 10px;
 }

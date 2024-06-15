@@ -8,15 +8,16 @@ function    rearrangeValues({ futurePredictions } : {futurePredictions : FutureP
     const   dataArray : number[] = [];
     const   labelArray : string[] = [];
 
-    futurePredictions.map((value) => {
-        if (typeof value === 'string')
-            labelArray.push(value);
-        else {
-            dataArray.push(value.predicted_score * Math.random());
-            labelArray.push(value.date);
-        }
-    })
-
+    if (Array.isArray(futurePredictions)) {
+        futurePredictions.map((value) => {
+            if (typeof value !== 'string') {
+                console.log(value.predicted_score);
+                dataArray.push(value.predicted_score);
+                labelArray.push(value.date);
+            }
+        })
+    }
+    
     return ({dataArray, labelArray});
 }
 

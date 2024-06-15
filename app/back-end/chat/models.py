@@ -9,4 +9,4 @@ class Messages(models.Model):
     class Meta:
         db_table = 'Messages'
         ordering = ['-message_date']
-        unique_together = (('user_one', 'user_two'),)
+        unique_together = (('user_one', 'user_two', 'message_date'),)
