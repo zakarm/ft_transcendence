@@ -170,7 +170,7 @@ const Achievements: React.FC<AchivProps> = React.memo(({ choosenTab, achievement
     useEffect(() => {
         const getAchievements = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/achievements', {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/achievements`, {
                     method: 'GET',
                     headers: { Authorization: `Bearer ${access}` },
                 });

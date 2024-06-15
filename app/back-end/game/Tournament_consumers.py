@@ -235,8 +235,13 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                 "data": (self.tournament.data),
             }
             await self.message({"message": message})
-            await self.message({"message": "hello"})
-            pass
+            asyncio.ensure_future(self.start_game())
+            asyncio.ensure_future(self.start_game())
+            asyncio.ensure_future(self.start_game())
+            asyncio.ensure_future(self.start_game())
+            asyncio.ensure_future(self.start_game())
+            asyncio.ensure_future(self.start_game())
+            asyncio.ensure_future(self.start_game())
             # if self.scope["user"].is_authenticated:
             #     await self.accept()
             #     self.user = await get_user(user_id=self.scope["user"].id)

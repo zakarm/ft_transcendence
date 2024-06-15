@@ -48,12 +48,10 @@ function Notification({ notification }: Props) {
 
     const fetchUserState = async (api: string, message: string, username: string, notification_id: number) => {
         const access = Cookies.get('access');
-        
 
         if (access) {
-
             try {
-                const res = await fetch(`http://localhost:8000/api/${api}`, {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/${api}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -65,26 +63,24 @@ function Notification({ notification }: Props) {
 
                 const data = await res.json();
 
-                try 
-                {
-                    const notif = await fetch(`http://localhost:8000/api/notification-delete/${notification_id}`, {
-                        method: 'DELETE',
-                        headers: {
-                        'Authorization': `Bearer ${access}`,
-                        'Content-Type': 'application/json'
-                        }
-                    });
-                    const notif_data = await notif.json();
-                    if (notif.ok)
-                    {
-                        toast.success("Notification deleted");
-                    }
-                    else {
-                        const errors = notif_data;
-                        for (const key in errors) 
+                try {
+                    const notif = await fetch(
+                        `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/notification-delete/${notification_id}`,
                         {
-                            if (errors.hasOwnProperty(key)) 
-                            {
+                            method: 'DELETE',
+                            headers: {
+                                Authorization: `Bearer ${access}`,
+                                'Content-Type': 'application/json',
+                            },
+                        },
+                    );
+                    const notif_data = await notif.json();
+                    if (notif.ok) {
+                        toast.success('Notification deleted');
+                    } else {
+                        const errors = notif_data;
+                        for (const key in errors) {
+                            if (errors.hasOwnProperty(key)) {
                                 errors[key].forEach((errorMessage: string) => {
                                     toast.error(`${key}: ${errorMessage}`);
                                 });
@@ -92,7 +88,7 @@ function Notification({ notification }: Props) {
                         }
                     }
                 } catch (error) {
-                    toast.error("No response received from server.");
+                    toast.error('No response received from server.');
                 }
 
                 if (!res.ok) {
@@ -130,19 +126,17 @@ function Notification({ notification }: Props) {
                     }
                     toast.success(message);
                 }
-                
             } catch (error) {
-                toast.error("No response received from server.");
+                toast.error('No response received from server.');
             }
-            
-        } else{
-            toast.error("error: Unauthorized. Invalid credentials provided.");
+        } else {
+            toast.error('error: Unauthorized. Invalid credentials provided.');
         }
     };
 
     return (
         <Toast className="border">
-            <Toast.Header  style={{ background: '#161625', borderBottom: "1px solid white" }}>
+            <Toast.Header style={{ background: '#161625', borderBottom: '1px solid white' }}>
                 <Image
                     src={notification.image_url}
                     width={30}
@@ -156,19 +150,38 @@ function Notification({ notification }: Props) {
                     {notification.title}
                 </strong>
             </Toast.Header>
-            <Toast.Body className="d-flex justify-content-between align-items-center" style={{ background: '#161625' , borderRadius: "0 0 5px 5px"}}>
-                <marquee className='text-white me-2'>{notification.message}</marquee>
+            <Toast.Body
+                className="d-flex justify-content-between align-items-center"
+                style={{ background: '#161625', borderRadius: '0 0 5px 5px' }}
+            >
+                <marquee className="text-white me-2">{notification.message}</marquee>
                 {notification.is_friend_notif == true && (
                     <>
                         <Button
                             variant="success"
                             className="me-2"
-                            onClick={() => fetchUserState('friends-accept', 'Added to friends', notification.action_by, notification.notification_id)}>
+                            onClick={() =>
+                                fetchUserState(
+                                    'friends-accept',
+                                    'Added to friends',
+                                    notification.action_by,
+                                    notification.notification_id,
+                                )
+                            }
+                        >
                             <FaCheck />
                         </Button>
                         <Button
-                            variant="danger" 
-                            onClick={() =>fetchUserState('friends-remove', 'Removed from friends', notification.action_by, notification.notification_id)}>
+                            variant="danger"
+                            onClick={() =>
+                                fetchUserState(
+                                    'friends-remove',
+                                    'Removed from friends',
+                                    notification.action_by,
+                                    notification.notification_id,
+                                )
+                            }
+                        >
                             <FaTimes />
                         </Button>
                     </>

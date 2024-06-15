@@ -24,14 +24,11 @@ export default function SignInPage() {
             const form = new FormData(event.currentTarget);
             const email = form.get('email') as string;
             const password = form.get('password') as string;
-            const response = await fetch(
-				'http://localhost:8000/api/sign-in', 
-				{
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ email, password }),
-				}
-			)
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/sign-in`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+            });
             const data = await response.json();
             console.log(data);
             if (response.ok)
@@ -53,9 +50,9 @@ export default function SignInPage() {
             else
             {
               const errors = data;
-              for (const key in errors) 
+              for (const key in errors)
               {
-                if (errors.hasOwnProperty(key)) 
+                if (errors.hasOwnProperty(key))
                 {
                   errors[key].forEach((errorMessage: string) => {
                     toast.error(`${key}: ${errorMessage}`);

@@ -34,6 +34,30 @@ def get_user(user_id):
         return AnonymousUser()
 
 
+@database_sync_to_async
+def add_match(
+    user_one,
+    user_two,
+    score_user_one,
+    score_user_two,
+    match_start,
+    match_end,
+    tackle_user_one,
+    tackle_user_two,
+):
+    Match.objects.create(
+        user_one=user_one,
+        user_two=user_two,
+        score_user_one=score_user_one,
+        score_user_two=score_user_two,
+        match_start=match_start,
+        match_end=match_end,
+        tackle_user_one=tackle_user_one,
+        tackle_user_two=tackle_user_two,
+    )
+    print(f"Match created", file=sys.stderr)
+
+
 Room_index = 0
 Rooms = {}
 
@@ -89,30 +113,6 @@ def increment_room_index():
         print(f"An error occurred in increment_room_index: {e}", file=sys.stderr)
 
 
-@database_sync_to_async
-def add_match(
-    user_one,
-    user_two,
-    score_user_one,
-    score_user_two,
-    match_start,
-    match_end,
-    tackle_user_one,
-    tackle_user_two,
-):
-    Match.objects.create(
-        user_one=user_one,
-        user_two=user_two,
-        score_user_one=score_user_one,
-        score_user_two=score_user_two,
-        match_start=match_start,
-        match_end=match_end,
-        tackle_user_one=tackle_user_one,
-        tackle_user_two=tackle_user_two,
-    )
-    print(f"Match created", file=sys.stderr)
-
-
 class GameConsumer(AsyncWebsocketConsumer):
     # -----------------------> 0. send_direct_message <-----------------------
     async def send_winner_message(self, winner):
@@ -157,6 +157,21 @@ class GameConsumer(AsyncWebsocketConsumer):
             print(f"An error occurred in message: {e}", file=sys.stderr)
 
     # -----------------------> 3. connect <-----------------------
+    async def connction_ack(self):
+        try:
+            index = self.room.get_user_index(self.user.email)
+            message = {
+                "action": "connection_ack",
+                "index": index,
+                "User": self.user.email,
+                "image_url": self.user.image_url,
+                "username": self.user.username,
+                "Room_name": self.room_name,
+            }
+            await self.message({"message": message})
+        except Exception as e:
+            print(f"An error occurred in connction_ack: {e}", file=sys.stderr)
+
     async def connect(self):
         try:
             if self.scope["user"].is_authenticated:
@@ -164,33 +179,9 @@ class GameConsumer(AsyncWebsocketConsumer):
                 self.user = await get_user(user_id=self.scope["user"].id)
                 self.room_name, self.room = await self.find_or_create_room(self.user)
                 await self.channel_layer.group_add(self.room_name, self.channel_name)
-                index = self.room.get_user_index(self.user.email)
-                message = {
-                    "action": "connection_ack",
-                    "index": index,
-                    "User": self.user.email,
-                    "image_url": self.user.image_url,
-                    "username": self.user.username,
-                    "Room_name": self.room_name,
-                }
-                await self.message({"message": message})
-                if self.room.is_ready():
-                    # user1, user1_data, user2, user2_data = (
-                    #     self.room.get_original_users()
-                    # )
-                    # # check the users ?//???????
-                    # message = {
-                    #     "action": "opponents",
-                    #     "user1": user1,
-                    #     "user1_image_url": user1_data["user_img"],
-                    #     "user1_username": user1_data["username"],
-                    #     "user2": user2,
-                    #     "user2_image_url": user2_data["user_img"],
-                    #     "user2_username": user2_data["username"],
-                    # }
-                    # await self.broadcast_message(message)
-                    if self.room.is_started() == False:
-                        asyncio.ensure_future(self.start_game())
+                await self.connction_ack()
+                if self.room.is_ready() and self.room.is_started() == False:
+                    asyncio.ensure_future(self.start_game())
             else:
                 await self.close()
         except Exception as e:
@@ -233,10 +224,9 @@ class GameConsumer(AsyncWebsocketConsumer):
             print(f"An error occurred in receive: {e}", file=sys.stderr)
 
     # -----------------------> 6. start_game <-----------------------
-    async def start_game(self):
+    async def opponents(self):
         try:
             user1, user1_data, user2, user2_data = self.room.get_original_users()
-            # check the users ?//???????
             message = {
                 "action": "opponents",
                 "user1": user1,
@@ -247,10 +237,31 @@ class GameConsumer(AsyncWebsocketConsumer):
                 "user2_username": user2_data["username"],
             }
             await self.broadcast_message(message)
+        except Exception as e:
+            print(f"An error occurred in opponents: {e}", file=sys.stderr)
+
+    async def update_ball_possiton(self, ball_position, ball_velocity):
+        try:
+            message = {
+                "action": "update",
+                "ball_position_x": ball_position["x"],
+                "ball_position_z": ball_position["z"],
+                "ball_velocity_x": ball_velocity["velocity_x"],
+                "ball_velocity_z": ball_velocity["velocity_z"],
+            }
+            await self.broadcast_message(message)
+            print(f"Ball position updated: {message}", file=sys.stderr)
+        except Exception as e:
+            print(f"An error occurred in update_ball_possiton: {e}", file=sys.stderr)
+
+    async def start_game(self):
+        try:
+            await self.opponents()
             await asyncio.sleep(5)
             await self.broadcast_message({"action": "load_game"})
             await asyncio.sleep(5)
             await self.broadcast_message({"action": "start_game"})
+            await asyncio.sleep(2)
             await self.init_pos()
             room = get_room(self.room_name)
             while True:
@@ -267,18 +278,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                             await self.send_winner_message(winner)
                             # delete_room(self.room_name)
                             return
-                    user1, user1_data, user2, user2_data = self.room.get_original_users()
-                    # check the users ?//???????
-                    message = {
-                        "action": "opponents",
-                        "user1": user1,
-                        "user1_image_url": user1_data["user_img"],
-                        "user1_username": user1_data["username"],
-                        "user2": user2,
-                        "user2_image_url": user2_data["user_img"],
-                        "user2_username": user2_data["username"],
-                    }
-                    await self.broadcast_message(message)
+                    await self.opponents()
                     await self.broadcast_message({"action": "start_game"})
                     message = {
                         "action": "score",
@@ -286,15 +286,17 @@ class GameConsumer(AsyncWebsocketConsumer):
                         "user2score": room.getScores()["user2"],
                     }
                     await self.broadcast_message(message)
+                    await asyncio.sleep(1)
                     ball_position, ball_velocity = room.get_updated_ball()
-                    message = {
-                        "action": "update",
-                        "ball_position_x": ball_position["x"],
-                        "ball_position_z": ball_position["z"],
-                        "ball_velocity_x": ball_velocity["velocity_x"],
-                        "ball_velocity_z": ball_velocity["velocity_z"],
-                    }
-                    await self.broadcast_message(message)
+                    await self.update_ball_possiton(ball_position, ball_velocity)
+                    # message = {
+                    #     "action": "update",
+                    #     "ball_position_x": ball_position["x"],
+                    #     "ball_position_z": ball_position["z"],
+                    #     "ball_velocity_x": ball_velocity["velocity_x"],
+                    #     "ball_velocity_z": ball_velocity["velocity_z"],
+                    # }
+                    # await self.broadcast_message(message)
                     await asyncio.sleep(5)
                 if room.is_paused():
                     await self.broadcast_message({"action": "pause"})
@@ -404,7 +406,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             for room_name, room in rooms_items:
                 if not room.is_ended():
                     if room.is_user_joined(user.email):
-                    # if room.is_ready() and room.is_user_joined(user.email):
+                        # if room.is_ready() and room.is_user_joined(user.email):
                         room.reconecting_user(self.channel_name, user.email)
                         await self.message({"message": {"action": "reconnected"}})
                         return room_name, room

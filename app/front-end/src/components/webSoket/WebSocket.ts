@@ -44,8 +44,8 @@ const useWebSocket = (url: string) => {
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            console.log("-> action: ", data.message.action)
             if (data.message.action === 'created') {
+                console.log('-> Room Created', data.message);
                 setGameState('lobby');
             }
 
@@ -73,28 +73,34 @@ const useWebSocket = (url: string) => {
                     username2: data.message.user2_username,
                 }));
                 console.log('-> opponents', data.message);
+                console.log('-> connectionInfo', connectionInfo);
             }
 
             if (data.message.action === 'load_game') {
                 setGameState('load_game');
+                console.log('-> load_game', data.message);
             }
 
             if (data.message.action === 'start_game') {
                 setGameState('start_game');
+                console.log('-> start_game', data.message);
             }
             if (data.message.action === 'reconnected') {
                 setGameState('lobby');
+                console.log('-> reconnected', data.message);
             }
             if (data.message.action === 'reconnecting') {
                 setGameState('reconnecting');
+                console.log('-> reconnecting', data.message);
             }
             if (data.message.action === 'pause') {
                 setGameState('pause');
+                console.log('-> pause', data.message);
             }
             if (data.message.action === 'end_game') {
                 if (data.message.status === 'winner') setGameState('winner');
                 else setGameState('loser');
-                console.log(data.message);
+                console.log('-> end_game', data.message);
             }
         };
 

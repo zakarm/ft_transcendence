@@ -25,7 +25,7 @@ const Ai: React.FC = () => {
   const access = Cookies.get("access");
 
   const { webSocket, gameState, connectionInfo } = Web_Socket(
-    `ws://localhost:8000/ws/data/ai/?token=${access}`
+      `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/data/ai/?token=${access}`,
   );
 
   const [MyProfile, setMyProfile] = useState<Player>({

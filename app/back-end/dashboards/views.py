@@ -18,6 +18,7 @@ from django.db.models import F, Q
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.contrib.auth.models import AnonymousUser
+from django.conf import settings
 
 class MainDashboardView(APIView):
     authentication_classes = [JWTAuthentication]
@@ -140,20 +141,23 @@ class AddFriendshipView(APIView):
             return Response({'error': 'Friendship alrady exist'}, status=status.HTTP_400_BAD_REQUEST)
         try:
 
-            friendship = Friendship.objects.create(user_from=user_from, user_to=user_add, 
+            friendship = Friendship.objects.create(user_from=user_from, user_to=user_add,
                                                    is_accepted = False)
             friendship.save()
 
-            notification = Notification.objects.create(user=user_add,
-                                                       title='New friend !',
-                                                       message=f"{user_from.username} sent you a friend request.",
-                                                       image_url=user_from.image_url,
-                                                       link = f"http://localhost:3000/profile/{user_from.username}", 
-                                                       is_friend_notif = True, 
-                                                       action_by = user_from.username)
+            notification = Notification.objects.create(
+                user=user_add,
+                title="New friend !",
+                message=f"{user_from.username} sent you a friend request.",
+                image_url=user_from.image_url,
+                # link=f"http://localhost:3000/profile/{user_from.username}",
+                link=f"{settings.FRONTEND_HOST}/profile/{user_from.username}",
+                is_friend_notif=True,
+                action_by=user_from.username,
+            )
             channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(
-                f"room_{user_add.id}",
+                f"user_{user_add.id}",
                 {
                     "type": "send_notification",
                     "notification_id": notification.notification_id,
@@ -219,7 +223,7 @@ class UnblockFriendshipView(APIView):
             block_flag = 'u_one_is_blocked_u_two'
         else:
             block_flag = 'u_two_is_blocked_u_one'
-        
+
         if not getattr(friendship, block_flag):
             return Response({'error': 'Friend is not blocked'}, status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -287,7 +291,7 @@ class NotificationDetailView(APIView):
             notification.delete()
             channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(
-                f"room_{user.id}",
+                f"user_{user.id}",
                 {
                     "type": "send_notification",
                     "notification_id": notification.notification_id,
