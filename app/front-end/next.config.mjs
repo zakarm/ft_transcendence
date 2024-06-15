@@ -10,6 +10,9 @@ const nextConfig = {
                 // pathname: '/dv1i5yh71/image/upload/**',
             },
             { hostname: 'cdn.cloudflare.steamstatic.com' },
+            {
+                protocol: 'http',
+                hostname:  'locahost:3000' },
             { hostname: 'ddragon.leagueoflegends.com' },
             { hostname: 'lh3.googleusercontent.com' },
             { hostname: 'cdn.intra.42.fr' },

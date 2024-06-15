@@ -11,7 +11,8 @@ function    rearrangeValues({ futurePredictions } : {futurePredictions : FutureP
     if (Array.isArray(futurePredictions)) {
         futurePredictions.map((value) => {
             if (typeof value !== 'string') {
-                dataArray.push(value.predicted_score * Math.random());
+                console.log(value.predicted_score);
+                dataArray.push(value.predicted_score);
                 labelArray.push(value.date);
             }
         })

@@ -13,50 +13,57 @@ import SocialAuth from '../../../components/socialAuth';
 import '../../global.css';
 
 export default function SignUp() {
-    const router = useRouter();
-    const [qrCode, setQrCode] = useState(null);
-    const signUpPost = async (event: FormEvent<HTMLFormElement>) => {
-        try {
-            event.preventDefault();
-            const form = new FormData(event.currentTarget);
-            const first_name = form.get('first_name') as string;
-            const last_name = form.get('last_name') as string;
-            const username = form.get('user_name') as string;
-            const email = form.get('email') as string;
-            const password = form.get('password') as string;
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/sign-up`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    first_name,
-                    last_name,
-                    username,
-                    email,
-                    password,
-                }),
-            });
-            const data = await response.json();
-            if (response.ok) {
-                const { access, refresh } = data;
-                toast.success('Successfully signed up !');
-                Cookies.set('access', access);
-                Cookies.set('refresh', refresh);
-                router.push('/dashboard');
-            } else {
+  const router = useRouter();
+  const [qrCode, setQrCode] = useState(null);
+  const signUpPost = async (event: FormEvent<HTMLFormElement>) => {
+	try
+	{
+		event.preventDefault();
+		const form = new FormData(event.currentTarget);
+		const first_name = form.get("first_name") as string;
+		const last_name = form.get("last_name") as string;
+		const username = form.get("user_name") as string;
+		const email = form.get("email") as string;
+		const password = form.get("password") as string;
+		const response = await fetch(
+			"http://localhost:8000/api/sign-up",
+			{
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+				first_name,
+				last_name,
+				username,
+				email,
+				password,
+			}),
+		});
+		const data = await response.json();
+		if (response.ok) {
+			const { access, refresh } = data;
+			toast.success("Successfully signed up !");
+			Cookies.set("access", access);
+			Cookies.set("refresh", refresh);
+			router.push("/dashboard");
+		}
+		else {
                 const errors = data;
-                for (const key in errors) {
-                    if (errors.hasOwnProperty(key)) {
+                for (const key in errors)
+                {
+                    if (errors.hasOwnProperty(key))
+                    {
                         errors[key].forEach((errorMessage: string) => {
-                            toast.error(`${key}: ${errorMessage}`);
+                        toast.error(`${key}: ${errorMessage}`);
                         });
                     }
                 }
             }
-        } catch (error: any) {
-            toast.error('No response received from server.', error);
+        }
+        catch (error : any)
+        {
+            toast.error("No response received from server.");
         }
     };
-
     return (
         <div className="container">
             {/* <ToastContainer /> */}

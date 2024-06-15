@@ -30,7 +30,6 @@ class MainDashboardView(APIView):
         serializer_data = self.serializer_class(instance=user)
         return Response(serializer_data.data)
 
-
 class ProfileView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -40,7 +39,6 @@ class ProfileView(APIView):
         user = request.user
         serializer_data = self.serializer_class(instance=user)
         return Response(serializer_data.data)
-
 
 class ProfileIdView(APIView):
     authentication_classes = [JWTAuthentication]
@@ -75,7 +73,6 @@ class UserSearchView(APIView):
         queryset = User.objects.filter(username__startswith=user)
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
-
 
 class RemoveFriendshipView(APIView):
     authentication_classes = [JWTAuthentication]
@@ -160,7 +157,7 @@ class AddFriendshipView(APIView):
             )
             channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(
-                f"room_{user_add.id}",
+                f"user_{user_add.id}",
                 {
                     "type": "send_notification",
                     "notification_id": notification.notification_id,
@@ -294,7 +291,7 @@ class NotificationDetailView(APIView):
             notification.delete()
             channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(
-                f"room_{user.id}",
+                f"user_{user.id}",
                 {
                     "type": "send_notification",
                     "notification_id": notification.notification_id,

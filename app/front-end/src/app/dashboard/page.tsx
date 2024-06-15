@@ -14,6 +14,7 @@ import { ChartOptions, ChartData } from 'chart.js';
 import { LineController } from 'chart.js/auto';
 import { useRouter } from 'next/navigation';
 import { Dropdown } from 'react-bootstrap';
+import { ExportMinutes } from '@/components/exportMatch'
 import { ExportCSV } from '../../components/export';
 import { ToastContainer, toast } from 'react-toastify';
 import { CategoryScale, LinearScale, Title, Legend, Tooltip, PointElement, LineElement } from 'chart.js';
@@ -45,12 +46,30 @@ interface UserData {
     total_minutes: TotalMinutes;
 }
 
+interface GameReport {
+    username: string;
+    email: string;
+    first_name: string | null;
+    last_name: string | null;
+    matches_as_user_one: Matches[];
+    matches_as_user_two: Matches[];
+    minutes_per_day: [number, number, number][];
+}
+
 interface GameData {
     player: string;
     score: number;
     date: string;
     result: 'WIN' | 'LOSS';
 }
+
+interface minutes_months
+{
+    month: number;
+    day: number;
+    minutes: number;
+}
+
 function formatDate(str: string): string {
     const date = new Date(str);
     const dateOptions: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
@@ -59,6 +78,7 @@ function formatDate(str: string): string {
     const newDate: string = Intl.DateTimeFormat('en-US', dateOptions).format(date);
     return `${newDate}, ${newTime}`;
 }
+
 export default function Dashboard() {
     const [dashboardData, setDashboardData] = useState<UserData | null>(null);
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -71,6 +91,7 @@ export default function Dashboard() {
     const router = useRouter();
     const gameData: GameData[] = [];
     const gameCsv: GameData[] = [];
+    let mappedData: minutes_months[] = [];
     useEffect(() => {
         const fetchData = async () => {
             const access = Cookies.get('access');
@@ -150,7 +171,7 @@ export default function Dashboard() {
                 gameCsv.push({
                     player: data.username,
                     score: match.score_user_one,
-                    date: formatDate(match.match_start),
+                    date: match.match_start,
                     result: match.score_user_one > match.score_user_two ? 'WIN' : 'LOSS',
                 });
             });
@@ -158,12 +179,23 @@ export default function Dashboard() {
                 gameCsv.push({
                     player: data.username,
                     score: match.score_user_two,
-                    date: formatDate(match.match_start),
+                    date: match.match_start,
                     result: match.score_user_two > match.score_user_one ? 'WIN' : 'LOSS',
                 });
             });
         }
         ExportCSV(gameCsv, 'game_history_' + value + '.csv');
+        toggleDropdown();
+    };
+
+    const handleDropdownSelect2 = async (value: string) => {
+        const data: GameReport = await fetchDataForCsv(value);
+        mappedData = data.minutes_per_day.map(([month, day, minutes]) => ({
+            day,
+            month,
+            minutes,
+        }));
+        ExportMinutes(mappedData, 'game_stats_' + value + "_" + new Date().getFullYear() + '.csv');
         toggleDropdown();
     };
 
@@ -319,13 +351,18 @@ export default function Dashboard() {
                                             </Dropdown.Toggle>
 
                                             <Dropdown.Menu show={dropdownOpenGameStats}>
-                                                <Dropdown.Item href="#/action-1" className="itim-font">
+                                                <Dropdown.Item
+                                                    className="itim-font"
+                                                    onClick={() => handleDropdownSelect2('month')}
+                                                >
                                                     This Month
                                                 </Dropdown.Item>
-                                                <Dropdown.Item href="#/action-2" className="itim-font">
+                                                <Dropdown.Item className="itim-font"
+                                                    onClick={() => handleDropdownSelect2('3_months')}>
                                                     3 Months
                                                 </Dropdown.Item>
-                                                <Dropdown.Item href="#/action-3" className="itim-font">
+                                                <Dropdown.Item className="itim-font"
+                                                    onClick={() => handleDropdownSelect2('year')}>
                                                     1 Year
                                                 </Dropdown.Item>
                                             </Dropdown.Menu>

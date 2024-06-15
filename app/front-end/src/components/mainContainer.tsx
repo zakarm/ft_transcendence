@@ -1,7 +1,7 @@
 'use client';
 import { FaAngleLeft } from 'react-icons/fa';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback, useMemo } from 'react';
 import SideBar from './sideBar';
 import RightBar from './rightBar';
 import SrightBar from './srightBar';
@@ -51,6 +51,7 @@ interface Friend {
     is_accepted: boolean;
 }
 
+
 interface ApiData {
     id: number;
     username: string;
@@ -65,7 +66,9 @@ export default function MainContainer({ children }: { children: React.ReactNode 
     const toggleShow = () => setShow((s) => !s);
     const handleToggle = () => setShowSide(false);
     const showToggle = () => setShowSide(true);
-
+    const [webSocketNotifications, setWebSocketNotifications] = useState<Notification[]>([]);
+    const [userStatus, setUserStatus] = useState<User[]>([]);
+    const { socket, isLoading } = useGlobalContext();
     const [friendsfetched, setFriendsFetched] = useState<FriendSocket[]>([]);
     const [notificationFetch, setNotificationFetch] = useState<Notification[]>([]);
     const [userData, setuserData] = useState<User>({
@@ -75,24 +78,25 @@ export default function MainContainer({ children }: { children: React.ReactNode 
         is_online: 0,
     });
 
-    const [webSocketNotifications, setWebSocketNotifications] = useState<Notification[]>([]);
-    const { socket, isLoading } = useGlobalContext();
-    if (isLoading) {
-        <div className={`${styles.spinnerContainer} ${styles.darkBackground}`}>
+    const spinner = useMemo(() => (
+        <div className={`${styles.spinnerContainer} ${styles.spinnerOverlay}`}>
             <Spinner animation="border" variant="danger" />
             <p className={`${styles.loadingMessage} valo-font`}>LOADING ...</p>
-        </div>;
-    }
+        </div>
+    ), []);
 
     useEffect(() => {
-        if (socket == null) return;
-        socket.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            switch (data.type) {
-                case 'notification':
-                    setWebSocketNotifications((prevNotifications) => [...prevNotifications, data]);
-                    break;
-            }
+        if (socket == null)
+            return ;
+        socket.onmessage = (event: any) => {
+          const data = JSON.parse(event.data);
+          switch (data.type) {
+            case 'notification':
+                setWebSocketNotifications((prevNotifications: any) => [...prevNotifications, data]);
+              break;
+			case 'user_status':
+                setUserStatus((prevUser: any) => [...prevUser, userData]);
+          }
         };
         return () => {
             socket.close();
@@ -164,10 +168,41 @@ export default function MainContainer({ children }: { children: React.ReactNode 
             }
         };
         fetchNotifications();
-    }, [webSocketNotifications]);
+    }, [webSocketNotifications, userStatus]);
+
+    const memoizedSideBar = useMemo(() => (
+        <SideBar />
+    ), []);
+
+    const memorizedSrightBar = useMemo(() => (
+        <SrightBar
+            webSocketNotifications={webSocketNotifications}
+            notifications_data={notificationFetch}
+            userdata={userData}
+            friends_data={friendsfetched}
+            setfriendModal={() => setFriendModal(true)}
+            toggleShow={toggleShow}
+        />
+    ), [webSocketNotifications, notificationFetch, userData, friendsfetched, toggleShow]);
+
+    const memorizedRightBar = useMemo(() => (
+        <RightBar
+            webSocketNotifications={webSocketNotifications}
+            notifications_data={notificationFetch}
+            userdata={userData}
+            friends_data={friendsfetched}
+            setfriendModal={() => setFriendModal(true)}
+            show={show}
+            setShow={setShow}
+            handleClose={handleClose}
+            toggleShow={toggleShow}
+        />
+    ), [webSocketNotifications, notificationFetch, userData, friendsfetched, setShow, handleClose, toggleShow]);
+    
 
     return (
         <div className="container-fluid p-0 vh-100" style={{ backgroundColor: '#000000', overflow: 'hidden' }}>
+            {isLoading && spinner}
             <div className="row">
                 <div className={`col-1 ${styles.toglle} p-0`}>
                     <Image
@@ -198,56 +233,34 @@ export default function MainContainer({ children }: { children: React.ReactNode 
                             </Offcanvas.Body>
                         </div>
                     </Offcanvas>
-                    <div
-                        className={`col-1 ${styles.slider} d-flex align-items-center justify-content-center`}
-                        onClick={toggleShow}
-                    >
+                    <div className={`col-1 ${styles.slider} d-flex align-items-center justify-content-center`}
+                        onClick={toggleShow}>
                         <FaAngleLeft color="#FFEBEB" />
                     </div>
                 </div>
                 <div className="sidebar col-md-1 d-none d-sm-none d-md-block" style={{ backgroundColor: '#000000' }}>
-                    <SideBar />
+                    {memoizedSideBar}
                 </div>
                 <div className="col-md-10 col-sm-12 p-0" style={{ backgroundColor: '#000000' }}>
                     {children}
                 </div>
                 <div
                     className="rightbar col-md-1 d-none d-sm-none d-md-block p-0"
-                    style={{ backgroundColor: '#161625' }}
-                >
+                    style={{ backgroundColor: '#161625' }}>
                     <div className="row-fluid d-flex flex-row align-items-center p-0 vh-100" style={{ zIndex: '50' }}>
                         <div
                             className="col-1 vh-100 d-flex justify-content-end align-items-center text-center"
-                            style={{ backgroundColor: '#000000' }}
-                        >
+                            style={{ backgroundColor: '#000000' }}>
                             <div
                                 className={`${styles.drag_class} pt-3 pb-3`}
                                 style={{ backgroundColor: '#161625', borderRadius: '15px 0 0 15px', cursor: 'pointer' }}
-                                onClick={toggleShow}
-                            >
+                                onClick={toggleShow}>
                                 <FaAngleLeft color="#FFEBEB" size="1.2em" />
-                                <RightBar
-                                    webSocketNotifications={webSocketNotifications}
-                                    notifications_data={notificationFetch}
-                                    userdata={userData}
-                                    friends_data={friendsfetched}
-                                    setfriendModal={() => setFriendModal(true)}
-                                    show={show}
-                                    setShow={setShow}
-                                    handleClose={handleClose}
-                                    toggleShow={toggleShow}
-                                />
+                                {memorizedRightBar}
                             </div>
                         </div>
                         <div className="col-11">
-                            <SrightBar
-                                webSocketNotifications={webSocketNotifications}
-                                notifications_data={notificationFetch}
-                                userdata={userData}
-                                friends_data={friendsfetched}
-                                setfriendModal={() => setFriendModal(true)}
-                                toggleShow={toggleShow}
-                            />
+                            {memorizedSrightBar}
                         </div>
                         <InviteFriend show={friendModal} close={() => setFriendModal(false)} />
                     </div>

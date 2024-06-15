@@ -112,10 +112,10 @@ export default function RightBar({
             <Offcanvas.Body className={`p-0 m-0`}>
                 <div className={`row-fluid d-flex flex-row align-items-center p-0 vh-100`}>
                     <div className="col-1 vh-100 d-flex justify-content-end align-items-center text-center">
-                        <div
-                            className={`${styles.drag_class} pt-3 pb-3`}
-                            style={{ backgroundColor: '#161625', borderRadius: '15px 0 0 15px', cursor: 'pointer' }}
-                        >
+                        <div className={`${styles.drag_class} pt-3 pb-3`}
+                            style={{ backgroundColor: '#161625', 
+                            borderRadius: '15px 0 0 15px', 
+                            cursor: 'pointer'}}>
                             <FaAngleRight color="#FFEBEB" size="1.2em" />
                         </div>
                     </div>
@@ -141,8 +141,7 @@ export default function RightBar({
                                                 </Dropdown.Toggle>
                                                 <Dropdown.Menu
                                                     className={`${styles.drop_class} border`}
-                                                    style={{ background: '#161625' }}
-                                                >
+                                                    style={{ background: '#161625' }}>
                                                     {notifications_data &&
                                                         notifications_data.map((key: Notification, index: number) => (
                                                             <Dropdown.Item
@@ -196,8 +195,7 @@ export default function RightBar({
                                     <div
                                         className={`row ${styles.search_inpt2} p-2 mb-2 m-1 text-center`}
                                         style={{ cursor: 'pointer' }}
-                                        onClick={setfriendModal}
-                                    >
+                                        onClick={setfriendModal}>
                                         <div className={`col-xl-8 col-6 ${styles.place}`}>
                                             <div style={{ fontFamily: 'intim', color: '#FFEBEB' }}>Add Friend</div>
                                         </div>

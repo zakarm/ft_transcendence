@@ -13,7 +13,6 @@ class Friendship(models.Model):
         db_table = 'Friendship'
         unique_together = (('user_from', 'user_to'),)
 
-
 class Notification(models.Model):
     notification_id = models.AutoField(primary_key=True)
     user = models.ForeignKey('authentication.User', models.DO_NOTHING,
