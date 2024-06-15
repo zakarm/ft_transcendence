@@ -217,23 +217,21 @@ export default function () {
                                                 style={{
                                                     borderLeft: '1px solid #61627C',
                                                     borderRight: '1px solid #61627C',
-                                                }}
-                                            >
+                                                }}>
                                                 Win
                                             </h4>
                                             <span
                                                 style={{
                                                     borderLeft: '1px solid #61627C',
                                                     borderRight: '1px solid #61627C',
-                                                }}
-                                            >
-                                                {((profile.win_games / profile.total_games) * 100).toFixed(1)}%
+                                                }}>
+                                                {profile.total_games !== 0 ? ((profile.win_games / profile.total_games) * 100).toFixed(1) : '0.0'}%
                                             </span>
                                         </div>
                                         <div className="col d-flex flex-column justify-content-end ">
                                             <h4>Lose</h4>
                                             <span>
-                                                {((profile.lose_games / profile.total_games) * 100).toFixed(1)}%
+                                                {profile.total_games !== 0 ? ((profile.lose_games / profile.total_games) * 100).toFixed(1) : '0.0'}%
                                             </span>
                                         </div>
                                     </div>
@@ -291,14 +289,12 @@ export default function () {
                                     className={`col-6 ${styles.edit_btn} valo-font text-center p-2 m-2`}
                                     onClick={() => {
                                         setModalShow(true);
-                                    }}
-                                >
+                                    }}>
                                     <button
                                         onClick={() => {
                                             setModalShow(true);
-                                        }}
-                                    >
-                                        EDIT PROFILE
+                                        }}>
+                                        EDIT BIO
                                     </button>
                                 </div>
                                 <div>
@@ -313,52 +309,16 @@ export default function () {
                                         centered
                                         backdrop="static"
                                         scrollable
-                                        animation
-                                    >
+                                        animation>
                                         <Modal.Header closeButton closeVariant="white">
                                             <Modal.Title id="contained-modal-title-vcenter">
                                                 <span style={{ color: '#FFEBEB', fontFamily: 'itim' }}>
-                                                    <FaUserEdit color="#7aa6d6" /> Edit Profile
+                                                    <FaUserEdit color="#7aa6d6" /> Edit Bio
                                                 </span>
                                             </Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body>
                                             <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                                                <InputGroup hasValidation className={`mb-3`}>
-                                                    <InputGroup.Text style={{ backgroundColor: '#2C3143' }}>
-                                                        <SiRepublicofgamers color="#FFEBEB" />
-                                                    </InputGroup.Text>
-                                                    <Form.Control
-                                                        className={`${styles.form_control}`}
-                                                        required
-                                                        type="text"
-                                                        color="red"
-                                                        aria-label="Nickname"
-                                                        placeholder="Nickname"
-                                                        defaultValue="!Snake_007"
-                                                        style={{ backgroundColor: '#2C3143' }}
-                                                    />
-                                                    <Form.Control.Feedback type="invalid">
-                                                        Please choose a Nickname.
-                                                    </Form.Control.Feedback>
-                                                </InputGroup>
-                                                <InputGroup hasValidation className="mb-3">
-                                                    <InputGroup.Text style={{ backgroundColor: '#2C3143' }}>
-                                                        <ImUsers color="#FFEBEB" />
-                                                    </InputGroup.Text>
-                                                    <Form.Control
-                                                        className={`${styles.form_control}`}
-                                                        required
-                                                        type="text"
-                                                        placeholder="Full name"
-                                                        aria-label="Full name"
-                                                        defaultValue="Othman Nouakchi"
-                                                        style={{ backgroundColor: '#2C3143' }}
-                                                    />
-                                                    <Form.Control.Feedback type="invalid">
-                                                        Please enter your full name.
-                                                    </Form.Control.Feedback>
-                                                </InputGroup>
                                                 <InputGroup hasValidation className="mb-3">
                                                     <InputGroup.Text style={{ backgroundColor: '#2C3143' }}>
                                                         <BsFillChatLeftQuoteFill color="#FFEBEB" />
@@ -393,37 +353,21 @@ export default function () {
                                                         Please talk about yourslef.
                                                     </Form.Control.Feedback>
                                                 </InputGroup>
-                                                <InputGroup className="mb-2 row p-0 m-0 d-flex justify-content-center">
-                                                    <CountryDropdown
-                                                        classes={`${styles.selector} col-md-5 col-sm-10 mx-3 mb-1 p-2`}
-                                                        value={country}
-                                                        onChange={(val) => selectCountry(val)}
-                                                    />
-                                                    <RegionDropdown
-                                                        classes={`${styles.selector} col-md-5 col-sm-10 mx-3 mb-1 p-2`}
-                                                        country={country}
-                                                        value={region}
-                                                        onChange={(val) => selectRegion(val)}
-                                                    />
-                                                </InputGroup>
                                                 <div className="row d-flex justify-content-center pb-1 m-0">
                                                     <div
                                                         className={`${styles.edit_btn} col-md-3 col-sm-5 valo-font text-center m-2 px-2`}
                                                         onClick={() => {
                                                             setModalShow(false);
-                                                        }}
-                                                    >
+                                                        }}>
                                                         <button
                                                             onClick={() => {
                                                                 setModalShow(false);
-                                                            }}
-                                                        >
+                                                            }}>
                                                             Cancel
                                                         </button>
                                                     </div>
                                                     <div
-                                                        className={`${styles.edit_btn} col-md-3 col-sm-5 valo-font text-center m-2 px-2`}
-                                                    >
+                                                        className={`${styles.edit_btn} col-md-3 col-sm-5 valo-font text-center m-2 px-2`}>
                                                         <button type="submit">Save</button>
                                                     </div>
                                                 </div>
