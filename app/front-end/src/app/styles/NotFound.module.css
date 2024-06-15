@@ -1,0 +1,81 @@
+.notFoundContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+.notFound404 {
+    color: #ff4755;
+    font-size: 6rem;
+    animation: pulse 2s infinite;
+}
+
+.notFoundTitle {
+    color: #ffffff;
+    font-size: 2rem;
+    margin-top: 0.5rem;
+    animation: fadeIn 2s ease-in-out;
+}
+
+.notFoundMessage {
+    font-family: 'itim';
+    color: #ff4755;
+    font-size: 1.5rem;
+    margin-top: 1rem;
+    animation: fadeIn 2.5s ease-in-out;
+}
+
+.codeAnimation {
+    font-family: 'Courier New', Courier, monospace;
+    color: #00ff00;
+    background-color: #000;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-top: 2rem;
+    white-space: pre;
+    overflow: hidden;
+    width: 20ch;
+    animation: typing 4s steps(20) infinite alternate, blink 0.75s step-end infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes typing {
+    from {
+        width: 0;
+    }
+    to {
+        width: 20ch;
+    }
+}
+
+@keyframes blink {
+    from, to {
+        border-color: transparent;
+    }
+    50% {
+        border-color: #00ff00;
+    }
+}

@@ -151,11 +151,9 @@ export default function SrightBar({
                 {data}
             </div>
             <div className="flex-grow-3 row-inline d-flex justify-content-center text-center" style={{ width: '91%' }}>
-                <div
-                    className={`col-6 ${styles.search_inpt1} my-1 p-2 mx-2 text-center`}
+                <div className={`col-6 ${styles.search_inpt1} my-1 p-2 mx-2 text-center`}
                     style={{ cursor: 'pointer' }}
-                    onClick={setfriendModal}
-                >
+                    onClick={setfriendModal}>
                     <ImUserPlus color="#FFEBEB" />
                 </div>
             </div>
