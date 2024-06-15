@@ -10,7 +10,11 @@
         "depcheck": "depcheck"
     },
     "dependencies": {
+        "@emotion/react": "^11.11.4",
+        "@emotion/styled": "^11.11.5",
         "@gsap/react": "^2.1.1",
+        "@react-three/drei": "^9.106.2",
+        "@react-three/fiber": "^8.16.8",
         "bootstrap": "^5.3.3",
         "chart.js": "^4.4.3",
         "cloudinary": "^2.2.0",

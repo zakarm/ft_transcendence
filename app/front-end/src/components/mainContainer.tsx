@@ -233,10 +233,8 @@ export default function MainContainer({ children }: { children: React.ReactNode 
                             </Offcanvas.Body>
                         </div>
                     </Offcanvas>
-                    <div
-                        className={`col-1 ${styles.slider} d-flex align-items-center justify-content-center`}
-                        onClick={toggleShow}
-                    >
+                    <div className={`col-1 ${styles.slider} d-flex align-items-center justify-content-center`}
+                        onClick={toggleShow}>
                         <FaAngleLeft color="#FFEBEB" />
                     </div>
                 </div>
@@ -248,18 +246,15 @@ export default function MainContainer({ children }: { children: React.ReactNode 
                 </div>
                 <div
                     className="rightbar col-md-1 d-none d-sm-none d-md-block p-0"
-                    style={{ backgroundColor: '#161625' }}
-                >
+                    style={{ backgroundColor: '#161625' }}>
                     <div className="row-fluid d-flex flex-row align-items-center p-0 vh-100" style={{ zIndex: '50' }}>
                         <div
                             className="col-1 vh-100 d-flex justify-content-end align-items-center text-center"
-                            style={{ backgroundColor: '#000000' }}
-                        >
+                            style={{ backgroundColor: '#000000' }}>
                             <div
                                 className={`${styles.drag_class} pt-3 pb-3`}
                                 style={{ backgroundColor: '#161625', borderRadius: '15px 0 0 15px', cursor: 'pointer' }}
-                                onClick={toggleShow}
-                            >
+                                onClick={toggleShow}>
                                 <FaAngleLeft color="#FFEBEB" size="1.2em" />
                                 {memorizedRightBar}
                             </div>
