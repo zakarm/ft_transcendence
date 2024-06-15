@@ -229,7 +229,7 @@ export default function Dashboard() {
                                         </h6>
                                     </div>
                                     <div>
-                                        <ButtonValo onClick={clickButton} value="Play" />
+                                        <ButtonValo onClick={clickButton} value="PLAY" />
                                     </div>
                                 </div>
                             </div>

@@ -1,0 +1,18 @@
+            self.tournament_id = self.scope["url_route"]["kwargs"]["tournament_id"]
+            query_string = self.scope["query_string"].decode()
+            query_params = dict(param.split("=") for param in query_string.split("&"))
+            self.watch = query_params.get("watch")
+            await self.accept()
+            print(f"watch: {self.watch}", file=sys.stderr)
+            print(f"Tournament ID: {self.tournament_id}", file=sys.stderr)
+            self.tournament = Tournament(self.tournament_id)
+            await self.channel_layer.group_add(self.tournament_id, self.channel_name)
+            add_room(self.tournament_id, self.tournament)
+            player = {
+                "data": {"name": "Player 1", "photoUrl": "", "score": 0},
+                "channel": self.channel_name,
+                "email": "email1",
+                "object": User(),
+                "match_id": None,
+            }
+            self.tournament.add_player(player)

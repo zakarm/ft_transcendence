@@ -63,9 +63,12 @@ type PromoteWinner = (
     matchIndex: number,
     userIndex: 0 | 1,
 ) => void;
-
+interface playerdata {
+    name: string;
+    imageUrl: string;
+}
 type SetPageState = (pageState: string) => void;
-
+type SetWinner_ = (winner: playerdata) => void;
 interface LocalGame {
     user1name: string;
     user2name: string;
@@ -79,6 +82,7 @@ interface LocalGame {
     setScore: SetScore | null;
     promoteWinner: PromoteWinner | null;
     setPageState_: SetPageState | null;
+    setWinner: SetWinner_ | null;
     usesetter: 0 | 1;
 }
 
@@ -109,9 +113,10 @@ const LocalTournamentPage: NextPage = () => {
         matchIndex: 0,
         user1Index: 0,
         user2Index: 1,
-        setScore: () => {},
-        promoteWinner: () => {},
-        setPageState_: () => {},
+        setScore: null,
+        promoteWinner: null,
+        setPageState_: null,
+        setWinner: null,
         usesetter: 1,
     });
     const [winner, setwinner] = useState<Player>({
@@ -340,6 +345,7 @@ const LocalTournamentPage: NextPage = () => {
         setScore: setScore,
         promoteWinner: promoteWinner,
         setPageState_: setPageState_,
+        setWinner: null,
         usesetter: 1,
     });
     useEffect(() => {

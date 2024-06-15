@@ -161,87 +161,24 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         try:
             self.tournament_id = self.scope["url_route"]["kwargs"]["tournament_id"]
-
-            # Extract query parameters
             query_string = self.scope["query_string"].decode()
             query_params = dict(param.split("=") for param in query_string.split("&"))
-            self.token = query_params.get("token")
             self.watch = query_params.get("watch")
             await self.accept()
-            print(f"Token: {self.token}", file=sys.stderr)
-            print(f"Wathc: {self.watch}", file=sys.stderr)
+            print(f"watch: {self.watch}", file=sys.stderr)
             print(f"Tournament ID: {self.tournament_id}", file=sys.stderr)
             self.tournament = Tournament(self.tournament_id)
             await self.channel_layer.group_add(self.tournament_id, self.channel_name)
-            player1 = {
+            add_room(self.tournament_id, self.tournament)
+            player = {
                 "data": {"name": "Player 1", "photoUrl": "", "score": 0},
                 "channel": self.channel_name,
                 "email": "email1",
                 "object": User(),
+                "match_id": None,
             }
-            player2 = {
-                "data": {"name": "Player 2", "photoUrl": "", "score": 0},
-                "channel": self.channel_name,
-                "email": "email2",
-                "object": User(),
-            }
-            player3 = {
-                "data": {"name": "Player 3", "photoUrl": "", "score": 0},
-                "channel": self.channel_name,
-                "email": "email3",
-                "object": User(),
-            }
-            player4 = {
-                "data": {"name": "Player 4", "photoUrl": "", "score": 0},
-                "channel": self.channel_name,
-                "email": "email4",
-                "object": User(),
-            }
-            player5 = {
-                "data": {"name": "Player 5", "photoUrl": "", "score": 0},
-                "channel": self.channel_name,
-                "email": "email5",
-                "object": User(),
-            }
-            player6 = {
-                "data": {"name": "Player 6", "photoUrl": "", "score": 0},
-                "channel": self.channel_name,
-                "email": "email6",
-                "object": User(),
-            }
-            player7 = {
-                "data": {"name": "Player 7", "photoUrl": "", "score": 0},
-                "channel": self.channel_name,
-                "email": "email7",
-                "object": User(),
-            }
-            player8 = {
-                "data": {"name": "Player 8", "photoUrl": "", "score": 0},
-                "channel": self.channel_name,
-                "email": "email8",
-                "object": User(),
-            }
-            self.tournament.add_player(player1)
-            self.tournament.add_player(player2)
-            self.tournament.add_player(player3)
-            self.tournament.add_player(player4)
-            self.tournament.add_player(player5)
-            self.tournament.add_player(player6)
-            self.tournament.add_player(player7)
-            self.tournament.add_player(player8)
-            self.tournament.generate_quatre_final_players()
-            message = {
-                "action": "connection_ack",
-                "data": (self.tournament.data),
-            }
-            await self.message({"message": message})
-            asyncio.ensure_future(self.start_game())
-            asyncio.ensure_future(self.start_game())
-            asyncio.ensure_future(self.start_game())
-            asyncio.ensure_future(self.start_game())
-            asyncio.ensure_future(self.start_game())
-            asyncio.ensure_future(self.start_game())
-            asyncio.ensure_future(self.start_game())
+            self.tournament.add_player(player)
+
             # if self.scope["user"].is_authenticated:
             #     await self.accept()
             #     self.user = await get_user(user_id=self.scope["user"].id)

@@ -35,6 +35,7 @@ const useWebSocket = (url: string) => {
         username2: '',
     });
 
+        const [countDown, setCountDown] = useState<number>(15);
     useEffect(() => {
         const ws = new WebSocket(url);
 
@@ -97,6 +98,10 @@ const useWebSocket = (url: string) => {
                 setGameState('pause');
                 console.log('-> pause', data.message);
             }
+            if (data.message.action === 'countdown') {
+                setCountDown(data.message.count);
+                console.log('-> pause', data.message);
+            }
             if (data.message.action === 'end_game') {
                 if (data.message.status === 'winner') setGameState('winner');
                 else setGameState('loser');
@@ -115,7 +120,7 @@ const useWebSocket = (url: string) => {
         };
     }, [url]);
 
-    return { webSocket, gameState, connectionInfo };
+    return { webSocket, gameState, connectionInfo, countDown };
 };
 
 export default useWebSocket;
