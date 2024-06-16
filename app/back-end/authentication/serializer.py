@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate
 from django.db import IntegrityError
 from .models import User
 from rest_framework_simplejwt.tokens import RefreshToken
+from datetime import datetime, timezone
 
 class UsersSignUpSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=55, min_length=8, allow_blank=False)
@@ -50,11 +51,20 @@ class User2FASerializer(serializers.Serializer):
     def validate(self, data):
         email = data.get('email')
         user = User.objects.get(email = email)
-        print(user, file = sys.stderr)
         if not user:
             raise serializers.ValidationError("Invalid email.")
+        # print(user.two_fa_secret_key, file = sys.stderr)
         verifier = pyotp.TOTP(user.two_fa_secret_key)
-        if not verifier.verify(data.get('otp')):
+        # print(verifier.verify(data.get('otp')), file = sys.stderr)
+        server_time = datetime.now()
+        print(f"Server time: {server_time}", file=sys.stderr)
+        print(f"User email: {user.email}", file=sys.stderr)
+        print(f"User 2FA Secret Key: {user.two_fa_secret_key}", file=sys.stderr)
+        print(f"OTP provided by user: {data.get('otp')}", file=sys.stderr)
+        print(f"Current OTP from TOTP: {verifier.now()}", file=sys.stderr)
+        print(f"OTP verification result: {verifier.verify(data.get('otp'))}", file=sys.stderr)
+
+        if not  pyotp.TOTP(user.two_fa_secret_key).verify(data.get('otp'), valid_window=1):
             raise serializers.ValidationError("Invalid 2FA code.")
         return user
 
