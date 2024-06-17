@@ -35,8 +35,8 @@ class UserSignInSerializer(serializers.Serializer):
             raise serializers.ValidationError({"error": "Unauthorized. Invalid credentials provided."})
         user.save()
         if user.is_2fa_enabled:
-            user.two_fa_secret_key = pyotp.random_base32()
-            user.save()
+            # user.two_fa_secret_key = pyotp.random_base32()
+            # user.save()
             url_code = pyotp.totp.TOTP(user.two_fa_secret_key).provisioning_uri(
                 name = user.email, issuer_name = "ft_transcendence")
             data['user'] = user

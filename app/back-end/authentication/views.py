@@ -123,7 +123,6 @@ class SignIn2Fa(APIView):
     post=extend_schema(summary="Enable 2Fa", tags=["Settings"])
 )
 class Control2Fa(APIView):
-    # serializer_class = User2FASerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     def post(self, request):
@@ -137,8 +136,6 @@ class Control2Fa(APIView):
             return Response({'url': url_code, 'email': user_obj.email}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({'error': {'User does not exist'}}, status=status.HTTP_400_BAD_REQUEST)
-
-
         # serializer = self.serializer_class(data = request.data)
         # if serializer.is_valid():
         #     user = serializer.validated_data

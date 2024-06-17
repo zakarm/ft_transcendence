@@ -93,7 +93,6 @@ function    GetCheckboxInput(
     
     
     useEffect(() => {
-        // console.log('accountValues[inputId] :' , accountValues[inputId] , "Boolean(accountValues[inputId])", Boolean(accountValues[inputId]))
         setIsChecked(Boolean(accountValues[inputId]))
     }, [accountValues[inputId]])
 
