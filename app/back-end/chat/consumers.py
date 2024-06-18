@@ -4,7 +4,7 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from authentication.models import User
 from .models import Messages
-
+import sys
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
@@ -36,14 +36,23 @@ class ChatConsumer(WebsocketConsumer):
         receiver = text_data_json["receiver"]
         timestamp = text_data_json["timestamp"]
 
+        print(f"chat_id: {chat_id}", file = sys.stderr)
+        print(f"message: {message}", file = sys.stderr)
+        print(f"sender: {sender}", file = sys.stderr)
+        print(f"receiver: {receiver}", file = sys.stderr)
+        print(f"timestamp: {timestamp}", file = sys.stderr)
+
+        receiver_obj = User.objects.get(username = receiver)
+        sender_obj = User.objects.get(username = sender)
+
         # receiver = self.scope['user']
-        # recipient = User.objects.get(username=receiver)
-        # message = Messages.objects.create(
-        #     user_one=receiver,
-        #     user_two=recipient,
-        #     message_content=message,
-        #     message_date=timestamp
-        # )
+
+        Messages.objects.create(
+            user_one=sender_obj,
+            user_two=receiver_obj,
+            message_content=message,
+            message_date=timestamp
+        )
 
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
