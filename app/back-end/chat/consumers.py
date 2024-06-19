@@ -37,7 +37,7 @@ class ChatConsumer(WebsocketConsumer):
         timestamp = text_data_json["timestamp"]
 
         # receiver = self.scope['user']
-        # recipient = User.objects.get(username=user)
+        # recipient = User.objects.get(username=receiver)
         # message = Messages.objects.create(
         #     user_one=receiver,
         #     user_two=recipient,

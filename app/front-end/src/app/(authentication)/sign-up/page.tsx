@@ -26,7 +26,7 @@ export default function SignUp() {
 		const email = form.get("email") as string;
 		const password = form.get("password") as string;
 		const response = await fetch(
-			"http://localhost:8000/api/sign-up",
+			`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/sign-up`,
 			{
 				method: "POST",
 				headers: { "Content-Type": "application/json" },

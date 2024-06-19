@@ -5,16 +5,19 @@ import QRCode from 'react-qr-code';
 import OtpInput from 'react-otp-input';
 import { TbSquareRoundedNumber1Filled, TbSquareRoundedNumber2Filled } from 'react-icons/tb';
 import Cookies from 'js-cookie';
+import { Button } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 
 interface QrCode {
     value?: string;
     email?: string;
+    qr: boolean;
 }
 
-export default function TwoFa({ value = '', email }: QrCode) {
+export default function TwoFa({ value = '', email, qr }: QrCode) {
     const router = useRouter();
     const [otp, setOtp] = useState('');
+    const [showModal, setShowModal] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -27,12 +30,18 @@ export default function TwoFa({ value = '', email }: QrCode) {
                     });
 
                     if (response.ok) {
-                        const data = await response.json();
-                        const { access, refresh } = data;
-                        toast.success('Successfully signed in!');
-                        Cookies.set('access', access);
-                        Cookies.set('refresh', refresh);
-                        router.push('/dashboard');
+                        if (!qr){
+                            const data = await response.json();
+                            const { access, refresh } = data;
+                            toast.success('Successfully signed in!');
+                            Cookies.set('access', access);
+                            Cookies.set('refresh', refresh);
+                            router.push('/dashboard');
+                        }
+                        else {
+                            toast.success('Two fa enabled successfully !');
+                            setShowModal(false);
+                        }
                     } else if (response.status === 401) {
                         toast.error('Invalid otp!');
                     } else if (response.status === 500) {
@@ -47,7 +56,11 @@ export default function TwoFa({ value = '', email }: QrCode) {
         fetchData();
     }, [otp, email, router]);
 
+    const handleClose = () => setShowModal(false);
+
     return (
+        <>
+        {showModal && (
         <div
             className="modal show"
             style={{
@@ -58,17 +71,16 @@ export default function TwoFa({ value = '', email }: QrCode) {
                 transform: 'translate(-50%, -50%)',
                 zIndex: '9999',
                 backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            }}
-        >
-            {/* <ToastContainer /> */}
+            }}>
             <Modal.Dialog>
                 <Modal.Header>
                     <Modal.Title>Two Factor Authentication</Modal.Title>
+                    <Button variant="close" onClick={handleClose}></Button>
                 </Modal.Header>
 
                 <Modal.Body style={{ backgroundColor: '#161625' }}>
                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <QRCode value={value || ''} style={{ border: '3px' }} className="border border-danger" />
+                        {qr == true ? <QRCode value={value || ''} style={{ border: '3px' }} className="border border-danger" /> : null}
                     </div>
                     <div className="mt-4 mb-4">
                         <p className="mt-2">
@@ -110,5 +122,7 @@ export default function TwoFa({ value = '', email }: QrCode) {
                 </Modal.Body>
             </Modal.Dialog>
         </div>
+    )}
+    </>
     );
 }

@@ -8,11 +8,11 @@ class Pong(gym.Env):
     def __init__(self, room):
         super(Pong, self).__init__()
         self.room = room
-        self.action_space = spaces.Discrete(3)  # Assuming 3 discrete actions for the bot
+        self.action_space = spaces.Discrete(3)
         self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(4,), dtype=np.float32)
 
     def step(self, action):
-        self.room.set_paddle_speed(2, action)  # Modify to fit your action mapping
+        self.room.set_paddle_speed(2, action)
         self.room.ball_update()
         self.room.ball_intersect()
         self.room.paddle_update()

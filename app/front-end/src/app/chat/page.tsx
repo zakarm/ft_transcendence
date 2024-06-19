@@ -64,7 +64,7 @@ export default function () {
         const access = Cookies.get('access');
         if (access) {
             try {
-                const newChatSocket = new WebSocket(`ws://127.0.0.1:8000/ws/chat/lobby?token=${access}`);
+                const newChatSocket = new WebSocket(`${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/chat/lobby?token=${access}`);
 
                 newChatSocket.onmessage = (e: MessageEvent) => {
                     console.log('message received');
