@@ -30,22 +30,16 @@ interface Message {
 
 export default function () {
     const [show, setShow] = useState(false);
-
     const [showAbout, setAbout] = useState(false);
-
     const [selectedChat, setSelectedChat] = useState<string>('none');
-
     const [chatUsers, setChatUsers] = useState<Users[]>([]);
-
-    const handleClose = () => setAbout(false);
-
     const [fullscreen, setFullscreen] = useState(window.innerWidth <= 768 ? true : false);
-
-    //////
     const [newMessage, setNewMessage] = useState<Message | undefined>(undefined);
     const [messages, setMessages] = useState<Message[]>([]);
     const chatSocketRef = useRef<WebSocket | null>(null);
     const [me, setMe] = useState<string>('');
+    
+    const handleClose = () => setAbout(false);
 
     const fetchSearchUser = async () => {
         const access = Cookies.get('access');

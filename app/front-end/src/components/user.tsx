@@ -59,7 +59,7 @@ export default function User({ id, src, isConnected, handleChat, username, handl
 
     return (
         <>
-            <div onClick={updateChat}>
+            <div className='d-flex flex-column align-items-center justify-content-center' onClick={updateChat}>
                 <Image
                     className={`${styles.user_img} m-2`}
                     src={src}
@@ -69,6 +69,7 @@ export default function User({ id, src, isConnected, handleChat, username, handl
                         borderColor: isConnected ? '#27B299' : '#7E7E8D',
                         filter: isConnected ? '' : 'grayscale(100%)'
                     }} />
+                <p style={{color: 'white', fontFamily: 'itim'}}>{username}</p>
             </div>
         </>
     );
