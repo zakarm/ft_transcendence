@@ -14,7 +14,7 @@ from django.utils import timezone
 
 # Local application/library specific imports
 from .room import RoomObject
-from .models import Match
+from .models import Match, GameTable
 
 User = get_user_model()
 
@@ -32,6 +32,23 @@ def get_user(user_id):
         return user
     except User.DoesNotExist:
         return AnonymousUser()
+
+
+@database_sync_to_async
+def get_game_data(user):
+    try:
+        game_data = GameTable.objects.get(user=user.id)
+        return game_data
+    except GameTable.DoesNotExist:
+        game_data = GameTable.objects.create(
+            user=user,
+            table_color="#161625",
+            ball_color="#ffffff",
+            paddle_color="#ff4655",
+            game_difficulty=1,
+            table_position="6,8,0",
+        )
+        return game_data
 
 
 @database_sync_to_async
@@ -55,7 +72,6 @@ def add_match(
         tackle_user_one=tackle_user_one,
         tackle_user_two=tackle_user_two,
     )
-    print(f"Match created", file=sys.stderr)
 
 
 Room_index = 0
@@ -161,6 +177,8 @@ class GameConsumer(AsyncWebsocketConsumer):
     # -----------------------> 3. connect <-----------------------
     async def connction_ack(self):
         try:
+            game_data = await get_game_data(self.user)
+            print(f"game_data: {game_data.table_position}", file=sys.stderr)
             index = self.room.get_user_index(self.user.email)
             message = {
                 "action": "connection_ack",
@@ -169,6 +187,10 @@ class GameConsumer(AsyncWebsocketConsumer):
                 "image_url": self.user.image_url,
                 "username": self.user.username,
                 "Room_name": self.room_name,
+                "table_color": game_data.table_color,
+                "ball_color": game_data.ball_color,
+                "paddle_color": game_data.paddle_color,
+                "table_position" : game_data.table_position,
             }
             await self.message({"message": message})
         except Exception as e:
@@ -194,6 +216,8 @@ class GameConsumer(AsyncWebsocketConsumer):
         try:
             room = get_room(self.room_name)
             room.set_reconect(self.user.email)
+            if (room.get_user2_stat()):
+                room.end_game()
             # await self.channel_layer.group_discard(self.room_name, self.channel_name)
             pass
         except Exception as e:
@@ -254,7 +278,6 @@ class GameConsumer(AsyncWebsocketConsumer):
                 "ball_velocity_z": ball_velocity["velocity_z"],
             }
             await self.broadcast_message(message)
-            print(f"Ball position updated: {message}", file=sys.stderr)
         except Exception as e:
             print(f"An error occurred in update_ball_possiton: {e}", file=sys.stderr)
 
@@ -321,6 +344,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                     i = 0
                     while room.is_reconecting():
                         if room.is_both_offline():
+                            room.end_game()
                             return
                         await asyncio.sleep(1)
                         message = {"action": "reconnecting"}

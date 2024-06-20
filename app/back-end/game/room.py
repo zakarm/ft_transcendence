@@ -169,6 +169,14 @@ class RoomObject:
             self.reconect = True
             self.reconect_user.append(user_id)
 
+    def get_user2_stat(self):
+        if self.game_started == False:
+            if self.Original_users["user2"]["joined"] == 0:
+                return True
+            return False
+        return False
+
+
     def get_online_user(self):
         # check if the both users are online
         # if self.Original_users["user1"]["user_id"] == self.reconect_user:
@@ -183,6 +191,13 @@ class RoomObject:
     def is_both_offline(self):
         if len(self.reconect_user) == 2:
             return True
+
+    def remove_user(self, user_id):
+        if self.Original_users["user1"]["user_id"] == user_id:
+            self.Original_users["user1"]["joined"] = 0
+        elif self.Original_users["user2"]["user_id"] == user_id:
+            self.Original_users["user2"]["joined"] = 0
+            self.room_is_full = False
 
     def make_user_winner(self, user_id):
         if self.Original_users["user1"]["user_id"] == user_id:
