@@ -114,6 +114,8 @@ class GameSettingsView(APIView):
             user_data.is_2fa_enabled = request.data.get('is_2fa_enabled', user_data.is_2fa_enabled )
             user_data.two_fa_secret_key = request.data.get('two_fa_secret_key', user_data.two_fa_secret_key)
             user_data.email = request.data.get('email', user_data.email)
+            user_data.quote = request.data.get('quote', user_data.quote)
+            user_data.intro = request.data.get('intro', user_data.intro)
             if request.data.get('country'):
                 user_data.location = request.data.get('country')
             if request.data.get('city'):
