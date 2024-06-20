@@ -57,7 +57,7 @@ interface MonthlyStats {
     win_games: number;
     lose_games: number;
     image_url: string | null;
-    summary: MonthlyStats;
+    monthly_stats: MonthlyStats;
   }
 
   interface User {
@@ -176,7 +176,7 @@ const fetchUser = async () => {
                       },
                       is_user_from: true,
                       is_accepted: false,
-                      blocked: false // assuming this property is also part of Friend_
+                      blocked: false
                     });
                 }
               }
@@ -211,48 +211,22 @@ const fetchUser = async () => {
         fetchUser();
     }, [profile]);
 
-    const [modalShow, setModalShow] = useState<boolean>(false);
-
-    const [country, setCountry] = useState<string>('');
-    const [region, setRegion] = useState<string>('');
-
-    const selectCountry = (val: string) => {
-        setCountry(val);
-        setRegion('');
-      }
-
-    const selectRegion = (val: string) => {
-      setRegion(val);
-    }
-
-    const [validated, setValidated] = useState<boolean>(false);
-
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-      const form = event.currentTarget;
-      if (form.checkValidity() === false) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-
-      setValidated(true);
-    };
-
     Chart.register(CategoryScale, LinearScale, Title, Legend, Tooltip, LineController, PointElement, LineElement);
     Chart.defaults.font.family = 'Itim';
     Chart.defaults.font.size = 14;
 
-    const profileChartData = profile?.summary ?? {
-        months: ["January", "February", "March", "April", "May", "June", "July"],
-        win: [10, 20, 30, 40, 30, 15, 28],
-        lose: [30, 20, 10, 40, 5, 15, 35]
-    };
-
     const data: ChartData<'line'> = {
-      labels: profileChartData.months,
+      labels:  profile?.monthly_stats?.months || [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June"],
       datasets: [
         {
             label: 'WIN',
-            data: profileChartData.win,
+            data:  profile?.monthly_stats?.win || [],
             borderColor: 'rgba(116,206,151, 0.5)',
             backgroundColor: 'green',
             fill: false,
@@ -260,7 +234,7 @@ const fetchUser = async () => {
         },
         {
             label: 'LOSS',
-            data: profileChartData.lose,
+            data:  profile?.monthly_stats?.lose || [],
             borderColor: 'rgba(181,55,49, 0.5)',
             backgroundColor: 'red',
             fill: false,
@@ -280,10 +254,6 @@ const fetchUser = async () => {
           }
         }
       }
-
-    const parag: string =   "Hey there! I'm Snake07, a dedicated ping pong gamer. From lightning-fast reflexes to strategic plays, I'm all about dominating the virtual table. Join me as we smash our way to victory, one pixel at a time!";
-
-
 
     return (
         <>
@@ -344,11 +314,15 @@ const fetchUser = async () => {
                                     </div>
                                     <div className='col d-flex flex-column justify-content-end '>
                                         <h4 style={{borderLeft: '1px solid #61627C', borderRight: '1px solid #61627C'}}>Win</h4>
-                                        <span style={{borderLeft: '1px solid #61627C', borderRight: '1px solid #61627C'}}>{((profile.win_games / profile.total_games) * 100).toFixed(1)}%</span>
+                                        <span style={{borderLeft: '1px solid #61627C', borderRight: '1px solid #61627C'}}>
+                                            {profile.total_games !== 0 ? ((profile.win_games / profile.total_games) * 100).toFixed(1) : '0.0'}%
+                                        </span>
                                     </div>
                                     <div className='col d-flex flex-column justify-content-end '>
                                         <h4>Lose</h4>
-                                        <span>{((profile.lose_games / profile.total_games) * 100).toFixed(1)}%</span>
+                                        <span>
+                                            {profile.total_games !== 0 ? ((profile.lose_games / profile.total_games) * 100).toFixed(1) : '0.0'}%
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -378,64 +352,6 @@ const fetchUser = async () => {
                                     <span><GiLaurelsTrophy size='2em' color='#7aa6d6'/></span>
                                     <span style={{color: '#FFEBEB', fontFamily: 'itim'}}>{profile.score}</span>
                                 </div>
-                            </div>
-                            <Image className={`${styles.rank}`} width={200} height={200} src="/rank.png" alt='rank'/>
-                            <div className={`col-6 ${styles.edit_btn} valo-font text-center p-2 m-2`} onClick={() => {setModalShow(true)}}><button onClick={() => {setModalShow(true)}}>EDIT PROFILE</button></div>
-                            <div >
-                            <Modal contentClassName={`${styles.edit_modal}`} show={modalShow} onHide={() => {setModalShow(false)}} size='lg' aria-labelledby="contained-modal-title-vcenter" centered backdrop="static" scrollable animation>
-                                <Modal.Header closeButton closeVariant='white'>
-                                    <Modal.Title id="contained-modal-title-vcenter">
-                                      <span style={{color: '#FFEBEB', fontFamily: 'itim'}}><FaUserEdit color='#7aa6d6'/> Edit Profile</span>
-                                    </Modal.Title>
-                                </Modal.Header>
-                                <Modal.Body>
-                                    <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                                        <InputGroup hasValidation className={`mb-3`}>
-                                          <InputGroup.Text style={{backgroundColor: '#2C3143'}}><SiRepublicofgamers color='#FFEBEB'/></InputGroup.Text>
-                                          <Form.Control className={`${styles.form_control}`} required type="text" color='red' aria-label='Nickname' placeholder='Nickname' defaultValue="!Snake_007" style={{backgroundColor: '#2C3143'}}/>
-                                            <Form.Control.Feedback type="invalid">
-                                              Please choose a Nickname.
-                                            </Form.Control.Feedback>
-                                        </InputGroup>
-                                        <InputGroup hasValidation className='mb-3'>
-                                            <InputGroup.Text style={{backgroundColor: '#2C3143'}}><ImUsers color='#FFEBEB'/></InputGroup.Text>
-                                            <Form.Control className={`${styles.form_control}`} required type="text" placeholder='Full name' aria-label='Full name' defaultValue="Othman Nouakchi" style={{backgroundColor: '#2C3143'}}/>
-                                            <Form.Control.Feedback type="invalid">
-                                              Please enter your full name.
-                                            </Form.Control.Feedback>
-                                        </InputGroup>
-                                        <InputGroup hasValidation className='mb-3'>
-                                            <InputGroup.Text style={{backgroundColor: '#2C3143'}}><BsFillChatLeftQuoteFill color='#FFEBEB'/></InputGroup.Text>
-                                            <Form.Control className={`${styles.form_control}`} required type="text" placeholder='Quote' aria-label='Quote' defaultValue="Game on! 🎮 Play hard, level up! 💪" style={{backgroundColor: '#2C3143'}}/>
-                                            <Form.Control.Feedback type="invalid">
-                                              Please choose a Quote.
-                                            </Form.Control.Feedback>
-                                        </InputGroup>
-                                        <InputGroup hasValidation className='mb-3'>
-                                            <InputGroup.Text style={{backgroundColor: '#2C3143'}}><MdRoundaboutRight color='#FFEBEB'/></InputGroup.Text>
-                                            <Form.Control className={`${styles.form_control}`} required type="textarea" placeholder='Intro' aria-label='Intro' defaultValue={parag} style={{backgroundColor: '#2C3143'}}/>
-                                            <Form.Control.Feedback type="invalid">
-                                              Please talk about yourslef.
-                                            </Form.Control.Feedback>
-                                        </InputGroup>
-                                        <InputGroup className='mb-2 row p-0 m-0 d-flex justify-content-center'>
-                                            <CountryDropdown
-                                                classes={`${styles.selector} col-md-5 col-sm-10 mx-3 mb-1 p-2`}
-                                                value={country}
-                                                onChange={(val) => selectCountry(val)} />
-                                            <RegionDropdown
-                                                classes={`${styles.selector} col-md-5 col-sm-10 mx-3 mb-1 p-2`}
-                                                country={country}
-                                                value={region}
-                                                onChange={(val) => selectRegion(val)} />
-                                        </InputGroup>
-                                        <div className='row d-flex justify-content-center pb-1 m-0'>
-                                            <div className={`${styles.edit_btn} col-md-3 col-sm-5 valo-font text-center m-2 px-2`} onClick={() => {setModalShow(false)}}><button onClick={() => {setModalShow(false)}}>Cancel</button></div>
-                                            <div className={`${styles.edit_btn} col-md-3 col-sm-5 valo-font text-center m-2 px-2`} ><button type="submit" >Save</button></div>
-                                        </div>
-                                    </Form>
-                                </Modal.Body>
-                            </Modal>
                             </div>
                         </div>
                         <div className={`${styles.data_holder} col-xl-6 col-lg-12 p-4 my-1`}>

@@ -43,8 +43,10 @@ const ValuesToPost: InputValuesProps = {
 };
 
 ----------------------------------------------------------
-profile: edit bio [get, post] -> None
-profile: chart fetch [get] -> None 
+profile: edit bio [get, post] -> Done
+profile: chart fetch [get] -> Done 
+dashboard game history image -> Done
+statistics game histor user image -> None 
 Profile: add friend, remove friend , block , unblock -> None
 chat: chart fetch [get] -> None
 rightbar: options [send messages, play a game] -> None
