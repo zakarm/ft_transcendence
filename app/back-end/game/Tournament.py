@@ -116,42 +116,42 @@ class Tournament:
         self.data["quarter_final"]["match4"]["user1"] = self.players[6]["data"]
         self.data["quarter_final"]["match4"]["user2"] = self.players[7]["data"]
         # add players to the games
-        self.games["quarter_final"]["match1"].add_user(
+        self.games["quarter_final"]["match1"]["room"].add_user(
             self.players[0]["channel"],
             self.players[0]["email"],
             self.players[0]["object"],
         )
-        self.games["quarter_final"]["match1"].add_user(
+        self.games["quarter_final"]["match1"]["room"].add_user(
             self.players[1]["channel"],
             self.players[1]["email"],
             self.players[1]["object"],
         )
-        self.games["quarter_final"]["match2"].add_user(
+        self.games["quarter_final"]["match2"]["room"].add_user(
             self.players[2]["channel"],
             self.players[2]["email"],
             self.players[2]["object"],
         )
-        self.games["quarter_final"]["match2"].add_user(
+        self.games["quarter_final"]["match2"]["room"].add_user(
             self.players[3]["channel"],
             self.players[3]["email"],
             self.players[3]["object"],
         )
-        self.games["quarter_final"]["match3"].add_user(
+        self.games["quarter_final"]["match3"]["room"].add_user(
             self.players[4]["channel"],
             self.players[4]["email"],
             self.players[4]["object"],
         )
-        self.games["quarter_final"]["match3"].add_user(
+        self.games["quarter_final"]["match3"]["room"].add_user(
             self.players[5]["channel"],
             self.players[5]["email"],
             self.players[5]["object"],
         )
-        self.games["quarter_final"]["match4"].add_user(
+        self.games["quarter_final"]["match4"]["room"].add_user(
             self.players[6]["channel"],
             self.players[6]["email"],
             self.players[6]["object"],
         )
-        self.games["quarter_final"]["match4"].add_user(
+        self.games["quarter_final"]["match4"]["room"].add_user(
             self.players[7]["channel"],
             self.players[7]["email"],
             self.players[7]["object"],
