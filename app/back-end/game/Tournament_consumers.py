@@ -157,6 +157,14 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
             print(f"An error occurred in message: {e}", file=sys.stderr)
 
     # -----------------------> 1. broadcast_message <-----------------------
+    async def tournamnet_broadcast_message(self, message):
+        try:
+            await self.channel_layer.group_send(
+                self.tournament_name, {"type": "message", "message": message}
+            )
+        except Exception as e:
+            print(f"An error occurred in broadcast_message: {e}", file=sys.stderr)
+
     async def broadcast_message(self, message):
         try:
             await self.channel_layer.group_send(
@@ -247,33 +255,30 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                     asyncio.ensure_future(self.tournament_manager())
                     print(f"Tournament is ready", file=sys.stderr)
                 # await self.connction_ack()
-                # await self.message(
-                #     {
-                #         "message": {
-                #             "action": "connected",
-                #             "data":self.tournament.data,
-                #         }
-                #     }
-                # )
-                # if self.room.is_ready() and self.room.is_started() == False:
-                #     asyncio.ensure_future(self.start_game())
             else:
                 await self.close()
         except Exception as e:
             print(f"An error occurred in connect: {e}", file=sys.stderr)
 
-    async def start_tournament(self, index):
+    async def start_tournament(self, match_id):
         try:
-            # generate number between 5 and 15
-            i = random.randint(5, 15)
+            print(f"Starting match {match_id}...", file=sys.stderr)
+            _tournament = get_room(self.tournament_name)
+            _players = _tournament.get_players_channel(match_id)
+            for player in _players:
+                await self.channel_layer.group_add(match_id, player)
+            i = random.randint(10, 15)
             for i in range(0, i):
-                await self.message(
+                await self.channel_layer.group_send(
+                    match_id,
                     {
+                        "type": "message",
                         "message": {
-                            "action": "thread_ready",
-                            "thread": index,
-                        }
-                    }
+                            "action": "countdown",
+                            "count": i,
+                            "match": match_id,
+                        },
+                    },
                 )
                 await asyncio.sleep(1)
         except Exception as e:
@@ -282,25 +287,37 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
     async def tournament_manager(self):
         try:
             self.tournament.generate_quatre_final_players()
-            await self.message(
-                {
-                    "message": {
-                        "action": "tournament_ready",
-                        "data": self.tournament.data,
-                    }
-                }
+            await self.tournamnet_broadcast_message(self.tournament.data)
+            for player in self.tournament.players:
+                player_data = player["data"]
+                name = player_data["name"]
+                photo_url = player_data["photoUrl"]
+                score = player_data["score"]
+                email = player["email"]
+                match_id = player["match_id"]
+                print(
+                    f"Name: {name}, Photo URL: {photo_url}, Score: {score}, Email: {email}, Match ID: {match_id}",
+                    file=sys.stderr,
+                )
+            finished_task_1 = False
+            finished_task_2 = False
+            finished_task_3 = False
+            finished_task_4 = False
+            finished_task_5 = False
+            finished_task_6 = False
+            finished_task_7 = False
+            task_1 = asyncio.ensure_future(
+                self.start_tournament(self.tournament_id + "quarter_final" + "match1")
             )
-            printed_task_1 = False
-            printed_task_2 = False
-            printed_task_3 = False
-            printed_task_4 = False
-            printed_task_5 = False
-            printed_task_6 = False
-            printed_task_7 = False
-            task_1 = asyncio.ensure_future(self.start_tournament(1))
-            task_2 = asyncio.ensure_future(self.start_tournament(2))
-            task_3 = asyncio.ensure_future(self.start_tournament(3))
-            task_4 = asyncio.ensure_future(self.start_tournament(4))
+            task_2 = asyncio.ensure_future(
+                self.start_tournament(self.tournament_id + "quarter_final" + "match2")
+            )
+            task_3 = asyncio.ensure_future(
+                self.start_tournament(self.tournament_id + "quarter_final" + "match3")
+            )
+            task_4 = asyncio.ensure_future(
+                self.start_tournament(self.tournament_id + "quarter_final" + "match4")
+            )
             print(
                 f"Tasks started...{task_1} {task_2} {task_3} {task_4}", file=sys.stderr
             )
@@ -309,40 +326,50 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
             task_7 = None
             # Periodically check the status of the tasks
             while True:
-                print("Checking status of tasks...", file=sys.stderr)
-                if task_1 and task_1.done() and not printed_task_1:
+                # print("Checking status of tasks...", file=sys.stderr)
+                if task_1 and task_1.done() and not finished_task_1:
                     print("Task 1 is done.", file=sys.stderr)
-                    printed_task_1 = True
-                if task_2 and task_2.done() and not printed_task_2:
+                    finished_task_1 = True
+                if task_2 and task_2.done() and not finished_task_2:
                     print("Task 2 is done.", file=sys.stderr)
-                    printed_task_2 = True
+                    finished_task_2 = True
                 if task_1 and task_2 and task_1.done() and task_2.done() and not task_5:
-                    task_5 = asyncio.ensure_future(self.start_tournament(5))
+                    task_5 = asyncio.ensure_future(
+                        self.start_tournament(
+                            self.tournament_id + "semi_final" + "match1"
+                        )
+                    )
                     print(f"Task 5 started...{task_5}", file=sys.stderr)
-                if task_3 and task_3.done() and not printed_task_3:
+                if task_3 and task_3.done() and not finished_task_3:
                     print("Task 3 is done.", file=sys.stderr)
-                    printed_task_3 = True
-                if task_4 and task_4.done() and not printed_task_4:
+                    finished_task_3 = True
+                if task_4 and task_4.done() and not finished_task_4:
                     print("Task 4 is done.", file=sys.stderr)
-                    printed_task_4 = True
+                    finished_task_4 = True
                 if task_3 and task_4 and task_3.done() and task_4.done() and not task_6:
-                    task_6 = asyncio.ensure_future(self.start_tournament(6))
+                    task_6 = asyncio.ensure_future(
+                        self.start_tournament(
+                            self.tournament_id + "semi_final" + "match2"
+                        )
+                    )
                     print(f"Task 6 started...{task_6}", file=sys.stderr)
-                if task_5 and task_5.done() and not printed_task_5:
+                if task_5 and task_5.done() and not finished_task_5:
                     print("Task 5 is done.", file=sys.stderr)
-                    printed_task_5 = True
-                if task_6 and task_6.done() and not printed_task_6:
+                    finished_task_5 = True
+                if task_6 and task_6.done() and not finished_task_6:
                     print("Task 6 is done.", file=sys.stderr)
-                    printed_task_6 = True
+                    finished_task_6 = True
                 if task_5 and task_6 and task_5.done() and task_6.done() and not task_7:
-                    task_7 = asyncio.ensure_future(self.start_tournament(7))
+                    task_7 = asyncio.ensure_future(
+                        self.start_tournament(self.tournament_id + "final" + "match1")
+                    )
                     print(f"Task 7 started...{task_7}", file=sys.stderr)
-                if task_7 and task_7.done() and not printed_task_7:
+                if task_7 and task_7.done() and not finished_task_7:
                     print("Task 7 is done.", file=sys.stderr)
-                    printed_task_7 = True
+                    finished_task_7 = True
                     break
 
-                print("...................................", file=sys.stderr)
+                # print("...................................", file=sys.stderr)
                 await asyncio.sleep(1)
             # await self.tournament.start_tournament()
         except Exception as e:
