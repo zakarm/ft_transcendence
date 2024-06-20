@@ -1,12 +1,13 @@
 import Toast from 'react-bootstrap/Toast';
 import Image from 'next/image';
 import { Button } from 'react-bootstrap';
-import { FaCheck, FaTimes } from 'react-icons/fa';
+import { FaCheck, FaTimes, FaTimesCircle } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { ToastContainer, toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 import { normalize } from 'path';
+import { Color } from 'three';
 
 interface Notif {
     notification_id: number;
@@ -46,9 +47,42 @@ function Notification({ notification }: Props) {
         router.push(notification.link);
     }
 
+    const deleteNotification = async (notification_id: number) => {
+        const access = Cookies.get('access');
+        if (access)
+        {
+            const notif = await fetch(
+                `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/notification-delete/${notification_id}`,
+                {
+                    method: 'DELETE',
+                    headers: {
+                        Authorization: `Bearer ${access}`,
+                        'Content-Type': 'application/json',
+                    },
+                },
+            );
+            const notif_data = await notif.json();
+            if (notif.ok) {
+                toast.success('Notification deleted');
+            } else {
+                const errors = notif_data;
+                for (const key in errors) {
+                    if (errors.hasOwnProperty(key)) {
+                        errors[key].forEach((errorMessage: string) => {
+                            toast.error(`${key}: ${errorMessage}`);
+                        });
+                    }
+                }
+            }
+
+        } else {
+            toast.error('error: Unauthorized. Invalid credentials provided.');
+        }
+        
+    }
+
     const fetchUserState = async (api: string, message: string, username: string, notification_id: number) => {
         const access = Cookies.get('access');
-
         if (access) {
             try {
                 const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/${api}`, {
@@ -62,35 +96,7 @@ function Notification({ notification }: Props) {
                 });
 
                 const data = await res.json();
-
-                try {
-                    const notif = await fetch(
-                        `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/notification-delete/${notification_id}`,
-                        {
-                            method: 'DELETE',
-                            headers: {
-                                Authorization: `Bearer ${access}`,
-                                'Content-Type': 'application/json',
-                            },
-                        },
-                    );
-                    const notif_data = await notif.json();
-                    if (notif.ok) {
-                        toast.success('Notification deleted');
-                    } else {
-                        const errors = notif_data;
-                        for (const key in errors) {
-                            if (errors.hasOwnProperty(key)) {
-                                errors[key].forEach((errorMessage: string) => {
-                                    toast.error(`${key}: ${errorMessage}`);
-                                });
-                            }
-                        }
-                    }
-                } catch (error) {
-                    toast.error('No response received from server.');
-                }
-
+                deleteNotification(notification_id);
                 if (!res.ok) {
                     if (res.status === 400) {
                         return toast.error('Action not allowed : ' + data.error);
@@ -135,8 +141,8 @@ function Notification({ notification }: Props) {
     };
 
     return (
-        <Toast className="border">
-            <Toast.Header style={{ background: '#161625', borderBottom: '1px solid white' }}>
+        <Toast className="border" onClose={() => deleteNotification(notification.notification_id)} >
+            <Toast.Header style={{ background: '#161625', color: 'white', borderBottom: '1px solid white' }}>
                 <Image
                     src={notification.image_url}
                     width={30}
@@ -152,8 +158,7 @@ function Notification({ notification }: Props) {
             </Toast.Header>
             <Toast.Body
                 className="d-flex justify-content-between align-items-center"
-                style={{ background: '#161625', borderRadius: '0 0 5px 5px' }}
-            >
+                style={{ background: '#161625', borderRadius: '0 0 5px 5px' }}>
                 <marquee className="text-white me-2">{notification.message}</marquee>
                 {notification.is_friend_notif == true && (
                     <>
@@ -167,8 +172,7 @@ function Notification({ notification }: Props) {
                                     notification.action_by,
                                     notification.notification_id,
                                 )
-                            }
-                        >
+                            }>
                             <FaCheck />
                         </Button>
                         <Button
@@ -180,8 +184,7 @@ function Notification({ notification }: Props) {
                                     notification.action_by,
                                     notification.notification_id,
                                 )
-                            }
-                        >
+                            }>
                             <FaTimes />
                         </Button>
                     </>

@@ -41,3 +41,10 @@ const ValuesToPost: InputValuesProps = {
     tournament_image: '', //
     game_difficulty: '1',
 };
+
+----------------------------------------------------------
+profile: edit bio [get, post] -> None
+profile: chart fetch [get] -> None 
+Profile: add friend, remove friend , block , unblock -> None
+chat: chart fetch [get] -> None
+rightbar: options [send messages, play a game] -> None

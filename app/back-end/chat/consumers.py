@@ -60,7 +60,7 @@ class ChatConsumer(WebsocketConsumer):
             title = "New message !",
             message = f"from {sender_obj.username}: {message}",
             image_url=sender_obj.image_url,
-             link=f"{settings.FRONTEND_HOST}/profile/{sender_obj.username}",
+             link=f"{settings.FRONTEND_HOST}/chat",
             is_chat_notif=True,
             action_by = sender_obj.username,
         )
