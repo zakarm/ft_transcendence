@@ -98,6 +98,7 @@ async function getTournamentsTabData(
                         }
                         participantsJoined={obj.participantsJoined}
                         imageUrl={obj.image_url}
+                        id={obj.tournament_id.toString()}
                         pageUrl={`/game/Tournament/${obj.tournament_id}`}
                         buttonText={currentTab === 'Ongoing' ? 'WATCH' : 'JOIN'}
                         setTournamentID={setTournamentID}
