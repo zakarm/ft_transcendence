@@ -260,6 +260,7 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             print(f"An error occurred in connect: {e}", file=sys.stderr)
 
+
     async def start_tournament(self, match_id):
         try:
             print(f"Starting match {match_id}...", file=sys.stderr)
@@ -267,8 +268,9 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
             _players = _tournament.get_players_channel(match_id)
             for player in _players:
                 await self.channel_layer.group_add(match_id, player)
-            i = random.randint(10, 15)
-            for i in range(0, i):
+            room = _tournament.get_room_game(match_id)
+            countdown_time = random.randint(10, 15)
+            for i in range(countdown_time):
                 await self.channel_layer.group_send(
                     match_id,
                     {
@@ -276,11 +278,22 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                         "message": {
                             "action": "countdown",
                             "count": i,
+                            # "room": room,
                             "match": match_id,
                         },
                     },
                 )
                 await asyncio.sleep(1)
+            await self.channel_layer.group_send(
+                match_id,
+                {
+                    "type": "message",
+                    "message": {
+                        "action": f"-"*20,
+                    },
+                },
+            )
+            return 1
         except Exception as e:
             print(f"An error occurred in start_tournament: {e}", file=sys.stderr)
 
@@ -334,6 +347,11 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                     print("Task 2 is done.", file=sys.stderr)
                     finished_task_2 = True
                 if task_1 and task_2 and task_1.done() and task_2.done() and not task_5:
+                    resault1 = task_1.result()
+                    resault2 = task_2.result()
+                    print(f"Task 1. 2 resault: {resault1}, {resault2}", file=sys.stderr)
+                    self.tournament.promote_quarter_final_winner(1, resault1)
+                    self.tournament.promote_quarter_final_winner(2, resault2)
                     task_5 = asyncio.ensure_future(
                         self.start_tournament(
                             self.tournament_id + "semi_final" + "match1"
@@ -347,6 +365,11 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                     print("Task 4 is done.", file=sys.stderr)
                     finished_task_4 = True
                 if task_3 and task_4 and task_3.done() and task_4.done() and not task_6:
+                    resault3 = task_3.result()
+                    resault4 = task_4.result()
+                    print(f"Task 3. 4 resault: {resault3}, {resault4}", file=sys.stderr)
+                    self.tournament.promote_quarter_final_winner(3, resault3)
+                    self.tournament.promote_quarter_final_winner(4, resault4)
                     task_6 = asyncio.ensure_future(
                         self.start_tournament(
                             self.tournament_id + "semi_final" + "match2"
@@ -360,6 +383,11 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                     print("Task 6 is done.", file=sys.stderr)
                     finished_task_6 = True
                 if task_5 and task_6 and task_5.done() and task_6.done() and not task_7:
+                    resault5 = task_5.result()
+                    resault6 = task_6.result()
+                    print(f"Task 5. 6 resault: {resault5}, {resault6}", file=sys.stderr)
+                    self.tournament.promote_semi_final_winner(1, resault5)
+                    self.tournament.promote_semi_final_winner(2, resault6)
                     task_7 = asyncio.ensure_future(
                         self.start_tournament(self.tournament_id + "final" + "match1")
                     )

@@ -153,5 +153,25 @@ class Tournament:
             player["email"], self.games["semi_final"][match_key]["room_id"]
         )
 
+    def promote_semi_final_winner(self, match, user):
+        match_key = f"match{1}"
+        match_key_ = f"match{match}"
+        if self.data["final"][match_key]["user1"]["name"] == "":
+            user_key = f"user1"
+        else:
+            user_key = f"user2"
+        user_key_ = f"user{user}"
+        self.data["final"][match_key][user_key] = self.data["semi_final"][match_key_][
+            user_key_
+        ]
+        player = self.get_player_by_name(
+            self.data["semi_final"][match_key_][user_key_]["name"]
+        )
+        self.games["final"][match_key]["room"].add_user(
+            player["channel"], player["email"], player["object"]
+        )
+        self.set_player_match_id(
+            player["email"], self.games["final"][match_key]["room_id"]
+        )
     # def update_data_score(self, round, match, user, score):
     #     self.data[round][match][user]["score"] = score
