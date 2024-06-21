@@ -44,9 +44,18 @@ const ValuesToPost: InputValuesProps = {
 
 ----------------------------------------------------------
 profile: edit bio [get, post] -> Done
-profile: chart fetch [get] -> Done 
+profile: chart fetch [get] -> Done
 dashboard game history image -> Done
-statistics game histor user image -> None 
+statistics game histor user image -> None
 Profile: add friend, remove friend , block , unblock -> None
 chat: chart fetch [get] -> None
 rightbar: options [send messages, play a game] -> None
+
+
+---------------------------------------------------------------------------------
+zakaria you have error in /api/game-settings
+->  PUT http://localhost:8000/api/game-settings 400 (Bad Request)
+{'first_name': 'Aimen', 'last_name': 'El', 'username': 'ael-mouz', 'email': 'ael-mouz@student.1337.ma', 'country': 'Andorra', 'city': 'Engordany', 'image_url': 'https://res.cloudinary.com/dv1i5yh71/image/upload/v1718999183/profile/115547999_pukk3i.jpg', 'new_password': '', 'repeat_password': '', 'is_2fa_enabled': False, 'two_fa_secret_key': '', 'table_color': '#161625', 'ball_color': '#ffffff', 'paddle_color': '#ff4655', 'table_position': '6,8,0', 'current_table_view': '6,8,0', 'game_difficulty': 1}
+
+i think the problem from serializer
+---------------------------------------------------------------

@@ -83,7 +83,8 @@ const validateInput: (valuesToPost: SettingsProps['valuesToPost']) => boolean = 
     valuesToPost: SettingsProps['valuesToPost'],
 ) => {
     const validateEmail: (email: string) => boolean = (email) => {
-        const rgx: RegExp = /^([a-zA-Z0-9\._]+)@([a-zA-Z0-9])+.([a-z]+)(.[a-z]+)?$/;
+        // const rgx: RegExp = /^([a-zA-Z0-9\._]+)@([a-zA-Z0-9])+.([a-z]+)(.[a-z]+)?$/;
+        const rgx: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         return rgx.test(email);
     };
 
