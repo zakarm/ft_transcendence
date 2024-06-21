@@ -3,6 +3,7 @@ import GameHistoryCard from "@/components/table";
 import { PlayerMatchesTypes } from '@/lib/StatisticsPageTypes/StatisticsPageTypes'
 
 interface GameData {
+    image: string;
     player: string;
     score: number;
     date: string;
@@ -12,13 +13,15 @@ interface GameData {
 
 function    prepareDataForTable({player_matches} : { player_matches: PlayerMatchesTypes[] }) : GameData[]  {
     const shit : GameData[] = []
-    let data : GameData = {
+    let data: GameData = {
+        image:"",
         player: "",
         score: 0,
         date: "",
         result: 'WIN'
     }
     player_matches.map((value) => {
+        data.image = value.image;
         data.player = value.player_name;
         data.date = value.date;
         data.score = value.player_score;

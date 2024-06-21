@@ -133,6 +133,7 @@ function renderLocalTournaments(setLocalTournaments: React.Dispatch<React.SetSta
                     date={value.date as string}
                     participantsJoined={value.Participants as number}
                     imageUrl={value.tournamentImage as string}
+                    id={index.toString()}
                     pageUrl={`/game/LocalTournament/${index}`}
                     buttonText="GO"
                 />
