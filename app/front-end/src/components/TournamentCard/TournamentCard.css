@@ -97,3 +97,11 @@
     background-color: #feebeb;
     color: black;
 }
+
+.button_disabled {
+    filter: grayscale(1);
+}
+
+.button_enabled {
+    filter: grayscale(0);
+}

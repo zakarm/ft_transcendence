@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Tournament.css';
+import styles from './styles.module.css';
 import NavBar from '@/components/NavBar/NavBar';
 // import { TournamentsData } from '@/app/api/testTournament/route';
 import { RemoteTournamentForm } from '@/components/TournamentForm/remoteForm';
@@ -44,6 +45,7 @@ async function fetchTournamentsData(): Promise<TournamentsData | null> {
 
             if (promise.ok) {
                 const data: TournamentsData = await promise.json();
+                console.log(data);
                 return data;
             }
         }
@@ -75,7 +77,6 @@ function formatDate(str: string): string {
     return `${newDate}, ${newTime}`;
 }
 
-// all_tournaments, ongoing_tournaments, completed_tournaments, my_tournaments
 async function getTournamentsTabData(
     currentTab: string,
     setTournamentID: React.Dispatch<React.SetStateAction<string>>,
@@ -100,10 +101,14 @@ async function getTournamentsTabData(
                         imageUrl={obj.image_url}
                         id={obj.tournament_id.toString()}
                         pageUrl={`/game/Tournament/${obj.tournament_id}`}
-                        buttonText={currentTab === 'Ongoing' ? 'WATCH' : 'JOIN'}
+                        buttonText={currentTab === 'Ongoing' ? 'WATCH': 'JOIN' }
                         setTournamentID={setTournamentID}
+                        isDisabled={
+                            ((obj.tournament_end !== null || obj.participantsJoined === 8) && currentTab !== 'Ongoing')
+                            ? true : false
+                        }
                     />
-                </div>,
+                </div>
             );
         });
     }
@@ -166,7 +171,9 @@ const Tournament: React.FC = () => {
         if (choosenTab !== 'Local') {
             const data = async () => {
                 const promise = await getTournamentsTabData(choosenTab, setTournamentID);
-                setTournamentsToRender(promise);
+                renderLocalTournaments(setLocalTournaments);
+                console.log(promise.concat(localTournaments));
+                setTournamentsToRender(choosenTab === 'All' ? promise.concat(localTournaments) : promise);
             };
             data();
         }
@@ -175,6 +182,7 @@ const Tournament: React.FC = () => {
     /* handles Local Tournament in Session Storage */
     useEffect(() => {
         renderLocalTournaments(setLocalTournaments);
+        // Object.entries(data)
     }, [rerender, localStorage.length]);
 
     /* Renders Local Tournaments from Session Storage */
@@ -188,16 +196,33 @@ const Tournament: React.FC = () => {
         window.addEventListener<'storage'>('storage', test);
     }, [rerender]);
 
+    const [isSearching, setIsSearching] = useState<Boolean>(false);
+    // const   [ prevTab, setPrevTab ] = useState<React.JSX.Element>();
+    const   searchTournament = (needle : string) => {
+        if (needle == '') {
+            setIsSearching(false);
+            return ;
+        }
+        setIsSearching(true);
+    }
+
     return (
         <div className="containerTournament">
             <div className="Tournament_title">TOURNAMENT</div>
             <div className="Tournament_search">
-                <input className="ps-3" type="search" name="" id="" placeholder="Search Tournament" />
+                <input
+                    className="p-3"
+                    type="search"
+                    name=""
+                    id=""
+                    placeholder="Search Tournament"
+                    onChange={(e : React.ChangeEvent<HTMLInputElement>) => searchTournament(e.target.value)}
+                />
             </div>
             <div className="Tournament_nav_bar">
                 <NavBar options={NavBarOptions} setChoosenTab={setChoosenTab} />
             </div>
-            <section className="row Tournament_section p-0  m-0">
+            <section className={`row Tournament_section p-0 m-0 ${!isSearching ? styles.visible : styles.hide}`}>
                 {choosenTab === 'My Tournament' ? (
                     <>
                         <div className={leftStyle}>{tournamentsToRender}</div>
@@ -228,6 +253,9 @@ const Tournament: React.FC = () => {
                 ) : (
                     <div className="col d-flex flex-wrap justify-content-center">{tournamentsToRender}</div>
                 )}
+            </section>
+            <section className={`text-center itim-font row Tournament_section p-0 m-0 ${!isSearching ? styles.hide : styles.visible}`}>
+                Nothing Found
             </section>
         </div>
     );
