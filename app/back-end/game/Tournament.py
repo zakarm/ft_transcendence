@@ -1,7 +1,6 @@
 import random
 from .room import RoomObject
 
-
 class Tournament:
     def __init__(self, tournament_id):
         self.tournament_id = tournament_id
@@ -41,17 +40,6 @@ class Tournament:
                     "room_id": self.tournament_id + "final" + "match1",
                 }
             },
-        }
-
-        self.winners = {
-            "quarter_final": {
-                "match1": None,
-                "match2": None,
-                "match3": None,
-                "match4": None,
-            },
-            "semi_final": {"match1": None, "match2": None},
-            "final": {"match1": None},
         }
 
         self.data = {
@@ -97,65 +85,46 @@ class Tournament:
     def add_player(self, player):
         self.players.append(player)
 
-    def clear_losers(self):
-        self.players = [
-            player for player in self.players if player["data"] not in self.winners
-        ]
-
-    def set_winners(self, round, match, user):
-        self.winners[round][match] = user
-
     def generate_quatre_final_players(self):
-        # random.shuffle(self.players)
-        self.data["quarter_final"]["match1"]["user1"] = self.players[0]["data"]
-        self.data["quarter_final"]["match1"]["user2"] = self.players[1]["data"]
-        self.data["quarter_final"]["match2"]["user1"] = self.players[2]["data"]
-        self.data["quarter_final"]["match2"]["user2"] = self.players[3]["data"]
-        self.data["quarter_final"]["match3"]["user1"] = self.players[4]["data"]
-        self.data["quarter_final"]["match3"]["user2"] = self.players[5]["data"]
-        self.data["quarter_final"]["match4"]["user1"] = self.players[6]["data"]
-        self.data["quarter_final"]["match4"]["user2"] = self.players[7]["data"]
-        # add players to the games
-        self.games["quarter_final"]["match1"].add_user(
-            self.players[0]["channel"],
-            self.players[0]["email"],
-            self.players[0]["object"],
-        )
-        self.games["quarter_final"]["match1"].add_user(
-            self.players[1]["channel"],
-            self.players[1]["email"],
-            self.players[1]["object"],
-        )
-        self.games["quarter_final"]["match2"].add_user(
-            self.players[2]["channel"],
-            self.players[2]["email"],
-            self.players[2]["object"],
-        )
-        self.games["quarter_final"]["match2"].add_user(
-            self.players[3]["channel"],
-            self.players[3]["email"],
-            self.players[3]["object"],
-        )
-        self.games["quarter_final"]["match3"].add_user(
-            self.players[4]["channel"],
-            self.players[4]["email"],
-            self.players[4]["object"],
-        )
-        self.games["quarter_final"]["match3"].add_user(
-            self.players[5]["channel"],
-            self.players[5]["email"],
-            self.players[5]["object"],
-        )
-        self.games["quarter_final"]["match4"].add_user(
-            self.players[6]["channel"],
-            self.players[6]["email"],
-            self.players[6]["object"],
-        )
-        self.games["quarter_final"]["match4"].add_user(
-            self.players[7]["channel"],
-            self.players[7]["email"],
-            self.players[7]["object"],
-        )
+        for i in range(4):
+            match_key = f"match{i+1}"
+            player1 = self.players[2 * i]
+            player2 = self.players[2 * i + 1]
+
+            # Assign players to quarter-final matches
+            self.data["quarter_final"][match_key]["user1"] = player1["data"]
+            self.data["quarter_final"][match_key]["user2"] = player2["data"]
+
+            # Add players to the game rooms
+            self.games["quarter_final"][match_key]["room"].add_user(
+                player1["channel"], player1["email"], player1["object"]
+            )
+            self.games["quarter_final"][match_key]["room"].add_user(
+                player2["channel"], player2["email"], player2["object"]
+            )
+            self.set_player_match_id(
+                player1["email"], self.games["quarter_final"][match_key]["room_id"]
+            )
+            self.set_player_match_id(
+                player2["email"], self.games["quarter_final"][match_key]["room_id"]
+            )
+
+    def set_player_match_id(self, email, match_id):
+        for player in self.players:
+            if player["email"] == email:
+                player["match_id"] = match_id
+
+    def get_player_by_name(self, name):
+        for player in self.players:
+            if player["data"]["name"] == name:
+                return player
+
+    def get_players_channel(self, match_id):
+        _players = []
+        for player in self.players:
+            if player["match_id"] == match_id:
+                _players.append(player["channel"])
+        return _players
 
     def get_room_game(self, room_id):
         for key in self.games:
@@ -163,61 +132,46 @@ class Tournament:
                 if self.games[key][match]["room_id"] == room_id:
                     return self.games[key][match]["room"]
 
-    # def get_room_id(self, round, match):
-
-    def promote_quarter_final_winners(self):
-        self.winners["semi_final"]["match1"]["user1"] = self.winners["quarter_final"][
-            "match1"
-        ]
-        self.winners["semi_final"]["match1"]["user2"] = self.winners["quarter_final"][
-            "match2"
-        ]
-        self.winners["semi_final"]["match2"]["user1"] = self.winners["quarter_final"][
-            "match3"
-        ]
-        self.winners["semi_final"]["match2"]["user2"] = self.winners["quarter_final"][
-            "match4"
-        ]
-        # add players to the games
-        self.games["semi_final"]["match1"]["room"].add_user(
-            self.players[0]["channel"],
-            self.players[0]["email"],
-            self.players[0]["object"],
+    def promote_quarter_final_winner(self, match, user):
+        match_key = f"match{1 if match <= 2 else 2}"
+        match_key_ = f"match{match}"
+        if self.data["semi_final"][match_key]["user1"]["name"] == "":
+            user_key = f"user1"
+        else:
+            user_key = f"user2"
+        user_key_ = f"user{user}"
+        self.data["semi_final"][match_key][user_key] = self.data["quarter_final"][
+            match_key_
+        ][user_key_]
+        player = self.get_player_by_name(
+            self.data["quarter_final"][match_key_][user_key_]["name"]
         )
-        self.games["semi_final"]["match1"]["room"].add_user(
-            self.players[1]["channel"],
-            self.players[1]["email"],
-            self.players[1]["object"],
+        self.games["semi_final"][match_key]["room"].add_user(
+            player["channel"], player["email"], player["object"]
         )
-        self.games["semi_final"]["match2"]["room"].add_user(
-            self.players[2]["channel"],
-            self.players[2]["email"],
-            self.players[2]["object"],
-        )
-        self.games["semi_final"]["match2"]["room"].add_user(
-            self.players[3]["channel"],
-            self.players[3]["email"],
-            self.players[3]["object"],
+        self.set_player_match_id(
+            player["email"], self.games["semi_final"][match_key]["room_id"]
         )
 
-    def promote_semi_final_winners(self):
-        self.winners["final"]["match1"]["user1"] = self.winners["semi_final"]["match1"]
-        self.winners["final"]["match1"]["user2"] = self.winners["semi_final"]["match2"]
-        # add players to the games
-        self.games["final"]["match1"]["room"].add_user(
-            self.players[0]["channel"],
-            self.players[0]["email"],
-            self.players[0]["object"],
+    def promote_semi_final_winner(self, match, user):
+        match_key = f"match{1}"
+        match_key_ = f"match{match}"
+        if self.data["final"][match_key]["user1"]["name"] == "":
+            user_key = f"user1"
+        else:
+            user_key = f"user2"
+        user_key_ = f"user{user}"
+        self.data["final"][match_key][user_key] = self.data["semi_final"][match_key_][
+            user_key_
+        ]
+        player = self.get_player_by_name(
+            self.data["semi_final"][match_key_][user_key_]["name"]
         )
-        self.games["final"]["match1"]["room"].add_user(
-            self.players[1]["channel"],
-            self.players[1]["email"],
-            self.players[1]["object"],
+        self.games["final"][match_key]["room"].add_user(
+            player["channel"], player["email"], player["object"]
         )
-
-    def promote_semi_final_winners(self):
-        self.winners["final"]["match1"]["user1"] = self.winners["semi_final"]["match1"]
-        self.winners["final"]["match1"]["user2"] = self.winners["semi_final"]["match2"]
-
-    def update_data_score(self, match, user, score):
-        self.data[match][user]["score"] = score
+        self.set_player_match_id(
+            player["email"], self.games["final"][match_key]["room_id"]
+        )
+    # def update_data_score(self, round, match, user, score):
+    #     self.data[round][match][user]["score"] = score

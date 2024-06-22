@@ -107,9 +107,7 @@ const RemoteMatchGame: React.FC = () => {
             },
         ]);
     }, [connectionInfo]);
-    {
-        /*, connectionInfo*/
-    }
+
     return (
         <div className="Lobby_container">
             {gameState === 'lobby' && (

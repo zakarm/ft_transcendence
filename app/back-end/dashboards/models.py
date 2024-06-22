@@ -26,7 +26,7 @@ class Notification(models.Model):
     is_tourn_notif = models.BooleanField(default=False)
     is_match_notif = models.BooleanField(default=False)
     action_by = models.CharField(default="")
-    
-
+    notification_date = models.DateTimeField(auto_now_add=True)
     class Meta:
         db_table = 'Notification'
+        ordering = ['-notification_date']

@@ -98,7 +98,8 @@ async function getTournamentsTabData(
                         }
                         participantsJoined={obj.participantsJoined}
                         imageUrl={obj.image_url}
-                        pageUrl={obj.pageUrl}
+                        id={obj.tournament_id.toString()}
+                        pageUrl={`/game/Tournament/${obj.tournament_id}`}
                         buttonText={currentTab === 'Ongoing' ? 'WATCH' : 'JOIN'}
                         setTournamentID={setTournamentID}
                     />
@@ -132,6 +133,7 @@ function renderLocalTournaments(setLocalTournaments: React.Dispatch<React.SetSta
                     date={value.date as string}
                     participantsJoined={value.Participants as number}
                     imageUrl={value.tournamentImage as string}
+                    id={index.toString()}
                     pageUrl={`/game/LocalTournament/${index}`}
                     buttonText="GO"
                 />

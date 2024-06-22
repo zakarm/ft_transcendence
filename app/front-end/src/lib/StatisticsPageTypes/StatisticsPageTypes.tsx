@@ -12,6 +12,7 @@ interface   PlayerMatchesTypes {
     opponent_name :string;
     player_score : number;
     opponent_score : number;
+    image: string;
     result : 'WIN' | 'LOSS';
 }
 

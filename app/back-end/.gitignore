@@ -25,3 +25,5 @@ chat/migrations/
 
 # macOS specific files
 .DS_Store
+
+data.log
