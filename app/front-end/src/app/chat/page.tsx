@@ -136,9 +136,17 @@ export default function () {
     }, []);
 
     useEffect(() => {
+        if (window.innerWidth > 768 && show)
+                setShow(false);
+    }, [window.innerWidth]);
+
+    useEffect(() => {
         const usernameParam = searchParams.get('username');
-        if (usernameParam)
+        if (usernameParam){
             setSelectedChat(usernameParam);
+            if (fullscreen)
+                setShow(true);
+        }
     }, [searchParams]);
 
     useEffect(() => {
@@ -181,6 +189,7 @@ export default function () {
                             fullscreen={fullscreen}
                             chatUsers={chatUsers}
                             setChatUsers={setChatUsers}
+                            messages={messages}
                         />
                     ) : (
                         <ChatFriendsResp
@@ -190,6 +199,7 @@ export default function () {
                             fullscreen={fullscreen}
                             chatUsers={chatUsers}
                             setChatUsers={setChatUsers}
+                            messages={messages}
                         />
                     )}
                     &nbsp;

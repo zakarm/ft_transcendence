@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import React from 'react';
-// import StepsPrograssBar from 'react-line-progress-bar-steps';
+import StepsPrograssBar from 'react-line-progress-bar-steps';
 import { Radar } from 'react-chartjs-2';
 import styles from './styles/chat_about.module.css';
 import Chart from 'chart.js/auto';
@@ -174,19 +174,19 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
                     <span>Matches</span>
                     <div className="row m-0 p-2">
                         <div className="col p-0 px-0" style={{ border: '1px solid #505050', borderRadius: '25px' }}>
-                            {/* <StepsPrograssBar colorSet="dark" partialValue={12} totalValue={15} showPrecentage="end"
+                            <StepsPrograssBar colorSet="dark" partialValue={12} totalValue={15} showPrecentage="end"
                                 firstElStyle={{ borderTopLeftRadius: '25px', borderBottomLeftRadius: '25px' }}
                                 lastElStyle={{ borderTopRightRadius: '25px', borderBottomRightRadius: '25px' }}
-                            /> */}
+                            />
                         </div>
                     </div>
                     <span>Tournaments</span>
                     <div className="row m-0 p-2">
                         <div className="col p-0 px-0" style={{ border: '1px solid #505050', borderRadius: '25px' }}>
-                            {/* <StepsPrograssBar colorSet="dark" partialValue={3} totalValue={5} showPrecentage="end"
+                            <StepsPrograssBar colorSet="dark" partialValue={3} totalValue={5} showPrecentage="end"
                                 firstElStyle={{ borderTopLeftRadius: '25px', borderBottomLeftRadius: '25px' }}
                                 lastElStyle={{ borderTopRightRadius: '25px', borderBottomRightRadius: '25px' }}
-                            /> */}
+                            />
                         </div>
                     </div>
                 </div>
