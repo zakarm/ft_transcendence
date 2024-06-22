@@ -176,12 +176,11 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
                         <ImUserMinus className="mx-2" size="1.8em" style={{ cursor: 'pointer' }} />
                     </div>
                 </div>
-
                 <div
                     className="flex-grow-1 valo-font d-flex row p-0 m-0 py-3 align-items-end"
                     style={{ overflow: 'auto' }}
                 >
-                    {messages?.length ? (
+                    {(messages && messages.filter((message: Message) => Number(message.chat_id) === searchedChat?.freindship_id ?? -1).length) ? (
                         <div>
                             {messages
                                 .filter(

@@ -15,13 +15,15 @@ interface Props{
     handleAbout: () => void;
     handleShow: () => void;
     handleChat: (username: string) => void;
+    setChatUsers: React.Dispatch<React.SetStateAction<Users[]>>;
     username: string;
+    last_message: string;
+    time: string;
     image_url: string;
     waiting_msg: boolean;
-    setChatUsers: React.Dispatch<React.SetStateAction<Users[]>>;
 }
 
-export default function UserChat ( {handleChat, username, image_url, handleAbout , handleShow, waiting_msg, setChatUsers}: Props )
+export default function UserChat ( {handleChat, username, last_message, time, image_url, handleAbout , handleShow, waiting_msg, setChatUsers}: Props )
 {
 
     const updateState = () => {
@@ -33,6 +35,7 @@ export default function UserChat ( {handleChat, username, image_url, handleAbout
             )
           );
     }
+
     return (
         <>
             <div className={`${styles.message_container} row m-2 p-2`} onClick={updateState}>
@@ -43,14 +46,14 @@ export default function UserChat ( {handleChat, username, image_url, handleAbout
                 </div>
                 <div className={`col d-flex flex-column d-flex justify-content-evenly align-items-start`} onClick={handleShow}>
                     <span>{username}</span>
-                    <span style={{color: '#bebebe'}}>Hey, do you wanna play, i dare you to win. {waiting_msg}</span>
+                    <span style={{color: '#bebebe'}}>{last_message}</span>
                 </div>
                 <div className='col-2 text-end'>
                     <span>
                     {
                         (waiting_msg) ? 
                         (<Spinner animation="grow" variant="danger" />) :
-                        ('now')
+                        (time)
                     }
                     </span>
                 </div>
