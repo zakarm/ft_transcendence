@@ -113,14 +113,14 @@ const AchivementCard: React.FC<Props> = React.memo(({ title, subTitle, imageURL,
             >
                 <div className={`row ${styles.cardHolder} align-items-center m-0 p-0`}>
                     <div className={`${styles.right_subcard} col-8 p-3 m-0 `}>
-                        <div className="row p-0 m-0 h-50 w-100">
+                        <div className="row p-0 m-0 h-25 border w-100">
                             <h3 className={`${styles.title} valo-font col d-flex align-items-center p-0 m-0`}>{title}</h3>
                         </div>
-                        <div className="row p-0 m-0 mt-1 h-25 w-100">
-                            <p className="itim-font col-12">{subTitle}</p>
+                        <div className="row p-0 m-0 mt-1 h-50 w-100 border">
+                            <p className={`${styles.font_size} itim-font col-12 p-2`}>{subTitle}</p>
                         </div>
-                        <div className="row p-0 m-0 mt-1 h-25 w-100">
-                            <h3 className={`col valo-font ${styles.achieved_text}`}>{achieved ? 'ACHIEVED' : ''}</h3>
+                        <div className="row p-0 m-0 mt-1 h-25 w-100 border">
+                            <h3 className={`col d-flex align-items-end valo-font ${styles.achieved_text}`}>{achieved ? 'ACHIEVED' : ''}</h3>
                         </div>
                     </div>
                     <div className={`col-4 p-0 m-0`}>

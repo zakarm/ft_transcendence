@@ -14,7 +14,7 @@
     max-width: 600px;
     border-radius: 25px;
     background-color: var(--clr--white);
-    height: 200px;
+    height: 250px;
 }
 
 .achi_container {
@@ -23,7 +23,7 @@
 }
 
 .achived {
-    box-shadow: 0px 0px 40px var(--clr--white);
+    box-shadow: 0px 0px 12px 1px var(--clr--white);
 }
 
 .not_achived {
@@ -60,8 +60,12 @@
     background: linear-gradient(90deg, var(--clr-red), var(--clr-dark) 100%);
 }
 
+.font_size {
+    font-size: clamp(0.7rem, 0.612rem + 0.471vw, 1.2rem);
+}
+
 .title {
-    font-size: clamp(1.2rem, 0.858rem + 0.757vw, 1.7rem);
+    font-size: clamp(1rem, 0.858rem + 0.757vw, 1.7rem);
     color : var(--clr-dark);
 }
 
