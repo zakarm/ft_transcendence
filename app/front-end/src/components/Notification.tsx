@@ -142,7 +142,7 @@ function Notification({ notification }: Props) {
 
     return (
         <Toast className="border" onClose={() => deleteNotification(notification.notification_id)} >
-            <Toast.Header style={{ background: '#161625', color: 'white', borderBottom: '1px solid white' }}>
+            <Toast.Header style={{  color: 'white', borderBottom: '1px solid white' }}>
                 <Image
                     src={notification.image_url}
                     width={30}
