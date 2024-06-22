@@ -16,19 +16,19 @@ interface Users {
     message_waiting: boolean;
 }
 
-interface Props {
-    setShow: React.Dispatch<React.SetStateAction<boolean>>;
-    setAbout: React.Dispatch<React.SetStateAction<boolean>>;
-    setSelectedChat: React.Dispatch<React.SetStateAction<string>>;
-    fullscreen: boolean;
-    chatUsers: Users[];
-    setChatUsers: React.Dispatch<React.SetStateAction<Users[]>>;
+interface Message {
+    chat_id: string;
+    message: string;
+    sender: string;
+    receiver: string;
+    timestamp: string;
 }
 
 interface User {
     id: number;
     username: string;
     image_url: string;
+    message_waiting: boolean;
 }
 
 interface Friend_ {
@@ -38,16 +38,37 @@ interface Friend_ {
     blocked: boolean;
 }
 
+interface LastMesg {
+    username: string;
+    message: string;
+    time: string;
+}
+
+interface Props {
+    setShow: React.Dispatch<React.SetStateAction<boolean>>;
+    setAbout: React.Dispatch<React.SetStateAction<boolean>>;
+    setSelectedChat: React.Dispatch<React.SetStateAction<string>>;
+    setChatUsers: React.Dispatch<React.SetStateAction<Users[]>>;
+    fullscreen: boolean;
+    chatUsers: Users[];
+    messages: Message[];
+}
+
+
+
 export default function ChatFriends({
     setSelectedChat,
     setShow,
     setAbout,
+    setChatUsers,
     fullscreen,
     chatUsers,
-    setChatUsers,
+    messages
 }: Props) {
     const [friendsData, setFriendsData] = useState<JSX.Element[]>([]);
     const [friendsChat, setFriendsChat] = useState<JSX.Element[]>([]);
+    const [usersLastMessage, setUsersLastMessage] = useState<LastMesg[]>([]);
+    const [search, setSearch] = useState<string>('');
 
     const handleAbout = () => setAbout(true);
     const handleShow = () => setShow(true);
@@ -80,12 +101,8 @@ export default function ChatFriends({
         }
     };
 
-    useEffect(() => {
-        fetchUsersData();
-    }, []);
-
-    useEffect(() => {
-        const sortedData = chatUsers.map((friend: Users, index: number) => (
+    const generateUserComponents = (users: User[]) => {
+        return users.map((friend: User) => (
             <div key={friend.id}>
                 <User
                     id={friend.id}
@@ -94,16 +111,42 @@ export default function ChatFriends({
                     username={friend.username}
                     handleChat={handleChat}
                     setFriendsChat={setFriendsChat}
-                    handleShow={handleShow}
                     handleAbout={handleAbout}
+                    handleShow={handleShow}
                     fullscreen={fullscreen}
                     waiting_msg={friend.message_waiting}
                     setChatUsers={setChatUsers}
+                    last_message={usersLastMessage.filter((msg: LastMesg) => msg.username === friend.username).at(0)?.message ?? 'Start Chatting :}'}
+                    time={usersLastMessage.filter((msg: LastMesg) => msg.username === friend.username).at(0)?.time ?? 'now'}
                 />
             </div>
         ));
-        setFriendsData(sortedData);
-    }, [chatUsers]);
+    };
+
+    useEffect(() => {
+        fetchUsersData();
+    }, []);
+
+    useEffect(() => {
+        const newMessages = chatUsers.map((friend: User) => {
+            const lastMessage = messages.filter((msg: Message) => msg.receiver === friend.username).at(-1);
+            return lastMessage ? { username: friend.username, message: lastMessage.message, time: lastMessage.timestamp } : null;
+        }).filter((msg): msg is LastMesg => msg !== null);
+    
+        setUsersLastMessage(newMessages);
+    }, [messages, chatUsers])
+
+    useEffect(() => {
+        if (search.length > 2) {
+            const filteredUsers = chatUsers.filter((friend: User) =>
+                friend.username.toLowerCase().includes(search.toLowerCase())
+            );
+            setFriendsData(generateUserComponents(filteredUsers));
+        } else {
+            // Reset to all users if search length is 2 or less
+            setFriendsData(generateUserComponents(chatUsers));
+        }
+    }, [search, usersLastMessage]);
 
     return (
         <>
@@ -141,6 +184,7 @@ export default function ChatFriends({
                                 aria-label="search"
                                 placeholder="Enter for search..."
                                 style={{ backgroundColor: '#2C3143' }}
+                                onChange={(e) => setSearch(e.target.value)}
                             />
                         </InputGroup>
                     </div>

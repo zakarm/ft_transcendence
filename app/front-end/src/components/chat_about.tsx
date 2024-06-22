@@ -10,6 +10,8 @@ import { IoCloseCircleSharp } from 'react-icons/io5';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 
+import dynamic from 'next/dynamic';
+
 interface Props {
     handleClose: () => void;
     selectedChat: string;
