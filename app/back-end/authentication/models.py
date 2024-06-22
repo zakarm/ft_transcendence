@@ -31,7 +31,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ),
     ])
     email = models.EmailField(max_length=55, unique=True)
-    password = models.CharField(max_length=100)
+    password = models.CharField(max_length=100, blank=True, null=True)
     first_name = models.CharField(max_length=30, blank=True, null=True)
     last_name = models.CharField(max_length=30, blank=True, null=True)
     is_staff = models.BooleanField(default=False)

@@ -150,7 +150,8 @@ class GameSettingsSerializer(serializers.ModelSerializer):
     country = serializers.SerializerMethodField()
     city = serializers.SerializerMethodField()
     game_table = serializers.SerializerMethodField()
-    new_password = serializers.CharField(write_only=True, required=False)
+    email = serializers.EmailField(max_length=55, min_length=8)
+    new_password = serializers.CharField(write_only=True, max_length=100, min_length=8, required=False, allow_blank = True)
 
     class Meta:
         model = User
@@ -161,6 +162,12 @@ class GameSettingsSerializer(serializers.ModelSerializer):
         user = self.instance
         if User.objects.filter(email=value).exclude(id=user.id).exists():
             raise serializers.ValidationError("User with this email already exists.")
+        return value
+
+    def validate_new_password(self, value):
+        user = self.instance
+        if User.objects.filter(id=user.id).first().password is not None and value == "":
+            raise serializers.ValidationError("This field may not be blank.")
         return value
     
     @extend_schema_field(serializers.CharField())
