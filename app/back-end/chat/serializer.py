@@ -6,6 +6,9 @@ from authentication.models import User
 
 class MessageSerializer(serializers.ModelSerializer):
     chat_id = serializers.SerializerMethodField()
+    sender = serializers.SerializerMethodField()
+    receiver = serializers.SerializerMethodField()
+
     class Meta:
         model = Messages
         fields = '__all__'
@@ -14,6 +17,14 @@ class MessageSerializer(serializers.ModelSerializer):
         chat_id = Friendship.objects.filter(Q(user_from = obj.user_one, user_to = obj.user_two) | 
                                             Q(user_from = obj.user_two, user_to = obj.user_one))
         return chat_id[0].freindship_id if chat_id else None
+    
+    def get_sender(self, obj):
+        user = User.objects.get(id=obj.user_one.id)
+        return user.username
+
+    def get_receiver(self, obj):
+        user = User.objects.get(id=obj.user_two.id)
+        return user.username
     
 class UserMessageSerializer(serializers.ModelSerializer):
     messages = serializers.SerializerMethodField()
