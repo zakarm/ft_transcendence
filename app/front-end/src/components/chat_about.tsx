@@ -126,6 +126,13 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
 
     return (
         <>
+            {
+            (profile === undefined) ? 
+            (<div className='vh-100 border border-dark d-flex flex-column align-items-center justify-content-center'>
+                <span style={{ fontFamily: 'itim', color: 'white' }}>
+                    User Not Found !!
+                </span>
+            </div>) : (
             <div className="d-flex flex-column vh-100 overflow-auto">
                 <div className={`p-4 ${styles.close_btn}`}>
                     <div className="text-end" style={{ cursor: 'pointer' }} onClick={handleClose}>
@@ -183,7 +190,7 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>)}
         </>
     );
 }
