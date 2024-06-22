@@ -41,6 +41,7 @@ export default function ChatFriendsResp({
 }: Props) {
     const [friendsData, setFriendsData] = useState<JSX.Element[]>([]);
     const [friendsChat, setFriendsChat] = useState<JSX.Element[]>([]);
+    const [search, setSearch] = useState<string>('');
 
     const handleAbout = () => setAbout(true);
     const handleShow = () => setShow(true);
@@ -77,8 +78,8 @@ export default function ChatFriendsResp({
         fetchUsersData();
     }, []);
 
-    useEffect(() => {
-        const sortedData = chatUsers.map((friend: User, index: number) => (
+    const generateUserComponents = (users: User[]) => {
+        return users.map((friend: User) => (
             <div key={friend.id}>
                 <User
                     id={friend.id}
@@ -95,8 +96,46 @@ export default function ChatFriendsResp({
                 />
             </div>
         ));
-        setFriendsData(sortedData);
+    };
+
+    useEffect(() => {
+        // const sortedData = chatUsers.map((friend: User, index: number) => (
+        //     <div key={friend.id}>
+        //         <User
+        //             id={friend.id}
+        //             src={friend.image_url}
+        //             isConnected={true}
+        //             username={friend.username}
+        //             handleChat={handleChat}
+        //             setFriendsChat={setFriendsChat}
+        //             handleAbout={handleAbout}
+        //             handleShow={handleShow}
+        //             fullscreen={fullscreen}
+        //             waiting_msg={friend.message_waiting}
+        //             setChatUsers={setChatUsers}
+        //         />
+        //     </div>
+        // ));
+        
+        // setFriendsData(sortedData);
+
+        
+
+        setFriendsData(generateUserComponents(chatUsers));
+
     }, [chatUsers]);
+
+    useEffect(() => {
+        if (search.length > 2) {
+            const filteredUsers = chatUsers.filter((friend: User) =>
+                friend.username.includes(search)
+            );
+            setFriendsData(generateUserComponents(filteredUsers));
+        } else {
+            // Reset to all users if search length is 2 or less
+            setFriendsData(generateUserComponents(chatUsers));
+        }
+    }, [search, chatUsers]);
 
     return (
         <>
@@ -134,6 +173,7 @@ export default function ChatFriendsResp({
                                 aria-label="search"
                                 placeholder="Enter for search..."
                                 style={{ backgroundColor: '#2C3143' }}
+                                onChange={(e) => setSearch(e.target.value)}
                             />
                         </InputGroup>
                     </div>

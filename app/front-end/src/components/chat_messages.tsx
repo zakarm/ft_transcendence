@@ -125,6 +125,13 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
 
     return (
         <>
+            {
+            (searchedChat === undefined) ? 
+            (<div className='vh-100 border border-dark d-flex flex-column align-items-center justify-content-center'>
+                <span style={{ fontFamily: 'itim', color: 'white' }}>
+                    Chat not available !!
+                </span>
+            </div>) : (
             <div className="vh-100 d-flex flex-column border border-dark">
                 <div
                     className="row p-0 m-0 d-flex justify-content-center "
@@ -244,6 +251,7 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
                     </InputGroup>
                 </div>
             </div>
+            )}
         </>
     );
 }
