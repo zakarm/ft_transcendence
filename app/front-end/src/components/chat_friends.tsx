@@ -129,7 +129,7 @@ export default function ChatFriends({
 
     useEffect(() => {
         const newMessages = chatUsers.map((friend: User) => {
-            const lastMessage = messages.filter((msg: Message) => msg.receiver === friend.username).at(-1);
+            const lastMessage = messages.filter((msg: Message) => (msg.receiver === friend.username || msg.sender === friend.username)).at(-1);
             return lastMessage ? { username: friend.username, message: lastMessage.message, time: lastMessage.timestamp } : null;
         }).filter((msg): msg is LastMesg => msg !== null);
     
