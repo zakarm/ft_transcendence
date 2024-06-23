@@ -3,7 +3,11 @@ import { RxDotsVertical } from "react-icons/rx";
 import { forwardRef, useState } from "react";
 import Dropdown from 'react-bootstrap/Dropdown';
 import styles from './styles/Player.module.css';
-import Image from 'next/image';
+
+import { GiCrumblingBall } from "react-icons/gi";
+import { PiChatTextThin } from "react-icons/pi";
+import { GiPlagueDoctorProfile } from "react-icons/gi";
+import { useRouter } from "next/navigation";
 
 interface PlayerProps {
   nickname: string;
@@ -27,11 +31,12 @@ const CustomToggle = forwardRef<HTMLDivElement, CustomToggleProps>(
 
 function Player({ nickname, id, image, isConnected }: PlayerProps) {
   const [isHoverd, setIsHoverd] = useState<boolean>(false);
+  const router = useRouter();
 
   return (
     <div className={`${styles.usr_class} row-inline d-flex flex-row`}>
       <div className="col-9 d-flex flex-row align-items-center">
-        <Image
+        <img
           className={`${styles.img_usr_class} m-2`}
           src={image}
           alt='Profile'
@@ -58,11 +63,11 @@ function Player({ nickname, id, image, isConnected }: PlayerProps) {
             />
           </Dropdown.Toggle>
           <Dropdown.Menu className="drop-class">
-            <Dropdown.Item eventKey="1">opt 1</Dropdown.Item>
+            <Dropdown.Item eventKey="1"><GiCrumblingBall /> Pong</Dropdown.Item>
             <hr className="dropdown-divider" />
-            <Dropdown.Item eventKey="2">opt 2</Dropdown.Item>
+            <Dropdown.Item eventKey="2" onClick={() => router.push(`/chat?username=${nickname}`)}><PiChatTextThin /> Message</Dropdown.Item>
             <hr className="dropdown-divider" />
-            <Dropdown.Item eventKey="3">opt 3</Dropdown.Item>
+            <Dropdown.Item eventKey="3" onClick={() => router.push(`/profile/${nickname}`)}><GiPlagueDoctorProfile /> Profile</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
       </div>

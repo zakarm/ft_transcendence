@@ -1,6 +1,5 @@
 'use client';
 import styles from './styles/chat_friends.module.css';
-import Image from 'next/image';
 import { InputGroup } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import User from '@/components/user';
@@ -76,7 +75,7 @@ export default function ChatFriendsResp({
 
                 const data = await res.json();
 
-                const friendsArray = data.friends.map((friend: Friend_) => ({
+                const friendsArray = data.friends.filter((friend: Friend_) => friend.is_accepted).map((friend: Friend_) => ({
                     id: friend.user.id,
                     username: friend.user.username,
                     image_url: friend.user.image_url,
@@ -154,7 +153,7 @@ export default function ChatFriendsResp({
                                 & PLAY
                             </span>
                         </span>
-                        <Image
+                        <img
                             className={`${styles.welcome_img}`}
                             width={300}
                             height={300}

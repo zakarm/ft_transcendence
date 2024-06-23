@@ -5,11 +5,7 @@ import styles from './styles/srightBar.module.css';
 import Splayer from './Splayer';
 import Notification from './Notification';
 import React, { forwardRef, useState, useEffect } from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-// import { ToastContainer } from 'react-toastify';
-import { useGlobalContext } from './webSocket';
-import Spinner from 'react-bootstrap/Spinner';
 
 interface Friend {
     id: number;
@@ -113,7 +109,7 @@ export default function SrightBar({
                     <div className={`${styles.holder} text-center p-2`}>
                         <div className={`col-inline ${styles.notification1}`}>
                             <Dropdown show={dropdownOpen} onToggle={() => setDropdownOpen(!dropdownOpen)}>
-                                <Image
+                                <img
                                     className={`${styles.img_class1}`}
                                     width={60}
                                     height={60}

@@ -1,13 +1,11 @@
 'use client';
 import styles from './styles/chat_messages.module.css';
 import { InputGroup } from 'react-bootstrap';
-import Image from 'next/image';
-import Form from 'react-bootstrap/Form';
+
 import Button from 'react-bootstrap/Button';
 import Cookies from 'js-cookie';
 
 import { FaTableTennisPaddleBall } from 'react-icons/fa6';
-import { ImUserMinus } from 'react-icons/im';
 import { IoIosSend } from 'react-icons/io';
 import { useEffect, useRef, useState } from 'react';
 import { CgHello } from 'react-icons/cg';
@@ -141,7 +139,7 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
                         className="col-2 py-3 text-end"
                         style={{ backgroundColor: '#161625', borderBottomLeftRadius: '25px' }}
                     >
-                        <Image
+                        <img
                             className={`${styles.chat_img}`}
                             width={200}
                             height={200}
@@ -233,12 +231,12 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
                     )}
                 </div>
                 <div
-                    className="p-4 mx-2"
+                    className="p-4"
                     style={{ backgroundColor: '#181B20', borderTopRightRadius: '25px', borderTopLeftRadius: '25px' }}
                 >
-                    <InputGroup size="lg" style={{ fontFamily: 'itim' }}>
-                        <Form.Control
-                            
+                    <InputGroup className='row p-0 m-0' style={{ fontFamily: 'itim' }}>
+                        <textarea
+                            className='col-9'
                             placeholder="Type..."
                             aria-label="Type..."
                             aria-describedby="basic-addon2"
@@ -251,7 +249,7 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
                                 }
                             }}
                         />
-                        <Button variant="outline-secondary" id="button-addon2" onClick={sendMessage}>
+                        <Button className='col-3' variant="outline-secondary" id="button-addon2" onClick={sendMessage}>
                             <IoIosSend className="mx-2" size="1.8em" color="#FF4755" style={{ cursor: 'pointer' }} />
                         </Button>
                     </InputGroup>
