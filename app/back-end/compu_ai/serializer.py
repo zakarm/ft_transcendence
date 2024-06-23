@@ -39,7 +39,7 @@ class StatisticsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'top_player', 'avg_score', 'last_achiev', 'future_predictions', 
+        fields = ('id', 'username', 'top_player', 'avg_score', 'image_url', 'last_achiev', 'future_predictions', 
                   'loses', 'wins', 'scores', 'tackles', 'win_rate', 'player_matches')
 
     @extend_schema_field(OpenApiTypes.STR)
