@@ -8,8 +8,6 @@ import Notification from './Notification';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import React, { forwardRef, useState } from 'react';
 import styles from './styles/rightBar.module.css';
-import Image from 'next/image';
-import Toast from 'react-bootstrap/Toast';
 
 interface User {
     id: number;
@@ -160,7 +158,7 @@ export default function RightBar({
                                         </div>
                                         <div className="row d-flex flex-column text-center">
                                             <div className="col">
-                                                <Image
+                                                <img
                                                     className={`${styles.img_class}`}
                                                     width={60}
                                                     height={60}

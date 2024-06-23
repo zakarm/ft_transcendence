@@ -12,9 +12,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { IoChatbubble } from "react-icons/io5";
 import { FaTrophy } from "react-icons/fa6";
 import { IoMdSettings } from "react-icons/io";
-import Image from 'next/image';
 import {signOut} from '@/components/sign-out/signOut';
-import { NextRouter } from 'next/router';
 import { IoStatsChart } from "react-icons/io5";
 
 export default function SideBar() {
@@ -40,7 +38,7 @@ export default function SideBar() {
       <div className={`${styles.side_container} d-inline-flex flex-column justify-content-around align-items-center vh-100 py-4 px-2`}>
         <div className="flex-grow-1 pt-3">
           <Link href="/dashboard" >
-			<Image src="/LOGO.svg"
+			<img src="/LOGO.svg"
 				  width={60}
 				  height={60}
 				  style={{ width: "auto", height: "auto" }}
