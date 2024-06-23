@@ -238,7 +238,7 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
                 >
                     <InputGroup size="lg" style={{ fontFamily: 'itim' }}>
                         <Form.Control
-                            as="textarea"
+                            
                             placeholder="Type..."
                             aria-label="Type..."
                             aria-describedby="basic-addon2"
