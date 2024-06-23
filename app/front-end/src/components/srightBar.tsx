@@ -128,7 +128,7 @@ export default function SrightBar({
                                             : 0}
                                     </span>
                                 </Dropdown.Toggle>
-
+                                {notifications_data && notifications_data.length > 0 && (
                                 <Dropdown.Menu className="drop-class border" style={{ background: '#161625' }}>
                                     {notifications_data &&
                                         notifications_data.map((key: Notification, index: number) => (
@@ -141,6 +141,7 @@ export default function SrightBar({
                                             </Dropdown.Item>
                                         ))}
                                 </Dropdown.Menu>
+                            )}
                             </Dropdown>
                         </div>
                         <div className={`${styles.usr} col pt-1`}>
