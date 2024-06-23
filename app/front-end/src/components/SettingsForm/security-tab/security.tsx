@@ -4,7 +4,7 @@ import { FormContext, SettingsProps } from "../form-components/formContext";
 import { GetInput, GetCheckboxInput, Props } from "../form-components/input";
 
 function GenerateInputFields() {
-  const { valuesToPost } = useContext<SettingsProps>(FormContext);
+  const { oldAccountValues } = useContext<SettingsProps>(FormContext);
 
   const inputProps = [
     {
@@ -21,7 +21,7 @@ function GenerateInputFields() {
       inputType: "checkbox",
       inputId: "is_2fa_enabled",
       labelText: "Enable 2FA",
-      placeholder: valuesToPost["is_2fa_enabled"],
+      placeholder: oldAccountValues["is_2fa_enabled"],
     },
     {
       inputId: "two_fa_secret_key",
@@ -82,14 +82,14 @@ function GenerateInputFields() {
 }
 
 function SecurityTab() {
-  const { accountValues } = useContext<SettingsProps>(FormContext);
+  const { currentAccoutValues } = useContext<SettingsProps>(FormContext);
 
   return (
     <>
       <fieldset className="col-12 col-xxl-6 p-0 m-0 d-flex justify-content-center align-items-center h-100">
         <div
           className={`${
-            Boolean(accountValues["is_2fa_enabled"]) ? "" : styles.qr_image
+            Boolean(currentAccoutValues["is_2fa_enabled"]) ? "" : styles.qr_image
           } my-3`}
         >
           <img src="qr_code.png" alt="" className={`${styles.qr_code}`} />

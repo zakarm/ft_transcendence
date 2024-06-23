@@ -44,11 +44,11 @@ function checkData(dataAPI: UserInfoTypes) {
 }
 
 async function getInitialData({
-    setValuesToPost,
-    setAccountValues,
+    setOldAccountValues,
+    setCurrentAccoutValues,
 }: {
-    setValuesToPost: SettingsProps['setValuesToPost'];
-    setAccountValues: SettingsProps['setAccountValues'];
+    setOldAccountValues: SettingsProps['setOldAccountValues'];
+    setCurrentAccoutValues: SettingsProps['setCurrentAccoutValues'];
 }) {
     try {
         const access = Cookies.get('access');
@@ -73,15 +73,15 @@ async function getInitialData({
         Cookies.set('ball_color', '#ffffff');
         Cookies.set('paddle_color', '#ff4655');
 
-        setValuesToPost(data);
-        setAccountValues(data);
+        setOldAccountValues(data);
+        setCurrentAccoutValues(data);
     } catch (error) {
         console.error('Unexpected error : ', error);
     }
 }
 
-const validateInput: (valuesToPost: SettingsProps['valuesToPost']) => boolean = (
-    valuesToPost: SettingsProps['valuesToPost'],
+const validateInput: (oldAccountValues: SettingsProps['oldAccountValues']) => boolean = (
+    oldAccountValues: SettingsProps['oldAccountValues'],
 ) => {
     const validateEmail: (email: string) => boolean = (email) => {
         // const rgx: RegExp = /^([a-zA-Z0-9\._]+)@([a-zA-Z0-9])+.([a-z]+)(.[a-z]+)?$/;
@@ -93,18 +93,18 @@ const validateInput: (valuesToPost: SettingsProps['valuesToPost']) => boolean = 
     let isValid: boolean = true;
 
     toCheck.map((key) => {
-        if (valuesToPost[key] === '') {
+        if (oldAccountValues[key] === '') {
             toast.error(`Invalid input : ${key}`, notificationStyle);
             isValid = false;
         }
     });
 
-    if (!validateEmail(valuesToPost['email'] as string)) {
+    if (!validateEmail(oldAccountValues['email'] as string)) {
         toast.error(`Invalid input : email`, notificationStyle);
         isValid = false;
     }
 
-    if (valuesToPost['new_password'] !== valuesToPost['repeat_password']) {
+    if (oldAccountValues['new_password'] !== oldAccountValues['repeat_password']) {
         toast.error(`Invalid input : new_password or repeat_password`, notificationStyle);
         isValid = false;
     }
@@ -113,27 +113,25 @@ const validateInput: (valuesToPost: SettingsProps['valuesToPost']) => boolean = 
 
 /* Submits the form */
 const postFormData = async ({
-    valuesToPost,
+    oldAccountValues,
     isFormChanged,
 }: {
-    valuesToPost: SettingsProps['valuesToPost'];
+    oldAccountValues: SettingsProps['oldAccountValues'];
     isFormChanged: MutableRefObject<boolean>;
 }) => {
-    if (isFormChanged.current && validateInput(valuesToPost)) {
+    if (isFormChanged.current && validateInput(oldAccountValues)) {
         const changeImageURL = async () => {
-            if (typeof valuesToPost['image_url'] === 'string') {
-                const promise = await handleImageUpload(valuesToPost['image_url']);
+            if (typeof oldAccountValues['image_url'] === 'string') {
+                const promise = await handleImageUpload(oldAccountValues['image_url']);
                 if (promise !== null && typeof promise === 'string') {
-                    valuesToPost['image_url'] = promise;
-                } else {
-                    toast.error('Error : cannot upload image', notificationStyle);
+                    oldAccountValues['image_url'] = promise;
                 }
             }
         };
 
         const postData = async () => {
             await changeImageURL();
-            console.log('------> JSON To Post', JSON.stringify(valuesToPost));
+            console.log('------> JSON To Post', JSON.stringify(oldAccountValues));
             isFormChanged.current = false;
             const access = Cookies.get('access');
             const csrftoken = Cookies.get('csrftoken') || '';
@@ -144,19 +142,18 @@ const postFormData = async ({
                     Authorization: `Bearer ${access}`,
                     'X-CSRFToken': csrftoken,
                 },
-                body: JSON.stringify(valuesToPost),
+                body: JSON.stringify(oldAccountValues),
             });
 
             if (res.ok) {
                 toast.success('To be saved...', notificationStyle);
                 /* New Chosen Colors */
-                Cookies.set('table_color', valuesToPost['table_color'] as string);
-                Cookies.set('ball_color', valuesToPost['ball_color'] as string);
-                Cookies.set('paddle_color', valuesToPost['paddle_color'] as string);
+                Cookies.set('table_color', oldAccountValues['table_color'] as string);
+                Cookies.set('ball_color', oldAccountValues['ball_color'] as string);
+                Cookies.set('paddle_color', oldAccountValues['paddle_color'] as string);
 
-                /* .... updates form placeholders */
             } else {
-                console.log(res);
+                toast.error('Error : cannot update profile', notificationStyle);
             }
         };
 
@@ -169,13 +166,13 @@ const postFormData = async ({
 };
 
 function SettingsPage() {
-    const [valuesToPost, setValuesToPost] = useState<SettingsProps['valuesToPost']>({});
-    const [accountValues, setAccountValues] = useState<SettingsProps['accountValues']>({});
+    const [oldAccountValues, setOldAccountValues] = useState<SettingsProps['oldAccountValues']>({});
+    const [currentAccoutValues, setCurrentAccoutValues] = useState<SettingsProps['currentAccoutValues']>({});
     const [tab, setTab] = useState<string>('Account');
     const isFormChanged = useRef<boolean>(false);
     /* Updates a specific field of the input */
     const updateField = (key: string, value: string | boolean) => {
-        setAccountValues((prevValues: SettingsProps['accountValues']) => {
+        setCurrentAccoutValues((prevValues: SettingsProps['currentAccoutValues']) => {
             const newValues = { ...prevValues };
             newValues[key] = value;
             return newValues;
@@ -183,9 +180,9 @@ function SettingsPage() {
     };
     const options = ['Account', 'Security', 'Game'];
 
-    /* Compares values in  [accountValues, valuesToPost] */
+    /* Compares values in  [currentAccoutValues, oldAccountValues] */
     const checkDifferences = () => {
-        const compareDictValues = (d1: SettingsProps['accountValues'], d2: SettingsProps['valuesToPost']) => {
+        const compareDictValues = (d1: SettingsProps['currentAccoutValues'], d2: SettingsProps['oldAccountValues']) => {
             let count: number = 0;
             for (const key in d1) {
                 if (d1[key] !== d2[key]) {
@@ -197,29 +194,29 @@ function SettingsPage() {
             return !(Object.entries(d1).length === count);
         };
 
-        const updatePostValues = (values: SettingsProps['accountValues']) => {
-            const newValues: SettingsProps['accountValues'] = { ...values };
+        const updatePostValues = (values: SettingsProps['currentAccoutValues']) => {
+            const newValues: SettingsProps['currentAccoutValues'] = { ...values };
             for (const [key, value] of Object.entries(values)) {
                 newValues[key] = value;
             }
-            if (compareDictValues(accountValues, valuesToPost)) {
-                setValuesToPost(newValues);
+            if (compareDictValues(currentAccoutValues, oldAccountValues)) {
+                setOldAccountValues(newValues);
                 isFormChanged.current = true;
             }
         };
 
-        updatePostValues(accountValues);
+        updatePostValues(currentAccoutValues);
     };
 
     /*  Gets Initial Values From Backend */
     useEffect(() => {
-        getInitialData({ setValuesToPost, setAccountValues });
+        getInitialData({ setOldAccountValues, setCurrentAccoutValues });
     }, []);
 
     /*  Updates PostValues */
     useEffect(() => {
         checkDifferences();
-    }, [accountValues]);
+    }, [currentAccoutValues]);
 
     return (
         <div className={`${styles.wrapper} container-fluid vh-100 p-0 m-0`}>
@@ -239,11 +236,11 @@ function SettingsPage() {
                         </fieldset>
                         <FormContext.Provider
                             value={{
-                                accountValues,
-                                valuesToPost,
+                                currentAccoutValues,
+                                oldAccountValues,
                                 updateField,
-                                setValuesToPost,
-                                setAccountValues,
+                                setOldAccountValues,
+                                setCurrentAccoutValues,
                             }}>
                             <div
                                 className={`${styles.content_container} row  p-0 m-0  justify-content-center align-items-center`}>
@@ -257,7 +254,7 @@ function SettingsPage() {
                         <button
                             className={`valo-font col-8 col-md-6 ${styles.create_button}`}
                             onClick={() => {
-                                postFormData({ valuesToPost, isFormChanged });
+                                postFormData({ oldAccountValues, isFormChanged });
                             }}>
                             SAVE
                         </button>

@@ -6,35 +6,35 @@ import { GetInput, Props } from "../form-components/input";
 
 
 function GenerateInputFields() {
-  const { valuesToPost } = useContext<SettingsProps>(FormContext);
+  const { oldAccountValues } = useContext<SettingsProps>(FormContext);
 
   const inputProps = [
     {
       inputId: "first_name",
       labelText: "First Name",
       inputType : "text",
-      placeholder: valuesToPost["first_name"],
+      placeholder: oldAccountValues["first_name"],
       inputLength: 20,
     },
     {
       inputId: "last_name",
       labelText: "Last Name",
       inputType : "text",
-      placeholder: valuesToPost["last_name"],
+      placeholder: oldAccountValues["last_name"],
       inputLength: 20,
     },
     {
       inputId: "username",
       labelText: "Username",
       inputType : "text",
-      placeholder: valuesToPost["username"],
+      placeholder: oldAccountValues["username"],
       inputLength: 20,
     },
     {
       inputId: "email",
       labelText: "Email",
       inputType : "email",
-      placeholder: valuesToPost["email"],
+      placeholder: oldAccountValues["email"],
       inputLength: 256,
     },
   ];
@@ -61,14 +61,13 @@ function GenerateInputFields() {
         className="p-0 m-0 mt-4 row justify-content-center"
         labelText1="Country"
         labelText2="City"
-        id="countries"
       ></CountriesAndCities>
     </>
   );
 }
 
 function AccountTab() {
-  const { updateField, accountValues } = useContext<SettingsProps>(FormContext);
+  const { updateField, currentAccoutValues } = useContext<SettingsProps>(FormContext);
 
   const handleImageError = (event : ChangeEvent<HTMLImageElement>) => {
     event.target.src = "Rectangle.png"
@@ -80,7 +79,7 @@ function AccountTab() {
           <label htmlFor="file_input" className={`${styles.image_container}`}>
             <img
               id = {`profile_pic`}
-              src={`${accountValues['image_url']}`}
+              src={`${currentAccoutValues['image_url']}`}
               alt="profile"
               className={`${styles.profilePic}`}
               onError={handleImageError}

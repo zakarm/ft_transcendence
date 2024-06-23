@@ -40,7 +40,7 @@ function    GetListInput(
         choosenPosition=""
     } : ListInputProps) {
 
-    const   {accountValues, updateField} = useContext<SettingsProps>(FormContext);
+    const   {currentAccoutValues, updateField} = useContext<SettingsProps>(FormContext);
 
     return (
         <>
@@ -87,14 +87,14 @@ function    GetCheckboxInput(
         labelClass=""
     }: Props) {
 
-    const   { accountValues, updateField } = useContext<SettingsProps>(FormContext);
+    const   { currentAccoutValues, updateField } = useContext<SettingsProps>(FormContext);
     const   [isChecked, setIsChecked] = useState<boolean>(false);
     const [twoFaData, setTwoFaData] = useState<{ value: string; email: string } | null>(null);
 
 
     useEffect(() => {
-        setIsChecked(Boolean(accountValues[inputId]))
-    }, [accountValues[inputId]])
+        setIsChecked(Boolean(currentAccoutValues[inputId]))
+    }, [currentAccoutValues[inputId]])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -217,7 +217,7 @@ function    GetColorInput(
 }
 
 function    GetInputRange({className} : Props) {
-    const   { updateField, accountValues } = useContext<SettingsProps>(FormContext);
+    const   { updateField, currentAccoutValues } = useContext<SettingsProps>(FormContext);
 
 
     return (
@@ -235,7 +235,7 @@ function    GetInputRange({className} : Props) {
                     min="0"
                     max="2"
                     step="1"
-                    value={ accountValues['game_difficulty'] as string }
+                    value={ currentAccoutValues['game_difficulty'] as string }
                     className={`${styles.slider}`}
                     onChange={(e : ChangeEvent<HTMLInputElement> ) => {
                             updateField("game_difficulty", e.target.value);

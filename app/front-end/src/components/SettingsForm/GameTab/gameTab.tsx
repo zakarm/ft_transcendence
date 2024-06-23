@@ -18,23 +18,23 @@ const convertHexColor = (hex: string): number => {
 };
 
 function GenerateInputFields() {
-  const { updateField, valuesToPost } = useContext<SettingsProps>(FormContext);
+  const { updateField, oldAccountValues } = useContext<SettingsProps>(FormContext);
 
   const inputProps = [
     {
       inputId: "table_color",
       labelText: "Table Color",
-      value: valuesToPost["table_color"],
+      value: oldAccountValues["table_color"],
     },
     {
       inputId: "ball_color",
       labelText: "Ball Color",
-      value: valuesToPost["ball_color"],
+      value: oldAccountValues["ball_color"],
     },
     {
       inputId: "paddle_color",
       labelText: "Paddle Color",
-      value: valuesToPost["paddle_color"],
+      value: oldAccountValues["paddle_color"],
     },
     {
       inputId: "table_position",
@@ -77,7 +77,7 @@ function GenerateInputFields() {
           labelText={inputProps[3].labelText}
           id={inputProps[3].inputId}
           opt={inputProps[3].opt}
-          choosenPosition={valuesToPost["table_position"] as string}
+          choosenPosition={oldAccountValues["table_position"] as string}
           >
         </GetListInput>
       </div>
@@ -125,26 +125,26 @@ function GenerateInputFields() {
 
 function GameTab() {
 
-  const { updateField, accountValues } = useContext<SettingsProps>(FormContext);
+  const { updateField, currentAccoutValues } = useContext<SettingsProps>(FormContext);
 
-  const [paddleColor, setPaddleColor] = useState<string>((accountValues['paddleColor'] as string) ?? "");
-  const [tableColor, setTableColor] = useState<string>((accountValues['tableColor'] as string) ?? "");
-  const [ballColor, setBallColor] = useState<string>((accountValues['ballColor'] as string) ?? "");
+  const [paddleColor, setPaddleColor] = useState<string>((currentAccoutValues['paddleColor'] as string) ?? "");
+  const [tableColor, setTableColor] = useState<string>((currentAccoutValues['tableColor'] as string) ?? "");
+  const [ballColor, setBallColor] = useState<string>((currentAccoutValues['ballColor'] as string) ?? "");
 
   useEffect(() =>{
-    setTableColor((accountValues['table_color'] as string));
-  }, [accountValues['table_color'],])
+    setTableColor((currentAccoutValues['table_color'] as string));
+  }, [currentAccoutValues['table_color'],])
 
     useEffect(() =>{
-      setBallColor((accountValues['ball_color'] as string));
-    }, [accountValues['ball_color'],])
+      setBallColor((currentAccoutValues['ball_color'] as string));
+    }, [currentAccoutValues['ball_color'],])
 
     useEffect(() =>{
-      setPaddleColor((accountValues['paddle_color'] as string));
-    }, [accountValues['paddle_color'],])
+      setPaddleColor((currentAccoutValues['paddle_color'] as string));
+    }, [currentAccoutValues['paddle_color'],])
 
         useEffect(() => {
-          const pos = accountValues["table_position"] as string;
+          const pos = currentAccoutValues["table_position"] as string;
           const view =
             pos === "default"
               ? "pos_default"
@@ -152,9 +152,8 @@ function GameTab() {
               ? "pos_horizantal"
               : "pos_vertical";
           const pos_v = Cookies.get(view) as string;
-          console.log("pos_values", pos_v);
           updateField("current_table_view", pos_v);
-        }, [accountValues["table_position"]]);
+        }, [currentAccoutValues["table_position"]]);
   return (
     <>
       <fieldset className="col-12 col-xxl-6 p-0 m-0 d-flex justify-content-center align-items-center">
@@ -166,9 +165,9 @@ function GameTab() {
             TableColor={convertHexColor(tableColor)}
             BallColor={convertHexColor(ballColor)}
             paddleColor={convertHexColor(paddleColor)}
-            Gameposition_x={parseInt((accountValues["current_table_view"] as string).split(",")[0])}
-            Gameposition_y={parseInt((accountValues["current_table_view"] as string).split(",")[1])}
-            Gameposition_z={parseInt((accountValues["current_table_view"] as string).split(",")[2])}
+            Gameposition_x={parseInt((currentAccoutValues["current_table_view"] as string).split(",")[0])}
+            Gameposition_y={parseInt((currentAccoutValues["current_table_view"] as string).split(",")[1])}
+            Gameposition_z={parseInt((currentAccoutValues["current_table_view"] as string).split(",")[2])}
           />
         </div>
       </fieldset>

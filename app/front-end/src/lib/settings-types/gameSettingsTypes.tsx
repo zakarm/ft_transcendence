@@ -22,18 +22,18 @@ interface   UserInfoTypes {
 }
 
 interface SettingsProps {
-    valuesToPost : {
+    oldAccountValues : {
         [formLabel : string] : string | boolean;
     };
-    accountValues : {
+    currentAccoutValues : {
         [formLabel : string] : string | boolean;
     };
     updateField : (key : string, value : string | boolean) => void;
 
-    setValuesToPost : Dispatch<SetStateAction<{
+    setOldAccountValues : Dispatch<SetStateAction<{
         [formLabel : string] : string | boolean;
     }>>;
-    setAccountValues : Dispatch<SetStateAction<{
+    setCurrentAccoutValues : Dispatch<SetStateAction<{
         [formLabel : string] : string | boolean;
     }>>;
 }
