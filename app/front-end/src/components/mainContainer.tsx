@@ -1,13 +1,12 @@
 'use client';
 import { FaAngleLeft } from 'react-icons/fa';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import React, { useState, useEffect, useContext, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import SideBar from './sideBar';
 import RightBar from './rightBar';
 import SrightBar from './srightBar';
 import Togglebar from './toggleBar';
 import styles from './styles/mainContainer.module.css';
-import Image from 'next/image';
 import InviteFriend from './inviteFriend';
 import { useGlobalContext } from './webSocket';
 import Spinner from 'react-bootstrap/Spinner';
@@ -108,8 +107,9 @@ export default function MainContainer({ children }: { children: React.ReactNode 
             const access = Cookies.get('access');
             if (access) {
                 try {
+                    const csrftoken = Cookies.get('csrftoken') || '';
                     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/friends`, {
-                        headers: { Authorization: `Bearer ${access}` },
+                        headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
                     });
                     if (response.ok) {
                         const data = await response.json();
@@ -138,8 +138,9 @@ export default function MainContainer({ children }: { children: React.ReactNode 
             const access = Cookies.get('access');
             if (access) {
                 try {
+                    const csrftoken = Cookies.get('csrftoken') || '';
                     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/notifications`, {
-                        headers: { Authorization: `Bearer ${access}` },
+                        headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
                     });
                     if (response.ok) {
                         const data = await response.json();
@@ -198,14 +199,14 @@ export default function MainContainer({ children }: { children: React.ReactNode 
             toggleShow={toggleShow}
         />
     ), [webSocketNotifications, notificationFetch, userData, friendsfetched, setShow, handleClose, toggleShow]);
-    
+
 
     return (
         <div className="container-fluid p-0 vh-100" style={{ backgroundColor: '#000000', overflow: 'hidden' }}>
             {isLoading && spinner}
             <div className="row">
                 <div className={`col-1 ${styles.toglle} p-0`}>
-                    <Image
+                    <img
                         src="/LOGO.svg"
                         width={60}
                         height={60}
@@ -218,7 +219,7 @@ export default function MainContainer({ children }: { children: React.ReactNode 
                         <div className={`${styles.sidebar_toggle} vh-100`}>
                             <Offcanvas.Header closeButton closeVariant="white">
                                 <Offcanvas.Title>
-                                    <Image
+                                    <img
                                         src="/LOGO.svg"
                                         width={60}
                                         height={60}

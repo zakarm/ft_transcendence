@@ -52,9 +52,10 @@ async function getInitialData({
 }) {
     try {
         const access = Cookies.get('access');
+        const csrftoken = Cookies.get('csrftoken') || '';
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/game-settings`, {
             method: 'GET',
-            headers: { Authorization: `Bearer ${access}` },
+            headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
         });
 
         let data = await response.json();
@@ -135,11 +136,13 @@ const postFormData = async ({
             console.log('------> JSON To Post', JSON.stringify(valuesToPost));
             isFormChanged.current = false;
             const access = Cookies.get('access');
+            const csrftoken = Cookies.get('csrftoken') || '';
             const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/game-settings`, {
                 method: 'PUT',
                 headers: {
                     'content-type': 'application/json',
                     Authorization: `Bearer ${access}`,
+                    'X-CSRFToken': csrftoken,
                 },
                 body: JSON.stringify(valuesToPost),
             });

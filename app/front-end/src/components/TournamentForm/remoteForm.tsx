@@ -228,11 +228,13 @@ function RemoteTournamentForm() {
         const access = Cookies.get('access');
         console.log(JSON.stringify(ValuesToPost));
         try {
+            const csrftoken = Cookies.get('csrftoken') || '';
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/create-tournament`, {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json',
                     Authorization: `Bearer ${access}`,
+                    'X-CSRFToken': csrftoken,
                 },
                 body: JSON.stringify(ValuesToPost),
             });

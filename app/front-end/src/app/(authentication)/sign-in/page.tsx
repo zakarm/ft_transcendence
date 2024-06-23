@@ -24,10 +24,14 @@ export default function SignInPage() {
             const form = new FormData(event.currentTarget);
             const email = form.get('email') as string;
             const password = form.get('password') as string;
+            const csrftoken = Cookies.get('csrftoken') || '';
             console.log(`${process.env.NEXT_PUBLIC_BACKEND_HOST}`);
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/sign-in`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
                 body: JSON.stringify({ email, password }),
             });
             const data = await response.json();

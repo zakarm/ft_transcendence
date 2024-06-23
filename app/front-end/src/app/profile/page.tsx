@@ -1,7 +1,6 @@
 'use client';
 
 import styles from './style.module.css';
-import Image from 'next/image';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -10,7 +9,6 @@ import Chart from 'chart.js/auto';
 import { CategoryScale, LinearScale, Title, Legend, Tooltip, PointElement, LineElement } from 'chart.js';
 import Modal from 'react-bootstrap/Modal';
 import { useEffect, useState } from 'react';
-import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 
 import { FaUserEdit } from 'react-icons/fa';
 import { SlUser } from 'react-icons/sl';
@@ -69,8 +67,9 @@ export default function () {
         const access = Cookies.get('access');
         if (access) {
             try {
+                const csrftoken = Cookies.get('csrftoken') || '';
                 const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/profile`, {
-                    headers: { Authorization: `Bearer ${access}` },
+                    headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
                 });
 
                 if (!res.ok) throw new Error('Failed to fetch data');
@@ -102,17 +101,19 @@ export default function () {
         try {
             const access = Cookies.get('access');
             const email : string = profile?.email || '';
-            const username : string = profile?.username || '';
+            const username: string = profile?.username || '';
+            const csrftoken = Cookies.get('csrftoken') || '';
             const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/game-settings`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${access}`,
+                    'X-CSRFToken': csrftoken,
                 },
                 body: JSON.stringify({ username, email, quote, intro }),
             });
 
-            if (!res.ok) 
+            if (!res.ok)
                 throw new Error('Failed to submit data');
 
             fetchProfileData();
@@ -171,7 +172,7 @@ export default function () {
             {profile && (
                 <div className={`${styles.container} vh-100 border border-dark`}>
                     <div className={`${styles.flag}`}>
-                        <Image className={`${styles.eagle}`} width={200} height={200} src="/eagle2.png" alt="flag" />
+                        <img className={`${styles.eagle}`} width={200} height={200} src="/eagle2.png" alt="flag" />
                         <div className={`${styles.square}`}></div>
                         <div className={`${styles.triangle} my-1`}></div>
                     </div>
@@ -180,7 +181,7 @@ export default function () {
                         <div className="text-center">
                             <div className="row m-0 p-0">
                                 <div className="col-xl-2 order-xl-2 my-3 text-center">
-                                    <Image
+                                    <img
                                         className={`${styles.profile_img}`}
                                         width={200}
                                         height={200}
@@ -196,8 +197,8 @@ export default function () {
                                         <div className={`col-md-5 col-8 ${styles.btn}`}>
                                             <button onClick={() => router.push('/game')}>Play</button>
                                         </div>
-                                        <div className={`col-md-5 col-8 ${styles.btn_delete}`}>
-                                            <button>Delete</button>
+                                        <div className={`col-md-5 col-8 ${styles.btn_delete}`} onClick={() => router.push('/settings')}>
+                                            <button>Settings</button>
                                         </div>
                                     </div>
                                 </div>
@@ -291,7 +292,7 @@ export default function () {
                                         <span style={{ color: '#FFEBEB', fontFamily: 'itim' }}>{profile.score}</span>
                                     </div>
                                 </div>
-                                <Image
+                                <img
                                     className={`${styles.rank}`}
                                     width={200}
                                     height={200}

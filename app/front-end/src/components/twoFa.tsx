@@ -23,9 +23,10 @@ export default function TwoFa({ value = '', email, qr }: QrCode) {
         const fetchData = async () => {
             try {
                 if (otp && otp.length === 6) {
+                    const csrftoken = Cookies.get('csrftoken') || '';
                     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/two-fa`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
                         body: JSON.stringify({ email, otp }),
                     });
 
@@ -91,7 +92,7 @@ export default function TwoFa({ value = '', email, qr }: QrCode) {
                                     Scan the QR code using any authentication application on your phone (e.g. Google
                                     Authenticator, Duo Mobile, Authy).
                                 </span>
-                            </p> 
+                            </p>
                         : null}
                         {qr == true ?
                             <p className="mt-2">
@@ -100,9 +101,9 @@ export default function TwoFa({ value = '', email, qr }: QrCode) {
                                     {' '}
                                     Is mandatory to scan your QR code if you see this message on your screen.
                                 </span>
-                            </p> 
+                            </p>
                         : null}
-                        
+
                         <p className="mt-2">
                             <TbSquareRoundedNumber3Filled size={30} color="white" />
                             <span style={{ color: 'white' }}>

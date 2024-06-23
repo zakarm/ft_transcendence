@@ -1,7 +1,5 @@
 'use client';
-import Image from 'next/image';
 import React from 'react';
-// import StepsPrograssBar from 'react-line-progress-bar-steps';
 import { Radar } from 'react-chartjs-2';
 import styles from './styles/chat_about.module.css';
 import Chart from 'chart.js/auto';
@@ -52,8 +50,9 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
         const access = Cookies.get('access');
         if (access) {
             try {
+                const csrftoken = Cookies.get('csrftoken') || '';
                 const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/profile/${selectedChat}`, {
-                    headers: { Authorization: `Bearer ${access}` },
+                    headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
                 });
 
                 if (!res.ok) throw new Error('Failed to fetch data');
@@ -129,7 +128,7 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
     return (
         <>
             {
-            (profile === undefined) ? 
+            (profile === undefined) ?
             (<div className='vh-100 border border-dark d-flex flex-column align-items-center justify-content-center'>
                 <span style={{ fontFamily: 'itim', color: 'white' }}>
                     User Not Found !!
@@ -143,7 +142,7 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
                 </div>
                 <div className="flex-grow-1 d-flex flex-column align-items-center justify-content-evenly">
                     <div>
-                        <Image
+                        <img
                             className={`${styles.about_img}`}
                             width={200}
                             height={200}

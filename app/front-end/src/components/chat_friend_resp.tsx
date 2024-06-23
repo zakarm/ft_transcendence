@@ -1,6 +1,5 @@
 'use client';
 import styles from './styles/chat_friends.module.css';
-import Image from 'next/image';
 import { InputGroup } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import User from '@/components/user';
@@ -68,15 +67,16 @@ export default function ChatFriendsResp({
         const access = Cookies.get('access');
         if (access) {
             try {
+                const csrftoken = Cookies.get('csrftoken') || '';
                 const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/friends`, {
-                    headers: { Authorization: `Bearer ${access}` },
+                    headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
                 });
 
                 if (!res.ok) throw new Error('Failed to fetch data');
 
                 const data = await res.json();
 
-                const friendsArray = data.friends.map((friend: Friend_) => ({
+                const friendsArray = data.friends.filter((friend: Friend_) => friend.is_accepted).map((friend: Friend_) => ({
                     id: friend.user.id,
                     username: friend.user.username,
                     image_url: friend.user.image_url,
@@ -122,7 +122,7 @@ export default function ChatFriendsResp({
             const lastMessage = messages.filter((msg: Message) => (msg.receiver === friend.username || msg.sender === friend.username)).at(-1);
             return lastMessage ? { username: friend.username, message: lastMessage.message, time: lastMessage.timestamp } : null;
         }).filter((msg): msg is LastMesg => msg !== null);
-    
+
         setUsersLastMessage(newMessages);
     }, [messages, chatUsers])
 
@@ -154,7 +154,7 @@ export default function ChatFriendsResp({
                                 & PLAY
                             </span>
                         </span>
-                        <Image
+                        <img
                             className={`${styles.welcome_img}`}
                             width={300}
                             height={300}

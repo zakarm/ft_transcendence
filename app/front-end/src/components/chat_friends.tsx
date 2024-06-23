@@ -1,8 +1,6 @@
 'use client';
 import styles from './styles/chat_friends.module.css';
-import Image from 'next/image';
 import { InputGroup } from 'react-bootstrap';
-import UserChat from './user_chat';
 import Form from 'react-bootstrap/Form';
 import { useEffect, useState } from 'react';
 import User from './user';
@@ -78,8 +76,9 @@ export default function ChatFriends({
         const access = Cookies.get('access');
         if (access) {
             try {
+                const csrftoken = Cookies.get('csrftoken') || '';
                 const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/friends`, {
-                    headers: { Authorization: `Bearer ${access}` },
+                    headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
                 });
 
                 if (!res.ok) throw new Error('Failed to fetch data');
@@ -132,7 +131,7 @@ export default function ChatFriends({
             const lastMessage = messages.filter((msg: Message) => (msg.receiver === friend.username || msg.sender === friend.username)).at(-1);
             return lastMessage ? { username: friend.username, message: lastMessage.message, time: lastMessage.timestamp } : null;
         }).filter((msg): msg is LastMesg => msg !== null);
-    
+
         setUsersLastMessage(newMessages);
     }, [messages, chatUsers])
 
@@ -164,7 +163,7 @@ export default function ChatFriends({
                                 & PLAY
                             </span>
                         </span>
-                        <Image
+                        <img
                             className={`${styles.welcome_img}`}
                             width={300}
                             height={300}

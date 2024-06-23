@@ -29,7 +29,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             message='Username can only contain alphanumeric characters and underscores.',
             code='invalid_username'
         ),
-    ])
+    ], unique=True)
     email = models.EmailField(max_length=55, unique=True)
     password = models.CharField(max_length=100, blank=True, null=True)
     first_name = models.CharField(max_length=30, blank=True, null=True)
