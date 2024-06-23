@@ -16,7 +16,7 @@ export default function Splayer({ nickname, id, image, isConnected }: PlayerProp
     <div className={`${styles.usr_class1} row-inline`}>
       <div className="d-flex flex-column align-items-center justify-content-center">
         <div>
-              <Image
+              <img
                 className={`${styles.img_usr_class1}`}
                 src={image}
                 alt="Profile"

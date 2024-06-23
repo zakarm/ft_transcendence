@@ -1,13 +1,10 @@
 import Toast from 'react-bootstrap/Toast';
-import Image from 'next/image';
 import { Button } from 'react-bootstrap';
-import { FaCheck, FaTimes, FaTimesCircle } from 'react-icons/fa';
+import { FaCheck, FaTimes } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
-import { ToastContainer, toast } from 'react-toastify';
-import { useEffect, useState } from 'react';
-import { normalize } from 'path';
-import { Color } from 'three';
+import { toast } from 'react-toastify';
+import { useState } from 'react';
 
 interface Notif {
     notification_id: number;
@@ -142,7 +139,7 @@ function Notification({ notification }: Props) {
     return (
         <Toast className="border" onClose={() => deleteNotification(notification.notification_id)} >
             <Toast.Header style={{  color: 'white', borderBottom: '1px solid white' }}>
-                <Image
+                <img
                     src={notification.image_url}
                     width={30}
                     height={30}
