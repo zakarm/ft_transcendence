@@ -63,7 +63,7 @@ function Notification({ notification }: Props) {
             );
             const notif_data = await notif.json();
             if (notif.ok) {
-                toast.success('Notification deleted');
+                console.log('Notification deleted');
             } else {
                 const errors = notif_data;
                 for (const key in errors) {
@@ -78,7 +78,6 @@ function Notification({ notification }: Props) {
         } else {
             toast.error('error: Unauthorized. Invalid credentials provided.');
         }
-        
     }
 
     const fetchUserState = async (api: string, message: string, username: string, notification_id: number) => {
@@ -188,6 +187,12 @@ function Notification({ notification }: Props) {
                             <FaTimes />
                         </Button>
                     </>
+                )}
+
+                {notification.is_chat_notif == true && (
+                    <Button variant="success" onClick={goToLink}>
+                        Chat
+                    </Button>
                 )}
             </Toast.Body>
         </Toast>
