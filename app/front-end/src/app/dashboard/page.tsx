@@ -13,7 +13,7 @@ import { ChartOptions, ChartData } from 'chart.js';
 import { LineController } from 'chart.js/auto';
 import { useRouter } from 'next/navigation';
 import { Dropdown } from 'react-bootstrap';
-import { ExportMinutes } from '@/components/exportMatch'
+import { ExportMinutes } from '@/components/exportMatch';
 import { ExportCSV } from '../../components/export';
 import { ToastContainer, toast } from 'react-toastify';
 import { CategoryScale, LinearScale, Title, Legend, Tooltip, PointElement, LineElement } from 'chart.js';
@@ -64,8 +64,7 @@ interface GameData {
     result: 'WIN' | 'LOSS';
 }
 
-interface minutes_months
-{
+interface minutes_months {
     month: number;
     day: number;
     minutes: number;
@@ -203,7 +202,7 @@ export default function Dashboard() {
             month,
             minutes,
         }));
-        ExportMinutes(mappedData, 'game_stats_' + value + "_" + new Date().getFullYear() + '.csv');
+        ExportMinutes(mappedData, 'game_stats_' + value + '_' + new Date().getFullYear() + '.csv');
         toggleDropdown();
     };
 
@@ -277,7 +276,7 @@ export default function Dashboard() {
                         <div className="col-12 col-md-6">
                             <div className={`${styles.imageContainer} position-relative`}>
                                 <img
-                                    src="/dashboard_char.png"
+                                    src="/assets/images/dashboard_char.png"
                                     width={350}
                                     height={350}
                                     style={{ width: 'auto', height: 'auto' }}
@@ -364,12 +363,16 @@ export default function Dashboard() {
                                                 >
                                                     This Month
                                                 </Dropdown.Item>
-                                                <Dropdown.Item className="itim-font"
-                                                    onClick={() => handleDropdownSelect2('3_months')}>
+                                                <Dropdown.Item
+                                                    className="itim-font"
+                                                    onClick={() => handleDropdownSelect2('3_months')}
+                                                >
                                                     3 Months
                                                 </Dropdown.Item>
-                                                <Dropdown.Item className="itim-font"
-                                                    onClick={() => handleDropdownSelect2('year')}>
+                                                <Dropdown.Item
+                                                    className="itim-font"
+                                                    onClick={() => handleDropdownSelect2('year')}
+                                                >
                                                     1 Year
                                                 </Dropdown.Item>
                                             </Dropdown.Menu>

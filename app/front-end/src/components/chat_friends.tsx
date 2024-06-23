@@ -52,8 +52,6 @@ interface Props {
     messages: Message[];
 }
 
-
-
 export default function ChatFriends({
     setSelectedChat,
     setShow,
@@ -61,7 +59,7 @@ export default function ChatFriends({
     setChatUsers,
     fullscreen,
     chatUsers,
-    messages
+    messages,
 }: Props) {
     const [friendsData, setFriendsData] = useState<JSX.Element[]>([]);
     const [friendsChat, setFriendsChat] = useState<JSX.Element[]>([]);
@@ -115,8 +113,14 @@ export default function ChatFriends({
                     fullscreen={fullscreen}
                     waiting_msg={friend.message_waiting}
                     setChatUsers={setChatUsers}
-                    last_message={usersLastMessage.filter((msg: LastMesg) => msg.username === friend.username).at(0)?.message ?? 'Start Chatting :}'}
-                    time={usersLastMessage.filter((msg: LastMesg) => msg.username === friend.username).at(0)?.time ?? 'now'}
+                    last_message={
+                        usersLastMessage.filter((msg: LastMesg) => msg.username === friend.username).at(0)?.message ??
+                        'Start Chatting :}'
+                    }
+                    time={
+                        usersLastMessage.filter((msg: LastMesg) => msg.username === friend.username).at(0)?.time ??
+                        'now'
+                    }
                 />
             </div>
         ));
@@ -127,18 +131,24 @@ export default function ChatFriends({
     }, []);
 
     useEffect(() => {
-        const newMessages = chatUsers.map((friend: User) => {
-            const lastMessage = messages.filter((msg: Message) => (msg.receiver === friend.username || msg.sender === friend.username)).at(-1);
-            return lastMessage ? { username: friend.username, message: lastMessage.message, time: lastMessage.timestamp } : null;
-        }).filter((msg): msg is LastMesg => msg !== null);
+        const newMessages = chatUsers
+            .map((friend: User) => {
+                const lastMessage = messages
+                    .filter((msg: Message) => msg.receiver === friend.username || msg.sender === friend.username)
+                    .at(-1);
+                return lastMessage
+                    ? { username: friend.username, message: lastMessage.message, time: lastMessage.timestamp }
+                    : null;
+            })
+            .filter((msg): msg is LastMesg => msg !== null);
 
         setUsersLastMessage(newMessages);
-    }, [messages, chatUsers])
+    }, [messages, chatUsers]);
 
     useEffect(() => {
         if (search.length > 2) {
             const filteredUsers = chatUsers.filter((friend: User) =>
-                friend.username.toLowerCase().includes(search.toLowerCase())
+                friend.username.toLowerCase().includes(search.toLowerCase()),
             );
             setFriendsData(generateUserComponents(filteredUsers));
         } else {
@@ -167,7 +177,7 @@ export default function ChatFriends({
                             className={`${styles.welcome_img}`}
                             width={300}
                             height={300}
-                            src="/welcome.png"
+                            src="/assets/images/welcome.png"
                             alt="welcome"
                         />
                     </div>

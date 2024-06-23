@@ -127,52 +127,50 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
 
     return (
         <>
-            {
-            (profile === undefined) ?
-            (<div className='vh-100 border border-dark d-flex flex-column align-items-center justify-content-center'>
-                <span style={{ fontFamily: 'itim', color: 'white' }}>
-                    User Not Found !!
-                </span>
-            </div>) : (
-            <div className="d-flex flex-column vh-100 overflow-auto">
-                <div className={`p-4 ${styles.close_btn}`}>
-                    <div className="text-end" style={{ cursor: 'pointer' }} onClick={handleClose}>
-                        <IoCloseCircleSharp color="white" size="1.5em" />
-                    </div>
+            {profile === undefined ? (
+                <div className="vh-100 border border-dark d-flex flex-column align-items-center justify-content-center">
+                    <span style={{ fontFamily: 'itim', color: 'white' }}>User Not Found !!</span>
                 </div>
-                <div className="flex-grow-1 d-flex flex-column align-items-center justify-content-evenly">
-                    <div>
-                        <img
-                            className={`${styles.about_img}`}
-                            width={200}
-                            height={200}
-                            src={profile?.image_url ?? '/Def_pfp.png'}
-                            alt="welcome"
-                        />
+            ) : (
+                <div className="d-flex flex-column vh-100 overflow-auto">
+                    <div className={`p-4 ${styles.close_btn}`}>
+                        <div className="text-end" style={{ cursor: 'pointer' }} onClick={handleClose}>
+                            <IoCloseCircleSharp color="white" size="1.5em" />
+                        </div>
                     </div>
-                    <div className="d-flex flex-column text-center">
-                        <span className="valo-font display-6">
-                            {profile?.first_name} {profile?.last_name}
-                        </span>
-                        <span className="h2" style={{ color: '#A6A0A0' }}>
-                            {profile?.location}
-                        </span>
-                        <span className="h2" style={{ color: '#A6A0A0' }}>
-                            {profile?.quote}
-                        </span>
+                    <div className="flex-grow-1 d-flex flex-column align-items-center justify-content-evenly">
+                        <div>
+                            <img
+                                className={`${styles.about_img}`}
+                                width={200}
+                                height={200}
+                                src={profile?.image_url ?? '/assets/images/gameProfiles/default_profile.png'}
+                                alt="welcome"
+                            />
+                        </div>
+                        <div className="d-flex flex-column text-center">
+                            <span className="valo-font display-6">
+                                {profile?.first_name} {profile?.last_name}
+                            </span>
+                            <span className="h2" style={{ color: '#A6A0A0' }}>
+                                {profile?.location}
+                            </span>
+                            <span className="h2" style={{ color: '#A6A0A0' }}>
+                                {profile?.quote}
+                            </span>
+                        </div>
+                        <div className="col-12 p-0 m-0">
+                            <Radar className="itim-font" options={options} data={data} />
+                            &nbsp;
+                        </div>
                     </div>
-                    <div className="col-12 p-0 m-0">
-                        <Radar className="itim-font" options={options} data={data} />
-                        &nbsp;
-                    </div>
-                </div>
-                <div className="d-flex flex-column p-4 pt-0" style={{ color: '#FFEBEB', fontFamily: 'itim' }}>
-                    <hr className="m-3" style={{ color: '#FFEBEB', borderWidth: '2px' }} />
-                    <div className="row m-0 text-center">
-                        <span className="col">High score: {profile?.score}</span>
-                        <span className="col">Rank: {profile?.rank}</span>
-                    </div>
-                    {/* <span>Matches</span>
+                    <div className="d-flex flex-column p-4 pt-0" style={{ color: '#FFEBEB', fontFamily: 'itim' }}>
+                        <hr className="m-3" style={{ color: '#FFEBEB', borderWidth: '2px' }} />
+                        <div className="row m-0 text-center">
+                            <span className="col">High score: {profile?.score}</span>
+                            <span className="col">Rank: {profile?.rank}</span>
+                        </div>
+                        {/* <span>Matches</span>
                     <div className="row m-0 p-2">
                         <div className="col p-0 px-0" style={{ border: '1px solid #505050', borderRadius: '25px' }}>
                             <StepsPrograssBar colorSet="dark" partialValue={12} totalValue={15} showPrecentage="end"
@@ -190,8 +188,9 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
                             />
                         </div>
                     </div> */}
+                    </div>
                 </div>
-            </div>)}
+            )}
         </>
     );
 }

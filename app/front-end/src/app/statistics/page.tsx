@@ -106,10 +106,18 @@ function StatisticsPage() {
                                 className={`row mt-3  justify-content-around flex-nowrap justify-content-xxl-between ${styles.outter_player_card_container}`}
                             >
                                 <div className={`col-3 mt-3 mx-1 ${styles.player_card} `}>
-                                    <StatisticCard title="Top Player" body={topPlayer} imgSrc="Top_Player.png" />
+                                    <StatisticCard
+                                        title="Top Player"
+                                        body={topPlayer}
+                                        imgSrc="/assets/images/Top_Player.png"
+                                    />
                                 </div>
                                 <div className={`col-3 mt-3 mx-1 ${styles.player_card} `}>
-                                    <StatisticCard title="Average Score" body={avgScore} imgSrc="Average_Score.png" />
+                                    <StatisticCard
+                                        title="Average Score"
+                                        body={avgScore}
+                                        imgSrc="/assets/images/Average_Score.png"
+                                    />
                                 </div>
                                 <div className={`col-3 mt-3 mx-1 ${styles.player_card} `}>
                                     <StatisticCard

@@ -113,7 +113,7 @@ export default function SrightBar({
                                     className={`${styles.img_class1}`}
                                     width={60}
                                     height={60}
-                                    src={userdata.image_url || '/Def_pfp.png'}
+                                    src={userdata.image_url || '/assets/images/gameProfiles/default_profile.png'}
                                     alt="Profile"
                                     onClick={() => router.push('/profile')}
                                 />
@@ -125,19 +125,19 @@ export default function SrightBar({
                                     </span>
                                 </Dropdown.Toggle>
                                 {notifications_data && notifications_data.length > 0 && (
-                                <Dropdown.Menu className="drop-class border" style={{ background: '#161625' }}>
-                                    {notifications_data &&
-                                        notifications_data.map((key: Notification, index: number) => (
-                                            <Dropdown.Item
-                                                style={{ background: '#161625' }}
-                                                key={index}
-                                                eventKey={index}
-                                            >
-                                                <Notification notification={key} />
-                                            </Dropdown.Item>
-                                        ))}
-                                </Dropdown.Menu>
-                            )}
+                                    <Dropdown.Menu className="drop-class border" style={{ background: '#161625' }}>
+                                        {notifications_data &&
+                                            notifications_data.map((key: Notification, index: number) => (
+                                                <Dropdown.Item
+                                                    style={{ background: '#161625' }}
+                                                    key={index}
+                                                    eventKey={index}
+                                                >
+                                                    <Notification notification={key} />
+                                                </Dropdown.Item>
+                                            ))}
+                                    </Dropdown.Menu>
+                                )}
                             </Dropdown>
                         </div>
                         <div className={`${styles.usr} col pt-1`}>
@@ -155,9 +155,11 @@ export default function SrightBar({
                 {data}
             </div>
             <div className="flex-grow-3 row-inline d-flex justify-content-center text-center" style={{ width: '91%' }}>
-                <div className={`col-6 ${styles.search_inpt1} my-1 p-2 mx-2 text-center`}
+                <div
+                    className={`col-6 ${styles.search_inpt1} my-1 p-2 mx-2 text-center`}
                     style={{ cursor: 'pointer' }}
-                    onClick={setfriendModal}>
+                    onClick={setfriendModal}
+                >
                     <ImUserPlus color="#FFEBEB" />
                 </div>
             </div>

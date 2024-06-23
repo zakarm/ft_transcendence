@@ -142,7 +142,11 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
                                 className={`${styles.chat_img}`}
                                 width={200}
                                 height={200}
-                                src={searchedChat ? searchedChat.image_url : '/Def_pfp.png'}
+                                src={
+                                    searchedChat
+                                        ? searchedChat.image_url
+                                        : '/assets/images/gameProfiles/default_profile.png'
+                                }
                                 alt="welcome"
                             />
                         </div>

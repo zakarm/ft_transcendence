@@ -84,7 +84,7 @@ function GetInput({ type, id, label, updatePlayersList, inputClassName, inputLen
 function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<React.SetStateAction<boolean>> }) {
     const [players, setPlayers] = useState<LocalTournamentProps>({
         tournament_name: '',
-        tournamentImage: '/Ping_Pong_Battle_4.png',
+        tournamentImage: '/assets/images/Backgrounds/Ping_Pong_Battle_4.png',
         player_1: '',
         player_2: '',
         player_3: '',

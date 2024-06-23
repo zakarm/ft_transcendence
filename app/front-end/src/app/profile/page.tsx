@@ -57,7 +57,6 @@ export default function () {
 
     const [modalShow, setModalShow] = useState<boolean>(false);
 
-
     const [quote, setQuote] = useState<string>('');
     const [intro, setIntro] = useState<string>('');
 
@@ -100,7 +99,7 @@ export default function () {
 
         try {
             const access = Cookies.get('access');
-            const email : string = profile?.email || '';
+            const email: string = profile?.email || '';
             const username: string = profile?.username || '';
             const csrftoken = Cookies.get('csrftoken') || '';
             const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/game-settings`, {
@@ -113,8 +112,7 @@ export default function () {
                 body: JSON.stringify({ username, email, quote, intro }),
             });
 
-            if (!res.ok)
-                throw new Error('Failed to submit data');
+            if (!res.ok) throw new Error('Failed to submit data');
 
             fetchProfileData();
             setModalShow(false);
@@ -128,32 +126,26 @@ export default function () {
     Chart.defaults.font.size = 14;
 
     const data: ChartData<'line'> = {
-        labels:  profile?.monthly_stats?.months || [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June"],
+        labels: profile?.monthly_stats?.months || ['January', 'February', 'March', 'April', 'May', 'June'],
         datasets: [
-          {
-              label: 'WIN',
-              data:  profile?.monthly_stats?.win || [],
-              borderColor: 'rgba(116,206,151, 0.5)',
-              backgroundColor: 'green',
-              fill: false,
-              tension: 0.1,
-          },
-          {
-              label: 'LOSS',
-              data:  profile?.monthly_stats?.lose || [],
-              borderColor: 'rgba(181,55,49, 0.5)',
-              backgroundColor: 'red',
-              fill: false,
-              tension: 0.1,
-          }
-        ]
-      };
+            {
+                label: 'WIN',
+                data: profile?.monthly_stats?.win || [],
+                borderColor: 'rgba(116,206,151, 0.5)',
+                backgroundColor: 'green',
+                fill: false,
+                tension: 0.1,
+            },
+            {
+                label: 'LOSS',
+                data: profile?.monthly_stats?.lose || [],
+                borderColor: 'rgba(181,55,49, 0.5)',
+                backgroundColor: 'red',
+                fill: false,
+                tension: 0.1,
+            },
+        ],
+    };
     const options: ChartOptions<'line'> = {
         responsive: true,
         plugins: {
@@ -172,7 +164,13 @@ export default function () {
             {profile && (
                 <div className={`${styles.container} vh-100 border border-dark`}>
                     <div className={`${styles.flag}`}>
-                        <img className={`${styles.eagle}`} width={200} height={200} src="/eagle2.png" alt="flag" />
+                        <img
+                            className={`${styles.eagle}`}
+                            width={200}
+                            height={200}
+                            src="/assets/images/eagle2.png"
+                            alt="flag"
+                        />
                         <div className={`${styles.square}`}></div>
                         <div className={`${styles.triangle} my-1`}></div>
                     </div>
@@ -185,7 +183,7 @@ export default function () {
                                         className={`${styles.profile_img}`}
                                         width={200}
                                         height={200}
-                                        src={profile?.image_url ?? '/char3.png'}
+                                        src={profile?.image_url ?? '/assets/images/gameProfiles/default_profile.png'}
                                         alt="Profile"
                                     />
                                     <div>
@@ -197,7 +195,10 @@ export default function () {
                                         <div className={`col-md-5 col-8 ${styles.btn}`}>
                                             <button onClick={() => router.push('/game')}>Play</button>
                                         </div>
-                                        <div className={`col-md-5 col-8 ${styles.btn_delete}`} onClick={() => router.push('/settings')}>
+                                        <div
+                                            className={`col-md-5 col-8 ${styles.btn_delete}`}
+                                            onClick={() => router.push('/settings')}
+                                        >
                                             <button>Settings</button>
                                         </div>
                                     </div>
@@ -231,21 +232,29 @@ export default function () {
                                                 style={{
                                                     borderLeft: '1px solid #61627C',
                                                     borderRight: '1px solid #61627C',
-                                                }}>
+                                                }}
+                                            >
                                                 Win
                                             </h4>
                                             <span
                                                 style={{
                                                     borderLeft: '1px solid #61627C',
                                                     borderRight: '1px solid #61627C',
-                                                }}>
-                                                {profile.total_games !== 0 ? ((profile.win_games / profile.total_games) * 100).toFixed(1) : '0.0'}%
+                                                }}
+                                            >
+                                                {profile.total_games !== 0
+                                                    ? ((profile.win_games / profile.total_games) * 100).toFixed(1)
+                                                    : '0.0'}
+                                                %
                                             </span>
                                         </div>
                                         <div className="col d-flex flex-column justify-content-end ">
                                             <h4>Lose</h4>
                                             <span>
-                                                {profile.total_games !== 0 ? ((profile.lose_games / profile.total_games) * 100).toFixed(1) : '0.0'}%
+                                                {profile.total_games !== 0
+                                                    ? ((profile.lose_games / profile.total_games) * 100).toFixed(1)
+                                                    : '0.0'}
+                                                %
                                             </span>
                                         </div>
                                     </div>
@@ -296,18 +305,20 @@ export default function () {
                                     className={`${styles.rank}`}
                                     width={200}
                                     height={200}
-                                    src="/rank.png"
+                                    src="/assets/images/rank.png"
                                     alt="rank"
                                 />
                                 <div
                                     className={`col-6 ${styles.edit_btn} valo-font text-center p-2 m-2`}
                                     onClick={() => {
                                         setModalShow(true);
-                                    }}>
+                                    }}
+                                >
                                     <button
                                         onClick={() => {
                                             setModalShow(true);
-                                        }}>
+                                        }}
+                                    >
                                         EDIT BIO
                                     </button>
                                 </div>
@@ -323,7 +334,8 @@ export default function () {
                                         centered
                                         backdrop="static"
                                         scrollable
-                                        animation>
+                                        animation
+                                    >
                                         <Modal.Header closeButton closeVariant="white">
                                             <Modal.Title id="contained-modal-title-vcenter">
                                                 <span style={{ color: '#FFEBEB', fontFamily: 'itim' }}>
@@ -374,16 +386,19 @@ export default function () {
                                                         className={`${styles.edit_btn} col-md-3 col-sm-5 valo-font text-center m-2 px-2`}
                                                         onClick={() => {
                                                             setModalShow(false);
-                                                        }}>
+                                                        }}
+                                                    >
                                                         <button
                                                             onClick={() => {
                                                                 setModalShow(false);
-                                                            }}>
+                                                            }}
+                                                        >
                                                             Cancel
                                                         </button>
                                                     </div>
                                                     <div
-                                                        className={`${styles.edit_btn} col-md-3 col-sm-5 valo-font text-center m-2 px-2`}>
+                                                        className={`${styles.edit_btn} col-md-3 col-sm-5 valo-font text-center m-2 px-2`}
+                                                    >
                                                         <button type="submit">Save</button>
                                                     </div>
                                                 </div>

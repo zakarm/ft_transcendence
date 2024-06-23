@@ -52,7 +52,7 @@ export default function ChatFriendsResp({
     setChatUsers,
     fullscreen,
     chatUsers,
-    messages
+    messages,
 }: Props) {
     const [friendsData, setFriendsData] = useState<JSX.Element[]>([]);
     const [friendsChat, setFriendsChat] = useState<JSX.Element[]>([]);
@@ -76,12 +76,14 @@ export default function ChatFriendsResp({
 
                 const data = await res.json();
 
-                const friendsArray = data.friends.filter((friend: Friend_) => friend.is_accepted).map((friend: Friend_) => ({
-                    id: friend.user.id,
-                    username: friend.user.username,
-                    image_url: friend.user.image_url,
-                    message_waiting: false,
-                }));
+                const friendsArray = data.friends
+                    .filter((friend: Friend_) => friend.is_accepted)
+                    .map((friend: Friend_) => ({
+                        id: friend.user.id,
+                        username: friend.user.username,
+                        image_url: friend.user.image_url,
+                        message_waiting: false,
+                    }));
                 setChatUsers(friendsArray);
             } catch (error) {
                 console.error('Error fetching data: ', error);
@@ -106,8 +108,14 @@ export default function ChatFriendsResp({
                     fullscreen={fullscreen}
                     waiting_msg={friend.message_waiting}
                     setChatUsers={setChatUsers}
-                    last_message={usersLastMessage.filter((msg: LastMesg) => msg.username === friend.username).at(0)?.message ?? 'Start Chatting :}'}
-                    time={usersLastMessage.filter((msg: LastMesg) => msg.username === friend.username).at(0)?.time ?? 'now'}
+                    last_message={
+                        usersLastMessage.filter((msg: LastMesg) => msg.username === friend.username).at(0)?.message ??
+                        'Start Chatting :}'
+                    }
+                    time={
+                        usersLastMessage.filter((msg: LastMesg) => msg.username === friend.username).at(0)?.time ??
+                        'now'
+                    }
                 />
             </div>
         ));
@@ -118,18 +126,24 @@ export default function ChatFriendsResp({
     }, []);
 
     useEffect(() => {
-        const newMessages = chatUsers.map((friend: User) => {
-            const lastMessage = messages.filter((msg: Message) => (msg.receiver === friend.username || msg.sender === friend.username)).at(-1);
-            return lastMessage ? { username: friend.username, message: lastMessage.message, time: lastMessage.timestamp } : null;
-        }).filter((msg): msg is LastMesg => msg !== null);
+        const newMessages = chatUsers
+            .map((friend: User) => {
+                const lastMessage = messages
+                    .filter((msg: Message) => msg.receiver === friend.username || msg.sender === friend.username)
+                    .at(-1);
+                return lastMessage
+                    ? { username: friend.username, message: lastMessage.message, time: lastMessage.timestamp }
+                    : null;
+            })
+            .filter((msg): msg is LastMesg => msg !== null);
 
         setUsersLastMessage(newMessages);
-    }, [messages, chatUsers])
+    }, [messages, chatUsers]);
 
     useEffect(() => {
         if (search.length > 2) {
             const filteredUsers = chatUsers.filter((friend: User) =>
-                friend.username.toLowerCase().includes(search.toLowerCase())
+                friend.username.toLowerCase().includes(search.toLowerCase()),
             );
             setFriendsData(generateUserComponents(filteredUsers));
         } else {
@@ -158,7 +172,7 @@ export default function ChatFriendsResp({
                             className={`${styles.welcome_img}`}
                             width={300}
                             height={300}
-                            src="/welcome.png"
+                            src="/assets/images/welcome.png"
                             alt="welcome"
                         />
                     </div>

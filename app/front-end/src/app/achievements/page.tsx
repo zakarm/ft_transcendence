@@ -184,50 +184,50 @@ const Achievements: React.FC<AchivProps> = React.memo(({ choosenTab, achievement
         {
             title: 'EARLY BIRD',
             subTitle: 'Win a match within the first three minutes',
-            imageURL: 'achiv_tourn1.png',
+            imageURL: '/assets/images/achievement/achiv_tourn1.png',
             achieved: achievements.tournament ? achievements.tournament['early'] : false,
         },
         {
             title: 'GRAND SLAM',
             subTitle: 'Win three consecutive tournaments',
-            imageURL: 'achiv_tourn4.png',
+            imageURL: '/assets/images/achievement/achiv_tourn4.png',
             achieved: achievements.tournament ? achievements.tournament['slam'] : false,
         },
         {
             title: 'TRIPLE THREAT',
             subTitle: 'Score a hat-trick (three consecutive points) at least twice in a match',
-            imageURL: 'achiv_tourn2.png',
+            imageURL: '/assets/images/achievement/achiv_tourn2.png',
             achieved: achievements.tournament ? achievements.tournament['triple'] : false,
         },
         {
             title: 'FRONTRUNNER',
             subTitle: 'Reach the finals of the tournament',
-            imageURL: 'achiv_tourn3.png',
+            imageURL: '/assets/images/achievement/achiv_tourn3.png',
             achieved: achievements.tournament ? achievements.tournament['front'] : false,
         },
         // MATCH GAME achievements
         {
             title: 'IRON DEFENSE',
             subTitle: 'Win a game without letting your opponent score more than five points',
-            imageURL: 'achiv_match4.png',
+            imageURL: '/assets/images/achievement/achiv_match4.png',
             achieved: achievements.match ? achievements.match['iron'] : false,
         },
         {
             title: 'SPEEDY VICTORY',
             subTitle: 'Win a game with a score of 7-0 within three minutes',
-            imageURL: 'achiv_match1.png',
+            imageURL: '/assets/images/achievement/achiv_match1.png',
             achieved: achievements.match ? achievements.match['speedy'] : false,
         },
         {
             title: 'LAST-MINUTE COMEBACK',
             subTitle: 'Win a game after being down by five points',
-            imageURL: 'achiv_match2.png',
+            imageURL: '/assets/images/achievement/achiv_match2.png',
             achieved: achievements.match ? achievements.match['last'] : false,
         },
         {
             title: 'TABLE KING/QUEEN',
             subTitle: 'Win ten games in a row without losing',
-            imageURL: 'achiv_match3.png',
+            imageURL: '/assets/images/achievement/achiv_match3.png',
             achieved: achievements.match ? achievements.match['king'] : false,
         },
     ];

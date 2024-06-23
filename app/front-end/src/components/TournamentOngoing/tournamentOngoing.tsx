@@ -117,7 +117,7 @@ function TournamentOngoing(pageUrl: { pageUrl: string }): JSX.Element {
     const [matchToRenderLive, setmatchToRenderLive] = useState<string>('match1');
     let key: string = 'quarter_final';
     const MatchBackgroundStyle: CSSProperties = {
-        backgroundImage: `url("/back.png")`,
+        backgroundImage: `url("/assets/images/Backgrounds/back.png")`,
         backgroundPosition: 'center',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
