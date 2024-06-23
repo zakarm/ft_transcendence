@@ -67,8 +67,9 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
         const access = Cookies.get('access');
         if (access) {
             try {
+                const csrftoken = Cookies.get('csrftoken') || '';
                 const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/friends`, {
-                    headers: { Authorization: `Bearer ${access}` },
+                    headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
                 });
 
                 if (!res.ok) throw new Error('Failed to fetch data');
@@ -126,7 +127,7 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
     return (
         <>
             {
-            (searchedChat === undefined) ? 
+            (searchedChat === undefined) ?
             (<div className='vh-100 border border-dark d-flex flex-column align-items-center justify-content-center'>
                 <span style={{ fontFamily: 'itim', color: 'white' }}>
                     Chat not available !!
@@ -238,7 +239,7 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
                 >
                     <InputGroup size="lg" style={{ fontFamily: 'itim' }}>
                         <Form.Control
-                            
+
                             placeholder="Type..."
                             aria-label="Type..."
                             aria-describedby="basic-addon2"

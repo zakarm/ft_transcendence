@@ -69,14 +69,16 @@ async function fetchTournamentsData(): Promise<TournamentsData | null> {
         const access: string | undefined = Cookies.get('access');
         if (access) {
             try {
+                const csrftoken = Cookies.get('csrftoken') || '';
                 const promise = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/tournaments`, {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${access}`,
                         'content-type': 'application/json',
+                        'X-CSRFToken': csrftoken,
                     },
                 });
-    
+
                 if (promise.ok) {
                     const data: TournamentsData = await promise.json();
                     return data;
@@ -217,7 +219,7 @@ function    findNeedleInHaystack(
     })
     console.log(filteredArray);
     return tournamentCards;
-    
+
 }
 
 /********** Main Component */

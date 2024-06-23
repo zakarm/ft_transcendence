@@ -108,8 +108,9 @@ export default function MainContainer({ children }: { children: React.ReactNode 
             const access = Cookies.get('access');
             if (access) {
                 try {
+                    const csrftoken = Cookies.get('csrftoken') || '';
                     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/friends`, {
-                        headers: { Authorization: `Bearer ${access}` },
+                        headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
                     });
                     if (response.ok) {
                         const data = await response.json();
@@ -138,8 +139,9 @@ export default function MainContainer({ children }: { children: React.ReactNode 
             const access = Cookies.get('access');
             if (access) {
                 try {
+                    const csrftoken = Cookies.get('csrftoken') || '';
                     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/notifications`, {
-                        headers: { Authorization: `Bearer ${access}` },
+                        headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
                     });
                     if (response.ok) {
                         const data = await response.json();
@@ -198,7 +200,7 @@ export default function MainContainer({ children }: { children: React.ReactNode 
             toggleShow={toggleShow}
         />
     ), [webSocketNotifications, notificationFetch, userData, friendsfetched, setShow, handleClose, toggleShow]);
-    
+
 
     return (
         <div className="container-fluid p-0 vh-100" style={{ backgroundColor: '#000000', overflow: 'hidden' }}>

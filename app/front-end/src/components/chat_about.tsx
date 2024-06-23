@@ -52,8 +52,9 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
         const access = Cookies.get('access');
         if (access) {
             try {
+                const csrftoken = Cookies.get('csrftoken') || '';
                 const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/profile/${selectedChat}`, {
-                    headers: { Authorization: `Bearer ${access}` },
+                    headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
                 });
 
                 if (!res.ok) throw new Error('Failed to fetch data');
@@ -129,7 +130,7 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
     return (
         <>
             {
-            (profile === undefined) ? 
+            (profile === undefined) ?
             (<div className='vh-100 border border-dark d-flex flex-column align-items-center justify-content-center'>
                 <span style={{ fontFamily: 'itim', color: 'white' }}>
                     User Not Found !!

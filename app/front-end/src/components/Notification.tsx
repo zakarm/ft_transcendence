@@ -51,6 +51,7 @@ function Notification({ notification }: Props) {
         const access = Cookies.get('access');
         if (access)
         {
+            const csrftoken = Cookies.get('csrftoken') || '';
             const notif = await fetch(
                 `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/notification-delete/${notification_id}`,
                 {
@@ -58,6 +59,7 @@ function Notification({ notification }: Props) {
                     headers: {
                         Authorization: `Bearer ${access}`,
                         'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken,
                     },
                 },
             );
@@ -84,11 +86,13 @@ function Notification({ notification }: Props) {
         const access = Cookies.get('access');
         if (access) {
             try {
+                const csrftoken = Cookies.get('csrftoken') || '';
                 const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/${api}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${access}`,
+                        'X-CSRFToken': csrftoken,
                     },
 
                     body: JSON.stringify({ username: username }),

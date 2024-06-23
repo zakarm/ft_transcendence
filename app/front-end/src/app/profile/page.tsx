@@ -69,8 +69,9 @@ export default function () {
         const access = Cookies.get('access');
         if (access) {
             try {
+                const csrftoken = Cookies.get('csrftoken') || '';
                 const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/profile`, {
-                    headers: { Authorization: `Bearer ${access}` },
+                    headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
                 });
 
                 if (!res.ok) throw new Error('Failed to fetch data');
@@ -102,17 +103,19 @@ export default function () {
         try {
             const access = Cookies.get('access');
             const email : string = profile?.email || '';
-            const username : string = profile?.username || '';
+            const username: string = profile?.username || '';
+            const csrftoken = Cookies.get('csrftoken') || '';
             const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/game-settings`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${access}`,
+                    'X-CSRFToken': csrftoken,
                 },
                 body: JSON.stringify({ username, email, quote, intro }),
             });
 
-            if (!res.ok) 
+            if (!res.ok)
                 throw new Error('Failed to submit data');
 
             fetchProfileData();

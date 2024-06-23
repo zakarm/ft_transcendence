@@ -164,9 +164,10 @@ const Achievements: React.FC<AchivProps> = React.memo(({ choosenTab, achievement
     useEffect(() => {
         const getAchievements = async () => {
             try {
+                const csrftoken = Cookies.get('csrftoken') || '';
                 const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/achievements`, {
                     method: 'GET',
-                    headers: { Authorization: `Bearer ${access}` },
+                    headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
                 });
 
                 const data = await response.json();

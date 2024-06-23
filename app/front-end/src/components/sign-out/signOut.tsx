@@ -16,10 +16,12 @@ function signOut(router: RouterType) {
     if (refresh) {
         try {
             const postSignOut = async () => {
+                const csrftoken = Cookies.get('csrftoken') || '';
                 const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/sign-out`, {
                     method: 'POST',
                     headers: {
                         'content-type': 'application/json',
+                        'X-CSRFToken': csrftoken,
                     },
                     body: JSON.stringify({ refresh: refresh }),
                 });

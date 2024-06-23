@@ -24,20 +24,19 @@ export default function SignUp() {
 		const last_name = form.get("last_name") as string;
 		const username = form.get("user_name") as string;
 		const email = form.get("email") as string;
-		const password = form.get("password") as string;
-		const response = await fetch(
-			`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/sign-up`,
-			{
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({
-				first_name,
-				last_name,
-				username,
-				email,
-				password,
-			}),
-		});
+        const password = form.get("password") as string;
+        const csrftoken = Cookies.get('csrftoken') || '';
+		const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/sign-up`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+            body: JSON.stringify({
+                first_name,
+                last_name,
+                username,
+                email,
+                password,
+            }),
+        });
 		const data = await response.json();
 		if (response.ok) {
 			const { access, refresh } = data;

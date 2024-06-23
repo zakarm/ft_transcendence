@@ -83,9 +83,13 @@ export default function ({ params }: { params: { username: string } })
         if (access)
         {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/profile${params ? '/' + params.username : ''}` , {
-                    headers: { Authorization: `Bearer ${access}` },
-                });
+                const csrftoken = Cookies.get('csrftoken') || '';
+                const res = await fetch(
+                    `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/profile${params ? '/' + params.username : ''}`,
+                    {
+                        headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
+                    },
+                );
 
                 if (!res.ok)
                     throw new Error('Failed to fetch data');
@@ -104,9 +108,10 @@ const fetchUser = async () => {
     const access = Cookies.get('access');
     if (access)
         {
-            try {
+        try {
+                const csrftoken = Cookies.get('csrftoken') || '';
                 const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/friends`, {
-                    headers: { Authorization: `Bearer ${access}` },
+                    headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
                 });
 
                 if (!res.ok)
@@ -141,14 +146,15 @@ const fetchUser = async () => {
         if (access)
         {
           try {
-
+            const csrftoken = Cookies.get('csrftoken') || '';
             const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/${api}`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${access}`
-              },
-              body: JSON.stringify({ username: username })
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${access}`,
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({ username: username }),
             });
 
             if (!res.ok)

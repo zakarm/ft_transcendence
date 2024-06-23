@@ -31,10 +31,10 @@ interface Message {
 
 export default function () {
 
-    
+
     const chatSocketRef = useRef<WebSocket | null>(null);
     const searchParams = useSearchParams();
-    
+
     const [show, setShow] = useState(false);
     const [showAbout, setAbout] = useState(false);
     const [selectedChat, setSelectedChat] = useState<string>('none');
@@ -43,15 +43,16 @@ export default function () {
     const [newMessage, setNewMessage] = useState<Message | undefined>(undefined);
     const [messages, setMessages] = useState<Message[]>([]);
     const [me, setMe] = useState<string>('');
-    
+
     const handleClose = () => setAbout(false);
 
     const fetchUserMessages = async () => {
         const access = Cookies.get('access');
         if (access) {
             try {
+                const csrftoken = Cookies.get('csrftoken') || '';
                 const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/messages`, {
-                    headers: { Authorization: `Bearer ${access}` },
+                    headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
                 });
 
                 if (!res.ok) throw new Error('Failed to fetch data');
@@ -76,8 +77,9 @@ export default function () {
         const access = Cookies.get('access');
         if (access) {
             try {
+                const csrftoken = Cookies.get('csrftoken') || '';
                 const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/friends`, {
-                    headers: { Authorization: `Bearer ${access}` },
+                    headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
                 });
 
                 if (!res.ok) throw new Error('Failed to fetch data');

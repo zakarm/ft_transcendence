@@ -33,9 +33,10 @@ async function getData(): Promise<StatisticsDataTypes> {
     let data: Partial<Promise<StatisticsDataTypes>> = {};
     const access = Cookies.get('access');
     if (access) {
+        const csrftoken = Cookies.get('csrftoken') || '';
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/statistics`, {
             method: 'GET',
-            headers: { Authorization: `Bearer ${access}` },
+            headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
         });
         try {
             data = await response.json();
