@@ -24,6 +24,7 @@ export default function SignInPage() {
             const form = new FormData(event.currentTarget);
             const email = form.get('email') as string;
             const password = form.get('password') as string;
+            console.log(`${process.env.NEXT_PUBLIC_BACKEND_HOST}`);
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/sign-in`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -67,7 +68,7 @@ export default function SignInPage() {
     }
     return (
       <div className={`container`}>
-        {twoFaData && <TwoFa value={twoFaData.value} email={twoFaData.email} />}
+        {twoFaData && <TwoFa value={twoFaData.value} email={twoFaData.email} qr={false}/>}
         <div className={`${styles.flexx}`}>
           <div className={`${styles.main_card} shadow row`}>
             <div

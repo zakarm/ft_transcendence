@@ -83,7 +83,8 @@ const validateInput: (valuesToPost: SettingsProps['valuesToPost']) => boolean = 
     valuesToPost: SettingsProps['valuesToPost'],
 ) => {
     const validateEmail: (email: string) => boolean = (email) => {
-        const rgx: RegExp = /^([a-zA-Z0-9\._]+)@([a-zA-Z0-9])+.([a-z]+)(.[a-z]+)?$/;
+        // const rgx: RegExp = /^([a-zA-Z0-9\._]+)@([a-zA-Z0-9])+.([a-z]+)(.[a-z]+)?$/;
+        const rgx: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         return rgx.test(email);
     };
 
@@ -240,11 +241,9 @@ function SettingsPage() {
                                 updateField,
                                 setValuesToPost,
                                 setAccountValues,
-                            }}
-                        >
+                            }}>
                             <div
-                                className={`${styles.content_container} row  p-0 m-0  justify-content-center align-items-center`}
-                            >
+                                className={`${styles.content_container} row  p-0 m-0  justify-content-center align-items-center`}>
                                 {(tab === 'Account' && <AccountTab />) ||
                                     (tab === 'Security' && <SecurityTab />) ||
                                     (tab === 'Game' && <GameTab />)}
@@ -256,8 +255,7 @@ function SettingsPage() {
                             className={`valo-font col-8 col-md-6 ${styles.create_button}`}
                             onClick={() => {
                                 postFormData({ valuesToPost, isFormChanged });
-                            }}
-                        >
+                            }}>
                             SAVE
                         </button>
                     </div>

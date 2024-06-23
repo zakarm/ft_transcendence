@@ -4,6 +4,7 @@ import Table from 'react-bootstrap/Table';
 
 
 interface GameData {
+  image: string;
   player: string;
   score: number;
   date: string;
@@ -30,7 +31,7 @@ const GameHistoryCard: React.FC<GameHistoryCardProps> = ({ data } : GameHistoryC
 			<tr key={index} className={`${styles.game_row}`}>
 				<td className={`${styles.game_col} ${styles.left_col}`}>
 				<div className={`${styles.player_info}`}>
-					<img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Aatrox_0.jpg" alt="Player Avatar" />
+					<img src={game.image} alt="Player Avatar" />
 					<span className="itim-font">{game.player}</span>
 				</div>
 				</td>

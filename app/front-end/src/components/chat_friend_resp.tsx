@@ -22,25 +22,43 @@ interface Friend_ {
     blocked: boolean;
 }
 
+interface LastMesg {
+    username: string;
+    message: string;
+    time: string;
+}
+
+interface Message {
+    chat_id: string;
+    message: string;
+    sender: string;
+    receiver: string;
+    timestamp: string;
+}
+
 interface Props {
     setAbout: React.Dispatch<React.SetStateAction<boolean>>;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
     setSelectedChat: React.Dispatch<React.SetStateAction<string>>;
+    setChatUsers: React.Dispatch<React.SetStateAction<User[]>>;
     fullscreen: boolean;
     chatUsers: User[];
-    setChatUsers: React.Dispatch<React.SetStateAction<User[]>>;
+    messages: Message[];
 }
 
 export default function ChatFriendsResp({
     setSelectedChat,
     setAbout,
     setShow,
+    setChatUsers,
     fullscreen,
     chatUsers,
-    setChatUsers,
+    messages
 }: Props) {
     const [friendsData, setFriendsData] = useState<JSX.Element[]>([]);
     const [friendsChat, setFriendsChat] = useState<JSX.Element[]>([]);
+    const [usersLastMessage, setUsersLastMessage] = useState<LastMesg[]>([]);
+    const [search, setSearch] = useState<string>('');
 
     const handleAbout = () => setAbout(true);
     const handleShow = () => setShow(true);
@@ -73,12 +91,8 @@ export default function ChatFriendsResp({
         }
     };
 
-    useEffect(() => {
-        fetchUsersData();
-    }, []);
-
-    useEffect(() => {
-        const sortedData = chatUsers.map((friend: User, index: number) => (
+    const generateUserComponents = (users: User[]) => {
+        return users.map((friend: User) => (
             <div key={friend.id}>
                 <User
                     id={friend.id}
@@ -92,11 +106,37 @@ export default function ChatFriendsResp({
                     fullscreen={fullscreen}
                     waiting_msg={friend.message_waiting}
                     setChatUsers={setChatUsers}
+                    last_message={usersLastMessage.filter((msg: LastMesg) => msg.username === friend.username).at(0)?.message ?? 'Start Chatting :}'}
+                    time={usersLastMessage.filter((msg: LastMesg) => msg.username === friend.username).at(0)?.time ?? 'now'}
                 />
             </div>
         ));
-        setFriendsData(sortedData);
-    }, [chatUsers]);
+    };
+
+    useEffect(() => {
+        fetchUsersData();
+    }, []);
+
+    useEffect(() => {
+        const newMessages = chatUsers.map((friend: User) => {
+            const lastMessage = messages.filter((msg: Message) => (msg.receiver === friend.username || msg.sender === friend.username)).at(-1);
+            return lastMessage ? { username: friend.username, message: lastMessage.message, time: lastMessage.timestamp } : null;
+        }).filter((msg): msg is LastMesg => msg !== null);
+    
+        setUsersLastMessage(newMessages);
+    }, [messages, chatUsers])
+
+    useEffect(() => {
+        if (search.length > 2) {
+            const filteredUsers = chatUsers.filter((friend: User) =>
+                friend.username.toLowerCase().includes(search.toLowerCase())
+            );
+            setFriendsData(generateUserComponents(filteredUsers));
+        } else {
+            // Reset to all users if search length is 2 or less
+            setFriendsData(generateUserComponents(chatUsers));
+        }
+    }, [search, usersLastMessage]);
 
     return (
         <>
@@ -134,6 +174,7 @@ export default function ChatFriendsResp({
                                 aria-label="search"
                                 placeholder="Enter for search..."
                                 style={{ backgroundColor: '#2C3143' }}
+                                onChange={(e) => setSearch(e.target.value)}
                             />
                         </InputGroup>
                     </div>

@@ -9,9 +9,17 @@ import Paddle from './Paddle';
 import './PongGame.css';
 import BoardItem from '../BoardItem/BoardItem';
 import gsap from 'gsap';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
+import { AfterimagePass } from 'three/examples/jsm/postprocessing/AfterimagePass';
+
 interface ConnectionInfo {
     index: number;
     roomName: string;
+    table_color: string;
+    ball_color: string;
+    paddle_color: string;
+    table_position : string;
 }
 
 interface Player {
@@ -30,6 +38,15 @@ interface Props {
     webSocket: WebSocket;
     connectionInfo: ConnectionInfo;
     players: Player[];
+}
+const convertHexColor = (hex: string): number => {
+    const cleanedHex = hex.replace('#', '');
+    return parseInt(cleanedHex, 16);
+};
+const convertStringToVector3 = (str: string): THREE.Vector3 => {
+    console.log("str",str);
+    const [x, y, z] = str.split(',').map((coord) => parseFloat(coord));
+    return new THREE.Vector3(x, y, z);
 }
 
 const PongGame: React.FC<Props> = ({ webSocket, connectionInfo, players }: Props) => {
@@ -85,7 +102,9 @@ const PongGame: React.FC<Props> = ({ webSocket, connectionInfo, players }: Props
         // camera.position.set(5, 0, 5);
         camera.position.set(25, 15, 16);
 
-        const targetPosition = new THREE.Vector3(6, 8, 0);
+        // const targetPosition = new THREE.Vector3(6, 8, 0);
+        console.log("+++++++++++++++++++++++++++++++++++++>>>>>" ,connectionInfo.table_position);
+        const targetPosition = convertStringToVector3(connectionInfo.table_position);
         gsap.to(camera.position, {
             x: targetPosition.x,
             y: targetPosition.y,
@@ -98,6 +117,15 @@ const PongGame: React.FC<Props> = ({ webSocket, connectionInfo, players }: Props
         const renderer = new THREE.WebGLRenderer();
         renderer.setSize(width, height);
         container.appendChild(renderer.domElement);
+
+        // Initialize EffectComposer
+        const composer = new EffectComposer(renderer);
+        composer.addPass(new RenderPass(scene, camera));
+
+        // Create and add AfterimagePass for the ball
+        const afterimagePass = new AfterimagePass();
+        afterimagePass.uniforms['damp'].value = 0.7;
+        composer.addPass(afterimagePass);
 
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableZoom = true;
@@ -112,7 +140,7 @@ const PongGame: React.FC<Props> = ({ webSocket, connectionInfo, players }: Props
         cameraRef.current = camera;
         controlsRef.current = controls;
 
-        const surface = new Surface(10, 5, 1, 1, 0x161625);
+        const surface = new Surface(10, 5, 1, 1, convertHexColor(connectionInfo.table_color));
         surface.addToScene(scene);
 
         const boundaries: {
@@ -128,20 +156,20 @@ const PongGame: React.FC<Props> = ({ webSocket, connectionInfo, players }: Props
             { width: 0.05, height: 0.02, depth: 5, positions: [0, 0.01, 0] },
         ];
         boundaries.forEach(({ width, height, depth, positions }) => {
-            const boundary = new Boundary(width, height, depth, positions, 0xff4655);
+            const boundary = new Boundary(width, height, depth, positions, convertHexColor(connectionInfo.paddle_color));
             boundary.addToScene(scene);
         });
 
-        const ball = new Ball(0.1, 46, 46, 0xffffff, [0, 0.1, 0], 0, 0);
+        const ball = new Ball(0.1, 46, 46, convertHexColor(connectionInfo.ball_color), [0, 0.1, 0], 0, 0);
         ball.addToScene(scene);
 
-        const wall1 = new Wall(10, 0.5, 0.1, 0x161625, [0, 0.2, 2.6]);
-        const wall2 = new Wall(10, 0.5, 0.1, 0x161625, [0, 0.2, -2.6]);
+        const wall1 = new Wall(10, 0.5, 0.1, convertHexColor(connectionInfo.table_color), [0, 0.2, 2.6]);
+        const wall2 = new Wall(10, 0.5, 0.1, convertHexColor(connectionInfo.table_color), [0, 0.2, -2.6]);
         wall1.addToScene(scene);
         wall2.addToScene(scene);
 
-        const paddle1 = new Paddle(0.2, 0.2, 1, 0xff4655, [-4.8, 0.15, 0]);
-        const paddle2 = new Paddle(0.2, 0.2, 1, 0xff4655, [4.8, 0.15, 0]);
+        const paddle1 = new Paddle(0.2, 0.2, 1, convertHexColor(connectionInfo.paddle_color), [-4.8, 0.15, 0]);
+        const paddle2 = new Paddle(0.2, 0.2, 1, convertHexColor(connectionInfo.paddle_color), [4.8, 0.15, 0]);
         paddle1.addToScene(scene);
         paddle2.addToScene(scene);
 
@@ -152,7 +180,7 @@ const PongGame: React.FC<Props> = ({ webSocket, connectionInfo, players }: Props
         directionalLight.position.set(0, 10, 0);
         scene.add(directionalLight);
 
-        const light = new THREE.PointLight(0xffffff, 1);
+        const light = new THREE.PointLight(0xffffff, 0.6);
         light.position.copy(ball.mesh.position).y += 0.1;
         scene.add(light);
 
@@ -259,6 +287,7 @@ const PongGame: React.FC<Props> = ({ webSocket, connectionInfo, players }: Props
         const animate = () => {
             animateIdRef.current = requestAnimationFrame(animate);
             renderer.render(scene, camera);
+            composer.render();
         };
         animate();
 

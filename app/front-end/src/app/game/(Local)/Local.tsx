@@ -1,6 +1,10 @@
 'use client';
+import PlayerCard from '@/components/PlayerCard/PlayerCard';
 import PongGameLocal from '@/components/PongGame/PongGameLocal';
-import { useState } from 'react';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import './Local.css';
+
 type SetScore = (
     side: 'side1' | 'side2',
     round: 'quarterfinals' | 'semifinals' | 'finals',
@@ -18,6 +22,8 @@ type PromoteWinner = (
 
 type SetPageState = (pageState: string) => void;
 
+type SetWinner_ = (winner: playerdata) => void;
+
 interface LocalGame {
     user1name: string;
     user2name: string;
@@ -31,10 +37,52 @@ interface LocalGame {
     setScore: SetScore | null;
     promoteWinner: PromoteWinner | null;
     setPageState_: SetPageState | null;
+    setWinner: SetWinner_ | null;
     usesetter: 0 | 1;
 }
 
+interface Player {
+    name: string;
+    imageUrl: string;
+    stats: {
+        adaptation: number;
+        agility: number;
+        winStreaks: number;
+        endurance: number;
+        eliteTierRanking: number;
+    };
+    index: number;
+}
+
+interface playerdata {
+    name: string;
+    imageUrl: string;
+}
+
 function Local() {
+    const [pageState, setPageState] = useState<string>('Initial');
+    const [effectRunCount, setEffectRunCount] = useState(0);
+    const [winner, setWinner] = useState<Player>({
+        name: '',
+        imageUrl: '',
+        stats: {
+            adaptation: 0,
+            agility: 0,
+            winStreaks: 0,
+            endurance: 0,
+            eliteTierRanking: 0,
+        },
+        index: 0,
+    });
+
+    const setWinner_ = (data: playerdata) => {
+        setWinner((prev) => ({
+            ...prev,
+            name: data.name,
+            imageUrl: data.imageUrl,
+        }));
+    };
+
     const [match, setMatch] = useState<LocalGame>({
         user1name: 'player1',
         user2name: 'player2',
@@ -48,9 +96,37 @@ function Local() {
         setScore: null,
         promoteWinner: null,
         setPageState_: null,
+        setWinner: setWinner_,
         usesetter: 0,
     });
-    return <PongGameLocal data={match} />;
+
+    useEffect(() => {
+        if (pageState === 'winner')
+            return;
+        if (winner.name !== '' && winner.imageUrl !== '') {
+            setPageState('Winner');
+            console.log('winner-----------');
+        }
+    }, [winner]);
+
+    return (
+        <div className="container_local">
+            <div className="page_state">
+                <PongGameLocal data={match} />
+            </div>
+            {pageState === 'Winner' && (
+                <div className="winner_page ">
+                    <div className="winner_container">
+                        <div className="winner_text">WINNER</div>
+                        <PlayerCard {...winner} />
+                        <Link href="/game" style={{ textDecoration: 'none' }}>
+                            <div className="go_back">go back</div>
+                        </Link>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
 }
 
 export default Local;

@@ -39,6 +39,7 @@ interface Matches {
 interface UserData {
     username: string;
     email: string;
+    image_url: string;
     first_name: string | null;
     last_name: string | null;
     matches_as_user_one: Matches[];
@@ -57,6 +58,7 @@ interface GameReport {
 }
 
 interface GameData {
+    image: string;
     player: string;
     score: number;
     date: string;
@@ -121,6 +123,7 @@ export default function Dashboard() {
     if (dashboardData) {
         dashboardData.matches_as_user_one.forEach((match) => {
             gameData.push({
+                image: dashboardData.image_url,
                 player: dashboardData.username,
                 score: match.score_user_one,
                 date: formatDate(match.match_start),
@@ -130,6 +133,7 @@ export default function Dashboard() {
 
         dashboardData.matches_as_user_two.forEach((match) => {
             gameData.push({
+                image: dashboardData.image_url,
                 player: dashboardData.username,
                 score: match.score_user_two,
                 date: formatDate(match.match_start),
@@ -169,6 +173,7 @@ export default function Dashboard() {
         if (data) {
             data.matches_as_user_one.forEach((match) => {
                 gameCsv.push({
+                    image: data.image_url,
                     player: data.username,
                     score: match.score_user_one,
                     date: match.match_start,
@@ -177,6 +182,7 @@ export default function Dashboard() {
             });
             data.matches_as_user_two.forEach((match) => {
                 gameCsv.push({
+                    image: data.image_url,
                     player: data.username,
                     score: match.score_user_two,
                     date: match.match_start,
@@ -261,7 +267,7 @@ export default function Dashboard() {
                                         </h6>
                                     </div>
                                     <div>
-                                        <ButtonValo onClick={clickButton} value="Play" />
+                                        <ButtonValo onClick={clickButton} value="PLAY" />
                                     </div>
                                 </div>
                             </div>

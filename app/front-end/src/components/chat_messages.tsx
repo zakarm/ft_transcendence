@@ -125,6 +125,13 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
 
     return (
         <>
+            {
+            (searchedChat === undefined) ? 
+            (<div className='vh-100 border border-dark d-flex flex-column align-items-center justify-content-center'>
+                <span style={{ fontFamily: 'itim', color: 'white' }}>
+                    Chat not available !!
+                </span>
+            </div>) : (
             <div className="vh-100 d-flex flex-column border border-dark">
                 <div
                     className="row p-0 m-0 d-flex justify-content-center "
@@ -166,15 +173,14 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
                         style={{ backgroundColor: '#161625', borderBottomRightRadius: '25px' }}
                     >
                         <FaTableTennisPaddleBall className="mx-2" size="1.8em" style={{ cursor: 'pointer' }} />
-                        <ImUserMinus className="mx-2" size="1.8em" style={{ cursor: 'pointer' }} />
+                        {/* <ImUserMinus className="mx-2" size="1.8em" style={{ cursor: 'pointer' }} /> */}
                     </div>
                 </div>
-
                 <div
                     className="flex-grow-1 valo-font d-flex row p-0 m-0 py-3 align-items-end"
-                    style={{ overflow: 'auto' }}
+                    style={{ overflowY: 'auto' }}
                 >
-                    {messages?.length ? (
+                    {(messages && messages.filter((message: Message) => Number(message.chat_id) === searchedChat?.freindship_id ?? -1).length) ? (
                         <div>
                             {messages
                                 .filter(
@@ -187,28 +193,33 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
                                         style={{ textAlign: message.sender === me ? 'right' : 'left' }}
                                     >
                                         {message.sender === selectedChat ? (
-                                            <div className="my-4" style={{ fontFamily: 'itim' }}>
-                                                <span
-                                                    style={{
-                                                        backgroundColor: '#181b20',
-                                                        padding: '10px',
-                                                        borderRadius: '15px',
-                                                    }}
-                                                >
-                                                    {message.message}
-                                                </span>
-                                            </div>
+                                                <div className="d-flex flex-column align-items-start " style={{ fontFamily: 'itim' }}>
+                                                    <p
+                                                        style={{
+                                                            backgroundColor: '#181b20',
+                                                            padding: '10px',
+                                                            borderRadius: '15px',
+                                                            wordBreak: 'break-word',
+                                                            maxWidth: '50%'
+                                                          }}
+                                                    >
+                                                        {message.message}
+                                                    </p>
+                                                </div>
                                         ) : (
-                                            <div className="my-4" style={{ fontFamily: 'itim' }}>
-                                                <span
+                                            <div className="d-flex flex-column align-items-end " style={{ fontFamily: 'itim' }}>
+                                                <p
                                                     style={{
                                                         backgroundColor: '#222a38',
                                                         padding: '10px',
                                                         borderRadius: '15px',
+                                                        textAlign: 'left',
+                                                        wordBreak: 'break-word',
+                                                        maxWidth: '50%'
                                                     }}
                                                 >
                                                     {message.message}
-                                                </span>
+                                                </p>
                                             </div>
                                         )}
                                     </div>
@@ -227,13 +238,15 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
                 >
                     <InputGroup size="lg" style={{ fontFamily: 'itim' }}>
                         <Form.Control
+                            
                             placeholder="Type..."
                             aria-label="Type..."
                             aria-describedby="basic-addon2"
+                            maxLength={512}
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
                             onKeyUp={(e) => {
-                                if (e.key === 'Enter') {
+                                if (e.key === 'Enter' && !e.shiftKey) {
                                     sendMessage();
                                 }
                             }}
@@ -244,6 +257,7 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
                     </InputGroup>
                 </div>
             </div>
+            )}
         </>
     );
 }

@@ -8,6 +8,7 @@ import { useEffect, useState, useRef } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Cookies from 'js-cookie';
+import { useSearchParams } from 'next/navigation';
 
 import Spinner from 'react-bootstrap/Spinner';
 import { GiAmericanFootballPlayer } from 'react-icons/gi';
@@ -29,23 +30,47 @@ interface Message {
 }
 
 export default function () {
+
+    
+    const chatSocketRef = useRef<WebSocket | null>(null);
+    const searchParams = useSearchParams();
+    
     const [show, setShow] = useState(false);
-
     const [showAbout, setAbout] = useState(false);
-
     const [selectedChat, setSelectedChat] = useState<string>('none');
-
     const [chatUsers, setChatUsers] = useState<Users[]>([]);
-
-    const handleClose = () => setAbout(false);
-
     const [fullscreen, setFullscreen] = useState(window.innerWidth <= 768 ? true : false);
-
-    //////
     const [newMessage, setNewMessage] = useState<Message | undefined>(undefined);
     const [messages, setMessages] = useState<Message[]>([]);
-    const chatSocketRef = useRef<WebSocket | null>(null);
     const [me, setMe] = useState<string>('');
+    
+    const handleClose = () => setAbout(false);
+
+    const fetchUserMessages = async () => {
+        const access = Cookies.get('access');
+        if (access) {
+            try {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/messages`, {
+                    headers: { Authorization: `Bearer ${access}` },
+                });
+
+                if (!res.ok) throw new Error('Failed to fetch data');
+                const data = await res.json();
+                const storedMessages = data.messages.map((msg: any) => ({
+                        chat_id: msg.chat_id.toString(),
+                        message: msg.message_content,
+                        sender: msg.sender,
+                        receiver: msg.receiver,
+                        timestamp: msg.message_date,
+                    })).reverse();
+                setMessages(storedMessages)
+            } catch (error) {
+                console.error('Error fetching data: ', error);
+            }
+        } else {
+            console.log('Access token is undefined or falsy');
+        }
+    }
 
     const fetchSearchUser = async () => {
         const access = Cookies.get('access');
@@ -70,7 +95,7 @@ export default function () {
         const access = Cookies.get('access');
         if (access) {
             try {
-                const newChatSocket = new WebSocket(`ws://127.0.0.1:8000/ws/chat/lobby?token=${access}`);
+                const newChatSocket = new WebSocket(`${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/chat/lobby?token=${access}`);
 
                 newChatSocket.onmessage = (e: MessageEvent) => {
                     console.log('message received');
@@ -107,7 +132,24 @@ export default function () {
     };
 
     useEffect(() => {
-        console.log('got it => ');
+        fetchUserMessages();
+    }, []);
+
+    useEffect(() => {
+        if (window.innerWidth > 768 && show)
+                setShow(false);
+    }, [window.innerWidth]);
+
+    useEffect(() => {
+        const usernameParam = searchParams.get('username');
+        if (usernameParam){
+            setSelectedChat(usernameParam);
+            if (fullscreen)
+                setShow(true);
+        }
+    }, [searchParams]);
+
+    useEffect(() => {
         if (
             newMessage &&
             (messages?.length === 0 || messages?.at(messages.length - 1)?.timestamp !== newMessage?.timestamp)
@@ -147,6 +189,7 @@ export default function () {
                             fullscreen={fullscreen}
                             chatUsers={chatUsers}
                             setChatUsers={setChatUsers}
+                            messages={messages}
                         />
                     ) : (
                         <ChatFriendsResp
@@ -156,6 +199,7 @@ export default function () {
                             fullscreen={fullscreen}
                             chatUsers={chatUsers}
                             setChatUsers={setChatUsers}
+                            messages={messages}
                         />
                     )}
                     &nbsp;

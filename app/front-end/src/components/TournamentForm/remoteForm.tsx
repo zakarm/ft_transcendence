@@ -62,6 +62,7 @@ function GetInput({
                         id={inputId}
                         maxLength={inputLength}
                         onChange={handleInputChange}
+                        autoComplete="off"
                         required
                     />
                 </div>
@@ -132,8 +133,8 @@ function InputRange({ handleChange = () => {}, index = 0 }: Props) {
                 <div className={`col-9 d-flex justify-content-center p-0 my-3 ${styles.inputTitle}`}>
                     <input
                         type="range"
-                        min="0"
-                        max="2"
+                        min="1"
+                        max="3"
                         step="1"
                         className={`${styles.slider}`}
                         onChange={handleRangeChange}

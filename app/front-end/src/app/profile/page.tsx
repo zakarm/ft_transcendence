@@ -26,6 +26,7 @@ import { ChartOptions, ChartData } from 'chart.js';
 import { LineController } from 'chart.js/auto';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
+import { RiProgress1Line } from 'react-icons/ri';
 
 interface MonthlyStats {
     months: string[];
@@ -50,7 +51,7 @@ interface ProfileData {
     win_games: number;
     lose_games: number;
     image_url: string | null;
-    summary: MonthlyStats;
+    monthly_stats: MonthlyStats;
 }
 
 export default function () {
@@ -58,8 +59,9 @@ export default function () {
 
     const [modalShow, setModalShow] = useState<boolean>(false);
 
-    const [country, setCountry] = useState<string>('');
-    const [region, setRegion] = useState<string>('');
+
+    const [quote, setQuote] = useState<string>('');
+    const [intro, setIntro] = useState<string>('');
 
     const router = useRouter();
 
@@ -85,58 +87,72 @@ export default function () {
         fetchProfileData();
     }, []);
 
-    const selectCountry = (val: string) => {
-        setCountry(val);
-        setRegion('');
-    };
-
-    const selectRegion = (val: string) => {
-        setRegion(val);
-    };
-
     const [validated, setValidated] = useState<boolean>(false);
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        event.stopPropagation();
+
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
+            setValidated(true);
+            return;
         }
 
-        setValidated(true);
+        try {
+            const access = Cookies.get('access');
+            const email : string = profile?.email || '';
+            const username : string = profile?.username || '';
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/game-settings`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${access}`,
+                },
+                body: JSON.stringify({ username, email, quote, intro }),
+            });
+
+            if (!res.ok) 
+                throw new Error('Failed to submit data');
+
+            fetchProfileData();
+            setModalShow(false);
+        } catch (error) {
+            console.error('Error submitting data: ', error);
+        }
     };
 
     Chart.register(CategoryScale, LinearScale, Title, Legend, Tooltip, LineController, PointElement, LineElement);
     Chart.defaults.font.family = 'Itim';
     Chart.defaults.font.size = 14;
 
-    const profileChartData = profile?.summary ?? {
-        months: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        win: [10, 20, 30, 40, 30, 15, 28],
-        lose: [30, 20, 10, 40, 5, 15, 35],
-    };
-
     const data: ChartData<'line'> = {
-        labels: profileChartData.months,
+        labels:  profile?.monthly_stats?.months || [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June"],
         datasets: [
-            {
-                label: 'WIN',
-                data: profileChartData.win,
-                borderColor: 'rgba(116,206,151, 0.5)',
-                backgroundColor: 'green',
-                fill: false,
-                tension: 0.1,
-            },
-            {
-                label: 'LOSS',
-                data: profileChartData.lose,
-                borderColor: 'rgba(181,55,49, 0.5)',
-                backgroundColor: 'red',
-                fill: false,
-                tension: 0.1,
-            },
-        ],
-    };
+          {
+              label: 'WIN',
+              data:  profile?.monthly_stats?.win || [],
+              borderColor: 'rgba(116,206,151, 0.5)',
+              backgroundColor: 'green',
+              fill: false,
+              tension: 0.1,
+          },
+          {
+              label: 'LOSS',
+              data:  profile?.monthly_stats?.lose || [],
+              borderColor: 'rgba(181,55,49, 0.5)',
+              backgroundColor: 'red',
+              fill: false,
+              tension: 0.1,
+          }
+        ]
+      };
     const options: ChartOptions<'line'> = {
         responsive: true,
         plugins: {
@@ -149,9 +165,6 @@ export default function () {
             },
         },
     };
-
-    const parag: string =
-        "Hey there! I'm Snake07, a dedicated ping pong gamer. From lightning-fast reflexes to strategic plays, I'm all about dominating the virtual table. Join me as we smash our way to victory, one pixel at a time!";
 
     return (
         <>
@@ -329,7 +342,8 @@ export default function () {
                                                         type="text"
                                                         placeholder="Quote"
                                                         aria-label="Quote"
-                                                        defaultValue="Game on! 🎮 Play hard, level up! 💪"
+                                                        onChange={(e) => setQuote(e.target.value)}
+                                                        defaultValue={profile.quote || ''}
                                                         style={{ backgroundColor: '#2C3143' }}
                                                     />
                                                     <Form.Control.Feedback type="invalid">
@@ -346,7 +360,8 @@ export default function () {
                                                         type="textarea"
                                                         placeholder="Intro"
                                                         aria-label="Intro"
-                                                        defaultValue={parag}
+                                                        onChange={(e) => setIntro(e.target.value)}
+                                                        defaultValue={profile.intro || ''}
                                                         style={{ backgroundColor: '#2C3143' }}
                                                     />
                                                     <Form.Control.Feedback type="invalid">

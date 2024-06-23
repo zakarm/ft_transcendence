@@ -8,7 +8,7 @@ import {
 } from 'react'
 import styles from '@/app/settings/styles.module.css'
 import Cookies from "js-cookie";
-
+import TwoFa from '@/components/twoFa';
 interface Props {
     inputType       ?: string;
     placeholder     ?: string | boolean;
@@ -89,14 +89,42 @@ function    GetCheckboxInput(
 
     const   { accountValues, updateField } = useContext<SettingsProps>(FormContext);
     const   [isChecked, setIsChecked] = useState<boolean>(false);
-
+    const [twoFaData, setTwoFaData] = useState<{ value: string; email: string } | null>(null);
+    
+    
     useEffect(() => {
-        // console.log('accountValues[inputId] :' , accountValues[inputId] , "Boolean(accountValues[inputId])", Boolean(accountValues[inputId]))
         setIsChecked(Boolean(accountValues[inputId]))
     }, [accountValues[inputId]])
 
+    useEffect(() => {
+        const fetchData = async () => {
+            if (isChecked) {
+                try {
+                    const access = Cookies.get('access'); 
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/control-2fa`, {
+                        method: 'POST',
+                        headers: { Authorization: `Bearer ${access}` },
+                    });
+
+                    const data = await response.json();
+                    if (response.ok) {
+                        const { url, email } = data;
+                        setTwoFaData({ value: url, email });
+                    }
+                } catch (error) {
+                    console.error('An unexpected error happened:', error);
+                }
+            } else {
+                setTwoFaData(null);
+            }
+        };
+
+        fetchData();
+    }, [isChecked]);
+
         return (
             <div className={`${className} flex-wrap flex-xxl-nowrap`}>
+                {twoFaData && <TwoFa value={twoFaData.value} email={twoFaData.email} qr={true}/>}
                 <label
                     className={`col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`} 
                     htmlFor={inputId}>
@@ -106,13 +134,12 @@ function    GetCheckboxInput(
                     <label className="col-3">
                         <input
                             type={inputType}
-                            // placeholder={placeholder}
                             className={`${styles.input}`}
                             id={inputId}
                             maxLength={inputLength}
                             autoComplete="off"
                             onChange={ (e : ChangeEvent<HTMLInputElement>) => {
-                                setIsChecked(!isChecked)
+                                setIsChecked(!isChecked);
                                 updateField(inputId, !isChecked);
                             } }
                             checked={isChecked}

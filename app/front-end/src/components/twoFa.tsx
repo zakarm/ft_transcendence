@@ -3,18 +3,21 @@ import { useRouter } from 'next/navigation';
 import Modal from 'react-bootstrap/Modal';
 import QRCode from 'react-qr-code';
 import OtpInput from 'react-otp-input';
-import { TbSquareRoundedNumber1Filled, TbSquareRoundedNumber2Filled } from 'react-icons/tb';
+import { TbSquareRoundedNumber1Filled, TbSquareRoundedNumber2Filled, TbSquareRoundedNumber3Filled } from 'react-icons/tb';
 import Cookies from 'js-cookie';
+import { Button } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 
 interface QrCode {
     value?: string;
     email?: string;
+    qr: boolean;
 }
 
-export default function TwoFa({ value = '', email }: QrCode) {
+export default function TwoFa({ value = '', email, qr }: QrCode) {
     const router = useRouter();
     const [otp, setOtp] = useState('');
+    const [showModal, setShowModal] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -27,12 +30,18 @@ export default function TwoFa({ value = '', email }: QrCode) {
                     });
 
                     if (response.ok) {
-                        const data = await response.json();
-                        const { access, refresh } = data;
-                        toast.success('Successfully signed in!');
-                        Cookies.set('access', access);
-                        Cookies.set('refresh', refresh);
-                        router.push('/dashboard');
+                        if (!qr){
+                            const data = await response.json();
+                            const { access, refresh } = data;
+                            toast.success('Successfully signed in!');
+                            Cookies.set('access', access);
+                            Cookies.set('refresh', refresh);
+                            router.push('/dashboard');
+                        }
+                        else {
+                            toast.success('Two fa enabled successfully !');
+                            setShowModal(false);
+                        }
                     } else if (response.status === 401) {
                         toast.error('Invalid otp!');
                     } else if (response.status === 500) {
@@ -47,7 +56,11 @@ export default function TwoFa({ value = '', email }: QrCode) {
         fetchData();
     }, [otp, email, router]);
 
+    const handleClose = () => setShowModal(false);
+
     return (
+        <>
+        {showModal && (
         <div
             className="modal show"
             style={{
@@ -58,29 +71,40 @@ export default function TwoFa({ value = '', email }: QrCode) {
                 transform: 'translate(-50%, -50%)',
                 zIndex: '9999',
                 backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            }}
-        >
-            {/* <ToastContainer /> */}
+            }}>
             <Modal.Dialog>
                 <Modal.Header>
                     <Modal.Title>Two Factor Authentication</Modal.Title>
+                    { qr != true ? <Button variant="close" onClick={handleClose}></Button> : null}
                 </Modal.Header>
 
                 <Modal.Body style={{ backgroundColor: '#161625' }}>
                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <QRCode value={value || ''} style={{ border: '3px' }} className="border border-danger" />
+                        {qr == true ? <QRCode value={value || ''} style={{ border: '3px' }} className="border border-danger" /> : null}
                     </div>
                     <div className="mt-4 mb-4">
+                        {qr == true ?
+                            <p className="mt-2">
+                                <TbSquareRoundedNumber1Filled size={30} color="white" />
+                                <span style={{ color: 'white' }}>
+                                    {' '}
+                                    Scan the QR code using any authentication application on your phone (e.g. Google
+                                    Authenticator, Duo Mobile, Authy).
+                                </span>
+                            </p> 
+                        : null}
+                        {qr == true ?
+                            <p className="mt-2">
+                                <TbSquareRoundedNumber2Filled size={30} color="white" />
+                                <span style={{ color: 'white' }}>
+                                    {' '}
+                                    Is mandatory to scan your QR code if you see this message on your screen.
+                                </span>
+                            </p> 
+                        : null}
+                        
                         <p className="mt-2">
-                            <TbSquareRoundedNumber1Filled size={30} color="white" />
-                            <span style={{ color: 'white' }}>
-                                {' '}
-                                Scan the QR code using any authentication application on your phone (e.g. Google
-                                Authenticator, Duo Mobile, Authy).
-                            </span>
-                        </p>
-                        <p className="mt-2">
-                            <TbSquareRoundedNumber2Filled size={30} color="white" />
+                            <TbSquareRoundedNumber3Filled size={30} color="white" />
                             <span style={{ color: 'white' }}>
                                 {' '}
                                 Enter the 6-digit confirmation code shown on the app:
@@ -89,8 +113,7 @@ export default function TwoFa({ value = '', email }: QrCode) {
                     </div>
                     <div
                         className="mt-2 mb-5"
-                        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                    >
+                        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         <OtpInput
                             value={otp}
                             onChange={setOtp}
@@ -110,5 +133,7 @@ export default function TwoFa({ value = '', email }: QrCode) {
                 </Modal.Body>
             </Modal.Dialog>
         </div>
+    )}
+    </>
     );
 }

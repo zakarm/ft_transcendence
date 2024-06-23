@@ -10,6 +10,8 @@ import { IoCloseCircleSharp } from 'react-icons/io5';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 
+import dynamic from 'next/dynamic';
+
 interface Props {
     handleClose: () => void;
     selectedChat: string;
@@ -126,6 +128,13 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
 
     return (
         <>
+            {
+            (profile === undefined) ? 
+            (<div className='vh-100 border border-dark d-flex flex-column align-items-center justify-content-center'>
+                <span style={{ fontFamily: 'itim', color: 'white' }}>
+                    User Not Found !!
+                </span>
+            </div>) : (
             <div className="d-flex flex-column vh-100 overflow-auto">
                 <div className={`p-4 ${styles.close_btn}`}>
                     <div className="text-end" style={{ cursor: 'pointer' }} onClick={handleClose}>
@@ -164,26 +173,26 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
                         <span className="col">High score: {profile?.score}</span>
                         <span className="col">Rank: {profile?.rank}</span>
                     </div>
-                    <span>Matches</span>
+                    {/* <span>Matches</span>
                     <div className="row m-0 p-2">
                         <div className="col p-0 px-0" style={{ border: '1px solid #505050', borderRadius: '25px' }}>
-                            {/* <StepsPrograssBar colorSet="dark" partialValue={12} totalValue={15} showPrecentage="end"
+                            <StepsPrograssBar colorSet="dark" partialValue={12} totalValue={15} showPrecentage="end"
                                 firstElStyle={{ borderTopLeftRadius: '25px', borderBottomLeftRadius: '25px' }}
                                 lastElStyle={{ borderTopRightRadius: '25px', borderBottomRightRadius: '25px' }}
-                            /> */}
+                            />
                         </div>
                     </div>
                     <span>Tournaments</span>
                     <div className="row m-0 p-2">
                         <div className="col p-0 px-0" style={{ border: '1px solid #505050', borderRadius: '25px' }}>
-                            {/* <StepsPrograssBar colorSet="dark" partialValue={3} totalValue={5} showPrecentage="end"
+                            <StepsPrograssBar colorSet="dark" partialValue={3} totalValue={5} showPrecentage="end"
                                 firstElStyle={{ borderTopLeftRadius: '25px', borderBottomLeftRadius: '25px' }}
                                 lastElStyle={{ borderTopRightRadius: '25px', borderBottomRightRadius: '25px' }}
-                            /> */}
+                            />
                         </div>
-                    </div>
+                    </div> */}
                 </div>
-            </div>
+            </div>)}
         </>
     );
 }

@@ -97,7 +97,14 @@ export default function SrightBar({
             />
         ));
 
+    const [dropdownOpen, setDropdownOpen] = useState(false);
     const router = useRouter();
+
+    useEffect(() => {
+        if (notifications_data.length > 0) {
+            setDropdownOpen(true);
+        }
+    }, [notifications_data]);
 
     return (
         <div className="d-flex flex-column vh-100 py-2">
@@ -105,7 +112,7 @@ export default function SrightBar({
                 <div className=" d-flex flex-column align-items-center justify-content-center p-0">
                     <div className={`${styles.holder} text-center p-2`}>
                         <div className={`col-inline ${styles.notification1}`}>
-                            <Dropdown>
+                            <Dropdown show={dropdownOpen} onToggle={() => setDropdownOpen(!dropdownOpen)}>
                                 <Image
                                     className={`${styles.img_class1}`}
                                     width={60}
@@ -121,7 +128,7 @@ export default function SrightBar({
                                             : 0}
                                     </span>
                                 </Dropdown.Toggle>
-
+                                {notifications_data && notifications_data.length > 0 && (
                                 <Dropdown.Menu className="drop-class border" style={{ background: '#161625' }}>
                                     {notifications_data &&
                                         notifications_data.map((key: Notification, index: number) => (
@@ -134,6 +141,7 @@ export default function SrightBar({
                                             </Dropdown.Item>
                                         ))}
                                 </Dropdown.Menu>
+                            )}
                             </Dropdown>
                         </div>
                         <div className={`${styles.usr} col pt-1`}>

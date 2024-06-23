@@ -57,7 +57,7 @@ function connectToSocket({ pageUrl }: { pageUrl: string }) {
                 wss = null;
             }
             wss = new WebSocket(
-                `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/data/tournament/${tournamentID}?token=${access}&spect=true`,
+                `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/pingpong/tournament/${tournamentID}?token=${access}&spect=true`,
             );
 
             wss.onopen = () => {

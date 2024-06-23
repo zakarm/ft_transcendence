@@ -23,8 +23,8 @@ interface Player {
 const RemoteMatchGame: React.FC = () => {
     const access = Cookies.get('access');
 
-    const { webSocket, gameState, connectionInfo } = Web_Socket(
-        `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/data/?token=${access}`,
+    const { webSocket, gameState, connectionInfo, countDown } = Web_Socket(
+        `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/pingpong/?token=${access}`,
     );
 
     const [MyProfile, setMyProfile] = useState<Player>({
@@ -107,9 +107,7 @@ const RemoteMatchGame: React.FC = () => {
             },
         ]);
     }, [connectionInfo]);
-    {
-        /*, connectionInfo*/
-    }
+
     return (
         <div className="Lobby_container">
             {gameState === 'lobby' && (
@@ -178,6 +176,7 @@ const RemoteMatchGame: React.FC = () => {
                                 <div className="blurred-background"></div>
                                 <div className="t-text">
                                     <div className="pause-text">PAUSED</div>
+                                    <div className="pause-text">{countDown}</div>
                                 </div>
                             </>
                         )}
@@ -186,6 +185,7 @@ const RemoteMatchGame: React.FC = () => {
                                 <div className="blurred-background"></div>
                                 <div className="t-text">
                                     <div className="reconnect-text">RECONNECTING...</div>
+                                    <div className="reconnect-text">{countDown}</div>
                                 </div>
                             </>
                         )}

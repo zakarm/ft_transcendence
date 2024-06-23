@@ -13,6 +13,9 @@ RESET := $(shell tput -Txterm sgr0)
 RED := $(shell tput -Txterm setaf 1)
 BLUE := $(shell tput -Txterm setaf 4)
 
+# Used to delete files in case permission denied (expect value sudo)
+sudo=
+
 # Define targets
 .PHONY: help start build up down restart logs create-data-dir remove-data-dir remove-volumes clean re check tools
 
@@ -67,7 +70,7 @@ create-data-dir: ## Create the data directory
 
 remove-data-dir: ## Remove the data directory
 	@echo "$(YELLOW)Removing data directory $(DATA_DIR)...$(RESET)"
-	@rm -rf $(DATA_DIR)
+	@${sudo} rm -rf $(DATA_DIR)
 
 remove-volumes: ## Remove Docker volumes
 	@echo "$(YELLOW)Removing Docker volumes...$(RESET)"
@@ -75,14 +78,14 @@ remove-volumes: ## Remove Docker volumes
 
 clean: down remove-volumes remove-data-dir ## Clean up build artifacts and temporary files
 	@echo "$(YELLOW)Cleaning up build artifacts and temporary files...$(RESET)"
-	@rm -rf ./app/front-end/node_modules
-	@rm -rf ./app/front-end/.next
-	@find . -type d -name '__pycache__' -exec rm -rf {} +
-	@rm -rf ./app/back-end/authentication/migrations
-	@rm -rf ./app/back-end/compu_ai/migrations
-	@rm -rf ./app/back-end/game/migrations
-	@rm -rf ./app/back-end/dashboards/migrations
-	@rm -rf ./app/back-end/chat/migrations
+	@${sudo} rm -rf ./app/front-end/node_modules
+	@${sudo} rm -rf ./app/front-end/.next
+	@find . -type d -name '__pycache__' -exec ${sudo} rm -rf {} +
+	@${sudo} rm -rf ./app/back-end/authentication/migrations
+	@${sudo} rm -rf ./app/back-end/compu_ai/migrations
+	@${sudo} rm -rf ./app/back-end/game/migrations
+	@${sudo} rm -rf ./app/back-end/dashboards/migrations
+	@${sudo} rm -rf ./app/back-end/chat/migrations
 
 re: clean start ## Clean and start Docker containers
 

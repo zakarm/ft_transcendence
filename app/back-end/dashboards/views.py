@@ -150,7 +150,6 @@ class AddFriendshipView(APIView):
                 title="New friend !",
                 message=f"{user_from.username} sent you a friend request.",
                 image_url=user_from.image_url,
-                # link=f"http://localhost:3000/profile/{user_from.username}",
                 link=f"{settings.FRONTEND_HOST}/profile/{user_from.username}",
                 is_friend_notif=True,
                 action_by=user_from.username,

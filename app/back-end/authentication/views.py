@@ -9,14 +9,18 @@ from rest_framework.generics import GenericAPIView
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from ft_transcendence.utils import *
 from .models import User
 from .serializer import (UsersSignUpSerializer,
                          UserSignInSerializer,
                          User2FASerializer,
                          SocialAuthSerializer)
+from datetime import datetime, timezone
 import urllib.parse
 import requests
+import pyotp
 import sys
 
 
@@ -114,6 +118,26 @@ class SignIn2Fa(APIView):
                 'access': str(refresh.access_token)
             }, status = status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
+
+@extend_schema_view(
+    post=extend_schema(summary="Enable 2Fa", tags=["Settings"])
+)
+class Control2Fa(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        user = request.user
+        try:
+            user_obj = User.objects.get(id = user.id)
+            user_obj.two_fa_secret_key = pyotp.random_base32()
+            user_obj.save()
+            url_code = pyotp.totp.TOTP(user_obj.two_fa_secret_key).provisioning_uri(
+                name = user_obj.email, issuer_name = "ft_transcendence")
+            return Response({'url': url_code, 'email': user_obj.email}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({'error': {'User does not exist'}}, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 @extend_schema_view(
     post=extend_schema(summary="Sign Out", tags=["Authentication"])

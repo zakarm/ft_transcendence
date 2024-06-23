@@ -26,7 +26,7 @@ class MainDashboardSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'email', 'first_name', 'last_name', 'image_url',
                   'matches_as_user_one', 'matches_as_user_two',
-                  'total_minutes')
+                  'total_minutes', 'image_url')
 
     @extend_schema_field(serializers.ListField(child=MatchSerializer()))
     def get_matches_as_user_one(self, obj) -> list:

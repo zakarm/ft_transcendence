@@ -40,15 +40,11 @@ function ChooseOpponent() {
                     <Link href="/game/RemoteMatchGame" style={{ textDecoration: 'none' }}>
                         <OptionCard cardTitle="MATCH GAME" imageSrc="/back3.png"></OptionCard>
                     </Link>
-                    {/* <div className="row justify-centent-between">
-                        <button className={`${styles.buttonS}`}>Local</button>
-                        <button className={`${styles.buttonS}`}>Remote</button>
-                    </div> */}
                 </div>
 
                 <div className={`${styles.option} col-10 col-sm-3 col-md-8 col-xl-3 mx-3`}>
-                    <Link href="/game/Ai" style={{ textDecoration: 'none' }}>
-                        <OptionCard cardTitle="AI BOT GAME" imageSrc="/back2.png"></OptionCard>
+                    <Link href="/game/Local" style={{ textDecoration: 'none' }}>
+                        <OptionCard cardTitle="LOCAL GAME" imageSrc="/back2.png"></OptionCard>
                     </Link>
                 </div>
             </div>

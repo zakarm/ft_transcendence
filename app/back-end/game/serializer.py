@@ -41,39 +41,36 @@ class UserTournamentsSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(serializers.ListField(child=serializers.DictField()))
     def get_all_tournaments(self, obj) -> list:
-        matches = Match.objects.filter(Q(user_one=obj) | Q(user_two=obj))
-        tournaments = Tournaments.objects.filter(
-            tournament_id__in=Tournamentsmatches.objects.filter(match__in=matches).values_list('tournament_id', flat=True)
-        )
+        tournaments = Tournaments.objects.all()
         serializer = TournamentsSerializer(tournaments, many=True)
         return serializer.data
 
     @extend_schema_field(serializers.ListField(child=serializers.DictField()))
     def get_ongoing_tournaments(self, obj) -> list:
-        matches = Match.objects.filter(Q(user_one=obj) | Q(user_two=obj))
+        # matches = Match.objects.filter(Q(user_one=obj) | Q(user_two=obj))
         tournaments = Tournaments.objects.filter(
             tournament_end__isnull=True,
-            tournament_id__in=Tournamentsmatches.objects.filter(match__in=matches).values_list('tournament_id', flat=True)
+            # tournament_id__in=Tournamentsmatches.objects.filter(match__in=matches).values_list('tournament_id', flat=True)
         )
         serializer = TournamentsSerializer(tournaments, many=True)
         return serializer.data
 
     @extend_schema_field(serializers.ListField(child=serializers.DictField()))
     def get_completed_tournaments(self, obj) -> list:
-        matches = Match.objects.filter(Q(user_one=obj) | Q(user_two=obj))
+        # matches = Match.objects.filter(Q(user_one=obj) | Q(user_two=obj))
         tournaments = Tournaments.objects.filter(
             tournament_end__isnull=False,
-            tournament_id__in=Tournamentsmatches.objects.filter(match__in=matches).values_list('tournament_id', flat=True)
+            # tournament_id__in=Tournamentsmatches.objects.filter(match__in=matches).values_list('tournament_id', flat=True)
         )
         serializer = TournamentsSerializer(tournaments, many=True)
         return serializer.data
 
     @extend_schema_field(serializers.ListField(child=serializers.DictField()))
     def get_my_tournaments(self, obj) -> list:
-        matches = Match.objects.filter(Q(user_one=obj) | Q(user_two=obj))
+        # matches = Match.objects.filter(Q(user_one=obj) | Q(user_two=obj))
         tournaments = Tournaments.objects.filter(
             crated_by_me=True,
-            tournament_id__in=Tournamentsmatches.objects.filter(match__in=matches).values_list('tournament_id', flat=True)
+            # tournament_id__in=Tournamentsmatches.objects.filter(match__in=matches).values_list('tournament_id', flat=True)
         )
         tournaments_user = Tournaments.objects.filter(
             crated_by_me=True,
@@ -153,7 +150,8 @@ class GameSettingsSerializer(serializers.ModelSerializer):
     country = serializers.SerializerMethodField()
     city = serializers.SerializerMethodField()
     game_table = serializers.SerializerMethodField()
-    new_password = serializers.CharField(write_only=True, required=False)
+    email = serializers.EmailField(max_length=55, min_length=8)
+    new_password = serializers.CharField(write_only=True, max_length=100, min_length=8, required=False, allow_blank = True)
 
     class Meta:
         model = User
@@ -164,6 +162,12 @@ class GameSettingsSerializer(serializers.ModelSerializer):
         user = self.instance
         if User.objects.filter(email=value).exclude(id=user.id).exists():
             raise serializers.ValidationError("User with this email already exists.")
+        return value
+
+    def validate_new_password(self, value):
+        user = self.instance
+        if User.objects.filter(id=user.id).first().password is not None and value == "":
+            raise serializers.ValidationError("This field may not be blank.")
         return value
     
     @extend_schema_field(serializers.CharField())

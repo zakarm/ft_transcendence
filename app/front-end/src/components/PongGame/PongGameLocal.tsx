@@ -10,6 +10,9 @@ import Paddle from './Paddle';
 import './PongGame.css';
 import BoardItem from '../BoardItem/BoardItem';
 import gsap from 'gsap';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
+import { AfterimagePass } from 'three/examples/jsm/postprocessing/AfterimagePass';
 
 type SetScore = (
     side: 'side1' | 'side2',
@@ -26,6 +29,11 @@ type PromoteWinner = (
     userIndex: 0 | 1,
 ) => void;
 type SetPageState = (pageState: string) => void;
+interface playerdata {
+    name: string;
+    imageUrl: string;
+}
+type SetWinner_ = (winner: playerdata) => void;
 interface LocalGame {
     data: {
         user1name: string;
@@ -40,6 +48,7 @@ interface LocalGame {
         setScore: SetScore | null;
         promoteWinner: PromoteWinner | null;
         setPageState_: SetPageState | null;
+        setWinner: SetWinner_ | null;
         usesetter: 0 | 1;
     };
 }
@@ -101,7 +110,7 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
         // camera.position.set(10, 25, 15);
 
         // const targetPosition = new THREE.Vector3(1, 10, 0);
-        const targetPosition = new THREE.Vector3(0, 10, 0);
+        const targetPosition = new THREE.Vector3(0, 10, -1);
         // const targetPosition = new THREE.Vector3(8, 6, 0);
         gsap.to(camera.position, {
             x: targetPosition.x,
@@ -115,6 +124,15 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
         const renderer = new THREE.WebGLRenderer();
         renderer.setSize(width, height);
         container.appendChild(renderer.domElement);
+
+        // Initialize EffectComposer
+        const composer = new EffectComposer(renderer);
+        composer.addPass(new RenderPass(scene, camera));
+
+        // Create and add AfterimagePass for the ball
+        const afterimagePass = new AfterimagePass();
+        afterimagePass.uniforms['damp'].value = 0.7;
+        composer.addPass(afterimagePass);
 
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableZoom = true;
@@ -149,7 +167,7 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
             boundary.addToScene(scene);
         });
 
-        const ball = new Ball(0.1, 46, 46, 0xffffff, [0, 0.1, 0], 0.5, 0.5);
+        const ball = new Ball(0.1, 46, 46, 0xffffff, [0, 0.1, 0], 0.05, 0.05);
         ball.addToScene(scene);
 
         const wall1 = new Wall(10, 0.5, 0.1, 0x161625, [0, 0.2, 2.6]);
@@ -267,12 +285,28 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
                     return newscore;
                 });
             }
+            composer.render();
             light.position.copy(ball.mesh.position);
         };
         animate();
         let pageStateSet = false;
-
+        let winnerSet = false;
+        let intervalId11: NodeJS.Timeout;
         const handleGameOver = () => {
+            setUser1Score((prevScore: number) => {
+                intervalId11 = setInterval(() => {
+                    const winner =
+                        prevScore === 7
+                            ? { name: data.user1name, imageUrl: data.user1image }
+                            : { name: data.user2name, imageUrl: data.user2image };
+                    if (!winnerSet && data.setWinner !== null) {
+                        console.log('setting winner');
+                        data.setWinner(winner);
+                        winnerSet = true;
+                    }
+                }, 0);
+                return prevScore;
+            });
             if (data.usesetter === 0) return;
             if (!pageStateSet && data.setPageState_ !== null) {
                 data.setPageState_('Tournamentlobby');
@@ -281,6 +315,7 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
         };
         return () => {
             console.log('PongGameLocal unmounted');
+            clearInterval(intervalId11);
             document.removeEventListener('keydown', handleKeyDown);
             document.removeEventListener('keyup', handleKeyUp);
             window.removeEventListener('resize', handleResize);

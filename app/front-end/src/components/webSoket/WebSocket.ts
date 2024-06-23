@@ -15,6 +15,10 @@ interface ConnectionInfo {
     user2: string;
     user2_image: string;
     username2: string;
+    table_color: string;
+    ball_color: string;
+    paddle_color: string;
+    table_position: string;
 }
 
 // Define the hook function with TypeScript
@@ -33,8 +37,13 @@ const useWebSocket = (url: string) => {
         user2: '',
         user2_image: '',
         username2: '',
+        table_color: '',
+        ball_color: '',
+        paddle_color: '',
+        table_position: '',
     });
 
+    const [countDown, setCountDown] = useState<number>(15);
     useEffect(() => {
         const ws = new WebSocket(url);
 
@@ -57,6 +66,10 @@ const useWebSocket = (url: string) => {
                     user: data.message.User,
                     user_image: data.message.image_url,
                     username: data.message.username,
+                    table_color: data.message.table_color,
+                    ball_color: data.message.ball_color,
+                    paddle_color: data.message.paddle_color,
+                    table_position: data.message.table_position,
                 }));
                 console.log('-> Connection Acknowledged', data.message);
             }
@@ -97,6 +110,10 @@ const useWebSocket = (url: string) => {
                 setGameState('pause');
                 console.log('-> pause', data.message);
             }
+            if (data.message.action === 'countdown') {
+                setCountDown(data.message.count);
+                console.log('-> pause', data.message);
+            }
             if (data.message.action === 'end_game') {
                 if (data.message.status === 'winner') setGameState('winner');
                 else setGameState('loser');
@@ -115,7 +132,7 @@ const useWebSocket = (url: string) => {
         };
     }, [url]);
 
-    return { webSocket, gameState, connectionInfo };
+    return { webSocket, gameState, connectionInfo, countDown };
 };
 
 export default useWebSocket;

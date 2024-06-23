@@ -14,7 +14,7 @@ from .serializer import (TournamentsSerializer,
 from drf_spectacular.utils import extend_schema
 from drf_spectacular.types import OpenApiTypes
 from django.utils import timezone
-
+import sys
 class TournamentsDataView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -75,7 +75,7 @@ class CreateTournament(APIView):
             return Response({'success': 'Tournament created'}, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 class GameSettingsView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -92,7 +92,7 @@ class GameSettingsView(APIView):
         user = request.user
         serializer = GameSettingsSerializer(instance=user)
         return Response(serializer.data)
-    
+
     @extend_schema(
         description="Update game settings for the authenticated user.",
         request=GameSettingsSerializer,
@@ -105,6 +105,7 @@ class GameSettingsView(APIView):
     def put(self, request):
         user = request.user
         serializer = GameSettingsSerializer(instance=user, data=request.data)
+        print("request data: ",request.data, file=sys.stderr)
         if serializer.is_valid():
             user_data = User.objects.get(id=user.id)
             user_data.first_name = request.data.get('first_name', user_data.first_name )
@@ -112,22 +113,29 @@ class GameSettingsView(APIView):
             user_data.username = request.data.get('username', user_data.username )
             user_data.image_url = request.data.get('image_url', user_data.image_url )
             user_data.is_2fa_enabled = request.data.get('is_2fa_enabled', user_data.is_2fa_enabled )
-            user_data.two_fa_secret_key = request.data.get('two_fa_secret_key', user_data.two_fa_secret_key)
             user_data.email = request.data.get('email', user_data.email)
+            user_data.quote = request.data.get('quote', user_data.quote)
+            user_data.intro = request.data.get('intro', user_data.intro)
             if request.data.get('country'):
                 user_data.location = request.data.get('country')
             if request.data.get('city'):
                 user_data.location += '/' + request.data.get('city')
             user_data.save()
-            game_table, _ = GameTable.objects.get_or_create(user = user, 
-                                                            defaults={'game_difficulty': 1, 
-                                                                      'ball_color': '#ffffff',
-                                                                      'paddle_color': '#ff4655',
-                                                                      'table_color': '#161625'})
+            game_table, _ = GameTable.objects.get_or_create(
+                user=user,
+                defaults={
+                    "table_color": "#161625",
+                    "ball_color": "#ffffff",
+                    "paddle_color": "#ff4655",
+                    "game_difficulty": 1,
+                    "table_position": "6,8,0",
+                },
+            )
+            game_table.table_color = request.data.get('table_color', game_table.table_color)
             game_table.ball_color = request.data.get('ball_color', game_table.ball_color)
             game_table.paddle_color = request.data.get('paddle_color', game_table.paddle_color)
             game_table.game_difficulty = request.data.get('game_difficulty', game_table.game_difficulty)
-            game_table.table_color = request.data.get('table_color', game_table.table_color)
+            game_table.table_position = request.data.get("current_table_view", game_table.table_position)
             game_table.save()
             return Response({"success": 'Settings updated'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
