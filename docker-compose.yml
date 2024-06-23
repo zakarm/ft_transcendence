@@ -58,7 +58,7 @@ services:
       container_name: nginx
       image: nginx:42
       build:
-        context: ./app/nginx
+        context: ./services/nginx
         dockerfile: Dockerfile
       restart: always
       ports:
