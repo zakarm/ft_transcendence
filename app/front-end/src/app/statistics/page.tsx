@@ -105,15 +105,15 @@ function StatisticsPage() {
 
                         <section className="col-12 m-2 order-1 order-xxl-1 ">
                             <div
-                                className={`row mt-3 justify-content-start flex-nowrap justify-content-xxl-between ${styles.outter_player_card_container}`}
+                                className={`row mt-3  justify-content-around flex-nowrap justify-content-xxl-between ${styles.outter_player_card_container}`}
                             >
-                                <div className={`col-4 m-1 ${styles.player_card}`}>
-                                    <StatisticCard title="Top Player" body={topPlayer} imgSrc="top_player_bg.png" />
+                                <div className={`col-3 mt-3 mx-1 ${styles.player_card} `}>
+                                    <StatisticCard title="Top Player" body={topPlayer} imgSrc="Top_Player.png" />
                                 </div>
-                                <div className={`col-4 m-1 ${styles.player_card}`}>
-                                    <StatisticCard title="Average Score" body={avgScore} imgSrc="valorant-logo.png" />
+                                <div className={`col-3 mt-3 mx-1 ${styles.player_card} `}>
+                                    <StatisticCard title="Average Score" body={avgScore} imgSrc="Average_Score.png" />
                                 </div>
-                                <div className={`col-4 m-1 ${styles.player_card}`}>
+                                <div className={`col-3 mt-3 mx-1 ${styles.player_card} `}>
                                     <StatisticCard
                                         title="Last Achivement"
                                         body={lastAchiv && lastAchiv.achievement_name ? lastAchiv.achievement_name : ''}
