@@ -34,41 +34,40 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'daphne',
-    'rest_framework',
-    'rest_framework_simplejwt',
-    'authentication.apps.AuthenticationConfig',
-    'dashboards.apps.DashboardsConfig',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'chat.apps.ChatConfig',
-    'game.apps.GameConfig',
-    'compu_ai.apps.CompuAiConfig',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'corsheaders',
-    'rest_framework_simplejwt.token_blacklist',
-    'channels',
-    'djangochannelsrestframework',
-    'channels_redis',
-    'drf_spectacular',
-    'django_prometheus'
+    "daphne",
+    "rest_framework",
+    "rest_framework_simplejwt",
+    "authentication.apps.AuthenticationConfig",
+    "dashboards.apps.DashboardsConfig",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "chat.apps.ChatConfig",
+    "game.apps.GameConfig",
+    "compu_ai.apps.CompuAiConfig",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "corsheaders",
+    "rest_framework_simplejwt.token_blacklist",
+    "channels",
+    "djangochannelsrestframework",
+    "channels_redis",
+    "drf_spectacular",
+    "django_prometheus",
 ]
 
 MIDDLEWARE = [
-    'django_prometheus.middleware.PrometheusBeforeMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django_prometheus.middleware.PrometheusAfterMiddleware',
+    "django_prometheus.middleware.PrometheusBeforeMiddleware",
+    "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_prometheus.middleware.PrometheusAfterMiddleware",
 ]
 
 ROOT_URLCONF = 'ft_transcendence.urls'
@@ -204,18 +203,17 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_HOSTS = ["back-end", "localhost", "127.0.0.1", os.environ.get("HOST_IP")]
+ALLOWED_HOSTS = [os.environ.get("HOST_IP")]
 
-# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://localhost:9090",
-    "http://127.0.0.1:9090",
-    f"http://{os.environ.get('HOST_IP')}:3000",
+    f"https://{os.environ.get('HOST_IP')}",
+    f"http://localhost:9090",
     f"http://{os.environ.get('HOST_IP')}:9090",
 ]
+
+CORS_ALLOW_HEADERS = ["*"]
 
 CORS_ALLOW_METHODS = [
     'DELETE',
@@ -226,8 +224,9 @@ CORS_ALLOW_METHODS = [
     'PUT',
 ]
 
-ASGI_APPLICATION = 'ft_transcendence.asgi.application'
+CORS_ALLOW_CREDENTIALS = True
 
+ASGI_APPLICATION = 'ft_transcendence.asgi.application'
 
 CHANNEL_LAYERS = {
     # "default": {
@@ -241,8 +240,6 @@ CHANNEL_LAYERS = {
     },
 }
 
-# settings.py
-
 SPECTACULAR_SETTINGS = {
     'TITLE': 'ft_transcendence',
     'DESCRIPTION': 'ft_transcendence project by 42 network',
@@ -250,18 +247,16 @@ SPECTACULAR_SETTINGS = {
     # Add more settings as needed
 }
 
-
 FRONTEND_HOST = os.environ.get('FRONTEND_HOST')
-
 
 GOOGLE_REDIRECT_URI = os.environ.get('GOOGLE_REDIRECT_URI')
 GOOGLE_CLIENT_ID=os.environ.get('GOOGLE_CLIENT_ID')
 GOOGLE_CLIENT_SECRET=os.environ.get('GOOGLE_CLIENT_SECRET')
 
-
 GITHUB_CLIENT_ID = os.environ.get('GITHUB_CLIENT_ID')
 GITHUB_CLIENT_SECRET = os.environ.get('GITHUB_CLIENT_SECRET')
 GITHUB_REDIRECT_URI = os.environ.get('GITHUB_REDIRECT_URI')
+
 FORTYTWO_CLIENT_ID = os.environ.get('FORTYTWO_CLIENT_ID')
 FORTYTWO_CLIENT_SECRET = os.environ.get('FORTYTWO_CLIENT_SECRET')
 FORTYTWO_REDIRECT_URI = os.environ.get('FORTYTWO_REDIRECT_URI')

@@ -104,8 +104,6 @@ class GameSettingsView(APIView):
     )
     def put(self, request):
         user = request.user
-        # zakaria checki hade serializer ra imken na9ssin fih chi l3aybat ola fihh chi blan
-        # 7a9ach ra marouan ti rsel lk data m9ada ra khalit lk print lte7t bach tchouf ach kain
         serializer = GameSettingsSerializer(instance=user, data=request.data)
         print("request data: ",request.data, file=sys.stderr)
         if serializer.is_valid():
@@ -115,12 +113,9 @@ class GameSettingsView(APIView):
             user_data.username = request.data.get('username', user_data.username )
             user_data.image_url = request.data.get('image_url', user_data.image_url )
             user_data.is_2fa_enabled = request.data.get('is_2fa_enabled', user_data.is_2fa_enabled )
-            user_data.two_fa_secret_key = request.data.get('two_fa_secret_key', user_data.two_fa_secret_key)
             user_data.email = request.data.get('email', user_data.email)
-            # zakraia ra hade joj fields=====>(quote, intro)<====== ra mtirsselhomch lk marouan fe request.data
             user_data.quote = request.data.get('quote', user_data.quote)
             user_data.intro = request.data.get('intro', user_data.intro)
-            # zakraia ra na9ssinek joj diyal lfilds li houma (new_password, repeat_password)
             if request.data.get('country'):
                 user_data.location = request.data.get('country')
             if request.data.get('city'):

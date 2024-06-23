@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import Modal from 'react-bootstrap/Modal';
 import QRCode from 'react-qr-code';
 import OtpInput from 'react-otp-input';
-import { TbSquareRoundedNumber1Filled, TbSquareRoundedNumber2Filled } from 'react-icons/tb';
+import { TbSquareRoundedNumber1Filled, TbSquareRoundedNumber2Filled, TbSquareRoundedNumber3Filled } from 'react-icons/tb';
 import Cookies from 'js-cookie';
 import { Button } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
@@ -75,7 +75,7 @@ export default function TwoFa({ value = '', email, qr }: QrCode) {
             <Modal.Dialog>
                 <Modal.Header>
                     <Modal.Title>Two Factor Authentication</Modal.Title>
-                    <Button variant="close" onClick={handleClose}></Button>
+                    { qr != true ? <Button variant="close" onClick={handleClose}></Button> : null}
                 </Modal.Header>
 
                 <Modal.Body style={{ backgroundColor: '#161625' }}>
@@ -83,16 +83,28 @@ export default function TwoFa({ value = '', email, qr }: QrCode) {
                         {qr == true ? <QRCode value={value || ''} style={{ border: '3px' }} className="border border-danger" /> : null}
                     </div>
                     <div className="mt-4 mb-4">
+                        {qr == true ?
+                            <p className="mt-2">
+                                <TbSquareRoundedNumber1Filled size={30} color="white" />
+                                <span style={{ color: 'white' }}>
+                                    {' '}
+                                    Scan the QR code using any authentication application on your phone (e.g. Google
+                                    Authenticator, Duo Mobile, Authy).
+                                </span>
+                            </p> 
+                        : null}
+                        {qr == true ?
+                            <p className="mt-2">
+                                <TbSquareRoundedNumber2Filled size={30} color="white" />
+                                <span style={{ color: 'white' }}>
+                                    {' '}
+                                    Is mandatory to scan your QR code if you see this message on your screen.
+                                </span>
+                            </p> 
+                        : null}
+                        
                         <p className="mt-2">
-                            <TbSquareRoundedNumber1Filled size={30} color="white" />
-                            <span style={{ color: 'white' }}>
-                                {' '}
-                                Scan the QR code using any authentication application on your phone (e.g. Google
-                                Authenticator, Duo Mobile, Authy).
-                            </span>
-                        </p>
-                        <p className="mt-2">
-                            <TbSquareRoundedNumber2Filled size={30} color="white" />
+                            <TbSquareRoundedNumber3Filled size={30} color="white" />
                             <span style={{ color: 'white' }}>
                                 {' '}
                                 Enter the 6-digit confirmation code shown on the app:
@@ -101,8 +113,7 @@ export default function TwoFa({ value = '', email, qr }: QrCode) {
                     </div>
                     <div
                         className="mt-2 mb-5"
-                        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                    >
+                        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         <OtpInput
                             value={otp}
                             onChange={setOtp}
