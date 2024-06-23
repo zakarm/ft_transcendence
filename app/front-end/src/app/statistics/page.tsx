@@ -13,7 +13,7 @@ import {
 } from '@/lib/StatisticsPageTypes/StatisticsPageTypes';
 import styles from './styles.module.css';
 import { FuturePredictionGraph } from '@/components/statistics/graph';
-import { GameHistoryTable } from '@/components/statistics/historyTable';
+import { GameHistoryTable, GameHistoryTableTypes } from '@/components/statistics/historyTable';
 import { StatisticCard } from '@/components/statistics/playerCard';
 import { PlayerStats } from '@/components/statistics/playerStats';
 
@@ -68,6 +68,7 @@ function getPlayerStatsFromData(data: Partial<StatisticsDataTypes>): PlayerStats
 function StatisticsPage() {
     const [futurePredictions, setFuturePredictions] = useState<FuturePredictionsTypes[] | string[]>([]);
     const [topPlayer, setTopPlayer] = useState<string>('');
+    const [image_url, setImageURL] = useState<string>('');
     const [playerMatches, setPlayerMatches] = useState<PlayerMatchesTypes[]>([]);
     const [avgScore, setAvgScore] = useState<number>(0);
     const [lastAchiv, setLastAchiv] = useState<Partial<AchivementTypes>>({});
@@ -80,10 +81,11 @@ function StatisticsPage() {
             data = await getData();
             setTopPlayer(data.top_player ?? '');
             setFuturePredictions(data.future_predictions ?? []);
-            setAvgScore(data.avg_score ?? 0);
+            setAvgScore(data.avg_score ? +((data.avg_score).toFixed(2)) : 0);
             setLastAchiv((data.last_achiev as AchivementTypes) ?? (data.last_achiev as undefined));
             setPlayerMatches(data.player_matches ?? []);
             setPlayerStats(getPlayerStatsFromData(data));
+            setImageURL(data.image_url ?? "");
         })();
     }, []);
 
@@ -134,7 +136,7 @@ function StatisticsPage() {
 
                     {/*  Right Side */}
                     <div className={`col-12 col-xxl-4 order-0 order-xxl-2 m-2`}>
-                        <GameHistoryTable player_matches={playerMatches} />
+                        <GameHistoryTable playerMatches={playerMatches} image_url={image_url} />
                     </div>
                 </div>
             </div>

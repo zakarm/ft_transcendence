@@ -27,8 +27,8 @@ class Match(models.Model):
         if winner is None:
             return 'Draw'
         elif winner == player:
-            return 'Win'
-        return 'Lose'
+            return 'WIN'
+        return 'LOSS'
 
 class Tournaments(models.Model):
     tournament_id = models.AutoField(primary_key=True)
