@@ -1,7 +1,6 @@
 'use client';
 
 import styles from './style.module.css';
-import Image from 'next/image';
 import { FaHistory } from 'react-icons/fa';
 import { BiStats } from 'react-icons/bi';
 import GameHistoryCard from '../../components/table';
@@ -277,13 +276,12 @@ export default function Dashboard() {
                         </div>
                         <div className="col-12 col-md-6">
                             <div className={`${styles.imageContainer} position-relative`}>
-                                <Image
+                                <img
                                     src="/dashboard_char.png"
                                     width={350}
                                     height={350}
                                     style={{ width: 'auto', height: 'auto' }}
                                     alt="anime charachter"
-                                    priority
                                 />
                             </div>
                         </div>

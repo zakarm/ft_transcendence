@@ -1,8 +1,6 @@
 'use client';
 import styles from './styles/chat_friends.module.css';
-import Image from 'next/image';
 import { InputGroup } from 'react-bootstrap';
-import UserChat from './user_chat';
 import Form from 'react-bootstrap/Form';
 import { useEffect, useState } from 'react';
 import User from './user';
@@ -165,7 +163,7 @@ export default function ChatFriends({
                                 & PLAY
                             </span>
                         </span>
-                        <Image
+                        <img
                             className={`${styles.welcome_img}`}
                             width={300}
                             height={300}

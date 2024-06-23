@@ -1,7 +1,5 @@
 'use client';
-import Image from 'next/image';
 import React from 'react';
-// import StepsPrograssBar from 'react-line-progress-bar-steps';
 import { Radar } from 'react-chartjs-2';
 import styles from './styles/chat_about.module.css';
 import Chart from 'chart.js/auto';
@@ -144,7 +142,7 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
                 </div>
                 <div className="flex-grow-1 d-flex flex-column align-items-center justify-content-evenly">
                     <div>
-                        <Image
+                        <img
                             className={`${styles.about_img}`}
                             width={200}
                             height={200}

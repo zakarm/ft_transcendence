@@ -150,9 +150,10 @@ class GameSettingsSerializer(serializers.ModelSerializer):
     country = serializers.SerializerMethodField()
     city = serializers.SerializerMethodField()
     game_table = serializers.SerializerMethodField()
-    email = serializers.EmailField(max_length=55, min_length=8)
     new_password = serializers.CharField(write_only=True, max_length=100, min_length=8, required=False, allow_blank = True)
-
+    email = serializers.EmailField(min_length = 7, max_length=320, required = False)
+    username = serializers.CharField(min_length = 4, max_length=20, required = False)
+    
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'username', 'image_url', 'is_2fa_enabled', 'two_fa_secret_key',

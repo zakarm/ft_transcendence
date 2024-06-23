@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import styles from './styles/user.module.css'
 import React, { useEffect } from "react";
 import UserChatResp from './user_chat_resp';
@@ -94,7 +93,7 @@ export default function User({ id, src, isConnected, handleChat, username, last_
     return (
         <>
             <div className='d-flex flex-column align-items-center justify-content-center' onClick={updateChat}>
-                <Image
+                <img
                     className={`${styles.user_img} m-2`}
                     src={src}
                     width={200}
