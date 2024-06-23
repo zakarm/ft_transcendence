@@ -102,7 +102,7 @@ function AccountTab() {
                   reader.readAsDataURL(files[0]);
                   reader.onloadend = () => {
                     if (reader.result && typeof reader.result === 'string') {
-                      updateField("image", reader.result);
+                      updateField("image_url", reader.result);
                     }
                   }
                 }
