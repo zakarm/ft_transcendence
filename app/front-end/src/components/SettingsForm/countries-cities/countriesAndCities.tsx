@@ -17,13 +17,13 @@ function    CountriesAndCities(
         className="",
         labelText1="",
         labelText2="",
-        id="",
+        id="country",
     } : Props) {
     
-    const   {accountValues, updateField} = useContext<SettingsProps>(FormContext);
+    const   {currentAccoutValues, updateField} = useContext<SettingsProps>(FormContext);
 
-    const   [selectedCountry, setselectedCountry] = useState<string | boolean>(accountValues['country']);
-    const   [selectedCity, setSelectedCity] = useState<string | boolean>(accountValues['city']);
+    const   [selectedCountry, setselectedCountry] = useState<string | boolean>(currentAccoutValues['country']);
+    const   [selectedCity, setSelectedCity] = useState<string | boolean>(currentAccoutValues['city']);
 
     const   [citiesOptions, setCitiesOptions] = useState<React.JSX.Element[]>([])
     const   [countryOptions, setcountryOptions] = useState<React.JSX.Element[]>([])
@@ -41,9 +41,9 @@ function    CountriesAndCities(
     }, []);
 
     useEffect(() => {
-        setselectedCountry(accountValues['country']);
-        setSelectedCity(accountValues['city']);
-    }, [accountValues])
+        setselectedCountry(currentAccoutValues['country']);
+        setSelectedCity(currentAccoutValues['city']);
+    }, [currentAccoutValues])
     
     useEffect(() => {
         if ( ! isFirstRender.current) {
@@ -56,7 +56,7 @@ function    CountriesAndCities(
             i.current += 1;
         }
 
-    }, [accountValues['country']]);
+    }, [currentAccoutValues['country']]);
 
     let cities : string[] = [];
     useEffect(() => {
@@ -86,6 +86,7 @@ function    CountriesAndCities(
                         <select
                             className={`itim-font ${styles.input} ps-4`}
                             name="countries"
+                            autoComplete="off"
                             id={id}
                             onChange={ (e: ChangeEvent<HTMLSelectElement>) => {
                                 setselectedCountry(e.target.value);
@@ -113,8 +114,9 @@ function    CountriesAndCities(
 
                     <select 
                         className={`itim-font ${styles.input} ps-4`}
-                        name="countries"
-                        id={id}
+                        name="city"
+                        id="city"
+                        autoComplete="off"
                         onChange={ (e : ChangeEvent<HTMLSelectElement>) => {
                             setSelectedCity(e.target.value);
                             updateField("city", e.target.value);

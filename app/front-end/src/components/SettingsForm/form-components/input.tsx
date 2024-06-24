@@ -40,7 +40,7 @@ function    GetListInput(
         choosenPosition=""
     } : ListInputProps) {
 
-    const   {accountValues, updateField} = useContext<SettingsProps>(FormContext);
+    const   { updateField } = useContext<SettingsProps>(FormContext);
 
     return (
         <>
@@ -77,28 +77,24 @@ function    GetListInput(
 function    GetCheckboxInput(
     {
         className="col",
-        inputClassName="",
         inputType="text",
-        placeholder="",
         inputId="",
         labelText="",
         inputLength,
-        index=0,
-        labelClass=""
     }: Props) {
 
-    const   { accountValues, updateField } = useContext<SettingsProps>(FormContext);
+    const   { currentAccoutValues, oldAccountValues, updateField } = useContext<SettingsProps>(FormContext);
     const   [isChecked, setIsChecked] = useState<boolean>(false);
+    const   [isValid, setIsValid] = useState<boolean>(Boolean(oldAccountValues[inputId]));
     const [twoFaData, setTwoFaData] = useState<{ value: string; email: string } | null>(null);
 
-
     useEffect(() => {
-        setIsChecked(Boolean(accountValues[inputId]))
-    }, [accountValues[inputId]])
+        setIsChecked(Boolean(currentAccoutValues[inputId]))
+    }, [currentAccoutValues[inputId]])
 
     useEffect(() => {
         const fetchData = async () => {
-            if (isChecked) {
+            if (isChecked && !Boolean(oldAccountValues[inputId])) {
                 try {
                     const access = Cookies.get('access');
                     const csrftoken = Cookies.get('csrftoken') || '';
@@ -125,7 +121,7 @@ function    GetCheckboxInput(
 
         return (
             <div className={`${className} flex-wrap flex-xxl-nowrap`}>
-                {twoFaData && <TwoFa value={twoFaData.value} email={twoFaData.email} qr={true}/>}
+                {twoFaData && <TwoFa value={twoFaData.value} email={twoFaData.email} qr={true} setIsValid={setIsValid}/>}
                 <label
                     className={`col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`}
                     htmlFor={inputId}>
@@ -139,11 +135,11 @@ function    GetCheckboxInput(
                             id={inputId}
                             maxLength={inputLength}
                             autoComplete="off"
-                            onChange={ (e : ChangeEvent<HTMLInputElement>) => {
+                            onChange={ () => {
                                 setIsChecked(!isChecked);
                                 updateField(inputId, !isChecked);
                             } }
-                            checked={isChecked}
+                            checked={isChecked && isValid}
                             />
                     </label>
                 </div>
@@ -160,8 +156,6 @@ function    GetColorInput(
         inputId="",
         labelText="",
         inputLength,
-        index=0,
-        labelClass="",
         value=""
     }: Props) {
 
@@ -216,8 +210,8 @@ function    GetColorInput(
     );
 }
 
-function    GetInputRange({className} : Props) {
-    const   { updateField, accountValues } = useContext<SettingsProps>(FormContext);
+function    GetInputRange() {
+    const   { updateField, currentAccoutValues } = useContext<SettingsProps>(FormContext);
 
 
     return (
@@ -232,10 +226,10 @@ function    GetInputRange({className} : Props) {
 
             <div className=" col d-flex justify-content-center p-0 my-3 ms-1">
                 <input type="range"
-                    min="0"
-                    max="2"
+                    min="1"
+                    max="3"
                     step="1"
-                    value={ accountValues['game_difficulty'] as string }
+                    value={ currentAccoutValues['game_difficulty'] as string }
                     className={`${styles.slider}`}
                     onChange={(e : ChangeEvent<HTMLInputElement> ) => {
                             updateField("game_difficulty", e.target.value);
@@ -276,8 +270,6 @@ function    GetInput(
         inputId="",
         labelText="",
         inputLength,
-        index=0,
-        labelClass=""
     }: Props) {
 
     const   { updateField } = useContext<SettingsProps>(FormContext);
@@ -304,8 +296,6 @@ function    GetInput(
             </div>
         );
 }
-
-
 
 export type { Props as Props }
 export { GetCheckboxInput, GetInput, GetListInput, GetColorInput, GetInputRange }

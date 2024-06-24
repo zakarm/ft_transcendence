@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { useRouter } from 'next/navigation';
 import Modal from 'react-bootstrap/Modal';
 import QRCode from 'react-qr-code';
@@ -12,9 +12,10 @@ interface QrCode {
     value?: string;
     email?: string;
     qr: boolean;
+    setIsValid ?:  Dispatch<SetStateAction<boolean>>
 }
 
-export default function TwoFa({ value = '', email, qr }: QrCode) {
+export default function TwoFa({ value = '', email, qr, setIsValid = () => {} }: QrCode) {
     const router = useRouter();
     const [otp, setOtp] = useState('');
     const [showModal, setShowModal] = useState(true);
@@ -31,6 +32,7 @@ export default function TwoFa({ value = '', email, qr }: QrCode) {
                     });
 
                     if (response.ok) {
+                        setIsValid(true);
                         if (!qr){
                             const data = await response.json();
                             const { access, refresh } = data;
@@ -40,7 +42,7 @@ export default function TwoFa({ value = '', email, qr }: QrCode) {
                             router.push('/dashboard');
                         }
                         else {
-                            toast.success('Two fa enabled successfully !');
+                            toast.success('Save changes to enable 2fa !');
                             setShowModal(false);
                         }
                     } else if (response.status === 401) {
@@ -74,30 +76,30 @@ export default function TwoFa({ value = '', email, qr }: QrCode) {
                 backgroundColor: 'rgba(0, 0, 0, 0.8)',
             }}>
             <Modal.Dialog>
-                <Modal.Header>
-                    <Modal.Title>Two Factor Authentication</Modal.Title>
-                    { qr != true ? <Button variant="close" onClick={handleClose}></Button> : null}
+                <Modal.Header style={{backgroundColor : '#feebeb'}}>
+                    <Modal.Title style={{color : '#111111'}}>Two Factor Authentication</Modal.Title>
+                    { qr === true ? <Button variant="close" onClick={handleClose}></Button> : null}
                 </Modal.Header>
 
                 <Modal.Body style={{ backgroundColor: '#161625' }}>
                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        {qr == true ? <QRCode value={value || ''} style={{ border: '3px' }} className="border border-danger" /> : null}
+                        {qr === true ? <QRCode value={value || ''} style={{ border: '3px' }} className="border border-danger" /> : null}
                     </div>
                     <div className="mt-4 mb-4">
-                        {qr == true ?
+                        {qr === true ?
                             <p className="mt-2">
-                                <TbSquareRoundedNumber1Filled size={30} color="white" />
-                                <span style={{ color: 'white' }}>
+                                <TbSquareRoundedNumber1Filled size={30} color="#feebeb" />
+                                <span style={{ color: '#feebeb' }}>
                                     {' '}
                                     Scan the QR code using any authentication application on your phone (e.g. Google
                                     Authenticator, Duo Mobile, Authy).
                                 </span>
                             </p>
                         : null}
-                        {qr == true ?
+                        {qr === true ?
                             <p className="mt-2">
-                                <TbSquareRoundedNumber2Filled size={30} color="white" />
-                                <span style={{ color: 'white' }}>
+                                <TbSquareRoundedNumber2Filled size={30} color="#feebeb" />
+                                <span style={{ color: '#feebeb' }}>
                                     {' '}
                                     Is mandatory to scan your QR code if you see this message on your screen.
                                 </span>
@@ -105,8 +107,8 @@ export default function TwoFa({ value = '', email, qr }: QrCode) {
                         : null}
 
                         <p className="mt-2">
-                            <TbSquareRoundedNumber3Filled size={30} color="white" />
-                            <span style={{ color: 'white' }}>
+                            <TbSquareRoundedNumber3Filled size={30} color="#feebeb" />
+                            <span style={{ color: '#feebeb' }}>
                                 {' '}
                                 Enter the 6-digit confirmation code shown on the app:
                             </span>
