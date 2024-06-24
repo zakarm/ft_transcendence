@@ -22,12 +22,7 @@ function GenerateInputFields() {
       inputId: "is_2fa_enabled",
       labelText: "Enable 2FA",
       placeholder: oldAccountValues["is_2fa_enabled"],
-    },
-    {
-      inputId: "two_fa_secret_key",
-      labelText: "2FA Secret Pass",
-      inputLength: 200,
-    },
+    }
   ];
 
   return (
@@ -66,16 +61,6 @@ function GenerateInputFields() {
           placeholder={inputProps[2].placeholder}
           inputLength={inputProps[2].inputLength}
         ></GetCheckboxInput>
-      </div>
-      <div key={inputProps[3].inputId}>
-        <GetInput
-          className="p-0 m-0 mt-4 row justify-content-center itim-font"
-          inputType={inputProps[3].inputType}
-          inputId={inputProps[3].inputId}
-          labelText={inputProps[3].labelText}
-          placeholder={inputProps[3].placeholder}
-          inputLength={inputProps[3].inputLength}
-        ></GetInput>
       </div>
     </>
   );

@@ -15,6 +15,7 @@ import { SettingsProps, UserInfoTypes } from '@/lib/settings-types/gameSettingsT
 
 function checkData(dataAPI: UserInfoTypes) {
     const shouldExist: UserInfoTypes = {
+        is_local : true,
         first_name: '',
         last_name: '',
         username: '',
@@ -25,7 +26,6 @@ function checkData(dataAPI: UserInfoTypes) {
         new_password: '',
         repeat_password: '',
         is_2fa_enabled: false,
-        two_fa_secret_key: '',
         table_color: '#161625',
         ball_color: '#ffffff',
         paddle_color: '#ff4655',
@@ -69,9 +69,9 @@ async function getInitialData({
         Cookies.set('theme_ball_color', '#ffffff');
         Cookies.set('theme_paddle_color', '#ff4655');
 
-        Cookies.set('table_color', '#161625');
-        Cookies.set('ball_color', '#ffffff');
-        Cookies.set('paddle_color', '#ff4655');
+        Cookies.set('table_color', data['table_color']);
+        Cookies.set('ball_color', data['ball_color']);
+        Cookies.set('paddle_color', data['paddle_color']);
 
         setOldAccountValues(data);
         setCurrentAccoutValues(data);
@@ -107,7 +107,7 @@ const validateInput: (oldAccountValues: SettingsProps['oldAccountValues']) => bo
 
     if ( "new_password" in oldAccountValues &&  "repeat_password" in oldAccountValues &&
         oldAccountValues['new_password'] !== oldAccountValues['repeat_password']) {
-        toast.error(`Invalid input : new_password or repeat_password`, notificationStyle);
+        toast.error(`Invalid input : mismatch between password fields`, notificationStyle);
         isValid = false;
     }
     return isValid;
@@ -117,13 +117,14 @@ const validateInput: (oldAccountValues: SettingsProps['oldAccountValues']) => bo
 const postFormData = async ({
     valuesToPost,
     isFormChanged,
-    setValuesToPost
+    setOldAccountValues,
+    currentAccoutValues
 }: {
     valuesToPost: SettingsProps['currentAccoutValues'];
     isFormChanged: MutableRefObject<boolean>;
-    setValuesToPost : SettingsProps['setCurrentAccoutValues']
+    setOldAccountValues : SettingsProps['setCurrentAccoutValues']
+    currentAccoutValues : SettingsProps['currentAccoutValues']
 }) => {
-    if (isFormChanged.current && validateInput(valuesToPost)) {
         const changeImageURL = async () => {
             if (typeof valuesToPost['image_url'] === 'string') {
                 const promise = await handleImageUpload(valuesToPost['image_url']);
@@ -151,16 +152,27 @@ const postFormData = async ({
                 body: JSON.stringify(valuesToPost),
             });
 
+            const   data = await res.json();
             if (res.ok) {
-                setValuesToPost({});
-                toast.success('To be saved...', notificationStyle);
+                Object.entries(data).map(([key, value]) => {
+                    toast.success(`${key} ${value}`, notificationStyle);
+                })
+                setOldAccountValues(currentAccoutValues);
                 /* New Chosen Colors */
-                // Cookies.set('table_color', valuesToPost['table_color'] as string);
-                // Cookies.set('ball_color', valuesToPost['ball_color'] as string);
-                // Cookies.set('paddle_color', valuesToPost['paddle_color'] as string);
+                if ("table_color" in valuesToPost) {
+                    Cookies.set('table_color', valuesToPost['table_color'] as string);
+                }
+                if ("ball_color" in valuesToPost) {
+                    Cookies.set('ball_color', valuesToPost['ball_color'] as string);
+                }
+                if ("paddle_color" in valuesToPost) {
+                    Cookies.set('paddle_color', valuesToPost['paddle_color'] as string);
+                }
 
             } else {
-                toast.error('Error : cannot update profile', notificationStyle);
+                Object.entries(data).map(([key, value]) => {
+                    toast.error(`Error : ${key} ${value}`, notificationStyle);
+                })
             }
         };
 
@@ -169,7 +181,6 @@ const postFormData = async ({
         } catch (error) {
             console.error('Unexpected error : ', error);
         }
-    }
 };
 let tmp : SettingsProps['currentAccoutValues'] = {};
 
@@ -187,8 +198,10 @@ function SettingsPage() {
             return newValues;
         });
     };
-    const options = ['Account', 'Security', 'Game'];
-    
+    const options = ['Account'];
+    if (currentAccoutValues.is_local) { options.push('Security') }
+    options.push('Game');
+
     /* Compares values in  [currentAccoutValues, oldAccountValues] */
     const checkDifferences = () => {
         const compareDictValues = (d1: SettingsProps['currentAccoutValues'], d2: SettingsProps['oldAccountValues']) => {
@@ -200,6 +213,7 @@ function SettingsPage() {
                 }
             }
             setValuesToPost(tmp);
+            tmp = {}
             return isValuesChanged;
         };
 
@@ -209,7 +223,7 @@ function SettingsPage() {
                 newValues[key] = value;
             }
             if (compareDictValues(currentAccoutValues, oldAccountValues)) {
-                setOldAccountValues(newValues);
+                // setOldAccountValues(newValues);
                 isFormChanged.current = true;
             }
         };
@@ -263,8 +277,10 @@ function SettingsPage() {
                         <button
                             className={`valo-font col-8 col-md-6 ${styles.create_button}`}
                             onClick={() => {
-                                postFormData({ valuesToPost, isFormChanged, setValuesToPost });
-                                console.log(valuesToPost);
+                                if (isFormChanged.current && validateInput(currentAccoutValues)
+                                        && Object.entries(valuesToPost).length > 0) {
+                                    postFormData({ valuesToPost, isFormChanged, setOldAccountValues, currentAccoutValues });
+                                }
                             }}>
                             SAVE
                         </button>

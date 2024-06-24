@@ -40,7 +40,7 @@ function    GetListInput(
         choosenPosition=""
     } : ListInputProps) {
 
-    const   {currentAccoutValues, updateField} = useContext<SettingsProps>(FormContext);
+    const   { updateField } = useContext<SettingsProps>(FormContext);
 
     return (
         <>
@@ -77,14 +77,10 @@ function    GetListInput(
 function    GetCheckboxInput(
     {
         className="col",
-        inputClassName="",
         inputType="text",
-        placeholder="",
         inputId="",
         labelText="",
         inputLength,
-        index=0,
-        labelClass=""
     }: Props) {
 
     const   { currentAccoutValues, updateField } = useContext<SettingsProps>(FormContext);
@@ -160,8 +156,6 @@ function    GetColorInput(
         inputId="",
         labelText="",
         inputLength,
-        index=0,
-        labelClass="",
         value=""
     }: Props) {
 
@@ -216,7 +210,7 @@ function    GetColorInput(
     );
 }
 
-function    GetInputRange({className} : Props) {
+function    GetInputRange() {
     const   { updateField, currentAccoutValues } = useContext<SettingsProps>(FormContext);
 
 
@@ -232,8 +226,8 @@ function    GetInputRange({className} : Props) {
 
             <div className=" col d-flex justify-content-center p-0 my-3 ms-1">
                 <input type="range"
-                    min="0"
-                    max="2"
+                    min="1"
+                    max="3"
                     step="1"
                     value={ currentAccoutValues['game_difficulty'] as string }
                     className={`${styles.slider}`}
@@ -276,8 +270,6 @@ function    GetInput(
         inputId="",
         labelText="",
         inputLength,
-        index=0,
-        labelClass=""
     }: Props) {
 
     const   { updateField } = useContext<SettingsProps>(FormContext);
@@ -304,8 +296,6 @@ function    GetInput(
             </div>
         );
 }
-
-
 
 export type { Props as Props }
 export { GetCheckboxInput, GetInput, GetListInput, GetColorInput, GetInputRange }
