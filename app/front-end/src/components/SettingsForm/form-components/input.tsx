@@ -83,10 +83,10 @@ function    GetCheckboxInput(
         inputLength,
     }: Props) {
 
-    const   { currentAccoutValues, updateField } = useContext<SettingsProps>(FormContext);
+    const   { currentAccoutValues, oldAccountValues, updateField } = useContext<SettingsProps>(FormContext);
     const   [isChecked, setIsChecked] = useState<boolean>(false);
+    const   [isValid, setIsValid] = useState<boolean>(Boolean(oldAccountValues[inputId]));
     const [twoFaData, setTwoFaData] = useState<{ value: string; email: string } | null>(null);
-
 
     useEffect(() => {
         setIsChecked(Boolean(currentAccoutValues[inputId]))
@@ -94,7 +94,7 @@ function    GetCheckboxInput(
 
     useEffect(() => {
         const fetchData = async () => {
-            if (isChecked) {
+            if (isChecked && !Boolean(oldAccountValues[inputId])) {
                 try {
                     const access = Cookies.get('access');
                     const csrftoken = Cookies.get('csrftoken') || '';
@@ -121,7 +121,7 @@ function    GetCheckboxInput(
 
         return (
             <div className={`${className} flex-wrap flex-xxl-nowrap`}>
-                {twoFaData && <TwoFa value={twoFaData.value} email={twoFaData.email} qr={true}/>}
+                {twoFaData && <TwoFa value={twoFaData.value} email={twoFaData.email} qr={true} setIsValid={setIsValid}/>}
                 <label
                     className={`col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`}
                     htmlFor={inputId}>
@@ -135,11 +135,11 @@ function    GetCheckboxInput(
                             id={inputId}
                             maxLength={inputLength}
                             autoComplete="off"
-                            onChange={ (e : ChangeEvent<HTMLInputElement>) => {
+                            onChange={ () => {
                                 setIsChecked(!isChecked);
                                 updateField(inputId, !isChecked);
                             } }
-                            checked={isChecked}
+                            checked={isChecked && isValid}
                             />
                     </label>
                 </div>
