@@ -12,10 +12,10 @@ interface QrCode {
     value?: string;
     email?: string;
     qr: boolean;
-    setIsValid ?:  Dispatch<SetStateAction<boolean>>
+    setPassOTP ?: Dispatch<SetStateAction<boolean>>
 }
 
-export default function TwoFa({ value = '', email, qr, setIsValid = () => {} }: QrCode) {
+export default function TwoFa({ value = '', email, qr, setPassOTP=()=>{} }: QrCode) {
     const router = useRouter();
     const [otp, setOtp] = useState('');
     const [showModal, setShowModal] = useState(true);
@@ -32,7 +32,6 @@ export default function TwoFa({ value = '', email, qr, setIsValid = () => {} }: 
                     });
 
                     if (response.ok) {
-                        setIsValid(true);
                         if (!qr){
                             const data = await response.json();
                             const { access, refresh } = data;
@@ -42,6 +41,7 @@ export default function TwoFa({ value = '', email, qr, setIsValid = () => {} }: 
                             router.push('/dashboard');
                         }
                         else {
+                            setPassOTP(true)
                             toast.success('Save changes to enable 2fa !');
                             setShowModal(false);
                         }
@@ -59,7 +59,7 @@ export default function TwoFa({ value = '', email, qr, setIsValid = () => {} }: 
         fetchData();
     }, [otp, email, router]);
 
-    const handleClose = () => setShowModal(false);
+    const handleClose = () => {setShowModal(false); setPassOTP(false)};
 
     return (
         <>
@@ -96,7 +96,7 @@ export default function TwoFa({ value = '', email, qr, setIsValid = () => {} }: 
                                 </span>
                             </p>
                         : null}
-                        {qr === true ?
+                        {/* {qr === true ?
                             <p className="mt-2">
                                 <TbSquareRoundedNumber2Filled size={30} color="#feebeb" />
                                 <span style={{ color: '#feebeb' }}>
@@ -104,10 +104,10 @@ export default function TwoFa({ value = '', email, qr, setIsValid = () => {} }: 
                                     Is mandatory to scan your QR code if you see this message on your screen.
                                 </span>
                             </p>
-                        : null}
+                        : null} */}
 
                         <p className="mt-2">
-                            <TbSquareRoundedNumber3Filled size={30} color="#feebeb" />
+                            <TbSquareRoundedNumber2Filled size={30} color="#feebeb" />
                             <span style={{ color: '#feebeb' }}>
                                 {' '}
                                 Enter the 6-digit confirmation code shown on the app:

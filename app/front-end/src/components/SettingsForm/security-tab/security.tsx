@@ -67,17 +67,17 @@ function GenerateInputFields() {
 }
 
 function SecurityTab() {
-  const { currentAccoutValues } = useContext<SettingsProps>(FormContext);
+  const { oldAccountValues } = useContext<SettingsProps>(FormContext);
 
   return (
     <>
       <fieldset className="col-12 col-xxl-6 p-0 m-0 d-flex justify-content-center align-items-center h-100">
         <div
           className={`${
-            Boolean(currentAccoutValues["is_2fa_enabled"]) ? "" : styles.qr_image
+            Boolean(oldAccountValues["is_2fa_enabled"]) ? "" : styles.qr_image
           } my-3`}
         >
-          <img src="qr_code.png" alt="" className={`${styles.qr_code}`} />
+          <img src="assets/images/qr_code.png" alt="QR code" className={`${styles.qr_code}`} />
         </div>
       </fieldset>
       <fieldset className="col-12 col-xxl-6 p-0 m-0 d-flex justify-content-center align-items-center">

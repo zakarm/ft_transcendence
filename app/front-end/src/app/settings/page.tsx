@@ -86,7 +86,7 @@ const validateInput: (oldAccountValues: SettingsProps['oldAccountValues']) => bo
     const validateEmail: (email: string) => boolean = (email) => {
         // const rgx: RegExp = /^([a-zA-Z0-9\._]+)@([a-zA-Z0-9])+.([a-z]+)(.[a-z]+)?$/;
         const rgx: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return rgx.test(email);
+        return rgx.test(email) && email.length >= 8;
     };
 
     const toCheck: string[] = ['first_name', 'last_name', 'nickname'];
@@ -101,7 +101,7 @@ const validateInput: (oldAccountValues: SettingsProps['oldAccountValues']) => bo
 
     if ("email" in oldAccountValues &&
             !validateEmail(oldAccountValues['email'] as string)) {
-        toast.error(`Invalid input : email`, notificationStyle);
+        toast.error(`Invalid input : email - ensure 8 characters long`, notificationStyle);
         isValid = false;
     }
 

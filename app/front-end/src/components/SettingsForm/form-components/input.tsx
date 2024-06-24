@@ -83,45 +83,54 @@ function    GetCheckboxInput(
         inputLength,
     }: Props) {
 
-    const   { currentAccoutValues, oldAccountValues, updateField } = useContext<SettingsProps>(FormContext);
-    const   [isChecked, setIsChecked] = useState<boolean>(false);
-    const   [isValid, setIsValid] = useState<boolean>(Boolean(oldAccountValues[inputId]));
+    const   { oldAccountValues, updateField } = useContext<SettingsProps>(FormContext);
+    const   [isChecked, setIsChecked] = useState<boolean>(Boolean(oldAccountValues[inputId]));
+    const   [passOTP, setPassOTP] = useState<boolean>(Boolean(oldAccountValues[inputId]));
     const [twoFaData, setTwoFaData] = useState<{ value: string; email: string } | null>(null);
 
-    useEffect(() => {
-        setIsChecked(Boolean(currentAccoutValues[inputId]))
-    }, [currentAccoutValues[inputId]])
+    const fetchData = async (isChk : boolean) => {
+        if (isChk && !Boolean(oldAccountValues[inputId])) {
+            try {
+                const access = Cookies.get('access');
+                const csrftoken = Cookies.get('csrftoken') || '';
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/control-2fa`, {
+                    method: 'POST',
+                    headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
+                });
 
-    useEffect(() => {
-        const fetchData = async () => {
-            if (isChecked && !Boolean(oldAccountValues[inputId])) {
-                try {
-                    const access = Cookies.get('access');
-                    const csrftoken = Cookies.get('csrftoken') || '';
-                    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/control-2fa`, {
-                        method: 'POST',
-                        headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
-                    });
-
-                    const data = await response.json();
-                    if (response.ok) {
-                        const { url, email } = data;
-                        setTwoFaData({ value: url, email });
-                    }
-                } catch (error) {
-                    console.error('An unexpected error happened:', error);
+                const data = await response.json();
+                if (response.ok) {
+                    const { url, email } = data;
+                    setTwoFaData({ value: url, email });
                 }
-            } else {
-                setTwoFaData(null);
+            } catch (error) {
+                console.error('An unexpected error happened:', error);
             }
-        };
+        } else {
+            if (oldAccountValues[inputId] as Boolean && !isChk) {
+                updateField(inputId, isChk);
+            }
+            setTwoFaData(null);
+        }
+    };
 
-        fetchData();
-    }, [isChecked]);
+    useEffect(() => {
+        console.log(passOTP)
+        setIsChecked(passOTP)
+        updateField(inputId, passOTP);
+    }, [passOTP])
 
         return (
             <div className={`${className} flex-wrap flex-xxl-nowrap`}>
-                {twoFaData && <TwoFa value={twoFaData.value} email={twoFaData.email} qr={true} setIsValid={setIsValid}/>}
+                {
+                twoFaData &&
+                    <TwoFa
+                        value={twoFaData.value}
+                        email={twoFaData.email}
+                        qr={true}
+                        setPassOTP={setPassOTP}
+                    />
+                }
                 <label
                     className={`col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`}
                     htmlFor={inputId}>
@@ -135,11 +144,11 @@ function    GetCheckboxInput(
                             id={inputId}
                             maxLength={inputLength}
                             autoComplete="off"
+                            checked={isChecked}
                             onChange={ () => {
+                                fetchData(!isChecked);
                                 setIsChecked(!isChecked);
-                                updateField(inputId, !isChecked);
                             } }
-                            checked={isChecked && isValid}
                             />
                     </label>
                 </div>
@@ -152,7 +161,6 @@ function    GetColorInput(
         className="col",
         inputClassName="",
         inputType="text",
-        placeholder="",
         inputId="",
         labelText="",
         inputLength,

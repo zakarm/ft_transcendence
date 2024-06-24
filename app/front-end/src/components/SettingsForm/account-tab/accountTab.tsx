@@ -96,13 +96,18 @@ function AccountTab() {
             accept="image/*"
             id="file_input"
             onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                const reader = new FileReader()
-                const files : FileList | null = e.target.files
-                if (files && files.length > 0) {
-                  reader.readAsDataURL(files[0]);
-                  reader.onloadend = () => {
-                    if (reader.result && typeof reader.result === 'string') {
-                      updateField("image_url", reader.result);
+              const files : FileList | null = e.target.files
+              
+              if (files && files.length > 0) {
+                  const reader = new FileReader()
+                  const validImageTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/webp', 'image/svg', 'image/jpg', 'image/webp'];
+
+                  if (validImageTypes.includes(files[0].type)) {
+                    reader.readAsDataURL(files[0]);
+                    reader.onloadend = () => {
+                      if (reader.result && typeof reader.result === 'string') {
+                        updateField("image_url", reader.result);
+                      }
                     }
                   }
                 }
