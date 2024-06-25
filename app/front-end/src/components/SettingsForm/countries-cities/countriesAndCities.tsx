@@ -22,8 +22,8 @@ function    CountriesAndCities(
     
     const   {currentAccoutValues, updateField} = useContext<SettingsProps>(FormContext);
 
-    const   [selectedCountry, setselectedCountry] = useState<string | boolean>(currentAccoutValues['country']);
-    const   [selectedCity, setSelectedCity] = useState<string | boolean>(currentAccoutValues['city']);
+    const   [selectedCountry, setselectedCountry] = useState<string>(currentAccoutValues['country'] as string);
+    const   [selectedCity, setSelectedCity] = useState<string>(currentAccoutValues['city'] as string);
 
     const   [citiesOptions, setCitiesOptions] = useState<React.JSX.Element[]>([])
     const   [countryOptions, setcountryOptions] = useState<React.JSX.Element[]>([])
