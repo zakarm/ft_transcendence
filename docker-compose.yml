@@ -6,8 +6,6 @@ services:
             context: ./app/back-end
             dockerfile: Dockerfile
         restart: always
-        depends_on:
-            - data-base
         env_file:
             - .env
         volumes:
@@ -23,8 +21,6 @@ services:
             context: ./app/front-end
             dockerfile: Dockerfile
         restart: always
-        depends_on:
-            - back-end
         env_file:
             - .env
         volumes:
@@ -64,9 +60,6 @@ services:
             - '443:443'
         env_file:
             - .env
-        depends_on:
-            - front-end
-            - back-end
         networks:
             - ft_transcendence
 
@@ -89,8 +82,6 @@ services:
             context: ./services/redis
             dockerfile: Dockerfile
         restart: on-failure
-        depends_on:
-            - back-end
         ports:
             - '6379:6379'
         env_file:

@@ -7,6 +7,7 @@ from .models import Tournaments, Tournamentsmatches, TournamentsUsernames, Match
 from authentication.models import User
 import sys
 from drf_spectacular.utils import extend_schema_field
+from django.db import transaction
 
 class TournamentsmatchesSerializer(serializers.ModelSerializer):
     match = MatchSerializer()
@@ -95,12 +96,12 @@ class TournamentCreationSerializer(serializers.Serializer):
         if Tournaments.objects.filter(tournament_name=value).exists():
             raise serializers.ValidationError("Tournament with this name already exists.")
         return value
-    
+
     def validate_game_difficulty(self, value):
         if value not in [1, 2, 3]:
             raise serializers.ValidationError("Game difficulty accept only [1, 2, 3] values.")
         return value
-    
+
     def create(self, validated_data):
         tour_data = Tournaments.objects.create(
             tournament_name=validated_data['tournament_name'],
@@ -128,15 +129,15 @@ class UserAchievementsSerializer(serializers.ModelSerializer):
                 user=obj, achievement__achievement_type=type, achievement__achievement_name=name
             ).exists()
         return achievements
-    
+
     @extend_schema_field(serializers.DictField(child=serializers.BooleanField()))
     def get_tournament(self, obj) -> dict:
         return self.get_achievement(obj, 'tournament', ['early', 'triple', 'front'])
-    
+
     @extend_schema_field(serializers.DictField(child=serializers.BooleanField()))
     def get_match(self, obj) -> dict:
         return self.get_achievement(obj, 'match', ['speedy', 'last', 'king'])
-    
+
     @extend_schema_field(serializers.DictField(child=serializers.BooleanField()))
     def get_ai(self, obj) -> dict:
         return self.get_achievement(obj, 'ai', ['challenger', 'rivalry', 'legend'])
@@ -153,12 +154,12 @@ class GameSettingsSerializer(serializers.ModelSerializer):
     new_password = serializers.CharField(write_only=True, max_length=100, min_length=8, required=False, allow_blank = True)
     email = serializers.EmailField(min_length = 7, max_length=320, required = False)
     username = serializers.CharField(min_length = 4, max_length=20, required = False)
-    
+
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'username', 'image_url', 'is_2fa_enabled', 'two_fa_secret_key',
+        fields = ('first_name', 'last_name', 'username', 'image_url', 'is_2fa_enabled',
                   'email', 'country', 'city', 'game_table', 'new_password')
-    
+
     def validate_email(self, value):
         user = self.instance
         if User.objects.filter(email=value).exclude(id=user.id).exists():
@@ -170,7 +171,7 @@ class GameSettingsSerializer(serializers.ModelSerializer):
         if User.objects.filter(id=user.id).first().password is not None and value == "":
             raise serializers.ValidationError("This field may not be blank.")
         return value
-    
+
     @extend_schema_field(serializers.CharField())
     def get_city(self, obj) -> str:
         if obj.location:
@@ -188,13 +189,25 @@ class GameSettingsSerializer(serializers.ModelSerializer):
             else:
                 return obj.location
         return ""
-    
+
     @extend_schema_field(serializers.DictField())
     def get_game_table(self, obj) -> dict:
         game_table = GameTable.objects.filter(user=obj).first()
-        if game_table:
-            return GameTableSerializer(instance=game_table).data
-        return None
+        if not game_table:
+            with transaction.atomic():
+                game_table = GameTable.objects.create(
+                    user=obj,
+                    table_color="#161625",
+                    ball_color="#ffffff",
+                    paddle_color="#ff4655",
+                    game_difficulty=1,
+                    table_position="6,8,0",
+                )
+        return GameTableSerializer(instance=game_table).data
+        # game_table = GameTable.objects.filter(user=obj).first()
+        # if game_table:
+        #     return GameTableSerializer(instance=game_table).data
+        # return None
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
