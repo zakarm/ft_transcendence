@@ -142,6 +142,7 @@ function    GetCheckboxInput(
                             type={inputType}
                             className={`${styles.input}`}
                             id={inputId}
+                            data-testid={inputId}
                             maxLength={inputLength}
                             autoComplete="off"
                             checked={isChecked}
@@ -295,6 +296,7 @@ function    GetInput(
                             placeholder={placeholder as string}
                             className={`${styles.input} ${inputClassName} ps-4`}
                             id={inputId}
+                            data-testid={inputId}
                             maxLength={inputLength}
                             autoComplete="off"
                             onChange={ (e : ChangeEvent<HTMLInputElement>) => { updateField(inputId, e.target.value) } }

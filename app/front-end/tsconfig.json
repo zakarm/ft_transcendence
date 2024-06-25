@@ -23,13 +23,14 @@
         "jsx": "preserve",
         "incremental": true,
         "tsBuildInfoFile": "./.tsbuildinfo",
+        "baseUrl": "./",
         "plugins": [
             {
                 "name": "next"
             }
         ],
         "paths": {
-            "@/*": ["./src/*"]
+            "@/*": ["src/*"]
         }
     },
     "include": ["next-env.d.ts", "env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
