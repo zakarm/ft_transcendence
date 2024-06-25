@@ -24,7 +24,8 @@ export default function SignInPage() {
             const email = form.get('email') as string;
             const password = form.get('password') as string;
             const csrftoken = Cookies.get('csrftoken') || '';
-            console.log(`${process.env.NEXT_PUBLIC_BACKEND_HOST}`);
+            const host = process.env.NEXT_PUBLIC_BACKEND_HOST;
+            console.log("host", host);
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/sign-in`, {
                 method: 'POST',
                 headers: {
