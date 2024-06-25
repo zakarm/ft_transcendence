@@ -19,7 +19,7 @@ function    CountriesAndCities(
         labelText2="",
         id="country",
     } : Props) {
-    
+
     const   {currentAccoutValues, updateField} = useContext<SettingsProps>(FormContext);
 
     const   [selectedCountry, setselectedCountry] = useState<string>(currentAccoutValues['country'] as string);
@@ -27,7 +27,7 @@ function    CountriesAndCities(
 
     const   [citiesOptions, setCitiesOptions] = useState<React.JSX.Element[]>([])
     const   [countryOptions, setcountryOptions] = useState<React.JSX.Element[]>([])
-    
+
     let isFirstRender = useRef<boolean>(true);
     let i = useRef<number>(0);
 
@@ -41,10 +41,10 @@ function    CountriesAndCities(
     }, []);
 
     useEffect(() => {
-        setselectedCountry(currentAccoutValues['country']);
-        setSelectedCity(currentAccoutValues['city']);
+        setselectedCountry(currentAccoutValues['country'] as string);
+        setSelectedCity(currentAccoutValues['city'] as string);
     }, [currentAccoutValues])
-    
+
     useEffect(() => {
         if ( ! isFirstRender.current) {
             setSelectedCity("--");
@@ -65,7 +65,7 @@ function    CountriesAndCities(
             cities = data[selectedCountry as string].filter((value, index) => (
                 data[selectedCountry as string].indexOf(value) === index
                 ));
-            
+
             setCitiesOptions(cities.map((city: string) => (
                 <option key={city} value={city}>{city}</option>
             )));
@@ -78,7 +78,7 @@ function    CountriesAndCities(
         <>
             <div className={`${className} flex-wrap flex-xl-nowrap`}>
                 <label
-                    className={`col-8 col-sm-3  itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle}`} 
+                    className={`col-8 col-sm-3  itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle}`}
                     htmlFor={id}>
                     {labelText1}
                 </label>
@@ -98,7 +98,7 @@ function    CountriesAndCities(
                                 value={ selectedCountry as string}>
                                     { selectedCountry || "Choose a country"}
                             </option>
-                            
+
                             { countryOptions }
 
                         </select>
@@ -106,13 +106,13 @@ function    CountriesAndCities(
             </div>
             <div className={`${className} flex-wrap flex-xl-nowrap`}>
                 <label
-                    className={`col-8 col-sm-3  itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle}`} 
+                    className={`col-8 col-sm-3  itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle}`}
                     htmlFor={id}>
                     {labelText2}
                 </label>
                 <div className={`col-6 ${styles.inputHolder} row justify-content-center p-0 mb-4`}>
 
-                    <select 
+                    <select
                         className={`itim-font ${styles.input} ps-4`}
                         name="city"
                         id="city"
@@ -130,7 +130,7 @@ function    CountriesAndCities(
 
                         { citiesOptions }
 
-                        
+
                     </select>
                 </div>
             </div>
