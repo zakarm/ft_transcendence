@@ -78,10 +78,10 @@ const useWebSocketTournament = (url: string) => {
         user2: '',
         user2_image: '',
         username2: '',
-        table_color: '',
-        ball_color: '',
-        paddle_color: '',
-        table_position: '',
+        table_color: '#161625',
+        ball_color: '#ffffff',
+        paddle_color: '#ff4655',
+        table_position: '6,8,0',
     });
 
     const [countDown, setCountDown] = useState<number>(15);

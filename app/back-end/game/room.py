@@ -229,6 +229,12 @@ class RoomObject:
         elif user_index == 2:
             return self.Original_users["user2"]["tackle"]
 
+    def get_winner_index(self):
+        if self.score["user1"] == 7:
+            return 1
+        elif self.score["user2"] == 7:
+            return 2
+
     # ------------------------> ball <------------------------
     def set_ball_position(self, x, z):
         self.ball_position["x"] = x
