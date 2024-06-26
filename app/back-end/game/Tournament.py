@@ -43,38 +43,40 @@ class Tournament:
         }
 
         self.data = {
+            "tournament_name": "",
+            "difficulty": "",
             "quarter_final": {
                 "match1": {
-                    "user1": {"name": "", "photoUrl": "", "score": 0},
-                    "user2": {"name": "", "photoUrl": "", "score": 0},
+                    "user1": {"name": "", "photoUrl": "", "score": 0, "status":True},
+                    "user2": {"name": "", "photoUrl": "", "score": 0, "status":True},
                 },
                 "match2": {
-                    "user1": {"name": "", "photoUrl": "", "score": 0},
-                    "user2": {"name": "", "photoUrl": "", "score": 0},
+                    "user1": {"name": "", "photoUrl": "", "score": 0, "status":True},
+                    "user2": {"name": "", "photoUrl": "", "score": 0, "status":True},
                 },
                 "match3": {
-                    "user1": {"name": "", "photoUrl": "", "score": 0},
-                    "user2": {"name": "", "photoUrl": "", "score": 0},
+                    "user1": {"name": "", "photoUrl": "", "score": 0, "status":True},
+                    "user2": {"name": "", "photoUrl": "", "score": 0, "status":True},
                 },
                 "match4": {
-                    "user1": {"name": "", "photoUrl": "", "score": 0},
-                    "user2": {"name": "", "photoUrl": "", "score": 0},
+                    "user1": {"name": "", "photoUrl": "", "score": 0, "status":True},
+                    "user2": {"name": "", "photoUrl": "", "score": 0, "status":True},
                 },
             },
             "semi_final": {
                 "match1": {
-                    "user1": {"name": "", "photoUrl": "", "score": 0},
-                    "user2": {"name": "", "photoUrl": "", "score": 0},
+                    "user1": {"name": "", "photoUrl": "", "score": 0, "status":True},
+                    "user2": {"name": "", "photoUrl": "", "score": 0, "status":True},
                 },
                 "match2": {
-                    "user1": {"name": "", "photoUrl": "", "score": 0},
-                    "user2": {"name": "", "photoUrl": "", "score": 0},
+                    "user1": {"name": "", "photoUrl": "", "score": 0, "status":True},
+                    "user2": {"name": "", "photoUrl": "", "score": 0, "status":True},
                 },
             },
             "final": {
                 "match1": {
-                    "user1": {"name": "", "photoUrl": "", "score": 0},
-                    "user2": {"name": "", "photoUrl": "", "score": 0},
+                    "user1": {"name": "", "photoUrl": "", "score": 0, "status":True},
+                    "user2": {"name": "", "photoUrl": "", "score": 0, "status":True},
                 },
             },
         }

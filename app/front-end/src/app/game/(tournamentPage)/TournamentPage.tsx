@@ -1,11 +1,12 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import Web_Socket from '../../../components/webSoket/WebSocket';
+import Web_Socket from '../../../components/webSoket/WebSocketTournament';
 import Cookies from 'js-cookie';
-import './RemoteMatchGame.css';
+import './TournamentPage.css';
 import PlayerCard from '@/components/PlayerCard/PlayerCard';
 import PongGame from '@/components/PongGame/PongGame';
 import Link from 'next/link';
+import TournamentLobby from '../(tournamet-lobby)/TournamentLobby';
 
 interface Player {
     name: string;
@@ -20,10 +21,10 @@ interface Player {
     index: number;
 }
 
-const RemoteMatchGame: React.FC = () => {
+const TournamentPage: React.FC = () => {
     const access = Cookies.get('access');
-    const { webSocket, gameState, connectionInfo, countDown } = Web_Socket(
-        `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/pingpong/?token=${access}`,
+    const { webSocket, gameState, connectionInfo, countDown, filteredTournamentData } = Web_Socket(
+        `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/pingpong/tournament/15151515/?token=${access}`,
     );
 
     const defaultPlayer: Player = {
@@ -90,13 +91,14 @@ const RemoteMatchGame: React.FC = () => {
         <div className="Lobby_container">
             {gameState === 'lobby' && (
                 <>
-                    <PlayerCard {...myProfile} />
+                    <TournamentLobby {...filteredTournamentData} />
                     <div className="blurred-background"></div>
                     <div className="t-text">
                         <div className="search-text">SEARCHING...</div>
                     </div>
                 </>
             )}
+            {gameState === 'TournamentLobby' && <TournamentLobby {...filteredTournamentData} />}
 
             {gameState === 'opponentFound' && (
                 <>
@@ -174,4 +176,4 @@ const RemoteMatchGame: React.FC = () => {
     );
 };
 
-export default RemoteMatchGame;
+export default TournamentPage;

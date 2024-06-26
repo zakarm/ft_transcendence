@@ -251,6 +251,12 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                 await self.channel_layer.group_add(
                     self.tournament_name, self.channel_name
                 )
+                # await self.tournamnet_broadcast_message(
+                #     {
+                #         "action": "TournamentData",
+                #         "tournamentdata": self.tournament.data,
+                #     }
+                # )
                 if self.tournament.is_tournament_ready():
                     asyncio.ensure_future(self.tournament_manager())
                     print(f"Tournament is ready", file=sys.stderr)
@@ -259,7 +265,6 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                 await self.close()
         except Exception as e:
             print(f"An error occurred in connect: {e}", file=sys.stderr)
-
 
     async def start_tournament(self, match_id):
         try:
@@ -300,7 +305,7 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
     async def tournament_manager(self):
         try:
             self.tournament.generate_quatre_final_players()
-            await self.tournamnet_broadcast_message(self.tournament.data)
+            await self.tournamnet_broadcast_message({"action" : "TournamentData", "tournamentdata" : self.tournament.data})
             for player in self.tournament.players:
                 player_data = player["data"]
                 name = player_data["name"]
