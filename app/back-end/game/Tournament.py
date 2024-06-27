@@ -128,6 +128,13 @@ class Tournament:
                 _players.append(player["channel"])
         return _players
 
+    def get_player_by_maych_id(self, match_id):
+        _players = []
+        for player in self.players:
+            if player["match_id"] == match_id:
+                _players.append(player)
+        return _players
+
     def get_room_game(self, room_id):
         for key in self.games:
             for match in self.games[key]:
@@ -142,9 +149,13 @@ class Tournament:
         else:
             user_key = f"user2"
         user_key_ = f"user{user}"
-        self.data["semi_final"][match_key][user_key] = self.data["quarter_final"][
-            match_key_
-        ][user_key_]
+        # self.data["semi_final"][match_key][user_key] = self.data["quarter_final"][
+        #     match_key_
+        # ][user_key_]
+        self.data["semi_final"][match_key][user_key]["name"] = self.data["quarter_final"][match_key_][user_key_]["name"]
+        self.data["semi_final"][match_key][user_key]["photoUrl"] = self.data["quarter_final"][match_key_][user_key_]["photoUrl"]
+        self.data["semi_final"][match_key][user_key]["status"] = True
+        self.data["semi_final"][match_key][user_key]["score"] = 0
         player = self.get_player_by_name(
             self.data["quarter_final"][match_key_][user_key_]["name"]
         )
@@ -155,6 +166,18 @@ class Tournament:
             player["email"], self.games["semi_final"][match_key]["room_id"]
         )
 
+    def get_promoted_quarter_final_winner(self, match, user):
+        match_key = f"match{1 if match <= 2 else 2}"
+        user_key = f"user{user}"
+        _channel = self.get_player_by_name(self.data["quarter_final"][match_key][user_key]["name"])["channel"]
+        return _channel
+
+    def get_promoted_semi_final_winner(self, match, user):
+        match_key = f"match{1}"
+        user_key = f"user{user}"
+        _channel = self.get_player_by_name(self.data["semi_final"][match_key][user_key]["name"])["channel"]
+        return _channel
+
     def promote_semi_final_winner(self, match, user):
         match_key = f"match{1}"
         match_key_ = f"match{match}"
@@ -163,9 +186,13 @@ class Tournament:
         else:
             user_key = f"user2"
         user_key_ = f"user{user}"
-        self.data["final"][match_key][user_key] = self.data["semi_final"][match_key_][
-            user_key_
-        ]
+        # self.data["final"][match_key][user_key] = self.data["semi_final"][match_key_][
+        #     user_key_
+        # ]
+        self.data["final"][match_key][user_key]["name"] = self.data["semi_final"][match_key_][user_key_]["name"]
+        self.data["final"][match_key][user_key]["photoUrl"] = self.data["semi_final"][match_key_][user_key_]["photoUrl"]
+        self.data["final"][match_key][user_key]["status"] = True
+        self.data["final"][match_key][user_key]["score"] = 0
         player = self.get_player_by_name(
             self.data["semi_final"][match_key_][user_key_]["name"]
         )
@@ -175,5 +202,12 @@ class Tournament:
         self.set_player_match_id(
             player["email"], self.games["final"][match_key]["room_id"]
         )
-    # def update_data_score(self, round, match, user, score):
-    #     self.data[round][match][user]["score"] = score
+
+    def update_scor_from_all_rooms(self, room_id, user, score):
+        for key in self.games:
+            for match in self.games[key]:
+                if self.games[key][match]["room_id"] == room_id:
+                    self.update_data_score(key, match, user, score)
+
+    def update_data_score(self, round, match, user, score):
+        self.data[round][match][user]["score"] = score
