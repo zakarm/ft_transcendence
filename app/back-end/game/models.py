@@ -49,13 +49,6 @@ class Tournamentsmatches(models.Model):
         db_table = 'TournamentsMatches'
         unique_together = (('tournament', 'match'),)
 
-class TournamentsUsernames(models.Model):
-    tournament = models.OneToOneField(Tournaments, models.DO_NOTHING, primary_key=True)
-    user = models.ForeignKey('authentication.User', models.DO_NOTHING)
-    user_display_name = models.CharField(max_length=30, unique=True)
-    class Meta:
-        db_table = 'TournamentsUsernames'
-        unique_together = (('tournament', 'user'),)
 
 class Achievements(models.Model):
     achievement_id = models.AutoField(primary_key=True)

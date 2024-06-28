@@ -3,7 +3,7 @@ from django.db.models import Q, F
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
 from dashboards.serializer import MatchSerializer, UserSerializer
-from .models import Tournaments, Tournamentsmatches, TournamentsUsernames, Match, Achievements, GameTable, UserAchievements
+from .models import Tournaments, Tournamentsmatches, Match, Achievements, GameTable, UserAchievements
 from authentication.models import User
 import sys
 from drf_spectacular.utils import extend_schema_field
@@ -73,11 +73,9 @@ class UserTournamentsSerializer(serializers.ModelSerializer):
         matches = Match.objects.filter(Q(user_one=obj) | Q(user_two=obj))
         tournaments = Tournaments.objects.filter(
             crated_by_me=True,
-            tournament_id__in=Tournamentsmatches.objects.filter(match__in=matches).values_list('tournament_id', flat=True)
         )
         tournaments_user = Tournaments.objects.filter(
             crated_by_me=True,
-            tournament_id__in=TournamentsUsernames.objects.filter(user=obj).values_list('tournament__tournament_id', flat=True)
         )
         all_tournaments = tournaments.union(tournaments_user)
         serializer = TournamentsSerializer(all_tournaments, many=True)
@@ -88,11 +86,6 @@ class TournamentCreationSerializer(serializers.Serializer):
     tournament_name = serializers.CharField(max_length=30)
     tournament_image = serializers.URLField(required=False, allow_blank=True, max_length=350)
     game_difficulty = serializers.IntegerField()
-
-    def validate_username(self, value):
-        if TournamentsUsernames.objects.filter(user_display_name=value).exists():
-            raise serializers.ValidationError("User with this username already exists.")
-        return value
 
     def validate_tournament_name(self, value):
         if Tournaments.objects.filter(tournament_name=value).exists():
@@ -112,7 +105,6 @@ class TournamentCreationSerializer(serializers.Serializer):
             tournament_start=datetime.now(),
             crated_by_me=True,
         )
-        TournamentsUsernames.objects.create(tournament=tour_data, user=self.context['request'].user, user_display_name=validated_data['username'])
         return tour_data
 
 class UserAchievementsSerializer(serializers.ModelSerializer):
