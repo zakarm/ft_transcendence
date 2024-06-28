@@ -174,7 +174,6 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
                             style={{ backgroundColor: '#161625', borderBottomRightRadius: '25px' }}
                         >
                             <FaTableTennisPaddleBall className="mx-2" size="1.8em" style={{ cursor: 'pointer' }} />
-                            {/* <ImUserMinus className="mx-2" size="1.8em" style={{ cursor: 'pointer' }} /> */}
                         </div>
                     </div>
                     <div

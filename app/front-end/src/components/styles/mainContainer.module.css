@@ -1,3 +1,33 @@
+
+
+@media (max-width: 250px) {
+    /* Adjust body or container width as needed */
+    body {
+        width: 250px;
+        overflow-x: hidden; /* Hide horizontal scrollbar */
+        margin: 0; /* Remove default margin */
+        padding: 0; /* Remove default padding */
+      }
+      
+      html {
+        overflow: hidden; /* Hide vertical scrollbar */
+      }
+  }
+
+  @media (max-height: 390px) {
+    /* Adjust body or container width as needed */
+    body {
+        height: 390px;
+        overflow-x: hidden; /* Hide horizontal scrollbar */
+        margin: 0; /* Remove default margin */
+        padding: 0; /* Remove default padding */
+      }
+      
+      html {
+        overflow: hidden; /* Hide vertical scrollbar */
+      }
+  }
+
 .drag_class:hover{
     border: 1px solid white;
     box-shadow: #383838 0 0px 20px 0;
