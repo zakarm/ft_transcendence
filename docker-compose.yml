@@ -25,6 +25,7 @@ services:
             - .env
         volumes:
             - .env:/front-end/.env
+            - lint-results.log:/front-end/lint-results.log
             - ./app/front-end/src:/front-end/src
             - ./app/front-end/public:/front-end/public
             - ./app/front-end/package.json:/front-end/package.json

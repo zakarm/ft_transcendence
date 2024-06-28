@@ -1,34 +1,24 @@
-
-
 @media (max-width: 250px) {
-    /* Adjust body or container width as needed */
-    body {
+    .mainContainer {
         width: 250px;
-        overflow-x: hidden; /* Hide horizontal scrollbar */
-        margin: 0; /* Remove default margin */
-        padding: 0; /* Remove default padding */
-      }
-      
-      html {
-        overflow: hidden; /* Hide vertical scrollbar */
-      }
-  }
+        overflow: hidden;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+    }
+}
 
-  @media (max-height: 390px) {
-    /* Adjust body or container width as needed */
-    body {
+@media (max-height: 390px) {
+    .mainContainer {
         height: 390px;
-        overflow-x: hidden; /* Hide horizontal scrollbar */
-        margin: 0; /* Remove default margin */
-        padding: 0; /* Remove default padding */
-      }
-      
-      html {
-        overflow: hidden; /* Hide vertical scrollbar */
-      }
-  }
+        overflow-x: hidden;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+    }
+}
 
-.drag_class:hover{
+.drag_class:hover {
     border: 1px solid white;
     box-shadow: #383838 0 0px 20px 0;
     box-sizing: border-box;
@@ -68,21 +58,20 @@
     position: relative;
 }
 
-.toglle{
+.toglle {
     display: none;
 }
 
-.slider{
+.slider {
     display: none;
 }
 
-.close_btn{
-    color: #F4E6E6;
-} 
+.close_btn {
+    color: #f4e6e6;
+}
 
 @media (max-width: 767px) {
-    
-    .toglle{
+    .toglle {
         display: block;
         position: fixed;
         bottom: 30px;
@@ -110,10 +99,9 @@
     }
 }
 
-@media (max-height: 500px)
-{
-    .logo{
+@media (max-height: 500px) {
+    .logo {
         height: 30px;
-        width: 30px;;
+        width: 30px;
     }
 }

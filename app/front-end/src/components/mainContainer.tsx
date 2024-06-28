@@ -206,7 +206,10 @@ export default function MainContainer({ children }: { children: React.ReactNode 
     );
 
     return (
-        <div className={`container-fluid p-0 vh-100`} style={{ backgroundColor: '#000000', overflow: 'hidden' }}>
+        <div
+            className={`container-fluid p-0 vh-100 ${styles.mainContainer}`}
+            style={{ backgroundColor: '#000000', overflow: 'hidden' }}
+        >
             {isLoading && spinner}
             <div className="row">
                 <div className={`col-1 ${styles.toglle} p-0`}>
