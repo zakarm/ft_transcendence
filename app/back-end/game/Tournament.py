@@ -5,6 +5,8 @@ import sys
 class Tournament:
     def __init__(self, tournament_id):
         self.tournament_id = tournament_id
+        self.ended = False
+        self.started = False
         self.players = []
         self.games = {
             "quarter_final": {
@@ -82,17 +84,37 @@ class Tournament:
             },
         }
 
-    def is_tournament_ready(self):
+    def is_ready(self):
         try:
             return len(self.players) == 8
         except Exception as e:
-            print(f"An error occurred in is_tournament_ready: {e}", file=sys.stderr)
+            print(f"An error occurred in is_ready: {e}", file=sys.stderr)
 
     def add_player(self, player):
         try:
             self.players.append(player)
         except Exception as e:
             print(f"An error occurred in add_player: {e}", file=sys.stderr)
+
+    def reconect_player(self, player):
+        try:
+            for player_ in self.players:
+                if player_["email"] == player["email"]:
+                    match_id = player_["match_id"]
+                    player_["channel"] = player["channel"]
+                    game = self.get_room_game(match_id)
+                    game.reconecting_user(player_["channel"], player_["email"])
+        except Exception as e:
+            print(f"An error occurred in reconect_player: {e}", file=sys.stderr)
+
+    def is_joined(self, email):
+        try:
+            for player in self.players:
+                if player["email"] == email:
+                    return True
+            return False
+        except Exception as e:
+            print(f"An error occurred in is_joined: {e}", file=sys.stderr)
 
     def set_player_match_id(self, email, match_id):
         try:
@@ -101,6 +123,14 @@ class Tournament:
                     player["match_id"] = match_id
         except Exception as e:
             print(f"An error occurred in set_player_match_id: {e}", file=sys.stderr)
+
+    def get_match_id(self, email):
+        try:
+            for player in self.players:
+                if player["email"] == email:
+                    return player["match_id"]
+        except Exception as e:
+            print(f"An error occurred in get_match_id: {e}", file=sys.stderr)
 
     def get_player_by_name(self, name):
         try:

@@ -190,7 +190,7 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
 
     # -----------------------> 3. connect <-----------------------
 
-    async def find_or_create_tournamnet(self, user):
+    async def find_tournamnet(self, user):
         try:
             player = {
                 "data": {
@@ -207,17 +207,24 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
             rooms_items = get_rooms_items()
             for tournament_name, tournament in rooms_items:
                 if tournament_name == f"tournament_{self.tournament_id}":
-                    tournament.add_player(player)
-                    return tournament_name, tournament
+                    if tournament.is_joined(user.email):
+                        tournament.reconect_player(player)
+                        match_id = tournament.get_match_id(user.email)
+                        await self.channel_layer.group_add(match_id, self.channel_name)
+                        return tournament_name, tournament
+                    elif not tournament.is_ready():
+                        if not tournament.is_joined(user.email):
+                            tournament.add_player(player)
+                            return tournament_name, tournament
+                    else:
+                        return None, None
             new_tournament = Tournament(self.tournament_id)
             new_tournament_name = f"tournament_{self.tournament_id}"
             add_room(new_tournament_name, new_tournament)
             new_tournament.add_player(player)
             return new_tournament_name, new_tournament
         except Exception as e:
-            print(
-                f"An error occurred in find_or_create_tournamnet: {e}", file=sys.stderr
-            )
+            print(f"An error occurred in find_tournamnet: {e}", file=sys.stderr)
 
     async def connect(self):
         try:
@@ -231,16 +238,15 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                 # print(f"Tournament ID: {self.tournament_id}", file=sys.stderr)
                 await self.accept()
                 self.user = await get_user(user_id=self.scope["user"].id)
-                self.tournament_name, self.tournament = (
-                    await self.find_or_create_tournamnet(self.user)
+                self.tournament_name, self.tournament = await self.find_tournamnet(
+                    self.user
                 )
                 await self.channel_layer.group_add(
                     self.tournament_name, self.channel_name
                 )
-                if self.tournament.is_tournament_ready():
+                if self.tournament.is_ready() and self.tournament.started == False:
                     asyncio.ensure_future(self.tournament_manager())
-                    print(f"Tournament is ready", file=sys.stderr)
-                # await self.connction_ack()
+                    print("Tournament started", file=sys.stderr)
             else:
                 await self.close()
         except Exception as e:
@@ -249,10 +255,11 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
     # -----------------------> 4. disconnect <-----------------------
     async def disconnect(self, close_code):
         try:
-            # room = _tournament.get_room_game(match_id)
-            # room.set_reconect(self.user.email)
-            # if room.get_user2_stat():
-            #     room.end_game()
+            match_id = self.tournament.get_match_id(self.user.email)
+            room = self.tournament.get_room_game(match_id)
+            room.set_reconect(self.user.email)
+            if room.get_user2_stat():
+                room.end_game()
             # await self.channel_layer.group_discard(self.room_name, self.channel_name)
             pass
         except Exception as e:
@@ -320,6 +327,7 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
 
     async def tournament_manager(self):
         try:
+            self.tournament.started = True
             self.tournament.generate_qf_players()
             message = {
                 "action": "TournamentData",
@@ -376,9 +384,9 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                 if task_3 and task_4 and task_3.done() and task_4.done() and not task_6:
                     resault3 = task_3.result()
                     resault4 = task_4.result()
-                    _channel3= self.tournament.get_qf_winner(3, resault3)
+                    _channel3 = self.tournament.get_qf_winner(3, resault3)
                     await self.channel_layer.group_discard(group_name3, _channel3)
-                    _channel4= self.tournament.get_qf_winner(4, resault4)
+                    _channel4 = self.tournament.get_qf_winner(4, resault4)
                     await self.channel_layer.group_discard(group_name4, _channel4)
                     self.tournament.promote_qf_winner(3, resault3)
                     self.tournament.promote_qf_winner(4, resault4)
@@ -400,6 +408,7 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                     task_7 = asyncio.ensure_future(self.start_game(group_name7))
 
                 await asyncio.sleep(1)
+            self.tournament.ended = True
 
         except Exception as e:
             print(f"An error occurred in tournament_manager: {e}", file=sys.stderr)
@@ -440,8 +449,8 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
     async def send_score(self, match_id, _tournament):
         try:
             room = _tournament.get_room_game(match_id)
-            user1_score =  room.getScores()["user1"]
-            user2_score =  room.getScores()["user2"]
+            user1_score = room.getScores()["user1"]
+            user2_score = room.getScores()["user2"]
             _tournament.update_rooms_scores(match_id, "user1", user1_score)
             _tournament.update_rooms_scores(match_id, "user2", user2_score)
             message = {
@@ -514,16 +523,14 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                         await asyncio.sleep(1)
                         message = {"action": "reconnecting"}
                         await self.broadcast_message(message, match_id)
-                        await self.broadcast_message(
-                            {"action": "countdown", "count": 15 - i}, match_id
-                        )
-                        if (i := i + 1) > 15:
+                        message = {"action": "countdown", "count": 20 - i}
+                        await self.broadcast_message(message, match_id)
+                        if (i := i + 1) > 20:
                             room.end_game()
                             room.make_user_winner(room.get_online_user())
                             await self.send_score(match_id, _tournament)
                             await self.add_game_to_db(match_id, _tournament)
                             await self.send_winner_message(match_id, _tournament)
-                            # delete_room(self.room_name)
                             await asyncio.sleep(3)
                             return room.get_winner_index()
                     await self.opponents(match_id, _tournament)
@@ -534,10 +541,9 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                     await asyncio.sleep(5)
                 if room.is_paused():
                     await self.broadcast_message({"action": "pause"}, match_id)
-                    for i in range(15, 0, -1):
-                        await self.broadcast_message(
-                            {"action": "countdown", "count": i}, match_id
-                        )
+                    for i in range(20, 0, -1):
+                        message = {"action": "countdown", "count": i}
+                        await self.broadcast_message(message, match_id)
                         await asyncio.sleep(1)
                     room.set_game_resume()
                     # await self.opponents()
@@ -555,7 +561,6 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                         room.end_game()
                         await self.add_game_to_db(match_id, _tournament)
                         await self.send_winner_message(match_id, _tournament)
-                        # delete_room(self.room_name)
                         await asyncio.sleep(3)
                         return room.get_winner_index()
                     room.paddle_reset()
@@ -594,7 +599,6 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
             ball_velocity_z = 0.05 * random.choice([-1, 1])
             room.set_ball_position(0, ball_position_z)
             room.set_ball_velocity(ball_velocity_x, ball_velocity_z)
-            # return ball_position_z, ball_velocity_x, ball_velocity_z
             message = {
                 "action": "reset",
                 "ball_position_x": 0,
