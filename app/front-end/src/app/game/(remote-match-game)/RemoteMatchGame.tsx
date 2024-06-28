@@ -22,53 +22,29 @@ interface Player {
 
 const RemoteMatchGame: React.FC = () => {
     const access = Cookies.get('access');
-
     const { webSocket, gameState, connectionInfo, countDown } = Web_Socket(
         `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/pingpong/?token=${access}`,
     );
 
-    const [MyProfile, setMyProfile] = useState<Player>({
-        name: 'username',
+    const defaultPlayer: Player = {
+        name: '',
         imageUrl: '',
         stats: {
             adaptation: 0,
             agility: 0,
             winStreaks: 0,
             endurance: 0,
-            eliteTierRanking: 5,
+            eliteTierRanking: 0,
         },
         index: 0,
-    });
+    };
 
-    const [opponents, setOpponents] = useState<Player[]>([
-        {
-            name: 'username',
-            imageUrl: '',
-            stats: {
-                adaptation: 0,
-                agility: 0,
-                winStreaks: 0,
-                endurance: 0,
-                eliteTierRanking: 0,
-            },
-            index: 0,
-        },
-        {
-            name: 'username',
-            imageUrl: '',
-            stats: {
-                adaptation: 0,
-                agility: 0,
-                winStreaks: 0,
-                endurance: 0,
-                eliteTierRanking: 0,
-            },
-            index: 0,
-        },
-    ]);
+    const [myProfile, setMyProfile] = useState<Player>(defaultPlayer);
+    const [opponents, setOpponents] = useState<Player[]>([defaultPlayer, defaultPlayer]);
 
     useEffect(() => {
         setMyProfile({
+            ...myProfile,
             name: connectionInfo.username,
             imageUrl: connectionInfo.user_image,
             stats: {
@@ -78,10 +54,11 @@ const RemoteMatchGame: React.FC = () => {
                 endurance: 90,
                 eliteTierRanking: 75,
             },
-            index: 0,
         });
+
         setOpponents([
             {
+                ...defaultPlayer,
                 name: connectionInfo.username1,
                 imageUrl: connectionInfo.user1_image,
                 stats: {
@@ -94,6 +71,7 @@ const RemoteMatchGame: React.FC = () => {
                 index: 1,
             },
             {
+                ...defaultPlayer,
                 name: connectionInfo.username2,
                 imageUrl: connectionInfo.user2_image,
                 stats: {
@@ -112,7 +90,7 @@ const RemoteMatchGame: React.FC = () => {
         <div className="Lobby_container">
             {gameState === 'lobby' && (
                 <>
-                    <PlayerCard {...MyProfile} />
+                    <PlayerCard {...myProfile} />
                     <div className="blurred-background"></div>
                     <div className="t-text">
                         <div className="search-text">SEARCHING...</div>

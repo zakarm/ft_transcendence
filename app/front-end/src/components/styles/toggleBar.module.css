@@ -5,31 +5,31 @@
     box-sizing: border-box;
     opacity: 1;
     background-color: #606060;
+    cursor: pointer;
 }
 
 .link{
     text-decoration: none;
 }
 
-@media (max-height: 500px) and (min-height: 350px) {
-    .title h3{
+@media (max-height: 570px) and (min-height: 350px) {
+    .title div{
         font-size: small;
     }
 
-    .s_icon{
-        height: 38px;
-        width: 38px;
+    .title .icon{
+        font-size: 0.5em;
     }
 }
 
-@media (max-height: 349px)
+@media (max-height: 400px)
 {
-    .title h3{
-        font-size: x-small;
+    .title div{
+        font-size: xx-small;
+        padding-bottom: 2px;
     }
 
-    .s_icon{
-        height: 24px;
-        width: 24px;
+    .title .icon{
+        font-size: 0.2em;
     }
 }

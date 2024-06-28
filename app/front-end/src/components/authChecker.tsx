@@ -15,10 +15,14 @@ const AuthChecker = ({ children }: { children: React.ReactNode }) => {
         const authentication = async () => {
             try {
                 const access = Cookies.get('access');
+                const csrftoken = Cookies.get('csrftoken') || '';
                 if (access) {
                     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/verify`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrftoken,
+                        },
                         body: JSON.stringify({ token: access }),
                     });
                     if (response.ok) {
@@ -46,7 +50,7 @@ const AuthChecker = ({ children }: { children: React.ReactNode }) => {
                     <p className={`${styles.loadingMessage} valo-font`}>LOADING ...</p>
                 </div>
             </MainContainer>
-            
+
         );
     }
 

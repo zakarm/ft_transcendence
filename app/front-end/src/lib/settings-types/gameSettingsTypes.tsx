@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from 'react'
 
 interface   UserInfoTypes {
+    is_local : boolean;
     first_name: string;
     last_name: string;
     username: string;
@@ -11,7 +12,6 @@ interface   UserInfoTypes {
     new_password: string;
     repeat_password: string;
     is_2fa_enabled: boolean;
-    two_fa_secret_key: string;
     table_color: string;
     ball_color: string;
     paddle_color: string;
@@ -22,18 +22,18 @@ interface   UserInfoTypes {
 }
 
 interface SettingsProps {
-    valuesToPost : {
+    oldAccountValues : {
         [formLabel : string] : string | boolean;
     };
-    accountValues : {
+    currentAccoutValues : {
         [formLabel : string] : string | boolean;
     };
     updateField : (key : string, value : string | boolean) => void;
 
-    setValuesToPost : Dispatch<SetStateAction<{
+    setOldAccountValues : Dispatch<SetStateAction<{
         [formLabel : string] : string | boolean;
     }>>;
-    setAccountValues : Dispatch<SetStateAction<{
+    setCurrentAccoutValues : Dispatch<SetStateAction<{
         [formLabel : string] : string | boolean;
     }>>;
 }

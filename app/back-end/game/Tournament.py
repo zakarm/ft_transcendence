@@ -1,9 +1,12 @@
-import random
 from .room import RoomObject
+import sys
+
 
 class Tournament:
-    def __init__(self, tournament_id):
+    def __init__(self, tournament_id, tournament_name, difficulty):
         self.tournament_id = tournament_id
+        self.ended = False
+        self.started = False
         self.players = []
         self.games = {
             "quarter_final": {
@@ -42,116 +45,245 @@ class Tournament:
             },
         }
 
+        self.winner = None
+
         self.data = {
+            "tournament_name": tournament_name,
+            "difficulty": difficulty,
             "quarter_final": {
                 "match1": {
-                    "user1": {"name": "", "photoUrl": "", "score": 0},
-                    "user2": {"name": "", "photoUrl": "", "score": 0},
+                    "user1": {"name": "", "photoUrl": "", "score": 0, "status": True},
+                    "user2": {"name": "", "photoUrl": "", "score": 0, "status": True},
                 },
                 "match2": {
-                    "user1": {"name": "", "photoUrl": "", "score": 0},
-                    "user2": {"name": "", "photoUrl": "", "score": 0},
+                    "user1": {"name": "", "photoUrl": "", "score": 0, "status": True},
+                    "user2": {"name": "", "photoUrl": "", "score": 0, "status": True},
                 },
                 "match3": {
-                    "user1": {"name": "", "photoUrl": "", "score": 0},
-                    "user2": {"name": "", "photoUrl": "", "score": 0},
+                    "user1": {"name": "", "photoUrl": "", "score": 0, "status": True},
+                    "user2": {"name": "", "photoUrl": "", "score": 0, "status": True},
                 },
                 "match4": {
-                    "user1": {"name": "", "photoUrl": "", "score": 0},
-                    "user2": {"name": "", "photoUrl": "", "score": 0},
+                    "user1": {"name": "", "photoUrl": "", "score": 0, "status": True},
+                    "user2": {"name": "", "photoUrl": "", "score": 0, "status": True},
                 },
             },
             "semi_final": {
                 "match1": {
-                    "user1": {"name": "", "photoUrl": "", "score": 0},
-                    "user2": {"name": "", "photoUrl": "", "score": 0},
+                    "user1": {"name": "", "photoUrl": "", "score": 0, "status": True},
+                    "user2": {"name": "", "photoUrl": "", "score": 0, "status": True},
                 },
                 "match2": {
-                    "user1": {"name": "", "photoUrl": "", "score": 0},
-                    "user2": {"name": "", "photoUrl": "", "score": 0},
+                    "user1": {"name": "", "photoUrl": "", "score": 0, "status": True},
+                    "user2": {"name": "", "photoUrl": "", "score": 0, "status": True},
                 },
             },
             "final": {
                 "match1": {
-                    "user1": {"name": "", "photoUrl": "", "score": 0},
-                    "user2": {"name": "", "photoUrl": "", "score": 0},
+                    "user1": {"name": "", "photoUrl": "", "score": 0, "status": True},
+                    "user2": {"name": "", "photoUrl": "", "score": 0, "status": True},
                 },
             },
         }
 
-    def is_tournament_ready(self):
-        return len(self.players) == 8
+    def is_ready(self):
+        try:
+            return len(self.players) == 8
+        except Exception as e:
+            print(f"An error occurred in is_ready: {e}", file=sys.stderr)
 
     def add_player(self, player):
-        self.players.append(player)
+        try:
+            self.players.append(player)
+        except Exception as e:
+            print(f"An error occurred in add_player: {e}", file=sys.stderr)
 
-    def generate_quatre_final_players(self):
-        for i in range(4):
-            match_key = f"match{i+1}"
-            player1 = self.players[2 * i]
-            player2 = self.players[2 * i + 1]
+    def reconect_player(self, player):
+        try:
+            for player_ in self.players:
+                if player_["email"] == player["email"]:
+                    match_id = player_["match_id"]
+                    player_["channel"] = player["channel"]
+                    game = self.get_room_game(match_id)
+                    game.reconecting_user(player_["channel"], player_["email"])
+        except Exception as e:
+            print(f"An error occurred in reconect_player: {e}", file=sys.stderr)
 
-            # Assign players to quarter-final matches
-            self.data["quarter_final"][match_key]["user1"] = player1["data"]
-            self.data["quarter_final"][match_key]["user2"] = player2["data"]
-
-            # Add players to the game rooms
-            self.games["quarter_final"][match_key]["room"].add_user(
-                player1["channel"], player1["email"], player1["object"]
-            )
-            self.games["quarter_final"][match_key]["room"].add_user(
-                player2["channel"], player2["email"], player2["object"]
-            )
-            self.set_player_match_id(
-                player1["email"], self.games["quarter_final"][match_key]["room_id"]
-            )
-            self.set_player_match_id(
-                player2["email"], self.games["quarter_final"][match_key]["room_id"]
-            )
+    def is_joined(self, email):
+        try:
+            for player in self.players:
+                if player["email"] == email:
+                    return True
+            return False
+        except Exception as e:
+            print(f"An error occurred in is_joined: {e}", file=sys.stderr)
 
     def set_player_match_id(self, email, match_id):
-        for player in self.players:
-            if player["email"] == email:
-                player["match_id"] = match_id
+        try:
+            for player in self.players:
+                if player["email"] == email:
+                    player["match_id"] = match_id
+        except Exception as e:
+            print(f"An error occurred in set_player_match_id: {e}", file=sys.stderr)
+
+    def get_match_id(self, email):
+        try:
+            for player in self.players:
+                if player["email"] == email:
+                    return player["match_id"]
+        except Exception as e:
+            print(f"An error occurred in get_match_id: {e}", file=sys.stderr)
 
     def get_player_by_name(self, name):
-        for player in self.players:
-            if player["data"]["name"] == name:
-                return player
+        try:
+            for player in self.players:
+                if player["data"]["name"] == name:
+                    return player
+        except Exception as e:
+            print(f"An error occurred in get_player_by_name: {e}", file=sys.stderr)
 
     def get_players_channel(self, match_id):
-        _players = []
-        for player in self.players:
-            if player["match_id"] == match_id:
-                _players.append(player["channel"])
-        return _players
+        try:
+            _players = []
+            for player in self.players:
+                if player["match_id"] == match_id:
+                    _players.append(player["channel"])
+            return _players
+        except Exception as e:
+            print(f"An error occurred in get_players_channel: {e}", file=sys.stderr)
+
+    def get_player_by_maych_id(self, match_id):
+        try:
+            _players = []
+            for player in self.players:
+                if player["match_id"] == match_id:
+                    _players.append(player)
+            return _players
+        except Exception as e:
+            print(f"An error occurred in get_player_by_maych_id: {e}", file=sys.stderr)
 
     def get_room_game(self, room_id):
-        for key in self.games:
-            for match in self.games[key]:
-                if self.games[key][match]["room_id"] == room_id:
-                    return self.games[key][match]["room"]
+        try:
+            for key in self.games:
+                for match in self.games[key]:
+                    if self.games[key][match]["room_id"] == room_id:
+                        return self.games[key][match]["room"]
+        except Exception as e:
+            print(f"An error occurred in get_room_game: {e}", file=sys.stderr)
 
-    def promote_quarter_final_winner(self, match, user):
-        match_key = f"match{1 if match <= 2 else 2}"
-        match_key_ = f"match{match}"
-        if self.data["semi_final"][match_key]["user1"]["name"] == "":
-            user_key = f"user1"
-        else:
-            user_key = f"user2"
-        user_key_ = f"user{user}"
-        self.data["semi_final"][match_key][user_key] = self.data["quarter_final"][
-            match_key_
-        ][user_key_]
-        player = self.get_player_by_name(
-            self.data["quarter_final"][match_key_][user_key_]["name"]
-        )
-        self.games["semi_final"][match_key]["room"].add_user(
-            player["channel"], player["email"], player["object"]
-        )
-        self.set_player_match_id(
-            player["email"], self.games["semi_final"][match_key]["room_id"]
-        )
+    def update_rooms_scores(self, room_id, user, score):
+        try:
+            for key in self.games:
+                for match in self.games[key]:
+                    if self.games[key][match]["room_id"] == room_id:
+                        self.data[key][match][user]["score"] = score
+        except Exception as e:
+            print(f"An error occurred in update_rooms_scores: {e}", file=sys.stderr)
 
-    # def update_data_score(self, round, match, user, score):
-    #     self.data[round][match][user]["score"] = score
+    def generate_qf_players(self):
+        try:
+            for i in range(4):
+                match_key = f"match{i+1}"
+                player1 = self.players[2 * i]
+                player2 = self.players[2 * i + 1]
+                self.data["quarter_final"][match_key]["user1"] = player1["data"]
+                self.data["quarter_final"][match_key]["user2"] = player2["data"]
+                game = self.games["quarter_final"][match_key]["room"]
+                game.add_user(player1["channel"], player1["email"], player1["object"])
+                game.add_user(player2["channel"], player2["email"], player2["object"])
+                game_id = self.games["quarter_final"][match_key]["room_id"]
+                self.set_player_match_id(player1["email"], game_id)
+                self.set_player_match_id(player2["email"], game_id)
+        except Exception as e:
+            print(f"An error occurred in generate_qf_players: {e}", file=sys.stderr)
+
+    def promote_qf_winner(self, match, user):
+        try:
+            match_key = f"match{1 if match <= 2 else 2}"
+            match_key_ = f"match{match}"
+            if self.data["semi_final"][match_key]["user1"]["name"] == "":
+                user_key = f"user1"
+            else:
+                user_key = f"user2"
+            user_key_ = f"user{user}"
+            winner = self.data["quarter_final"][match_key_][user_key_]
+            loser = self.data["quarter_final"][match_key_][f"user{1 if user == 2 else 2}"]
+            loser["status"] = False
+            self.data["semi_final"][match_key][user_key]["name"] = winner["name"]
+            self.data["semi_final"][match_key][user_key]["photoUrl"] = winner[
+                "photoUrl"
+            ]
+            self.data["semi_final"][match_key][user_key]["status"] = True
+            self.data["semi_final"][match_key][user_key]["score"] = 0
+            player = self.get_player_by_name(winner["name"])
+            game = self.games["semi_final"][match_key]["room"]
+            game.add_user(player["channel"], player["email"], player["object"])
+            game_id = self.games["semi_final"][match_key]["room_id"]
+            self.set_player_match_id(player["email"], game_id)
+        except Exception as e:
+            print(f"An error occurred in promote_qf_winner: {e}", file=sys.stderr)
+
+    def get_qf_winner(self, match, user):
+        try:
+            match_key_ = f"match{match}"
+            user_key_ = f"user{user}"
+            winner = self.data["quarter_final"][match_key_][user_key_]
+            name = winner["name"]
+            _channel = self.get_player_by_name(name)["channel"]
+            return _channel
+        except Exception as e:
+            print(f"An error occurred in get_qf_winner: {e}", file=sys.stderr)
+
+    def promote_sf_winner(self, match, user):
+        try:
+            match_key = f"match{1}"
+            match_key_ = f"match{match}"
+            if self.data["final"][match_key]["user1"]["name"] == "":
+                user_key = f"user1"
+            else:
+                user_key = f"user2"
+            user_key_ = f"user{user}"
+            winner = self.data["semi_final"][match_key_][user_key_]
+            loser = self.data["semi_final"][match_key_][f"user{1 if user == 2 else 2}"]
+            loser["status"] = False
+            self.data["final"][match_key][user_key]["name"] = winner["name"]
+            self.data["final"][match_key][user_key]["photoUrl"] = winner["photoUrl"]
+            self.data["final"][match_key][user_key]["status"] = True
+            self.data["final"][match_key][user_key]["score"] = 0
+            player = self.get_player_by_name(winner["name"])
+            game = self.games["final"][match_key]["room"]
+            game.add_user(player["channel"], player["email"], player["object"])
+            game_id = self.games["final"][match_key]["room_id"]
+            self.set_player_match_id(player["email"], game_id)
+        except Exception as e:
+            print(f"An error occurred in promote_sf_winner: {e}", file=sys.stderr)
+
+    def get_sf_winner(self, match, user):
+        try:
+            match_key_ = f"match{match}"
+            user_key_ = f"user{user}"
+            winner = self.data["semi_final"][match_key_][user_key_]
+            name = winner["name"]
+            _channel = self.get_player_by_name(name)["channel"]
+            return _channel
+        except Exception as e:
+            print(f"An error occurred in get_sf_winner: {e}", file=sys.stderr)
+
+    def promote_final_winner(self, user):
+        try:
+            match_key = f"match{1}"
+            user_key = f"user{user}"
+            winner = self.data["final"][match_key][user_key]
+            loser = self.data["final"][match_key][f"user{1 if user == 2 else 2}"]
+            loser["status"] = False
+            self.winner = winner["name"]
+        except Exception as e:
+            print(f"An error occurred in promote_final_winner: {e}", file=sys.stderr)
+
+    def get_final_winner(self):
+        try:
+            for player in self.players:
+                if player["data"]["name"] == self.winner:
+                    return player
+        except Exception as e:
+            print(f"An error occurred in get_final_winner: {e}", file=sys.stderr)

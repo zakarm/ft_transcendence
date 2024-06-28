@@ -21,14 +21,14 @@ class Match(models.Model):
         elif self.score_user_two > self.score_user_one:
             return self.user_two
         return None
-    
+
     def get_match_result(self, player):
         winner = self.get_winner()
         if winner is None:
             return 'Draw'
         elif winner == player:
-            return 'Win'
-        return 'Lose'
+            return 'WIN'
+        return 'LOSS'
 
 class Tournaments(models.Model):
     tournament_id = models.AutoField(primary_key=True)
@@ -42,7 +42,8 @@ class Tournaments(models.Model):
         db_table = 'Tournaments'
 
 class Tournamentsmatches(models.Model):
-    tournament = models.OneToOneField(Tournaments, models.DO_NOTHING, primary_key=True)
+    id = models.AutoField(primary_key=True)
+    tournament = models.ForeignKey(Tournaments, models.DO_NOTHING)
     match = models.ForeignKey(Match, models.DO_NOTHING)
     tournament_round = models.CharField(max_length=30)
     class Meta:

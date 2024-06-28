@@ -8,7 +8,6 @@ import Notification from './Notification';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import React, { forwardRef, useState } from 'react';
 import styles from './styles/rightBar.module.css';
-import Image from 'next/image';
 
 interface User {
     id: number;
@@ -113,8 +112,8 @@ export default function RightBar({
                 <div className={`row-fluid d-flex flex-row align-items-center p-0 vh-100`}>
                     <div className="col-1 vh-100 d-flex justify-content-end align-items-center text-center">
                         <div className={`${styles.drag_class} pt-3 pb-3`}
-                            style={{ backgroundColor: '#161625', 
-                            borderRadius: '15px 0 0 15px', 
+                            style={{ backgroundColor: '#161625',
+                            borderRadius: '15px 0 0 15px',
                             cursor: 'pointer'}}>
                             <FaAngleRight color="#FFEBEB" size="1.2em" />
                         </div>
@@ -139,6 +138,7 @@ export default function RightBar({
                                                         </span>
                                                     </div>
                                                 </Dropdown.Toggle>
+                                                {notifications_data && notifications_data.length > 0 && (
                                                 <Dropdown.Menu
                                                     className={`${styles.drop_class} border`}
                                                     style={{ background: '#161625' }}>
@@ -153,11 +153,12 @@ export default function RightBar({
                                                             </Dropdown.Item>
                                                         ))}
                                                 </Dropdown.Menu>
+                                                )}
                                             </Dropdown>
                                         </div>
                                         <div className="row d-flex flex-column text-center">
                                             <div className="col">
-                                                <Image
+                                                <img
                                                     className={`${styles.img_class}`}
                                                     width={60}
                                                     height={60}
@@ -167,7 +168,7 @@ export default function RightBar({
                                             </div>
                                             <div className={`col ${styles.profile} mt-2`}>
                                                 <h3 className="valo-font">{userdata && userdata.username}</h3>
-                                                <h4 style={{ fontFamily: 'intim', color: '#FFEBEB' }}>
+                                                <h4 style={{ fontFamily: 'Itim', color: '#FFEBEB' }}>
                                                     #{userdata && userdata.id}
                                                 </h4>
                                             </div>
@@ -197,7 +198,7 @@ export default function RightBar({
                                         style={{ cursor: 'pointer' }}
                                         onClick={setfriendModal}>
                                         <div className={`col-xl-8 col-6 ${styles.place}`}>
-                                            <div style={{ fontFamily: 'intim', color: '#FFEBEB' }}>Add Friend</div>
+                                            <div style={{ fontFamily: 'Itim', color: '#FFEBEB' }}>Add Friend</div>
                                         </div>
                                         <div className="col-xl-4 col-6">
                                             <ImUserPlus className={`${styles.ico}`} color="#FFEBEB" size="2em" />

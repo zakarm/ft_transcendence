@@ -13,6 +13,9 @@ RESET := $(shell tput -Txterm sgr0)
 RED := $(shell tput -Txterm setaf 1)
 BLUE := $(shell tput -Txterm setaf 4)
 
+# Used to delete files in case permission denied (expect value sudo)
+sudo=
+
 # Define targets
 .PHONY: help start build up down restart logs create-data-dir remove-data-dir remove-volumes clean re check tools
 
@@ -67,7 +70,7 @@ create-data-dir: ## Create the data directory
 
 remove-data-dir: ## Remove the data directory
 	@echo "$(YELLOW)Removing data directory $(DATA_DIR)...$(RESET)"
-	@rm -rf $(DATA_DIR)
+	@${sudo} rm -rf $(DATA_DIR)
 
 remove-volumes: ## Remove Docker volumes
 	@echo "$(YELLOW)Removing Docker volumes...$(RESET)"
@@ -75,14 +78,14 @@ remove-volumes: ## Remove Docker volumes
 
 clean: down remove-volumes remove-data-dir ## Clean up build artifacts and temporary files
 	@echo "$(YELLOW)Cleaning up build artifacts and temporary files...$(RESET)"
-	@rm -rf ./app/front-end/node_modules
-	@rm -rf ./app/front-end/.next
-	@find . -type d -name '__pycache__' -exec rm -rf {} +
-	@rm -rf ./app/back-end/authentication/migrations
-	@rm -rf ./app/back-end/compu_ai/migrations
-	@rm -rf ./app/back-end/game/migrations
-	@rm -rf ./app/back-end/dashboards/migrations
-	@rm -rf ./app/back-end/chat/migrations
+	@${sudo} rm -rf ./app/front-end/node_modules
+	@${sudo} rm -rf ./app/front-end/.next
+	@find . -type d -name '__pycache__' -exec ${sudo} rm -rf {} +
+	@${sudo} rm -rf ./app/back-end/authentication/migrations
+	@${sudo} rm -rf ./app/back-end/compu_ai/migrations
+	@${sudo} rm -rf ./app/back-end/game/migrations
+	@${sudo} rm -rf ./app/back-end/dashboards/migrations
+	@${sudo} rm -rf ./app/back-end/chat/migrations
 
 re: clean start ## Clean and start Docker containers
 
@@ -92,12 +95,16 @@ check: ## Check the status of the Docker containers
 	@echo "$(BLUE)2. Check for package updates$(RESET)"
 	@echo "$(BLUE)3. Check for Update package versions$(RESET)"
 	@echo "$(BLUE)4. Check for unused dependencies$(RESET)"
-	@read -p "Select a tool (1-4): " tool_choice; \
+	@echo "$(BLUE)5. Run frontend tests$(RESET)"
+	@echo "$(BLUE)6. Run csslint$(RESET)"
+	@read -p "Select a tool (1-6): " tool_choice; \
 	case $$tool_choice in \
 		1) tool_command="npx tsc --noEmit";; \
 		2) tool_command="npx npm-check --skip-unused";; \
 		3) tool_command="npx npm-check-updates --silent";; \
 		4) tool_command="npm run depcheck";; \
+		5) tool_command="npm test";; \
+		6) tool_command="find src -name "*.css" -exec npx csslint {} + > lint-results.log";; \
 		*) echo "Invalid choice!"; exit 1;; \
 	esac; \
 	echo "$(YELLOW)Running $$tool_command...$(RESET)"; \
@@ -149,7 +156,7 @@ Docker-ip: ## Get the IP address of the Docker containers
 	@docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(shell docker ps -q)
 
 IP_ADDRESS := $(shell ifconfig | grep inet | awk 'NR==5 {print $$2}')
-HOST_NAME := $(shell echo "10.12.5.13" | tr '.' '\n' | awk 'NR > 1 { if (NR == 2) segment = "e" substr($$0, 2); else if (NR == 3) segment = "r" $$0; else if (NR == 4) segment = "p" $$0; output = output segment } END { print output ".1337.ma" }')
+HOST_NAME := $(shell echo ${IP_ADDRESS} | tr '.' '\n' | awk 'NR > 1 { if (NR == 2) segment = "e" substr($$0, 2); else if (NR == 3) segment = "r" $$0; else if (NR == 4) segment = "p" $$0; output = output segment } END { print output ".1337.ma" }')
 
 linkIp: ## Link IP address
 	@echo "$(YELLOW)Linking IP address...$(RESET)"
@@ -162,3 +169,7 @@ restorenv: ## Restore the .env file
 	@echo "$(YELLOW)Restoring the .env file...$(RESET)"
 	@cp .env.example .env
 	@echo "$(GREEN).env file restored!$(RESET)"
+
+datagenerator: ## Generate data
+	@echo "$(YELLOW)Generating data...$(RESET)"
+	@docker exec -it back-end bash -c "python3 generate_users.py"

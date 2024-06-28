@@ -3,37 +3,46 @@ import GameHistoryCard from "@/components/table";
 import { PlayerMatchesTypes } from '@/lib/StatisticsPageTypes/StatisticsPageTypes'
 
 interface GameData {
+    image: string;
     player: string;
     score: number;
     date: string;
     result: 'WIN' | 'LOSS';
 }
 
+interface GameHistoryTableTypes {
+    playerMatches: PlayerMatchesTypes[];
+    image_url : string;
+}
 
-function    prepareDataForTable({player_matches} : { player_matches: PlayerMatchesTypes[] }) : GameData[]  {
+function    prepareDataForTable({playerMatches, image_url} : GameHistoryTableTypes) : GameData[]  {
     const shit : GameData[] = []
-    let data : GameData = {
+    let data: GameData = {
+        image:"",
         player: "",
         score: 0,
         date: "",
         result: 'WIN'
     }
-    player_matches.map((value) => {
-        data.player = value.player_name;
-        data.date = value.date;
-        data.score = value.player_score;
-        data.result = value.result;
 
+    playerMatches.forEach((value) => {
+        const data = {
+            image: image_url,
+            player: value.player_name,
+            date: value.date,
+            score: value.player_score,
+            result: value.result
+        };
+    
         shit.push(data);
-    })
-
+    });
     return (shit);
 }
 
 // take a prop, and adapt keys
-function    GameHistoryTable(player_matches  : { player_matches: PlayerMatchesTypes[] }) {
+function    GameHistoryTable({playerMatches, image_url}  : GameHistoryTableTypes) {
 
-    const   shit = prepareDataForTable(player_matches);
+    const   shit = prepareDataForTable({playerMatches, image_url});
 
     return (
         <section className={`${styles.table_container}`}>
@@ -53,4 +62,7 @@ function    GameHistoryTable(player_matches  : { player_matches: PlayerMatchesTy
     )
 }
 
+export type {
+    GameHistoryTableTypes as GameHistoryTableTypes
+}
 export { GameHistoryTable };

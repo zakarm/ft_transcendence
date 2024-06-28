@@ -101,9 +101,11 @@ class RoomObject:
 
     def update_score(self):
         if self.ball_position["x"] < -5:
-            self.score["user1"] += 1
+            if self.score["user1"] < 7:
+                 self.score["user1"] += 1
         elif self.ball_position["x"] > 5:
-            self.score["user2"] += 1
+            if self.score["user2"] < 7:
+                self.score["user2"] += 1
 
     def getScores(self):
         return self.score
@@ -178,11 +180,6 @@ class RoomObject:
 
 
     def get_online_user(self):
-        # check if the both users are online
-        # if self.Original_users["user1"]["user_id"] == self.reconect_user:
-        #     return self.Original_users["user2"]["user_id"]
-        # if self.Original_users["user2"]["user_id"] == self.reconect_user:
-        #     return self.Original_users["user1"]["user_id"]
         if self.Original_users["user1"]["user_id"] == self.reconect_user[0]:
             return self.Original_users["user2"]["user_id"]
         if self.Original_users["user2"]["user_id"] == self.reconect_user[0]:
@@ -228,6 +225,12 @@ class RoomObject:
             return self.Original_users["user1"]["tackle"]
         elif user_index == 2:
             return self.Original_users["user2"]["tackle"]
+
+    def get_winner_index(self):
+        if self.score["user1"] == 7:
+            return 1
+        elif self.score["user2"] == 7:
+            return 2
 
     # ------------------------> ball <------------------------
     def set_ball_position(self, x, z):
@@ -351,19 +354,6 @@ class RoomObject:
             self.ball_velocity["velocity_z"] *= -1
 
     # ------------------------> paddle <------------------------
-    def bot(self):
-        if (
-            self.ball_position["x"] < 0
-            and self.ball_position["z"] > self.paddle1_position["z"]
-        ):
-            self.paddle1_speed = 0.1
-        elif (
-            self.ball_position["x"] < 0
-            and self.ball_position["z"] < self.paddle1_position["z"]
-        ):
-            self.paddle1_speed = -0.1
-        else:
-            self.paddle1_speed = 0
 
     def paddle_update(self):
         newPosition1 = self.paddle1_position["z"] + self.paddle1_speed

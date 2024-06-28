@@ -10,7 +10,7 @@ function GetPlayerImageTitle({
     imageSrc = '',
 }: GetPlayerImageTitleTypes) {
     const handleError = (event: ChangeEvent<HTMLImageElement>) => {
-        event.target.src = '/Rectangle.png';
+        event.target.src = '/assets/images/gameProfiles/default_profile.png';
     };
 
     return (

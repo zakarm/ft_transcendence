@@ -3,7 +3,7 @@ import asyncio
 import json
 import random
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime
 
 # Third-party imports
 from channels.db import database_sync_to_async
@@ -135,9 +135,8 @@ class GameConsumer(AsyncWebsocketConsumer):
         try:
             room = get_room(self.room_name)
             winner = room.get_winner()
-            await self.channel_layer.group_send(
-                self.room_name, {"type": "w_message", "winner": winner}
-            )
+            data = {"type": "w_message", "winner": winner}
+            await self.channel_layer.group_send(self.room_name, data)
         except Exception as e:
             print(f"An error occurred in send_direct_message: {e}", file=sys.stderr)
 
@@ -145,22 +144,22 @@ class GameConsumer(AsyncWebsocketConsumer):
         try:
             status = "winner" if event["winner"] == self.user.email else "loser"
             message = {
-                "action": "end_game",
-                "status": status,
-                "winner": event["winner"],
+                "message": {
+                    "action": "end_game",
+                    "status": status,
+                    "winner": event["winner"],
+                },
+                "time": current_time(),
             }
-            await self.send(
-                text_data=json.dumps({"message": message, "time": current_time()})
-            )
+            await self.send(text_data=json.dumps(message))
         except Exception as e:
             print(f"An error occurred in message: {e}", file=sys.stderr)
 
     # -----------------------> 1. broadcast_message <-----------------------
     async def broadcast_message(self, message):
         try:
-            await self.channel_layer.group_send(
-                self.room_name, {"type": "message", "message": message}
-            )
+            data = {"type": "message", "message": message}
+            await self.channel_layer.group_send(self.room_name, data)
         except Exception as e:
             print(f"An error occurred in broadcast_message: {e}", file=sys.stderr)
 
@@ -168,9 +167,8 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def message(self, event):
         try:
             message = event["message"]
-            await self.send(
-                text_data=json.dumps({"message": message, "time": current_time()})
-            )
+            data = {"message": message, "time": current_time()}
+            await self.send(text_data=json.dumps(data))
         except Exception as e:
             print(f"An error occurred in message: {e}", file=sys.stderr)
 
@@ -190,7 +188,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 "table_color": game_data.table_color,
                 "ball_color": game_data.ball_color,
                 "paddle_color": game_data.paddle_color,
-                "table_position" : game_data.table_position,
+                "table_position": game_data.table_position,
             }
             await self.message({"message": message})
         except Exception as e:
@@ -216,7 +214,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         try:
             room = get_room(self.room_name)
             room.set_reconect(self.user.email)
-            if (room.get_user2_stat()):
+            if room.get_user2_stat():
                 room.end_game()
             # await self.channel_layer.group_discard(self.room_name, self.channel_name)
             pass
@@ -349,10 +347,9 @@ class GameConsumer(AsyncWebsocketConsumer):
                         await asyncio.sleep(1)
                         message = {"action": "reconnecting"}
                         await self.broadcast_message(message)
-                        await self.broadcast_message(
-                            {"action": "countdown", "count": 15 - i}
-                        )
-                        if (i := i + 1) > 15:
+                        message = {"action": "countdown", "count": 20 - i}
+                        await self.broadcast_message(message)
+                        if (i := i + 1) > 20:
                             room.end_game()
                             room.make_user_winner(room.get_online_user())
                             await self.send_score()
@@ -368,10 +365,9 @@ class GameConsumer(AsyncWebsocketConsumer):
                     await asyncio.sleep(5)
                 if room.is_paused():
                     await self.broadcast_message({"action": "pause"})
-                    for i in range(15, 0, -1):
-                        await self.broadcast_message(
-                            {"action": "countdown", "count": i}
-                        )
+                    for i in range(20, 0, -1):
+                        message = {"action": "countdown", "count": i}
+                        await self.broadcast_message(message)
                         await asyncio.sleep(1)
                     room.set_game_resume()
                     # await self.opponents()
@@ -426,7 +422,6 @@ class GameConsumer(AsyncWebsocketConsumer):
             ball_velocity_z = 0.05 * random.choice([-1, 1])
             room.set_ball_position(0, ball_position_z)
             room.set_ball_velocity(ball_velocity_x, ball_velocity_z)
-            # return ball_position_z, ball_velocity_x, ball_velocity_z
             message = {
                 "action": "reset",
                 "ball_position_x": 0,

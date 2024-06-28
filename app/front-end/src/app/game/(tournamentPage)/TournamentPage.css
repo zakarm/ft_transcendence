@@ -1,0 +1,129 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Itim&display=swap");
+
+.Lobby_container {
+  padding: 0;
+  position: relative;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: itim;
+}
+
+.vs_key {
+  font-family: Valorax;
+  color: white;
+  padding: 15px;
+  font-size: 55px;
+  animation: fadeIn 1s forwards;
+}
+
+.blurred-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  backdrop-filter: blur(5px);
+}
+.t-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: valorax;
+  color: white;
+  text-shadow: 0px 0px 20px rgba(255, 255, 255, 0.6), 1px 1px 1px black;
+  z-index: 2;
+  animation: pulseGlow 2s infinite ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.play-again-button,
+.back-to-home,
+.winner-text,
+.loser-text,
+.pause-text,
+.reconnect-text,
+.load-text,
+.search-text {
+  /* width: 320px; */
+  border-radius: 20px;
+  text-align: center;
+  font-size: 1.5em;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 1px solid white;
+  padding: 10px;
+  cursor: pointer;
+  margin-bottom: 15px;
+  transition: all 0.7s ease;
+}
+
+.play-again-button:hover,
+.back-to-home:hover{
+  border-color: black;
+  background-color: white;
+  color: black;
+}
+.pause-text,
+.reconnect-text,
+.load-text,
+.search-text {
+  font-size: 4em;
+  background-color: transparent;
+  border: 0;
+  color: white;
+}
+
+.winner-text {
+  font-size: 4em;
+  background-color: transparent;
+  border: 0;
+  color: rgba(70, 198, 70, 0.5);
+}
+
+.loser-text {
+  font-size: 4em;
+  background-color: transparent;
+  border: 0;
+  color: rgba(191, 63, 63, 0.5);
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes pulseGlow {
+  0% {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 1);
+  }
+  100% {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .t-text {
+    transform: scale(0.5) translate(-100%, -100%);
+  }
+  .Lobby_container {
+    flex-direction: column;
+  }
+  .vs_key {
+    transform: scale(0.7);
+  }
+}

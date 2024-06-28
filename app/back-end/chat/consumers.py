@@ -48,6 +48,10 @@ class ChatConsumer(WebsocketConsumer):
         #     self.send(text_data=json.dumps({"error": "You are not friends with the receiver or you have blocked the receiver."}))
         #     return
 
+        if len(message) >= 511:
+            self.send(text_data=json.dumps({"error": "Message is too long."}))
+            return
+
         Messages.objects.create(
             user_one=sender_obj,
             user_two=receiver_obj,
@@ -58,9 +62,9 @@ class ChatConsumer(WebsocketConsumer):
         notification = Notification.objects.create(
             user=receiver_obj,
             title = "New message !",
-            message = f"from {sender_obj.username}: {message}",
+            message = f"from {sender_obj.username}: { message[:20] + "..." if len(message) > 20 else message}",
             image_url=sender_obj.image_url,
-             link=f"{settings.FRONTEND_HOST}/chat",
+             link=f"{settings.FRONTEND_HOST}/chat?username={sender_obj.username}",
             is_chat_notif=True,
             action_by = sender_obj.username,
         )

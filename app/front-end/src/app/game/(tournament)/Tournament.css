@@ -4,6 +4,7 @@
   align-items: center;
   flex-direction: column;
   height: 100vh;
+  overflow: auto;
 }
 .Tournament_title {
   font-size: 3rem;
@@ -36,7 +37,6 @@
 }
 
 .Tournament_section {
-  overflow: auto;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;

@@ -39,26 +39,26 @@ function    GetListInput(
         opt=[],
         choosenPosition=""
     } : ListInputProps) {
-    
-    const   {accountValues, updateField} = useContext<SettingsProps>(FormContext);
+
+    const   { updateField } = useContext<SettingsProps>(FormContext);
 
     return (
         <>
             <div className={`${className} flex-wrap flex-xl-nowrap mb-4 `}>
             <label
-                    className={` col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`} 
+                    className={` col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`}
                     htmlFor={id}>
                     {labelText}
                 </label>
 
                 <div className={`${styles.inputHolder} row p-0 m-1`}>
-                    <select 
+                    <select
                         className={`itim-font ${styles.input} ps-4`}
                         name=""
                         id={id}
                         value={ choosenPosition }
                         onChange={ (e : ChangeEvent<HTMLSelectElement>) => { updateField(id, e.target.value); } }>
-                        {    
+                        {
                             opt.map((val) => (
                                 <option key={val}
                                     className={`itim-font`}
@@ -77,56 +77,62 @@ function    GetListInput(
 function    GetCheckboxInput(
     {
         className="col",
-        inputClassName="",
         inputType="text",
-        placeholder="",
         inputId="",
         labelText="",
         inputLength,
-        index=0,
-        labelClass=""
     }: Props) {
 
-    const   { accountValues, updateField } = useContext<SettingsProps>(FormContext);
-    const   [isChecked, setIsChecked] = useState<boolean>(false);
+    const   { oldAccountValues, updateField } = useContext<SettingsProps>(FormContext);
+    const   [isChecked, setIsChecked] = useState<boolean>(Boolean(oldAccountValues[inputId]));
+    const   [passOTP, setPassOTP] = useState<boolean>(Boolean(oldAccountValues[inputId]));
     const [twoFaData, setTwoFaData] = useState<{ value: string; email: string } | null>(null);
-    
-    
-    useEffect(() => {
-        setIsChecked(Boolean(accountValues[inputId]))
-    }, [accountValues[inputId]])
 
-    useEffect(() => {
-        const fetchData = async () => {
-            if (isChecked) {
-                try {
-                    const access = Cookies.get('access'); 
-                    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/control-2fa`, {
-                        method: 'POST',
-                        headers: { Authorization: `Bearer ${access}` },
-                    });
+    const fetchData = async (isChk : boolean) => {
+        if (isChk && !Boolean(oldAccountValues[inputId])) {
+            try {
+                const access = Cookies.get('access');
+                const csrftoken = Cookies.get('csrftoken') || '';
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/control-2fa`, {
+                    method: 'POST',
+                    headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
+                });
 
-                    const data = await response.json();
-                    if (response.ok) {
-                        const { url, email } = data;
-                        setTwoFaData({ value: url, email });
-                    }
-                } catch (error) {
-                    console.error('An unexpected error happened:', error);
+                const data = await response.json();
+                if (response.ok) {
+                    const { url, email } = data;
+                    setTwoFaData({ value: url, email });
                 }
-            } else {
-                setTwoFaData(null);
+            } catch (error) {
+                console.error('An unexpected error happened:', error);
             }
-        };
+        } else {
+            if (oldAccountValues[inputId] as Boolean && !isChk) {
+                updateField(inputId, isChk);
+            }
+            setTwoFaData(null);
+        }
+    };
 
-        fetchData();
-    }, [isChecked]);
+    useEffect(() => {
+        console.log(passOTP)
+        setIsChecked(passOTP)
+        updateField(inputId, passOTP);
+    }, [passOTP])
 
         return (
             <div className={`${className} flex-wrap flex-xxl-nowrap`}>
-                {twoFaData && <TwoFa value={twoFaData.value} email={twoFaData.email} qr={true}/>}
+                {
+                twoFaData &&
+                    <TwoFa
+                        value={twoFaData.value}
+                        email={twoFaData.email}
+                        qr={true}
+                        setPassOTP={setPassOTP}
+                    />
+                }
                 <label
-                    className={`col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`} 
+                    className={`col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`}
                     htmlFor={inputId}>
                     {labelText}
                 </label>
@@ -136,13 +142,14 @@ function    GetCheckboxInput(
                             type={inputType}
                             className={`${styles.input}`}
                             id={inputId}
+                            data-testid={inputId}
                             maxLength={inputLength}
                             autoComplete="off"
-                            onChange={ (e : ChangeEvent<HTMLInputElement>) => {
-                                setIsChecked(!isChecked);
-                                updateField(inputId, !isChecked);
-                            } }
                             checked={isChecked}
+                            onChange={ () => {
+                                fetchData(!isChecked);
+                                setIsChecked(!isChecked);
+                            } }
                             />
                     </label>
                 </div>
@@ -155,12 +162,9 @@ function    GetColorInput(
         className="col",
         inputClassName="",
         inputType="text",
-        placeholder="",
         inputId="",
         labelText="",
         inputLength,
-        index=0,
-        labelClass="",
         value=""
     }: Props) {
 
@@ -171,7 +175,7 @@ function    GetColorInput(
     return (
         <div className={`${className} flex-wrap flex-xxl-nowrap `}>
             <label
-                className={` col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`} 
+                className={` col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`}
                 htmlFor={inputId}>
                 {labelText}
             </label>
@@ -200,7 +204,7 @@ function    GetColorInput(
                         >Preview</button>
                 </div>
                 <div className="col-4">
-                    <button 
+                    <button
                         type="button"
                         className={`${styles.previewButton} ${inputClassName} `}
                         onClick={ (e : MouseEvent<HTMLButtonElement>) => {
@@ -215,8 +219,8 @@ function    GetColorInput(
     );
 }
 
-function    GetInputRange({className} : Props) {
-    const   { updateField, accountValues } = useContext<SettingsProps>(FormContext);
+function    GetInputRange() {
+    const   { updateField, currentAccoutValues } = useContext<SettingsProps>(FormContext);
 
 
     return (
@@ -231,10 +235,10 @@ function    GetInputRange({className} : Props) {
 
             <div className=" col d-flex justify-content-center p-0 my-3 ms-1">
                 <input type="range"
-                    min="0"
-                    max="2"
+                    min="1"
+                    max="3"
                     step="1"
-                    value={ accountValues['game_difficulty'] as string }
+                    value={ currentAccoutValues['game_difficulty'] as string }
                     className={`${styles.slider}`}
                     onChange={(e : ChangeEvent<HTMLInputElement> ) => {
                             updateField("game_difficulty", e.target.value);
@@ -275,8 +279,6 @@ function    GetInput(
         inputId="",
         labelText="",
         inputLength,
-        index=0,
-        labelClass=""
     }: Props) {
 
     const   { updateField } = useContext<SettingsProps>(FormContext);
@@ -284,7 +286,7 @@ function    GetInput(
         return (
             <div className={`${className} flex-wrap flex-xxl-nowrap`}>
                 <label
-                    className={`col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`} 
+                    className={`col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`}
                     htmlFor={inputId}>
                     {labelText}
                 </label>
@@ -294,6 +296,7 @@ function    GetInput(
                             placeholder={placeholder as string}
                             className={`${styles.input} ${inputClassName} ps-4`}
                             id={inputId}
+                            data-testid={inputId}
                             maxLength={inputLength}
                             autoComplete="off"
                             onChange={ (e : ChangeEvent<HTMLInputElement>) => { updateField(inputId, e.target.value) } }
@@ -303,8 +306,6 @@ function    GetInput(
             </div>
         );
 }
-
-
 
 export type { Props as Props }
 export { GetCheckboxInput, GetInput, GetListInput, GetColorInput, GetInputRange }

@@ -136,15 +136,7 @@ class Control2Fa(APIView):
             return Response({'url': url_code, 'email': user_obj.email}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({'error': {'User does not exist'}}, status=status.HTTP_400_BAD_REQUEST)
-        # serializer = self.serializer_class(data = request.data)
-        # if serializer.is_valid():
-        #     user = serializer.validated_data
-        #     refresh = RefreshToken.for_user(user)
-        #     return Response({
-        #         'refresh': str(refresh),
-        #         'access': str(refresh.access_token)
-        #     }, status = status.HTTP_200_OK)
-        # return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
+
 
 
 @extend_schema_view(
@@ -161,11 +153,11 @@ class SignOutView(APIView):
         try:
             token = RefreshToken(refresh_token)
             token.blacklist()
-            return Response({'message': 'Successfully logged out'}, status=status.HTTP_200_OK)
+            return Response({'success': {'Successfully logged out'}}, status=status.HTTP_200_OK)
         except TokenError as e:
-            return Response({'error': 'Invalid or expired refresh token'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': {'Invalid or expired refresh token'}}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            return Response({'error': 'An unexpected error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'error': {'An unexpected error occurred'}}, status=status.HTTP_400_BAD_REQUEST)
 
 @extend_schema_view(
     get=extend_schema(summary="Social Auth Exchange", tags=["Authentication"])

@@ -1,7 +1,6 @@
 'use client';
 
 import styles from './style.module.css';
-import Image from 'next/image';
 import { FaHistory } from 'react-icons/fa';
 import { BiStats } from 'react-icons/bi';
 import GameHistoryCard from '../../components/table';
@@ -14,7 +13,7 @@ import { ChartOptions, ChartData } from 'chart.js';
 import { LineController } from 'chart.js/auto';
 import { useRouter } from 'next/navigation';
 import { Dropdown } from 'react-bootstrap';
-import { ExportMinutes } from '@/components/exportMatch'
+import { ExportMinutes } from '@/components/exportMatch';
 import { ExportCSV } from '../../components/export';
 import { ToastContainer, toast } from 'react-toastify';
 import { CategoryScale, LinearScale, Title, Legend, Tooltip, PointElement, LineElement } from 'chart.js';
@@ -65,8 +64,7 @@ interface GameData {
     result: 'WIN' | 'LOSS';
 }
 
-interface minutes_months
-{
+interface minutes_months {
     month: number;
     day: number;
     minutes: number;
@@ -99,8 +97,9 @@ export default function Dashboard() {
             const access = Cookies.get('access');
             if (access) {
                 try {
+                    const csrftoken = Cookies.get('csrftoken') || '';
                     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/dashboard`, {
-                        headers: { Authorization: `Bearer ${access}` },
+                        headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
                     });
                     if (response.ok) {
                         const data = await response.json();
@@ -146,11 +145,13 @@ export default function Dashboard() {
         const access = Cookies.get('access');
         if (!access) return;
         try {
+            const csrftoken = Cookies.get('csrftoken') || '';
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/game-stats-report`, {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${access}`,
                     'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
                 },
                 body: JSON.stringify({ period }),
             });
@@ -201,7 +202,7 @@ export default function Dashboard() {
             month,
             minutes,
         }));
-        ExportMinutes(mappedData, 'game_stats_' + value + "_" + new Date().getFullYear() + '.csv');
+        ExportMinutes(mappedData, 'game_stats_' + value + '_' + new Date().getFullYear() + '.csv');
         toggleDropdown();
     };
 
@@ -274,13 +275,12 @@ export default function Dashboard() {
                         </div>
                         <div className="col-12 col-md-6">
                             <div className={`${styles.imageContainer} position-relative`}>
-                                <Image
-                                    src="/dashboard_char.png"
+                                <img
+                                    src="/assets/images/dashboard_char.png"
                                     width={350}
                                     height={350}
                                     style={{ width: 'auto', height: 'auto' }}
                                     alt="anime charachter"
-                                    priority
                                 />
                             </div>
                         </div>
@@ -363,12 +363,16 @@ export default function Dashboard() {
                                                 >
                                                     This Month
                                                 </Dropdown.Item>
-                                                <Dropdown.Item className="itim-font"
-                                                    onClick={() => handleDropdownSelect2('3_months')}>
+                                                <Dropdown.Item
+                                                    className="itim-font"
+                                                    onClick={() => handleDropdownSelect2('3_months')}
+                                                >
                                                     3 Months
                                                 </Dropdown.Item>
-                                                <Dropdown.Item className="itim-font"
-                                                    onClick={() => handleDropdownSelect2('year')}>
+                                                <Dropdown.Item
+                                                    className="itim-font"
+                                                    onClick={() => handleDropdownSelect2('year')}
+                                                >
                                                     1 Year
                                                 </Dropdown.Item>
                                             </Dropdown.Menu>

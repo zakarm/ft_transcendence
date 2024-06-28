@@ -1,52 +1,38 @@
  Mushigarou :
     ----------------------------------------------------------------------------------
     Bugs :
-        - Change typo error in "11-0"
         - Remove console.log, console.error from all code
         - Remove type "any" from all code
         - Check data before using it or casting the type
-        - Prevent "cannot upload the image" in settings
         - Handle cases of when color cookies are delete or invalid
-        - validate access token in signout view (permissions & auth)
-        - Browser Issues in tournament Form's input and label (id)
         - (wait PageUrl) in tournaments cards api
         - set "Your Colors" to colors coming from backend (settings)
-        - page/profile ==> refresh on save
-        - valid range of game difficulty [0-2]
         - Fix bugs of when API fails
+        - current_tab_view ???? in settings
 
     ----------------------------------------------------------------------------------
     Feat :
-        - Implement searchbox logic in tournament page
-        - Make game customization buttons smaller
-        - Make achivements cards smaller
         - Add "(ball speed)" as a description next to the "Game difficulty" label
         - Background of enble 2FA from white to input's color
         - Group color's cookies in into one object
         - Fix width of label above input in settings to prevent label from moving back and forth on small screen sizes
 
-    ----------------------------------------------------------------------------------
-    Chore :
-        - POST settings data and handle response accordingly
-        - POST remote and local tournament data and handle response accordingly
-
-api/ create-tournament [name='create-tournament']
-api/ game-settings [name='game-settings']
-
-
-----------------------------------------------------------
-const ValuesToPost: InputValuesProps = {
-    username: '', //
-    tournament_name: '',
-    tournament_image: '', //
-    game_difficulty: '1',
-};
-
 ----------------------------------------------------------
 profile: edit bio [get, post] -> Done
-profile: chart fetch [get] -> Done 
+profile: chart fetch [get] -> Done
 dashboard game history image -> Done
-statistics game histor user image -> None 
+statistics game histor user image -> None
 Profile: add friend, remove friend , block , unblock -> None
 chat: chart fetch [get] -> None
 rightbar: options [send messages, play a game] -> None
+
+
+---------------------------------------------------------------------------------
+zakaria you have error in /api/game-settings
+->  PUT http://localhost:8000/api/game-settings 400 (Bad Request)
+{'first_name': 'Aimen', 'last_name': 'El', 'username': 'ael-mouz', 'email': 'ael-mouz@student.1337.ma', 'country': 'Andorra', 'city': 'Engordany', 'image_url': 'https://res.cloudinary.com/dv1i5yh71/image/upload/v1718999183/profile/115547999_pukk3i.jpg', 'new_password': '', 'repeat_password': '', 'is_2fa_enabled': False, 'two_fa_secret_key': '', 'table_color': '#161625', 'ball_color': '#ffffff', 'paddle_color': '#ff4655', 'table_position': '6,8,0', 'current_table_view': '6,8,0', 'game_difficulty': 1}
+
+i think the problem from serializer
+
+no makayn ta problem the problem li3ndk l3ach katl3lk bad request cause is mandatory to send email and username
+---------------------------------------------------------------
