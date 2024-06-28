@@ -8,7 +8,7 @@ import type {
     TournamentData_User,
     Tournament_User,
 } from '@/types/game/Tournament';
-
+import { useRouter } from 'next/navigation';
 // Define the interface for the connection information
 interface ConnectionInfo {
     index: number;
@@ -63,6 +63,7 @@ const initialTournamentData = {
 
 // Define the hook function with TypeScript
 const useWebSocketTournament = (url: string) => {
+    const router = useRouter();
     const [filteredTournamentData, setFilteredTournamentData] = useState<TournamentData>(initialTournamentData);
     const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
     const [gameState, setGameState] = useState<string>('lobby');
@@ -201,6 +202,7 @@ const useWebSocketTournament = (url: string) => {
         };
 
         ws.onclose = () => {
+            router.back();
             console.log('Disconnected from WebSocket');
         };
 

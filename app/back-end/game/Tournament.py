@@ -3,7 +3,7 @@ import sys
 
 
 class Tournament:
-    def __init__(self, tournament_id):
+    def __init__(self, tournament_id, tournament_name, difficulty):
         self.tournament_id = tournament_id
         self.ended = False
         self.started = False
@@ -45,9 +45,11 @@ class Tournament:
             },
         }
 
+        self.winner = None
+
         self.data = {
-            "tournament_name": "",
-            "difficulty": "",
+            "tournament_name": tournament_name,
+            "difficulty": difficulty,
             "quarter_final": {
                 "match1": {
                     "user1": {"name": "", "photoUrl": "", "score": 0, "status": True},
@@ -205,6 +207,8 @@ class Tournament:
                 user_key = f"user2"
             user_key_ = f"user{user}"
             winner = self.data["quarter_final"][match_key_][user_key_]
+            loser = self.data["quarter_final"][match_key_][f"user{1 if user == 2 else 2}"]
+            loser["status"] = False
             self.data["semi_final"][match_key][user_key]["name"] = winner["name"]
             self.data["semi_final"][match_key][user_key]["photoUrl"] = winner[
                 "photoUrl"
@@ -240,6 +244,8 @@ class Tournament:
                 user_key = f"user2"
             user_key_ = f"user{user}"
             winner = self.data["semi_final"][match_key_][user_key_]
+            loser = self.data["semi_final"][match_key_][f"user{1 if user == 2 else 2}"]
+            loser["status"] = False
             self.data["final"][match_key][user_key]["name"] = winner["name"]
             self.data["final"][match_key][user_key]["photoUrl"] = winner["photoUrl"]
             self.data["final"][match_key][user_key]["status"] = True
@@ -262,3 +268,22 @@ class Tournament:
             return _channel
         except Exception as e:
             print(f"An error occurred in get_sf_winner: {e}", file=sys.stderr)
+
+    def promote_final_winner(self, user):
+        try:
+            match_key = f"match{1}"
+            user_key = f"user{user}"
+            winner = self.data["final"][match_key][user_key]
+            loser = self.data["final"][match_key][f"user{1 if user == 2 else 2}"]
+            loser["status"] = False
+            self.winner = winner["name"]
+        except Exception as e:
+            print(f"An error occurred in promote_final_winner: {e}", file=sys.stderr)
+
+    def get_final_winner(self):
+        try:
+            for player in self.players:
+                if player["data"]["name"] == self.winner:
+                    return player
+        except Exception as e:
+            print(f"An error occurred in get_final_winner: {e}", file=sys.stderr)

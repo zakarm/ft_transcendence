@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 import './TournamentPage.css';
 import PlayerCard from '@/components/PlayerCard/PlayerCard';
 import PongGame from '@/components/PongGame/PongGame';
-import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import TournamentLobby from '../(tournamet-lobby)/TournamentLobby';
 
 interface Player {
@@ -22,9 +22,11 @@ interface Player {
 }
 
 const TournamentPage: React.FC = () => {
+    const pathname = usePathname();
+    const id = pathname.split('/').pop();
     const access = Cookies.get('access');
     const { webSocket, gameState, connectionInfo, countDown, filteredTournamentData } = Web_Socket(
-        `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/pingpong/tournament/15151515/?token=${access}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/pingpong/tournament/${id}/?token=${access}&watch=false`,
     );
 
     const defaultPlayer: Player = {
@@ -128,12 +130,6 @@ const TournamentPage: React.FC = () => {
                                 <div className="blurred-background"></div>
                                 <div className="t-text">
                                     <div className="winner-text">WINNER</div>
-                                    <Link href="/game">
-                                        <button className="play-again-button">play again</button>
-                                    </Link>
-                                    <Link href="/dashboard">
-                                        <button className="back-to-home">back to home</button>
-                                    </Link>
                                 </div>
                             </>
                         )}
@@ -142,12 +138,6 @@ const TournamentPage: React.FC = () => {
                                 <div className="blurred-background"></div>
                                 <div className="t-text">
                                     <div className="loser-text">LOSER</div>
-                                    <Link href="/game">
-                                        <button className="play-again-button">play again</button>
-                                    </Link>
-                                    <Link href="/dashboard">
-                                        <button className="back-to-home">back to home</button>
-                                    </Link>
                                 </div>
                             </>
                         )}
