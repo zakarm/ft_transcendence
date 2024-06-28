@@ -167,3 +167,7 @@ restorenv: ## Restore the .env file
 	@echo "$(YELLOW)Restoring the .env file...$(RESET)"
 	@cp .env.example .env
 	@echo "$(GREEN).env file restored!$(RESET)"
+
+datagenerator: ## Generate data
+	@echo "$(YELLOW)Generating data...$(RESET)"
+	@docker exec -it back-end bash -c "python3 generate_users.py"

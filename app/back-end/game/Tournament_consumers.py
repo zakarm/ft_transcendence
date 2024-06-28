@@ -3,7 +3,7 @@ import asyncio
 import json
 import random
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime
 
 # Third-party imports
 from channels.db import database_sync_to_async
@@ -11,8 +11,6 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from django.utils import timezone
-from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
 
 # Local application/library specific imports
 from .room import RoomObject
@@ -148,71 +146,49 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
         try:
             status = "winner" if event["winner"] == self.user.email else "loser"
             message = {
-                "action": "end_game",
-                "status": status,
-                "winner": event["winner"],
+                "message": {
+                    "action": "end_game",
+                    "status": status,
+                    "winner": event["winner"],
+                },
+                "time": current_time(),
             }
-            await self.send(
-                text_data=json.dumps({"message": message, "time": current_time()})
-            )
+            await self.send(text_data=json.dumps(message))
         except Exception as e:
             print(f"An error occurred in message: {e}", file=sys.stderr)
 
     # -----------------------> 1. broadcast_message <-----------------------
     async def tournamnet_broadcast_message(self, message):
         try:
-            await self.channel_layer.group_send(
-                self.tournament_name, {"type": "message", "message": message}
-            )
+            data = {"type": "message", "message": message}
+            await self.channel_layer.group_send(self.tournament_name, data)
         except Exception as e:
             print(f"An error occurred in broadcast_message: {e}", file=sys.stderr)
 
     async def broadcast_message(self, message, match_id):
         try:
-            await self.channel_layer.group_send(
-                match_id, {"type": "message", "message": message}
-            )
+            data = {"type": "message", "message": message}
+            await self.channel_layer.group_send(match_id, data)
         except Exception as e:
             print(f"An error occurred in broadcast_message: {e}", file=sys.stderr)
 
     async def send_message_to_channel(self, channel_name, message):
-        # channel_layer = get_channel_layer()
-        await self.channel_layer.send(
-            channel_name,
-            {"type": "message", "message": message},
-        )
+        try:
+            data = {"type": "message", "message": message}
+            await self.channel_layer.send(channel_name, data)
+        except Exception as e:
+            print(f"An error occurred in send_message_to_channel: {e}", file=sys.stderr)
 
     # -----------------------> 2. message <-----------------------
     async def message(self, event):
         try:
-            message = event["message"]
-            await self.send(
-                text_data=json.dumps({"message": message, "time": current_time()})
-            )
+            _message = event["message"]
+            message = {"message": _message, "time": current_time()}
+            await self.send(text_data=json.dumps(message))
         except Exception as e:
             print(f"An error occurred in message: {e}", file=sys.stderr)
 
     # -----------------------> 3. connect <-----------------------
-    # async def connction_ack(self):
-    #     try:
-    #         game_data = await get_game_data(self.user)
-    #         print(f"game_data: {game_data.table_position}", file=sys.stderr)
-    #         index = self.room.get_user_index(self.user.email)
-    #         message = {
-    #             "action": "connection_ack",
-    #             "index": index,
-    #             "User": self.user.email,
-    #             "image_url": self.user.image_url,
-    #             "username": self.user.username,
-    #             "Room_name": self.room_name,
-    #             "table_color": game_data.table_color,
-    #             "ball_color": game_data.ball_color,
-    #             "paddle_color": game_data.paddle_color,
-    #             "table_position": game_data.table_position,
-    #         }
-    #         await self.message({"message": message})
-    #     except Exception as e:
-    #         print(f"An error occurred in connction_ack: {e}", file=sys.stderr)
 
     async def find_or_create_tournamnet(self, user):
         try:
@@ -270,254 +246,6 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             print(f"An error occurred in connect: {e}", file=sys.stderr)
 
-    async def tournament_manager(self):
-        try:
-            self.tournament.generate_quatre_final_players()
-            await self.tournamnet_broadcast_message(
-                {"action": "TournamentData", "tournamentdata": self.tournament.data}
-            )
-            for player in self.tournament.players:
-                player_data = player["data"]
-                name = player_data["name"]
-                game_data = await get_game_data(player["object"])
-                room = self.tournament.get_room_game(player["match_id"])
-                index = room.get_user_index(player["email"])
-                message = {
-                    "action": "connection_ack",
-                    "index": index,
-                    "User": player["email"],
-                    "image_url": player_data["photoUrl"],
-                    "username": player_data["name"],
-                    "Room_name": player["match_id"],
-                    "table_color": game_data.table_color,
-                    "ball_color": game_data.ball_color,
-                    "paddle_color": game_data.paddle_color,
-                    "table_position": game_data.table_position,
-                }
-                await self.send_message_to_channel(player["channel"], message)
-            finished_task_1 = False
-            finished_task_2 = False
-            finished_task_3 = False
-            finished_task_4 = False
-            finished_task_5 = False
-            finished_task_6 = False
-            finished_task_7 = False
-            task_1 = asyncio.ensure_future(
-                self.start_game(self.tournament_id + "quarter_final" + "match1")
-            )
-            task_2 = asyncio.ensure_future(
-                self.start_game(self.tournament_id + "quarter_final" + "match2")
-            )
-            task_3 = asyncio.ensure_future(
-                self.start_game(self.tournament_id + "quarter_final" + "match3")
-            )
-            task_4 = asyncio.ensure_future(
-                self.start_game(self.tournament_id + "quarter_final" + "match4")
-            )
-            task_5 = None
-            task_6 = None
-            task_7 = None
-            # Periodically check the status of the tasks
-            while True:
-                if task_1 and task_1.done() and not finished_task_1:
-                    await self.broadcast_message(
-                        {
-                            "action": "TournamentData",
-                            "tournamentdata": self.tournament.data,
-                        },
-                        self.tournament_id + "quarter_final" + "match1",
-                    )
-                    finished_task_1 = True
-                if task_2 and task_2.done() and not finished_task_2:
-                    await self.broadcast_message(
-                        {
-                            "action": "TournamentData",
-                            "tournamentdata": self.tournament.data,
-                        },
-                        self.tournament_id + "quarter_final" + "match2",
-                    )
-                    finished_task_2 = True
-                if task_1 and task_2 and task_1.done() and task_2.done() and not task_5:
-                    resault1 = task_1.result()
-                    resault2 = task_2.result()
-                    # _channel = self.tournament.get_promoted_quarter_final_winner(
-                    #     1, resault1
-                    # )
-                    # await self.channel_layer.group_discard(
-                    #     self.tournament_id + "quarter_final" + "match1", _channel
-                    # )
-                    # _channel = self.tournament.get_promoted_quarter_final_winner(
-                    #     2, resault2
-                    # )
-                    # await self.channel_layer.group_discard(
-                    #     self.tournament_id + "quarter_final" + "match2", _channel
-                    # )
-                    self.tournament.promote_quarter_final_winner(1, resault1)
-                    self.tournament.promote_quarter_final_winner(2, resault2)
-                    for player in self.tournament.get_player_by_maych_id(
-                        self.tournament_id + "semi_final" + "match1"
-                    ):
-                        player_data = player["data"]
-                        game_data = await get_game_data(player["object"])
-                        room = self.tournament.get_room_game(player["match_id"])
-                        index = room.get_user_index(player["email"])
-                        message = {
-                            "action": "connection_ack",
-                            "index": index,
-                            "User": player["email"],
-                            "image_url": player_data["photoUrl"],
-                            "username": player_data["name"],
-                            "Room_name": player["match_id"],
-                            "table_color": game_data.table_color,
-                            "ball_color": game_data.ball_color,
-                            "paddle_color": game_data.paddle_color,
-                            "table_position": game_data.table_position,
-                        }
-                        await self.send_message_to_channel(player["channel"], message)
-                    task_5 = asyncio.ensure_future(
-                        self.start_game(self.tournament_id + "semi_final" + "match1")
-                    )
-                if task_3 and task_3.done() and not finished_task_3:
-                    await self.broadcast_message(
-                        {
-                            "action": "TournamentData",
-                            "tournamentdata": self.tournament.data,
-                        },
-                        self.tournament_id + "quarter_final" + "match3",
-                    )
-                    finished_task_3 = True
-                if task_4 and task_4.done() and not finished_task_4:
-                    await self.broadcast_message(
-                        {
-                            "action": "TournamentData",
-                            "tournamentdata": self.tournament.data,
-                        },
-                        self.tournament_id + "quarter_final" + "match4",
-                    )
-                    finished_task_4 = True
-                if task_3 and task_4 and task_3.done() and task_4.done() and not task_6:
-                    resault3 = task_3.result()
-                    resault4 = task_4.result()
-                    # _channel = self.tournament.get_promoted_quarter_final_winner(
-                    #     3, resault3
-                    # )
-                    # await self.channel_layer.group_discard(
-                    #     self.tournament_id + "quarter_final" + "match3", _channel
-                    # )
-                    # _channel = self.tournament.get_promoted_quarter_final_winner(
-                    #     4, resault4
-                    # )
-                    # await self.channel_layer.group_discard(
-                    #     self.tournament_id + "quarter_final" + "match4", _channel
-                    # )
-                    self.tournament.promote_quarter_final_winner(3, resault3)
-                    self.tournament.promote_quarter_final_winner(4, resault4)
-                    for player in self.tournament.get_player_by_maych_id(
-                        self.tournament_id + "semi_final" + "match2"
-                    ):
-                        player_data = player["data"]
-                        game_data = await get_game_data(player["object"])
-                        room = self.tournament.get_room_game(player["match_id"])
-                        index = room.get_user_index(player["email"])
-                        message = {
-                            "action": "connection_ack",
-                            "index": index,
-                            "User": player["email"],
-                            "image_url": player_data["photoUrl"],
-                            "username": player_data["name"],
-                            "Room_name": player["match_id"],
-                            "table_color": game_data.table_color,
-                            "ball_color": game_data.ball_color,
-                            "paddle_color": game_data.paddle_color,
-                            "table_position": game_data.table_position,
-                        }
-                        await self.send_message_to_channel(player["channel"], message)
-                    task_6 = asyncio.ensure_future(
-                        self.start_game(self.tournament_id + "semi_final" + "match2")
-                    )
-                if task_5 and task_5.done() and not finished_task_5:
-                    await self.broadcast_message(
-                        {
-                            "action": "TournamentData",
-                            "tournamentdata": self.tournament.data,
-                        },
-                        self.tournament_id + "semi_final" + "match1",
-                    )
-                    finished_task_5 = True
-                if task_6 and task_6.done() and not finished_task_6:
-                    await self.broadcast_message(
-                        {
-                            "action": "TournamentData",
-                            "tournamentdata": self.tournament.data,
-                        },
-                        self.tournament_id + "semi_final" + "match2",
-                    )
-                    finished_task_6 = True
-                if task_5 and task_6 and task_5.done() and task_6.done() and not task_7:
-                    resault5 = task_5.result()
-                    resault6 = task_6.result()
-                    # _channel = self.tournament.get_promoted_semi_final_winner(
-                    #     1, resault5
-                    # )
-                    # await self.channel_layer.group_discard(
-                    #     self.tournament_id + "semi_final" + "match1", _channel
-                    # )
-                    # _channel = self.tournament.get_promoted_semi_final_winner(
-                    #     2, resault6
-                    # )
-                    # await self.channel_layer.group_discard(
-                    #     self.tournament_id + "semi_final" + "match2", _channel
-                    # )
-                    self.tournament.promote_semi_final_winner(1, resault5)
-                    self.tournament.promote_semi_final_winner(2, resault6)
-                    for player in self.tournament.get_player_by_maych_id(
-                        self.tournament_id + "final" + "match1"
-                    ):
-                        player_data = player["data"]
-                        game_data = await get_game_data(player["object"])
-                        room = self.tournament.get_room_game(player["match_id"])
-                        index = room.get_user_index(player["email"])
-                        message = {
-                            "action": "connection_ack",
-                            "index": index,
-                            "User": player["email"],
-                            "image_url": player_data["photoUrl"],
-                            "username": player_data["name"],
-                            "Room_name": player["match_id"],
-                            "table_color": game_data.table_color,
-                            "ball_color": game_data.ball_color,
-                            "paddle_color": game_data.paddle_color,
-                            "table_position": game_data.table_position,
-                        }
-                        await self.send_message_to_channel(player["channel"], message)
-                    await self.tournamnet_broadcast_message(
-                        {
-                            "action": "TournamentData",
-                            "tournamentdata": self.tournament.data,
-                        }
-                    )
-                    task_7 = asyncio.ensure_future(
-                        self.start_game(self.tournament_id + "final" + "match1")
-                    )
-                if task_7 and task_7.done() and not finished_task_7:
-                    # _players = self.tournament.get_players_channel(self.tournament_id + "final" + "match1")
-                    # for player in _players:
-                    #     await self.channel_layer.group_discard(
-                    #         self.tournament_id + "final" + "match1", player
-                    #     )
-                    await self.broadcast_message(
-                        {
-                            "action": "TournamentData",
-                            "tournamentdata": self.tournament.data,
-                        },
-                        self.tournament_id + "final" + "match1",
-                    )
-                    finished_task_7 = True
-                    break
-                await asyncio.sleep(1)
-        except Exception as e:
-            print(f"An error occurred in tournament_manager: {e}", file=sys.stderr)
-
     # -----------------------> 4. disconnect <-----------------------
     async def disconnect(self, close_code):
         try:
@@ -558,6 +286,124 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             print(f"An error occurred in receive: {e}", file=sys.stderr)
 
+    async def connction_ack(self, player):
+        try:
+            player_data = player["data"]
+            game_data = await get_game_data(player["object"])
+            room = self.tournament.get_room_game(player["match_id"])
+            index = room.get_user_index(player["email"])
+            message = {
+                "action": "connection_ack",
+                "index": index,
+                "User": player["email"],
+                "image_url": player_data["photoUrl"],
+                "username": player_data["name"],
+                "Room_name": player["match_id"],
+                "table_color": game_data.table_color,
+                "ball_color": game_data.ball_color,
+                "paddle_color": game_data.paddle_color,
+                "table_position": game_data.table_position,
+            }
+            await self.send_message_to_channel(player["channel"], message)
+        except Exception as e:
+            print(f"An error occurred in connction_ack: {e}", file=sys.stderr)
+
+    async def send_tournament_data(self, match_id):
+        try:
+            message = {
+                "action": "TournamentData",
+                "tournamentdata": self.tournament.data,
+            }
+            await self.broadcast_message(message, match_id)
+        except Exception as e:
+            print(f"An error occurred in send_tournament_data: {e}", file=sys.stderr)
+
+    async def tournament_manager(self):
+        try:
+            self.tournament.generate_qf_players()
+            message = {
+                "action": "TournamentData",
+                "tournamentdata": self.tournament.data,
+            }
+            await self.tournamnet_broadcast_message(message)
+            for player in self.tournament.players:
+                await self.connction_ack(player)
+            group_name1 = self.tournament_id + "quarter_final" + "match1"
+            group_name2 = self.tournament_id + "quarter_final" + "match2"
+            group_name3 = self.tournament_id + "quarter_final" + "match3"
+            group_name4 = self.tournament_id + "quarter_final" + "match4"
+            group_name5 = self.tournament_id + "semi_final" + "match1"
+            group_name6 = self.tournament_id + "semi_final" + "match2"
+            group_name7 = self.tournament_id + "final" + "match1"
+            task_1 = asyncio.ensure_future(self.start_game(group_name1))
+            task_2 = asyncio.ensure_future(self.start_game(group_name2))
+            task_3 = asyncio.ensure_future(self.start_game(group_name3))
+            task_4 = asyncio.ensure_future(self.start_game(group_name4))
+            task_5 = None
+            task_6 = None
+            task_7 = None
+
+            while True:
+                if task_1 and task_1.done():
+                    await self.send_tournament_data(group_name1)
+                if task_2 and task_2.done():
+                    await self.send_tournament_data(group_name2)
+                if task_3 and task_3.done():
+                    await self.send_tournament_data(group_name3)
+                if task_4 and task_4.done():
+                    await self.send_tournament_data(group_name4)
+                if task_5 and task_5.done():
+                    await self.send_tournament_data(group_name5)
+                if task_6 and task_6.done():
+                    await self.send_tournament_data(group_name6)
+                if task_7 and task_7.done():
+                    await self.send_tournament_data(group_name7)
+                    break
+
+                if task_1 and task_2 and task_1.done() and task_2.done() and not task_5:
+                    resault1 = task_1.result()
+                    resault2 = task_2.result()
+                    _channel1 = self.tournament.get_qf_winner(1, resault1)
+                    await self.channel_layer.group_discard(group_name1, _channel1)
+                    _channel2 = self.tournament.get_qf_winner(2, resault2)
+                    await self.channel_layer.group_discard(group_name2, _channel2)
+                    self.tournament.promote_qf_winner(1, resault1)
+                    self.tournament.promote_qf_winner(2, resault2)
+                    for player in self.tournament.get_player_by_maych_id(group_name5):
+                        await self.connction_ack(player)
+                    task_5 = asyncio.ensure_future(self.start_game(group_name5))
+
+                if task_3 and task_4 and task_3.done() and task_4.done() and not task_6:
+                    resault3 = task_3.result()
+                    resault4 = task_4.result()
+                    _channel3= self.tournament.get_qf_winner(3, resault3)
+                    await self.channel_layer.group_discard(group_name3, _channel3)
+                    _channel4= self.tournament.get_qf_winner(4, resault4)
+                    await self.channel_layer.group_discard(group_name4, _channel4)
+                    self.tournament.promote_qf_winner(3, resault3)
+                    self.tournament.promote_qf_winner(4, resault4)
+                    for player in self.tournament.get_player_by_maych_id(group_name6):
+                        await self.connction_ack(player)
+                    task_6 = asyncio.ensure_future(self.start_game(group_name6))
+
+                if task_5 and task_6 and task_5.done() and task_6.done() and not task_7:
+                    resault5 = task_5.result()
+                    resault6 = task_6.result()
+                    _channel5 = self.tournament.get_sf_winner(1, resault5)
+                    await self.channel_layer.group_discard(group_name5, _channel5)
+                    _channel6 = self.tournament.get_sf_winner(2, resault6)
+                    await self.channel_layer.group_discard(group_name6, _channel6)
+                    self.tournament.promote_sf_winner(1, resault5)
+                    self.tournament.promote_sf_winner(2, resault6)
+                    for player in self.tournament.get_player_by_maych_id(group_name7):
+                        await self.connction_ack(player)
+                    task_7 = asyncio.ensure_future(self.start_game(group_name7))
+
+                await asyncio.sleep(1)
+
+        except Exception as e:
+            print(f"An error occurred in tournament_manager: {e}", file=sys.stderr)
+
     # -----------------------> 6. start_game <-----------------------
     async def opponents(self, match_id, _tournament):
         try:
@@ -594,16 +440,14 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
     async def send_score(self, match_id, _tournament):
         try:
             room = _tournament.get_room_game(match_id)
-            _tournament.update_scor_from_all_rooms(
-                match_id, "user1", room.getScores()["user1"]
-            )
-            _tournament.update_scor_from_all_rooms(
-                match_id, "user2", room.getScores()["user2"]
-            )
+            user1_score =  room.getScores()["user1"]
+            user2_score =  room.getScores()["user2"]
+            _tournament.update_rooms_scores(match_id, "user1", user1_score)
+            _tournament.update_rooms_scores(match_id, "user2", user2_score)
             message = {
                 "action": "score",
-                "user1score": room.getScores()["user1"],
-                "user2score": room.getScores()["user2"],
+                "user1score": user1_score,
+                "user2score": user2_score,
             }
             await self.broadcast_message(message, match_id)
         except Exception as e:
@@ -686,7 +530,7 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                     await self.broadcast_message({"action": "start_game"}, match_id)
                     await self.send_score(match_id, _tournament)
                     await asyncio.sleep(1)
-                    await self.update_ball_possiton(match_id, _tournament)
+                    # await self.update_ball_possiton(match_id, _tournament)
                     await asyncio.sleep(5)
                 if room.is_paused():
                     await self.broadcast_message({"action": "pause"}, match_id)
@@ -698,7 +542,7 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                     room.set_game_resume()
                     # await self.opponents()
                     await self.broadcast_message({"action": "start_game"}, match_id)
-                    await self.update_ball_possiton(match_id, _tournament)
+                    # await self.update_ball_possiton(match_id, _tournament)
                     await asyncio.sleep(5)
                 room.ball_update()
                 room.ball_intersect()
@@ -718,7 +562,8 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                     await self.reset(match_id, _tournament)
                     await asyncio.sleep(1)
                 else:
-                    await self.update_ball_possiton(match_id, _tournament)
+                    pass
+                    # await self.update_ball_possiton(match_id, _tournament)
                 await asyncio.sleep(1 / 60)
         except Exception as e:
             print(f"An error occurred in connect: {e}", file=sys.stderr)
