@@ -13,7 +13,7 @@ function OptionCard({ cardTitle, imageSrc }: Props) {
     return (
         <>
             <div className={`${styles.image_container} responsive_image row`}>
-                <img src={imageSrc} alt="" className={`${styles.cards} p-0 m-0`}></img>
+                <img src={imageSrc} alt={cardTitle} className={`${styles.cards} p-0 m-0`}></img>
             </div>
             <div className={`row text-nowrap`}>
                 <h1 className={`${styles.cards} valo-font py-3 px-0 m-0 text-center`}>{cardTitle}</h1>

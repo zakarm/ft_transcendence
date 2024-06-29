@@ -54,7 +54,7 @@ function    GetListInput(
                 <div className={`${styles.inputHolder} row p-0 m-1`}>
                     <select
                         className={`itim-font ${styles.input} ps-4`}
-                        name=""
+                        name="tournaments"
                         id={id}
                         value={ choosenPosition }
                         onChange={ (e : ChangeEvent<HTMLSelectElement>) => { updateField(id, e.target.value); } }>

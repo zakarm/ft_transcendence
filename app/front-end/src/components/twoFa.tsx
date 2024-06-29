@@ -63,40 +63,47 @@ export default function TwoFa({ value = '', email, qr, setPassOTP=()=>{} }: QrCo
 
     return (
         <>
-        {showModal && (
-        <div
-            className="modal show"
-            style={{
-                display: 'block',
-                position: 'fixed',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                zIndex: '9999',
-                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            }}>
-            <Modal.Dialog>
-                <Modal.Header style={{backgroundColor : '#feebeb'}}>
-                    <Modal.Title style={{color : '#111111'}}>Two Factor Authentication</Modal.Title>
-                    { qr === true ? <Button variant="close" onClick={handleClose}></Button> : null}
-                </Modal.Header>
+            {showModal && (
+                <div
+                    className="modal show"
+                    style={{
+                        display: 'block',
+                        position: 'fixed',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        zIndex: '9999',
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    }}
+                >
+                    <Modal.Dialog>
+                        <Modal.Header style={{ backgroundColor: '#feebeb' }}>
+                            <Modal.Title style={{ color: '#111111' }}>Two Factor Authentication</Modal.Title>
+                            {qr === true ? <Button variant="close" onClick={handleClose}></Button> : null}
+                        </Modal.Header>
 
-                <Modal.Body style={{ backgroundColor: '#161625' }}>
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        {qr === true ? <QRCode value={value || ''} style={{ border: '3px' }} className="border border-danger" /> : null}
-                    </div>
-                    <div className="mt-4 mb-4">
-                        {qr === true ?
-                            <p className="mt-2">
-                                <TbSquareRoundedNumber1Filled size={30} color="#feebeb" />
-                                <span style={{ color: '#feebeb' }}>
-                                    {' '}
-                                    Scan the QR code using any authentication application on your phone (e.g. Google
-                                    Authenticator, Duo Mobile, Authy).
-                                </span>
-                            </p>
-                        : null}
-                        {/* {qr === true ?
+                        <Modal.Body style={{ backgroundColor: '#161625' }}>
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                {qr === true ? (
+                                    <QRCode
+                                        value={value || ''}
+                                        style={{ border: '3px' }}
+                                        className="border border-danger"
+                                    />
+                                ) : null}
+                            </div>
+                            <div className="mt-4 mb-4">
+                                {qr === true ? (
+                                    <p className="mt-2">
+                                        <TbSquareRoundedNumber1Filled size={30} color="#feebeb" />
+                                        <span style={{ color: '#feebeb' }}>
+                                            {' '}
+                                            Scan the QR code using any authentication application on your phone (e.g.
+                                            Google Authenticator, Duo Mobile, Authy).
+                                        </span>
+                                    </p>
+                                ) : null}
+                                {/* {qr === true ?
                             <p className="mt-2">
                                 <TbSquareRoundedNumber2Filled size={30} color="#feebeb" />
                                 <span style={{ color: '#feebeb' }}>
@@ -106,37 +113,38 @@ export default function TwoFa({ value = '', email, qr, setPassOTP=()=>{} }: QrCo
                             </p>
                         : null} */}
 
-                        <p className="mt-2">
-                            <TbSquareRoundedNumber2Filled size={30} color="#feebeb" />
-                            <span style={{ color: '#feebeb' }}>
-                                {' '}
-                                Enter the 6-digit confirmation code shown on the app:
-                            </span>
-                        </p>
-                    </div>
-                    <div
-                        className="mt-2 mb-5"
-                        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <OtpInput
-                            value={otp}
-                            onChange={setOtp}
-                            numInputs={6}
-                            renderSeparator={<span>&nbsp;&nbsp;</span>}
-                            renderInput={(props) => <input {...props} />}
-                            inputStyle={{
-                                width: '50px',
-                                height: '60px',
-                                borderRadius: '6px',
-                                border: '0px',
-                                color: '#FF4755',
-                                backgroundColor: '#2C3143',
-                            }}
-                        />
-                    </div>
-                </Modal.Body>
-            </Modal.Dialog>
-        </div>
-    )}
-    </>
+                                <p className="mt-2">
+                                    <TbSquareRoundedNumber2Filled size={30} color="#feebeb" />
+                                    <span style={{ color: '#feebeb' }}>
+                                        {' '}
+                                        Enter the 6-digit confirmation code shown on the app:
+                                    </span>
+                                </p>
+                            </div>
+                            <div
+                                className="mt-2 mb-5"
+                                style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                            >
+                                <OtpInput
+                                    value={otp}
+                                    onChange={setOtp}
+                                    numInputs={6}
+                                    renderSeparator={<span>&nbsp;&nbsp;</span>}
+                                    renderInput={(props, index) => <input {...props} id={`otp-input-${index}`} />}
+                                    inputStyle={{
+                                        width: '50px',
+                                        height: '60px',
+                                        borderRadius: '6px',
+                                        border: '0px',
+                                        color: '#FF4755',
+                                        backgroundColor: '#2C3143',
+                                    }}
+                                />
+                            </div>
+                        </Modal.Body>
+                    </Modal.Dialog>
+                </div>
+            )}
+        </>
     );
 }

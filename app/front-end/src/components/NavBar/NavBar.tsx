@@ -36,8 +36,7 @@ const NavBar: React.FC<TournamentProps> = ({ options, setChoosenTab = () : void 
       ) : (
         <select
           className="itim-font"
-          name="tournament"
-          id="tournament"
+          id={"tournaments" + options[0]}
           value={currentOption}
           onChange={(e : ChangeEvent<HTMLSelectElement>) => {
             setChoosenTab(e.target.value);

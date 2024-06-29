@@ -21,11 +21,7 @@ services:
             context: ./app/front-end
             dockerfile: Dockerfile
         restart: always
-        env_file:
-            - .env
         volumes:
-            - .env:/front-end/.env
-            - ./app/front-end/src/lint-results.log:/front-end/lint-results.log
             - ./app/front-end/src:/front-end/src
             - ./app/front-end/public:/front-end/public
             - ./app/front-end/package.json:/front-end/package.json
@@ -40,8 +36,6 @@ services:
             context: ./app/data-base
             dockerfile: Dockerfile
         restart: always
-        ports:
-            - '5432:5432'
         env_file:
             - .env
         volumes:
@@ -83,8 +77,6 @@ services:
             context: ./services/redis
             dockerfile: Dockerfile
         restart: on-failure
-        ports:
-            - '6379:6379'
         env_file:
             - .env
         networks:

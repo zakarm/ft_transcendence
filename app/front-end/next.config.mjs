@@ -1,8 +1,4 @@
 /** @type {import('next').NextConfig} */
-import path from 'path';
-import dotenv from 'dotenv';
-
-dotenv.config({ path: path.join(process.cwd(), '.env') });
 
 const nextConfig = {
     compress: true,
@@ -20,10 +16,6 @@ const nextConfig = {
         ],
     },
     reactStrictMode: false,
-    env: {
-        NEXT_PUBLIC_BACKEND_HOST: process.env.NEXT_PUBLIC_BACKEND_HOST,
-        NEXT_PUBLIC_BACKEND_WS_HOST: process.env.NEXT_PUBLIC_BACKEND_WS_HOST,
-    },
 };
 
 export default nextConfig;

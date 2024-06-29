@@ -11,7 +11,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import Link from 'next/link';
 import SocialAuth from '../../../components/socialAuth';
 import TwoFa from '../../../components/twoFa';
-import '../../global.css';
 
 export default function SignInPage() {
     const router = useRouter();

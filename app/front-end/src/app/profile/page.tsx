@@ -271,7 +271,10 @@ export default function () {
                                     </span>
                                 </div>
                                 <hr className=" my-3" style={{ color: '#61627C', borderWidth: '2px' }} />
-                                <p className="text-center px-3 py-3" style={{ color: '#61627C', fontSize: '1.2em' }}>
+                                <p
+                                    className="text-center px-3 py-3"
+                                    style={{ color: '#61627C', fontSize: '1.2em', fontFamily: 'itim' }}
+                                >
                                     {profile.intro}
                                 </p>
                                 <h2 className="text-center" style={{ color: '#ACACAC', fontFamily: 'itim' }}>
@@ -355,6 +358,7 @@ export default function () {
                                                         type="text"
                                                         placeholder="Quote"
                                                         aria-label="Quote"
+                                                        id="quote"
                                                         onChange={(e) => setQuote(e.target.value)}
                                                         defaultValue={profile.quote || ''}
                                                         style={{ backgroundColor: '#2C3143' }}
@@ -373,6 +377,7 @@ export default function () {
                                                         type="textarea"
                                                         placeholder="Intro"
                                                         aria-label="Intro"
+                                                        id="intro"
                                                         onChange={(e) => setIntro(e.target.value)}
                                                         defaultValue={profile.intro || ''}
                                                         style={{ backgroundColor: '#2C3143' }}

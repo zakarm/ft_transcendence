@@ -10,7 +10,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Link from 'next/link';
 import SocialAuth from '../../../components/socialAuth';
-import '../../global.css';
 
 export default function SignUp() {
     const router = useRouter();

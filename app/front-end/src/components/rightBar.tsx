@@ -182,6 +182,7 @@ export default function RightBar({
                                                     className={`${styles.place} ${styles.data}`}
                                                     type="text"
                                                     placeholder="Find a player ..."
+                                                    id="search"
                                                     onChange={(e) => searchOnlineFriends(e)}
                                                     style={{ backgroundColor: '#2C3143', border: 0 }}
                                                 />

@@ -1,5 +1,5 @@
 .container {
-    background-image: url('https://localhost/assets/images/Backgrounds/bg.png');
+    background-image: url('/assets/images/Backgrounds/bg.png');
     background-size: cover;
     background-position: center;
     backdrop-filter: grayscale(50%) blur(5px);

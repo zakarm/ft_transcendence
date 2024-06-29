@@ -286,6 +286,7 @@ export default function InviteFriend({ show, close }: Props) {
                                     placeholder="Username"
                                     aria-label="Username"
                                     aria-describedby="basic-addon1"
+                                    id="username_search"
                                     style={{ backgroundColor: '#2C3143' }}
                                     value={searchTerm}
                                     onChange={(e) => {
@@ -373,12 +374,14 @@ export default function InviteFriend({ show, close }: Props) {
                                     className={`${styles.form_control}`}
                                     placeholder="Username"
                                     aria-label="Username"
+                                    id="Username"
                                     aria-describedby="basic-addon1"
                                     style={{ backgroundColor: '#2C3143' }}
                                     value={searchTerm}
                                     onChange={(e) => {
                                         setSearchTerm(e.target.value);
                                     }}
+                                    autocomplete="username"
                                 />
                                 <Button
                                     className="border"
@@ -434,6 +437,7 @@ export default function InviteFriend({ show, close }: Props) {
                                     placeholder="Username"
                                     aria-label="Username"
                                     aria-describedby="basic-addon1"
+                                    id="Username__"
                                     style={{ backgroundColor: '#2C3143' }}
                                     value={searchTerm}
                                     onChange={(e) => {

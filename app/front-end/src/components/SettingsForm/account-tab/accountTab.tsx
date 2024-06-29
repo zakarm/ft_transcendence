@@ -66,60 +66,63 @@ function GenerateInputFields() {
 function AccountTab() {
     const { updateField, currentAccoutValues } = useContext<SettingsProps>(FormContext);
 
-  const handleImageError = (event : ChangeEvent<HTMLImageElement>) => {
-    event.target.src = "/assets/images/gameProfiles/default_profile.png";
-  }
-  return (
-    <>
-      <fieldset className="col-12 col-xxl-6 p-0 m-0 d-flex justify-content-center align-items-center h-100">
-        <div className={`${styles.image_container}`}>
-          <label htmlFor="file_input" className={`${styles.image_container}`}>
-            <img
-              id = {`profile_pic`}
-              src={`${currentAccoutValues['image_url']}`}
-              alt="profile"
-              className={`${styles.profilePic}`}
-              onError={handleImageError}
-            />
-            <img
-              src="camera.png"
-              alt="camera"
-              className={`${styles.camera}`}
-            />
-          </label>
-          <input
-            type="file"
-            className="d-none"
-            accept="image/*"
-            id="file_input"
-            onChange={(e: ChangeEvent<HTMLInputElement>) => {
-              const files : FileList | null = e.target.files
+    const handleImageError = (event: ChangeEvent<HTMLImageElement>) => {
+        event.target.src = '/assets/images/gameProfiles/default_profile.png';
+    };
+    return (
+        <>
+            <fieldset className="col-12 col-xxl-6 p-0 m-0 d-flex justify-content-center align-items-center h-100">
+                <div className={`${styles.image_container}`}>
+                    <label htmlFor="file_input" className={`${styles.image_container}`}>
+                        <img
+                            id={`profile_pic`}
+                            src={`${currentAccoutValues['image_url']}`|| '/assets/images/gameProfiles/default_profile.png'}
+                            alt="profile"
+                            className={`${styles.profilePic}`}
+                            onError={handleImageError}
+                        />
+                        <img src="/assets/images/icons/Camera.png" alt="camera" className={`${styles.camera}`} />
+                    </label>
+                    <input
+                        type="file"
+                        className="d-none"
+                        accept="image/*"
+                        id="file_input"
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                            const files: FileList | null = e.target.files;
 
-              if (files && files.length > 0) {
-                  const reader = new FileReader()
-                  const validImageTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/webp', 'image/svg', 'image/jpg', 'image/webp'];
+                            if (files && files.length > 0) {
+                                const reader = new FileReader();
+                                const validImageTypes = [
+                                    'image/gif',
+                                    'image/jpeg',
+                                    'image/png',
+                                    'image/webp',
+                                    'image/svg',
+                                    'image/jpg',
+                                    'image/webp',
+                                ];
 
-                  if (validImageTypes.includes(files[0].type)) {
-                    reader.readAsDataURL(files[0]);
-                    reader.onloadend = () => {
-                      if (reader.result && typeof reader.result === 'string') {
-                        updateField("image_url", reader.result);
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          />
-        </div>
-      </fieldset>
-      <fieldset className="col-12 col-xxl-6 p-0 m-0 d-flex justify-content-center align-items-center">
-        <div className="row ">
-          <GenerateInputFields />
-        </div>
-      </fieldset>
-    </>
-  );
+                                if (validImageTypes.includes(files[0].type)) {
+                                    reader.readAsDataURL(files[0]);
+                                    reader.onloadend = () => {
+                                        if (reader.result && typeof reader.result === 'string') {
+                                            updateField('image_url', reader.result);
+                                        }
+                                    };
+                                }
+                            }
+                        }}
+                    />
+                </div>
+            </fieldset>
+            <fieldset className="col-12 col-xxl-6 p-0 m-0 d-flex justify-content-center align-items-center">
+                <div className="row ">
+                    <GenerateInputFields />
+                </div>
+            </fieldset>
+        </>
+    );
 }
 
 export default AccountTab;
