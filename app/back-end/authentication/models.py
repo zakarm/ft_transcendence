@@ -1,10 +1,10 @@
 from django.db import models
+from django.core.validators import RegexValidator
 from django.contrib.auth.models import (
     PermissionsMixin,
     AbstractBaseUser,
     BaseUserManager,
 )
-from django.core.validators import RegexValidator
 
 
 class UserManager(BaseUserManager):
@@ -29,49 +29,38 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(
-        max_length=30,
-        validators=[
-            RegexValidator(
-                regex="^[a-zA-Z0-9_ ]*$",
-                message="Username can only contain alphanumeric characters and underscores.",
-                code="invalid_username",
-            ),
-        ],
-        unique=True,
+    reg_validator = RegexValidator(
+        regex="^[a-zA-Z0-9_ ]*$",
+        message="Username can only contain alphanumeric characters and underscores.",
+        code="invalid_username",
     )
+    dft_img = "/assets/images/gameProfiles/default_profile.png"
+    loc_text = "Morocco/Khouribga"
+    quote_text = "Life is like a game of table tennis - you need focus, strategy, and the right amount of spin to win."
+    intro_text = "Hello, It's me!"
+    username = models.CharField(max_length=30, validators=[reg_validator], unique=True)
     email = models.EmailField(max_length=55, unique=True)
     password = models.CharField(max_length=100, blank=True, null=True)
     first_name = models.CharField(max_length=30, blank=True, null=True)
     last_name = models.CharField(max_length=30, blank=True, null=True)
-    is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
-    is_online = models.IntegerField(default=0)
-    date_joined = models.DateTimeField(auto_now_add=True)
-    is_superuser = models.BooleanField(default=False)
-    last_login = models.DateTimeField(auto_now=True)
-    image_url = models.URLField(
-        max_length=350,
-        blank=True,
-        null=True,
-        default="/assets/images/gameProfiles/default_profile.png",
-    )
+    image_url = models.URLField(max_length=350, blank=True, null=True, default=dft_img)
+    location = models.CharField(max_length=100, blank=True, null=True, default=loc_text)
+    quote = models.CharField(max_length=100, blank=True, null=True, default=quote_text)
+    intro = models.CharField(max_length=150, blank=True, null=True, default=intro_text)
     cover_url = models.URLField(max_length=350, blank=True, null=True)
-    location = models.CharField(
-        max_length=100, blank=True, null=True, default="Morocco/Khouribga"
-    )
-    is_2fa_enabled = models.BooleanField(default=False)
-    is_email_verified = models.BooleanField(default=False)
-    two_fa_secret_key = models.CharField(max_length=200, blank=True, null=True)
     score = models.IntegerField(blank=True, null=True, default=0.0)
     level = models.FloatField(blank=True, null=True, default=0.0)
     rank = models.IntegerField(blank=True, null=True, default=0)
-    quote = models.CharField(
-        max_length=100, blank=True, null=True, default="Hello A7ssan ft_transcendence"
-    )
-    intro = models.CharField(
-        max_length=100, blank=True, null=True, default="This is my bio"
-    )
+    date_joined = models.DateTimeField(auto_now_add=True)
+    last_login = models.DateTimeField(auto_now=True)
+    is_local = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    is_online = models.IntegerField(default=False)
+    is_superuser = models.BooleanField(default=False)
+    is_email_verified = models.BooleanField(default=False)
+    is_2fa_enabled = models.BooleanField(default=False)
+    two_fa_secret_key = models.CharField(max_length=200, blank=True, null=True)
 
     objects = UserManager()
     USERNAME_FIELD = "email"
