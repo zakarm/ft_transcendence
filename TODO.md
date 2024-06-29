@@ -9,7 +9,9 @@
         - set "Your Colors" to colors coming from backend (settings)
         - Fix bugs of when API fails
         - current_tab_view ???? in settings
-
+        - else if (response.status === 500) {
+                        toast.error('Server error!');
+                    }
     ----------------------------------------------------------------------------------
     Feat :
         - Add "(ball speed)" as a description next to the "Game difficulty" label

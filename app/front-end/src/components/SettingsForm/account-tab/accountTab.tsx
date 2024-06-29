@@ -76,7 +76,7 @@ function AccountTab() {
                     <label htmlFor="file_input" className={`${styles.image_container}`}>
                         <img
                             id={`profile_pic`}
-                            src={`${currentAccoutValues['image_url']}`|| '/assets/images/gameProfiles/default_profile.png'}
+                            src={`${currentAccoutValues['image_url'] ?? "/assets/images/gameProfiles/default_profile.png"}`}
                             alt="profile"
                             className={`${styles.profilePic}`}
                             onError={handleImageError}

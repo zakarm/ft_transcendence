@@ -40,6 +40,15 @@ function checkData(dataAPI: UserInfoTypes) {
             else if (typeof dataAPI[key] !== 'string') shouldExist[key] = dataAPI[key];
         }
     });
+
+    shouldExist['current_table_view'] = shouldExist['table_position'];
+    if (shouldExist['table_position'] === '1,10,0') {
+        shouldExist['table_position'] = 'vertical'
+    } else if (shouldExist['table_position'] === '6,8,0') {
+        shouldExist['table_position'] = 'default'
+    } else if (shouldExist['table_position'] === '0,10,0') {
+        shouldExist['table_position'] = 'horizantal'
+    }
     return shouldExist;
 }
 
@@ -59,6 +68,7 @@ async function getInitialData({
         });
 
         let data = await response.json();
+        console.log('---->', data);
         data = checkData(data);
 
         Cookies.set('pos_default', '6,8,0');
