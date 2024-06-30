@@ -15,7 +15,7 @@ import { SettingsProps, UserInfoTypes } from '@/lib/settings-types/gameSettingsT
 
 function checkData(dataAPI: UserInfoTypes) {
     const shouldExist: UserInfoTypes = {
-        is_local : true,
+        is_local : false,
         first_name: '',
         last_name: '',
         username: '',
@@ -68,7 +68,6 @@ async function getInitialData({
         });
 
         let data = await response.json();
-        console.log('---->', data);
         data = checkData(data);
 
         Cookies.set('pos_default', '6,8,0');

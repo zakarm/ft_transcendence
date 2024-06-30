@@ -115,7 +115,6 @@ function    GetCheckboxInput(
     };
 
     useEffect(() => {
-        console.log(passOTP)
         setIsChecked(passOTP)
         updateField(inputId, passOTP);
     }, [passOTP])
@@ -137,7 +136,7 @@ function    GetCheckboxInput(
                     {labelText}
                 </label>
                 <div className={`${styles.inputHolder} ${styles.checkbox} row justify-content-start p-0 m-1`}>
-                    <label className="col-3">
+                    {/* <label className="col-3" > */}
                         <input
                             type={inputType}
                             className={`${styles.input}`}
@@ -151,7 +150,7 @@ function    GetCheckboxInput(
                                 setIsChecked(!isChecked);
                             } }
                             />
-                    </label>
+                    {/* </label> */}
                 </div>
             </div>
         );

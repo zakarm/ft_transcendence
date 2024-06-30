@@ -97,7 +97,8 @@ check: ## Check the status of the Docker containers
 	@echo "$(BLUE)4. Check for unused dependencies$(RESET)"
 	@echo "$(BLUE)5. Run frontend tests$(RESET)"
 	@echo "$(BLUE)6. Run csslint$(RESET)"
-	@read -p "Select a tool (1-6): " tool_choice; \
+	@echo "$(BLUE)7. Clear jest cache$(RESET)"
+	@read -p "Select a tool (1-7): " tool_choice; \
 	case $$tool_choice in \
 		1) tool_command="npx tsc --noEmit";; \
 		2) tool_command="npx npm-check --skip-unused";; \
@@ -105,6 +106,7 @@ check: ## Check the status of the Docker containers
 		4) tool_command="npm run depcheck";; \
 		5) tool_command="npm test";; \
 		6) tool_command="find src -name "*.css" -exec npx csslint {} + > lint-results.log";; \
+		7) tool_command="npx jest --clearCache";; \
 		*) echo "Invalid choice!"; exit 1;; \
 	esac; \
 	echo "$(YELLOW)Running $$tool_command...$(RESET)"; \
