@@ -74,26 +74,26 @@
 
 .image_container_player {
     top: 0%;
-    left: 27%;
-    bottom : -15%;
+    left: 0%;
+    /* transform: translate( +10%,0); */
     height: 100%;
-    width: 70%;
-
+    width: 100%;
 }
 
 .image_container_hits {
-    top: 20%;
-    left: 35%;
-    width: 60%;
-    height: 70%;
+    top: 0%;
+    left: 0%;
+    transform: translate( +90%,0);
+    height: 100%;
+    width: 50%;
 }
 
 .image_container_achiv {
-    top: 12%;
-    left: 14%;
-    bottom: -10%;
-    width: 87%;
-    height: 87%;
+    top: 0%;
+    left: 0%;
+    transform: translate( +90%,0);
+    height: 100%;
+    width: 50%;
 }
 
 .stats_container {

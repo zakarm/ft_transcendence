@@ -1,8 +1,6 @@
 'use client';
 import styles from './styles/chat_friends.module.css';
-import Image from 'next/image';
 import { InputGroup } from 'react-bootstrap';
-import UserChat from './user_chat';
 import Form from 'react-bootstrap/Form';
 import { useEffect, useState } from 'react';
 import User from './user';
@@ -54,8 +52,6 @@ interface Props {
     messages: Message[];
 }
 
-
-
 export default function ChatFriends({
     setSelectedChat,
     setShow,
@@ -63,7 +59,7 @@ export default function ChatFriends({
     setChatUsers,
     fullscreen,
     chatUsers,
-    messages
+    messages,
 }: Props) {
     const [friendsData, setFriendsData] = useState<JSX.Element[]>([]);
     const [friendsChat, setFriendsChat] = useState<JSX.Element[]>([]);
@@ -78,8 +74,9 @@ export default function ChatFriends({
         const access = Cookies.get('access');
         if (access) {
             try {
+                const csrftoken = Cookies.get('csrftoken') || '';
                 const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/friends`, {
-                    headers: { Authorization: `Bearer ${access}` },
+                    headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
                 });
 
                 if (!res.ok) throw new Error('Failed to fetch data');
@@ -116,8 +113,14 @@ export default function ChatFriends({
                     fullscreen={fullscreen}
                     waiting_msg={friend.message_waiting}
                     setChatUsers={setChatUsers}
-                    last_message={usersLastMessage.filter((msg: LastMesg) => msg.username === friend.username).at(0)?.message ?? 'Start Chatting :}'}
-                    time={usersLastMessage.filter((msg: LastMesg) => msg.username === friend.username).at(0)?.time ?? 'now'}
+                    last_message={
+                        usersLastMessage.filter((msg: LastMesg) => msg.username === friend.username).at(0)?.message ??
+                        'Start Chatting :}'
+                    }
+                    time={
+                        usersLastMessage.filter((msg: LastMesg) => msg.username === friend.username).at(0)?.time ??
+                        'now'
+                    }
                 />
             </div>
         ));
@@ -128,18 +131,24 @@ export default function ChatFriends({
     }, []);
 
     useEffect(() => {
-        const newMessages = chatUsers.map((friend: User) => {
-            const lastMessage = messages.filter((msg: Message) => (msg.receiver === friend.username || msg.sender === friend.username)).at(-1);
-            return lastMessage ? { username: friend.username, message: lastMessage.message, time: lastMessage.timestamp } : null;
-        }).filter((msg): msg is LastMesg => msg !== null);
-    
+        const newMessages = chatUsers
+            .map((friend: User) => {
+                const lastMessage = messages
+                    .filter((msg: Message) => msg.receiver === friend.username || msg.sender === friend.username)
+                    .at(-1);
+                return lastMessage
+                    ? { username: friend.username, message: lastMessage.message, time: lastMessage.timestamp }
+                    : null;
+            })
+            .filter((msg): msg is LastMesg => msg !== null);
+
         setUsersLastMessage(newMessages);
-    }, [messages, chatUsers])
+    }, [messages, chatUsers]);
 
     useEffect(() => {
         if (search.length > 2) {
             const filteredUsers = chatUsers.filter((friend: User) =>
-                friend.username.toLowerCase().includes(search.toLowerCase())
+                friend.username.toLowerCase().includes(search.toLowerCase()),
             );
             setFriendsData(generateUserComponents(filteredUsers));
         } else {
@@ -164,11 +173,11 @@ export default function ChatFriends({
                                 & PLAY
                             </span>
                         </span>
-                        <Image
+                        <img
                             className={`${styles.welcome_img}`}
                             width={300}
                             height={300}
-                            src="/welcome.png"
+                            src="/assets/images/welcome.png"
                             alt="welcome"
                         />
                     </div>
@@ -182,6 +191,7 @@ export default function ChatFriends({
                                 type="text"
                                 color="red"
                                 aria-label="search"
+                                id="search"
                                 placeholder="Enter for search..."
                                 style={{ backgroundColor: '#2C3143' }}
                                 onChange={(e) => setSearch(e.target.value)}

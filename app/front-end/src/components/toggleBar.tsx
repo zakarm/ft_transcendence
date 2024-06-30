@@ -4,8 +4,12 @@ import styles from './styles/toggleBar.module.css';
 import { IoSettings, IoChatbubbles } from "react-icons/io5";
 import { GiPingPongBat, GiTrophy } from "react-icons/gi";
 import { MdSpaceDashboard } from "react-icons/md";
+import { IoStatsChart } from 'react-icons/io5';
 import { IoMdLogOut } from "react-icons/io";
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+import { signOut } from '@/components/sign-out/signOut';
 
 interface Props {
   handleToggle: () => void;
@@ -13,6 +17,7 @@ interface Props {
 
 const Togglebar: React.FC<Props> = ({ handleToggle }) => {
   const [activeIcon, setActiveIcon] = useState(0);
+  const router = useRouter();
 
   const handleLinkClick = (index: number) => {
     handleToggle();
@@ -20,31 +25,40 @@ const Togglebar: React.FC<Props> = ({ handleToggle }) => {
   };
 
   return (
-    <div className="d-inline-flex flex-column justify-content-around align-items-center py-4 pt-0 px-2" style={{ height: '100%' }}>
-      <div className="flex-grow-1 d-flex flex-column justify-content-around">
-        <Link className={`${styles.title} ${styles.link} valo-font d-flex flex-row align-items-center justify-content-start p-2`} href="/dashboard" onClick={() => handleLinkClick(0)}>
-          <MdSpaceDashboard className={`${styles.side_icon} ${styles.icon_0}`} color={activeIcon === 0 ? '#FF4755' : '#FFEBEB'} />
-          <h3 className='px-4'>HOME</h3>
+    <div className={`${styles.container} d-flex flex-column justify-content-center align-items-center py-4 pt-0 px-2`} style={{ height: '100%' }}>
+      <div className="mb-4">
+        <Link className={`d-flex flex-row align-items-center justify-content-start py-2  ${styles.title} ${styles.link} valo-font`} href="/dashboard" onClick={() => handleLinkClick(0)}>
+          <MdSpaceDashboard className={`${styles.icon}`} size="3em" color={activeIcon === 0 ? '#FF4755' : '#FFEBEB'} />
+          <div>HOME</div>
         </Link>
-        <Link className={`${styles.title} ${styles.link} valo-font d-flex flex-row align-items-center justify-content-start p-2`} href="/game" onClick={() => handleLinkClick(1)}>
-          <GiPingPongBat className={`${styles.side_icon} ${styles.icon_1}`} color={activeIcon === 1 ? '#FF4755' : '#FFEBEB'} />
-          <h3 className='px-4'>GAME</h3>
+        <Link className={`d-flex flex-row align-items-center justify-content-start py-2 ${styles.title} ${styles.link} valo-font`} href="/game" onClick={() => handleLinkClick(1)}>
+          <GiPingPongBat className={`${styles.icon}`} size="3em" color={activeIcon === 1 ? '#FF4755' : '#FFEBEB'} />
+          <div>GAME</div>
         </Link>
-        <Link className={`${styles.title} ${styles.link} valo-font d-flex flex-row align-items-center justify-content-start p-2`} href="/chat" onClick={() => handleLinkClick(2)}>
-          <IoChatbubbles className={`${styles.s_icon} ${styles.icon_2}`} color={activeIcon === 2 ? '#FF4755' : '#FFEBEB'} />
-          <h3 className='px-4'>CHAT</h3>
+        <Link className={`d-flex flex-row align-items-center justify-content-start py-2 ${styles.title} ${styles.link} valo-font`} href="/chat" onClick={() => handleLinkClick(2)}>
+          <IoChatbubbles className={`${styles.icon}`} size="3em" color={activeIcon === 2 ? '#FF4755' : '#FFEBEB'} />
+          <div>CHAT</div>
         </Link>
-        <Link className={`${styles.title} ${styles.link} valo-font d-flex flex-row align-items-center justify-content-start p-2`} href="/achievements" onClick={() => handleLinkClick(3)}>
-          <GiTrophy className={`${styles.s_icon} ${styles.icon_3}`} color={activeIcon === 3 ? '#FF4755' : '#FFEBEB'} />
-          <h3 className='px-4'>ACHIEVEMENT</h3>
+        <Link className={`d-flex flex-row align-items-center justify-content-start py-2 ${styles.title} ${styles.link} valo-font`} href="/achievements" onClick={() => handleLinkClick(3)}>
+          <GiTrophy className={`${styles.icon}`} size="3em" color={activeIcon === 3 ? '#FF4755' : '#FFEBEB'} />
+          <div>ACHIEVEMENT</div>
         </Link>
-        <Link className={`${styles.title} ${styles.link} valo-font d-flex flex-row align-items-center justify-content-start p-2`} href="/settings" onClick={() => handleLinkClick(4)}>
-          <IoSettings className={`${styles.s_icon} ${styles.icon_4}`} color={activeIcon === 4 ? '#FF4755' : '#FFEBEB'} />
-          <h3 className='px-4'>SETTINGS</h3>
+        <Link className={`d-flex flex-row align-items-center justify-content-start py-2 ${styles.title} ${styles.link} valo-font`} href="/statistics" onClick={() => handleLinkClick(4)}>
+          <IoStatsChart className={`${styles.icon}`} size="3em" color={activeIcon === 4 ? '#FF4755' : '#FFEBEB'} />
+          <div>STATISTICS</div>
+        </Link>
+        <Link className={`d-flex flex-row align-items-center justify-content-start py-2 ${styles.title} ${styles.link} valo-font`} href="/settings" onClick={() => handleLinkClick(4)}>
+          <IoSettings className={`${styles.icon}`} size="3em" color={activeIcon === 4 ? '#FF4755' : '#FFEBEB'} />
+          <div>SETTINGS</div>
         </Link>
       </div>
-      <div className="flex-grow-1 d-flex align-items-end pb-3">
-        <IoMdLogOut className={`${styles.s_icon} ${styles.icon_5}`} color={activeIcon === 5 ? '#FF4755' : '#FFEBEB'} />
+      <div className={`d-flex flex-row align-items-end justify-content-end py-2 ${styles.title} ${styles.link} valo-font`}>
+        <IoMdLogOut 
+          className={`${styles.icon}`}
+            size="2em" 
+            color={activeIcon === 5 ? '#FF4755' : '#FFEBEB'} 
+            onClick={() => signOut(router)}  
+          />
       </div>
     </div>
   );

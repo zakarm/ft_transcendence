@@ -102,7 +102,7 @@ function GetImageInput({ handleChange = () => {}, index = 0 }: Props) {
                     >
                         <marquee className={`text-nowrap ms-2`}>{imageName.split('\\').pop()}</marquee>
                         <div className="ps-2">
-                            <img src="../../../imageUpload.png" height="15px" />
+                            <img src="/assets/images/icons/imageUpload.png" height="15px" />
                         </div>
                     </label>
                     <input
@@ -228,11 +228,13 @@ function RemoteTournamentForm() {
         const access = Cookies.get('access');
         console.log(JSON.stringify(ValuesToPost));
         try {
+            const csrftoken = Cookies.get('csrftoken') || '';
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/create-tournament`, {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json',
                     Authorization: `Bearer ${access}`,
+                    'X-CSRFToken': csrftoken,
                 },
                 body: JSON.stringify(ValuesToPost),
             });

@@ -1,7 +1,6 @@
 
 import React from 'react';
 import styles from './styles/user_chat.module.css';
-import Image from 'next/image';
 import Spinner from 'react-bootstrap/Spinner';
 
 interface Users {
@@ -41,7 +40,7 @@ export default function UserChat ( {handleChat, username, last_message, time, im
             <div className={`${styles.message_container} row m-2 p-2`} onClick={updateState}>
                 <div className={`${styles.img_holder} col-2 d-flex justify-content-center align-items-center`}>
                     <div>
-                        <Image className={`${styles.profile_img}`} src={image_url} height={200} width={200} alt='profile_image' onClick={handleAbout}/>
+                        <img className={`${styles.profile_img}`} src={image_url} height={200} width={200} alt='profile_image' onClick={handleAbout}/>
                     </div>
                 </div>
                 <div className={`col d-flex flex-column d-flex justify-content-evenly align-items-start`} onClick={handleShow}>

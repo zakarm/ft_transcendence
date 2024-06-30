@@ -95,12 +95,16 @@ check: ## Check the status of the Docker containers
 	@echo "$(BLUE)2. Check for package updates$(RESET)"
 	@echo "$(BLUE)3. Check for Update package versions$(RESET)"
 	@echo "$(BLUE)4. Check for unused dependencies$(RESET)"
-	@read -p "Select a tool (1-4): " tool_choice; \
+	@echo "$(BLUE)5. Run frontend tests$(RESET)"
+	@echo "$(BLUE)6. Run csslint$(RESET)"
+	@read -p "Select a tool (1-6): " tool_choice; \
 	case $$tool_choice in \
 		1) tool_command="npx tsc --noEmit";; \
 		2) tool_command="npx npm-check --skip-unused";; \
 		3) tool_command="npx npm-check-updates --silent";; \
 		4) tool_command="npm run depcheck";; \
+		5) tool_command="npm test";; \
+		6) tool_command="find src -name "*.css" -exec npx csslint {} + > lint-results.log";; \
 		*) echo "Invalid choice!"; exit 1;; \
 	esac; \
 	echo "$(YELLOW)Running $$tool_command...$(RESET)"; \
@@ -152,7 +156,7 @@ Docker-ip: ## Get the IP address of the Docker containers
 	@docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(shell docker ps -q)
 
 IP_ADDRESS := $(shell ifconfig | grep inet | awk 'NR==5 {print $$2}')
-HOST_NAME := $(shell echo "10.12.5.13" | tr '.' '\n' | awk 'NR > 1 { if (NR == 2) segment = "e" substr($$0, 2); else if (NR == 3) segment = "r" $$0; else if (NR == 4) segment = "p" $$0; output = output segment } END { print output ".1337.ma" }')
+HOST_NAME := $(shell echo ${IP_ADDRESS} | tr '.' '\n' | awk 'NR > 1 { if (NR == 2) segment = "e" substr($$0, 2); else if (NR == 3) segment = "r" $$0; else if (NR == 4) segment = "p" $$0; output = output segment } END { print output ".1337.ma" }')
 
 linkIp: ## Link IP address
 	@echo "$(YELLOW)Linking IP address...$(RESET)"
@@ -165,3 +169,7 @@ restorenv: ## Restore the .env file
 	@echo "$(YELLOW)Restoring the .env file...$(RESET)"
 	@cp .env.example .env
 	@echo "$(GREEN).env file restored!$(RESET)"
+
+datagenerator: ## Generate data
+	@echo "$(YELLOW)Generating data...$(RESET)"
+	@docker exec -it back-end bash -c "python3 generate_users.py"

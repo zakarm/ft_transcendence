@@ -1,13 +1,10 @@
 import Toast from 'react-bootstrap/Toast';
-import Image from 'next/image';
 import { Button } from 'react-bootstrap';
-import { FaCheck, FaTimes, FaTimesCircle } from 'react-icons/fa';
+import { FaCheck, FaTimes } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
-import { ToastContainer, toast } from 'react-toastify';
-import { useEffect, useState } from 'react';
-import { normalize } from 'path';
-import { Color } from 'three';
+import { toast } from 'react-toastify';
+import { useState } from 'react';
 
 interface Notif {
     notification_id: number;
@@ -51,6 +48,7 @@ function Notification({ notification }: Props) {
         const access = Cookies.get('access');
         if (access)
         {
+            const csrftoken = Cookies.get('csrftoken') || '';
             const notif = await fetch(
                 `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/notification-delete/${notification_id}`,
                 {
@@ -58,6 +56,7 @@ function Notification({ notification }: Props) {
                     headers: {
                         Authorization: `Bearer ${access}`,
                         'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken,
                     },
                 },
             );
@@ -84,11 +83,13 @@ function Notification({ notification }: Props) {
         const access = Cookies.get('access');
         if (access) {
             try {
+                const csrftoken = Cookies.get('csrftoken') || '';
                 const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/${api}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${access}`,
+                        'X-CSRFToken': csrftoken,
                     },
 
                     body: JSON.stringify({ username: username }),
@@ -142,7 +143,7 @@ function Notification({ notification }: Props) {
     return (
         <Toast className="border" onClose={() => deleteNotification(notification.notification_id)} >
             <Toast.Header style={{  color: 'white', borderBottom: '1px solid white' }}>
-                <Image
+                <img
                     src={notification.image_url}
                     width={30}
                     height={30}

@@ -103,7 +103,6 @@ const PongGame: React.FC<Props> = ({ webSocket, connectionInfo, players }: Props
         camera.position.set(25, 15, 16);
 
         // const targetPosition = new THREE.Vector3(6, 8, 0);
-        console.log("+++++++++++++++++++++++++++++++++++++>>>>>" ,connectionInfo.table_position);
         const targetPosition = convertStringToVector3(connectionInfo.table_position);
         gsap.to(camera.position, {
             x: targetPosition.x,
@@ -199,7 +198,7 @@ const PongGame: React.FC<Props> = ({ webSocket, connectionInfo, players }: Props
             }
             i = i === 1 ? 2 : 1;
             speed *= i === 1 ? -1 : 1;
-            sendMessage({ action: 'paddle_move', paddle: i, speed: speed });
+            sendMessage({ action: 'paddle_move', match_id: connectionInfo.roomName , paddle: i, speed: speed });
         };
 
         const handleKeyUp = (event: KeyboardEvent) => {
@@ -209,13 +208,13 @@ const PongGame: React.FC<Props> = ({ webSocket, connectionInfo, players }: Props
                 case 'ArrowRight':
                     break;
                 case 'Space':
-                    sendMessage({ action: 'pause' });
+                    sendMessage({ action: 'pause', match_id: connectionInfo.roomName });
                     break;
                 default:
                     break;
             }
             i = i === 1 ? 2 : 1;
-            sendMessage({ action: 'paddle_stop', paddle: i });
+            sendMessage({ action: 'paddle_stop', match_id: connectionInfo.roomName , paddle: i });
         };
 
         const handleResize = () => {

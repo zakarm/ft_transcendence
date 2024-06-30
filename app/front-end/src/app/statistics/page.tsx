@@ -13,7 +13,7 @@ import {
 } from '@/lib/StatisticsPageTypes/StatisticsPageTypes';
 import styles from './styles.module.css';
 import { FuturePredictionGraph } from '@/components/statistics/graph';
-import { GameHistoryTable } from '@/components/statistics/historyTable';
+import { GameHistoryTable, GameHistoryTableTypes } from '@/components/statistics/historyTable';
 import { StatisticCard } from '@/components/statistics/playerCard';
 import { PlayerStats } from '@/components/statistics/playerStats';
 
@@ -33,9 +33,10 @@ async function getData(): Promise<StatisticsDataTypes> {
     let data: Partial<Promise<StatisticsDataTypes>> = {};
     const access = Cookies.get('access');
     if (access) {
+        const csrftoken = Cookies.get('csrftoken') || '';
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/statistics`, {
             method: 'GET',
-            headers: { Authorization: `Bearer ${access}` },
+            headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
         });
         try {
             data = await response.json();
@@ -67,6 +68,7 @@ function getPlayerStatsFromData(data: Partial<StatisticsDataTypes>): PlayerStats
 function StatisticsPage() {
     const [futurePredictions, setFuturePredictions] = useState<FuturePredictionsTypes[] | string[]>([]);
     const [topPlayer, setTopPlayer] = useState<string>('');
+    const [image_url, setImageURL] = useState<string>('');
     const [playerMatches, setPlayerMatches] = useState<PlayerMatchesTypes[]>([]);
     const [avgScore, setAvgScore] = useState<number>(0);
     const [lastAchiv, setLastAchiv] = useState<Partial<AchivementTypes>>({});
@@ -79,10 +81,11 @@ function StatisticsPage() {
             data = await getData();
             setTopPlayer(data.top_player ?? '');
             setFuturePredictions(data.future_predictions ?? []);
-            setAvgScore(data.avg_score ?? 0);
+            setAvgScore(data.avg_score ? +((data.avg_score).toFixed(2)) : 0);
             setLastAchiv((data.last_achiev as AchivementTypes) ?? (data.last_achiev as undefined));
             setPlayerMatches(data.player_matches ?? []);
             setPlayerStats(getPlayerStatsFromData(data));
+            setImageURL(data.image_url ?? "");
         })();
     }, []);
 
@@ -102,15 +105,23 @@ function StatisticsPage() {
 
                         <section className="col-12 m-2 order-1 order-xxl-1 ">
                             <div
-                                className={`row mt-3 justify-content-start flex-nowrap justify-content-xxl-between ${styles.outter_player_card_container}`}
+                                className={`row mt-3  justify-content-around flex-nowrap justify-content-xxl-between ${styles.outter_player_card_container}`}
                             >
-                                <div className={`col-4 m-1 ${styles.player_card}`}>
-                                    <StatisticCard title="Top Player" body={topPlayer} imgSrc="top_player_bg.png" />
+                                <div className={`col-3 mt-3 mx-1 ${styles.player_card} `}>
+                                    <StatisticCard
+                                        title="Top Player"
+                                        body={topPlayer}
+                                        imgSrc="/assets/images/Top_Player.png"
+                                    />
                                 </div>
-                                <div className={`col-4 m-1 ${styles.player_card}`}>
-                                    <StatisticCard title="Average Score" body={avgScore} imgSrc="valorant-logo.png" />
+                                <div className={`col-3 mt-3 mx-1 ${styles.player_card} `}>
+                                    <StatisticCard
+                                        title="Average Score"
+                                        body={avgScore}
+                                        imgSrc="/assets/images/Average_Score.png"
+                                    />
                                 </div>
-                                <div className={`col-4 m-1 ${styles.player_card}`}>
+                                <div className={`col-3 mt-3 mx-1 ${styles.player_card} `}>
                                     <StatisticCard
                                         title="Last Achivement"
                                         body={lastAchiv && lastAchiv.achievement_name ? lastAchiv.achievement_name : ''}
@@ -133,7 +144,7 @@ function StatisticsPage() {
 
                     {/*  Right Side */}
                     <div className={`col-12 col-xxl-4 order-0 order-xxl-2 m-2`}>
-                        <GameHistoryTable player_matches={playerMatches} />
+                        <GameHistoryTable playerMatches={playerMatches} image_url={image_url} />
                     </div>
                 </div>
             </div>

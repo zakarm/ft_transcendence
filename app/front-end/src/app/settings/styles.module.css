@@ -216,8 +216,11 @@
 
     .input, .inputColor, .select, .previewButton {
         height: 50px;
+        border-radius: 15px;
     }
-
+    .inputColor::-webkit-color-swatch {
+      border-radius: 15px;
+    }
     .form_container {
         height: auto;
     }

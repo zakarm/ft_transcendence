@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
     back-end:
         container_name: back-end
@@ -8,8 +6,6 @@ services:
             context: ./app/back-end
             dockerfile: Dockerfile
         restart: always
-        depends_on:
-            - data-base
         env_file:
             - .env
         volumes:
@@ -25,12 +21,7 @@ services:
             context: ./app/front-end
             dockerfile: Dockerfile
         restart: always
-        depends_on:
-            - back-end
-        env_file:
-            - .env
         volumes:
-            - .env:/front-end/.env
             - ./app/front-end/src:/front-end/src
             - ./app/front-end/public:/front-end/public
             - ./app/front-end/package.json:/front-end/package.json
@@ -45,8 +36,6 @@ services:
             context: ./app/data-base
             dockerfile: Dockerfile
         restart: always
-        ports:
-            - '5432:5432'
         env_file:
             - .env
         volumes:
@@ -55,22 +44,19 @@ services:
             - ft_transcendence
 
     nginx:
-      container_name: nginx
-      image: nginx:42
-      build:
-        context: ./app/nginx
-        dockerfile: Dockerfile
-      restart: always
-      ports:
-        - "80:80"
-        - "443:443"
-      env_file:
-        - .env
-      depends_on:
-        - front-end
-        - back-end
-      networks:
-        - ft_transcendence
+        container_name: nginx
+        image: nginx:42
+        build:
+            context: ./services/nginx
+            dockerfile: Dockerfile
+        restart: always
+        ports:
+            - '80:80'
+            - '443:443'
+        env_file:
+            - .env
+        networks:
+            - ft_transcendence
 
     adminer:
         container_name: adminer
@@ -91,10 +77,6 @@ services:
             context: ./services/redis
             dockerfile: Dockerfile
         restart: on-failure
-        depends_on:
-            - back-end
-        ports:
-            - '6379:6379'
         env_file:
             - .env
         networks:

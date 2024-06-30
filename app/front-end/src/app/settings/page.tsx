@@ -15,6 +15,7 @@ import { SettingsProps, UserInfoTypes } from '@/lib/settings-types/gameSettingsT
 
 function checkData(dataAPI: UserInfoTypes) {
     const shouldExist: UserInfoTypes = {
+        is_local : true,
         first_name: '',
         last_name: '',
         username: '',
@@ -25,7 +26,6 @@ function checkData(dataAPI: UserInfoTypes) {
         new_password: '',
         repeat_password: '',
         is_2fa_enabled: false,
-        two_fa_secret_key: '',
         table_color: '#161625',
         ball_color: '#ffffff',
         paddle_color: '#ff4655',
@@ -40,24 +40,35 @@ function checkData(dataAPI: UserInfoTypes) {
             else if (typeof dataAPI[key] !== 'string') shouldExist[key] = dataAPI[key];
         }
     });
+
+    shouldExist['current_table_view'] = shouldExist['table_position'];
+    if (shouldExist['table_position'] === '1,10,0') {
+        shouldExist['table_position'] = 'vertical'
+    } else if (shouldExist['table_position'] === '6,8,0') {
+        shouldExist['table_position'] = 'default'
+    } else if (shouldExist['table_position'] === '0,10,0') {
+        shouldExist['table_position'] = 'horizantal'
+    }
     return shouldExist;
 }
 
 async function getInitialData({
-    setValuesToPost,
-    setAccountValues,
+    setOldAccountValues,
+    setCurrentAccoutValues,
 }: {
-    setValuesToPost: SettingsProps['setValuesToPost'];
-    setAccountValues: SettingsProps['setAccountValues'];
+    setOldAccountValues: SettingsProps['setOldAccountValues'];
+    setCurrentAccoutValues: SettingsProps['setCurrentAccoutValues'];
 }) {
     try {
         const access = Cookies.get('access');
+        const csrftoken = Cookies.get('csrftoken') || '';
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/game-settings`, {
             method: 'GET',
-            headers: { Authorization: `Bearer ${access}` },
+            headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
         });
 
         let data = await response.json();
+        console.log('---->', data);
         data = checkData(data);
 
         Cookies.set('pos_default', '6,8,0');
@@ -68,43 +79,45 @@ async function getInitialData({
         Cookies.set('theme_ball_color', '#ffffff');
         Cookies.set('theme_paddle_color', '#ff4655');
 
-        Cookies.set('table_color', '#161625');
-        Cookies.set('ball_color', '#ffffff');
-        Cookies.set('paddle_color', '#ff4655');
+        Cookies.set('table_color', data['table_color']);
+        Cookies.set('ball_color', data['ball_color']);
+        Cookies.set('paddle_color', data['paddle_color']);
 
-        setValuesToPost(data);
-        setAccountValues(data);
+        setOldAccountValues(data);
+        setCurrentAccoutValues(data);
     } catch (error) {
         console.error('Unexpected error : ', error);
     }
 }
 
-const validateInput: (valuesToPost: SettingsProps['valuesToPost']) => boolean = (
-    valuesToPost: SettingsProps['valuesToPost'],
+const validateInput: (oldAccountValues: SettingsProps['oldAccountValues']) => boolean = (
+    oldAccountValues: SettingsProps['oldAccountValues'],
 ) => {
     const validateEmail: (email: string) => boolean = (email) => {
         // const rgx: RegExp = /^([a-zA-Z0-9\._]+)@([a-zA-Z0-9])+.([a-z]+)(.[a-z]+)?$/;
         const rgx: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return rgx.test(email);
+        return rgx.test(email) && email.length >= 8;
     };
 
     const toCheck: string[] = ['first_name', 'last_name', 'nickname'];
     let isValid: boolean = true;
 
     toCheck.map((key) => {
-        if (valuesToPost[key] === '') {
+        if (oldAccountValues[key] === '') {
             toast.error(`Invalid input : ${key}`, notificationStyle);
             isValid = false;
         }
     });
 
-    if (!validateEmail(valuesToPost['email'] as string)) {
-        toast.error(`Invalid input : email`, notificationStyle);
+    if ("email" in oldAccountValues &&
+            !validateEmail(oldAccountValues['email'] as string)) {
+        toast.error(`Invalid input : email - ensure 8 characters long`, notificationStyle);
         isValid = false;
     }
 
-    if (valuesToPost['new_password'] !== valuesToPost['repeat_password']) {
-        toast.error(`Invalid input : new_password or repeat_password`, notificationStyle);
+    if ( "new_password" in oldAccountValues &&  "repeat_password" in oldAccountValues &&
+        oldAccountValues['new_password'] !== oldAccountValues['repeat_password']) {
+        toast.error(`Invalid input : mismatch between password fields`, notificationStyle);
         isValid = false;
     }
     return isValid;
@@ -114,46 +127,62 @@ const validateInput: (valuesToPost: SettingsProps['valuesToPost']) => boolean = 
 const postFormData = async ({
     valuesToPost,
     isFormChanged,
+    setOldAccountValues,
+    currentAccoutValues
 }: {
-    valuesToPost: SettingsProps['valuesToPost'];
+    valuesToPost: SettingsProps['currentAccoutValues'];
     isFormChanged: MutableRefObject<boolean>;
+    setOldAccountValues : SettingsProps['setCurrentAccoutValues']
+    currentAccoutValues : SettingsProps['currentAccoutValues']
 }) => {
-    if (isFormChanged.current && validateInput(valuesToPost)) {
         const changeImageURL = async () => {
             if (typeof valuesToPost['image_url'] === 'string') {
                 const promise = await handleImageUpload(valuesToPost['image_url']);
                 if (promise !== null && typeof promise === 'string') {
                     valuesToPost['image_url'] = promise;
-                } else {
-                    toast.error('Error : cannot upload image', notificationStyle);
                 }
             }
         };
 
         const postData = async () => {
-            await changeImageURL();
+            if ("image_url" in valuesToPost) {
+                await changeImageURL();
+            }
             console.log('------> JSON To Post', JSON.stringify(valuesToPost));
             isFormChanged.current = false;
             const access = Cookies.get('access');
+            const csrftoken = Cookies.get('csrftoken') || '';
             const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/game-settings`, {
                 method: 'PUT',
                 headers: {
                     'content-type': 'application/json',
                     Authorization: `Bearer ${access}`,
+                    'X-CSRFToken': csrftoken,
                 },
                 body: JSON.stringify(valuesToPost),
             });
 
+            const   data = await res.json();
             if (res.ok) {
-                toast.success('To be saved...', notificationStyle);
+                Object.entries(data).map(([key, value]) => {
+                    toast.success(`${key} ${value}`, notificationStyle);
+                })
+                setOldAccountValues(currentAccoutValues);
                 /* New Chosen Colors */
-                Cookies.set('table_color', valuesToPost['table_color'] as string);
-                Cookies.set('ball_color', valuesToPost['ball_color'] as string);
-                Cookies.set('paddle_color', valuesToPost['paddle_color'] as string);
+                if ("table_color" in valuesToPost) {
+                    Cookies.set('table_color', valuesToPost['table_color'] as string);
+                }
+                if ("ball_color" in valuesToPost) {
+                    Cookies.set('ball_color', valuesToPost['ball_color'] as string);
+                }
+                if ("paddle_color" in valuesToPost) {
+                    Cookies.set('paddle_color', valuesToPost['paddle_color'] as string);
+                }
 
-                /* .... updates form placeholders */
             } else {
-                console.log(res);
+                Object.entries(data).map(([key, value]) => {
+                    toast.error(`Error : ${key} ${value}`, notificationStyle);
+                })
             }
         };
 
@@ -162,61 +191,65 @@ const postFormData = async ({
         } catch (error) {
             console.error('Unexpected error : ', error);
         }
-    }
 };
+let tmp : SettingsProps['currentAccoutValues'] = {};
 
 function SettingsPage() {
-    const [valuesToPost, setValuesToPost] = useState<SettingsProps['valuesToPost']>({});
-    const [accountValues, setAccountValues] = useState<SettingsProps['accountValues']>({});
+    const [valuesToPost, setValuesToPost] = useState<SettingsProps['oldAccountValues']>({});
+    const [oldAccountValues, setOldAccountValues] = useState<SettingsProps['oldAccountValues']>({});
+    const [currentAccoutValues, setCurrentAccoutValues] = useState<SettingsProps['currentAccoutValues']>({});
     const [tab, setTab] = useState<string>('Account');
     const isFormChanged = useRef<boolean>(false);
     /* Updates a specific field of the input */
     const updateField = (key: string, value: string | boolean) => {
-        setAccountValues((prevValues: SettingsProps['accountValues']) => {
+        setCurrentAccoutValues((prevValues: SettingsProps['currentAccoutValues']) => {
             const newValues = { ...prevValues };
             newValues[key] = value;
             return newValues;
         });
     };
-    const options = ['Account', 'Security', 'Game'];
+    const options = ['Account'];
+    if (currentAccoutValues.is_local) { options.push('Security') }
+    options.push('Game');
 
-    /* Compares values in  [accountValues, valuesToPost] */
+    /* Compares values in  [currentAccoutValues, oldAccountValues] */
     const checkDifferences = () => {
-        const compareDictValues = (d1: SettingsProps['accountValues'], d2: SettingsProps['valuesToPost']) => {
-            let count: number = 0;
+        const compareDictValues = (d1: SettingsProps['currentAccoutValues'], d2: SettingsProps['oldAccountValues']) => {
+            let isValuesChanged : boolean = false;
             for (const key in d1) {
                 if (d1[key] !== d2[key]) {
-                    break;
+                    tmp[key] = d1[key];
+                    isValuesChanged = true
                 }
-                count++;
             }
-
-            return !(Object.entries(d1).length === count);
+            setValuesToPost(tmp);
+            tmp = {}
+            return isValuesChanged;
         };
 
-        const updatePostValues = (values: SettingsProps['accountValues']) => {
-            const newValues: SettingsProps['accountValues'] = { ...values };
+        const updatePostValues = (values: SettingsProps['currentAccoutValues']) => {
+            const newValues: SettingsProps['currentAccoutValues'] = { ...values };
             for (const [key, value] of Object.entries(values)) {
                 newValues[key] = value;
             }
-            if (compareDictValues(accountValues, valuesToPost)) {
-                setValuesToPost(newValues);
+            if (compareDictValues(currentAccoutValues, oldAccountValues)) {
+                // setOldAccountValues(newValues);
                 isFormChanged.current = true;
             }
         };
 
-        updatePostValues(accountValues);
+        updatePostValues(currentAccoutValues);
     };
 
     /*  Gets Initial Values From Backend */
     useEffect(() => {
-        getInitialData({ setValuesToPost, setAccountValues });
+        getInitialData({ setOldAccountValues, setCurrentAccoutValues });
     }, []);
 
     /*  Updates PostValues */
     useEffect(() => {
         checkDifferences();
-    }, [accountValues]);
+    }, [currentAccoutValues]);
 
     return (
         <div className={`${styles.wrapper} container-fluid vh-100 p-0 m-0`}>
@@ -236,11 +269,11 @@ function SettingsPage() {
                         </fieldset>
                         <FormContext.Provider
                             value={{
-                                accountValues,
-                                valuesToPost,
+                                currentAccoutValues,
+                                oldAccountValues,
                                 updateField,
-                                setValuesToPost,
-                                setAccountValues,
+                                setOldAccountValues,
+                                setCurrentAccoutValues,
                             }}>
                             <div
                                 className={`${styles.content_container} row  p-0 m-0  justify-content-center align-items-center`}>
@@ -254,7 +287,10 @@ function SettingsPage() {
                         <button
                             className={`valo-font col-8 col-md-6 ${styles.create_button}`}
                             onClick={() => {
-                                postFormData({ valuesToPost, isFormChanged });
+                                if (isFormChanged.current && validateInput(currentAccoutValues)
+                                        && Object.entries(valuesToPost).length > 0) {
+                                    postFormData({ valuesToPost, isFormChanged, setOldAccountValues, currentAccoutValues });
+                                }
                             }}>
                             SAVE
                         </button>

@@ -114,19 +114,23 @@ const AchivementCard: React.FC<Props> = React.memo(({ title, subTitle, imageURL,
                 <div className={`row ${styles.cardHolder} align-items-center m-0 p-0`}>
                     <div className={`${styles.right_subcard} col-8 p-3 m-0 `}>
                         <div className="row p-0 m-0 h-25 w-100">
-                            <h3 className={`${styles.title} valo-font col d-flex align-items-center p-0 m-0`}>{title}</h3>
+                            <h3 className={`${styles.title} valo-font col d-flex align-items-center p-0 m-0`}>
+                                {title}
+                            </h3>
                         </div>
                         <div className="row p-0 m-0 mt-1 h-50 w-100">
                             <p className={`${styles.font_size} itim-font col-12 p-2`}>{subTitle}</p>
                         </div>
                         <div className="row p-0 m-0 mt-1 h-25 w-100">
-                            <h3 className={`col d-flex align-items-end valo-font ${styles.achieved_text}`}>{achieved ? 'ACHIEVED' : ''}</h3>
+                            <h3 className={`col d-flex align-items-end valo-font ${styles.achieved_text}`}>
+                                {achieved ? 'ACHIEVED' : ''}
+                            </h3>
                         </div>
                     </div>
                     <div className={`col-4 p-0 m-0`}>
                         <div className={`row p-0 m-0`}>
                             <div className={`col`}>
-                                <img className={`${styles.achiv_img}`} src={imageURL}></img>
+                                <img className={`${styles.achiv_img}`} src={imageURL} alt={title}></img>
                             </div>
                         </div>
                     </div>
@@ -164,9 +168,10 @@ const Achievements: React.FC<AchivProps> = React.memo(({ choosenTab, achievement
     useEffect(() => {
         const getAchievements = async () => {
             try {
+                const csrftoken = Cookies.get('csrftoken') || '';
                 const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/achievements`, {
                     method: 'GET',
-                    headers: { Authorization: `Bearer ${access}` },
+                    headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
                 });
 
                 const data = await response.json();
@@ -183,50 +188,50 @@ const Achievements: React.FC<AchivProps> = React.memo(({ choosenTab, achievement
         {
             title: 'EARLY BIRD',
             subTitle: 'Win a match within the first three minutes',
-            imageURL: 'achiv_tourn1.png',
+            imageURL: '/assets/images/achievement/achiv_tourn1.png',
             achieved: achievements.tournament ? achievements.tournament['early'] : false,
         },
         {
             title: 'GRAND SLAM',
             subTitle: 'Win three consecutive tournaments',
-            imageURL: 'achiv_tourn4.png',
+            imageURL: '/assets/images/achievement/achiv_tourn4.png',
             achieved: achievements.tournament ? achievements.tournament['slam'] : false,
         },
         {
             title: 'TRIPLE THREAT',
             subTitle: 'Score a hat-trick (three consecutive points) at least twice in a match',
-            imageURL: 'achiv_tourn2.png',
+            imageURL: '/assets/images/achievement/achiv_tourn2.png',
             achieved: achievements.tournament ? achievements.tournament['triple'] : false,
         },
         {
             title: 'FRONTRUNNER',
             subTitle: 'Reach the finals of the tournament',
-            imageURL: 'achiv_tourn3.png',
+            imageURL: '/assets/images/achievement/achiv_tourn3.png',
             achieved: achievements.tournament ? achievements.tournament['front'] : false,
         },
         // MATCH GAME achievements
         {
             title: 'IRON DEFENSE',
             subTitle: 'Win a game without letting your opponent score more than five points',
-            imageURL: 'achiv_match4.png',
+            imageURL: '/assets/images/achievement/achiv_match4.png',
             achieved: achievements.match ? achievements.match['iron'] : false,
         },
         {
             title: 'SPEEDY VICTORY',
             subTitle: 'Win a game with a score of 7-0 within three minutes',
-            imageURL: 'achiv_match1.png',
+            imageURL: '/assets/images/achievement/achiv_match1.png',
             achieved: achievements.match ? achievements.match['speedy'] : false,
         },
         {
             title: 'LAST-MINUTE COMEBACK',
             subTitle: 'Win a game after being down by five points',
-            imageURL: 'achiv_match2.png',
+            imageURL: '/assets/images/achievement/achiv_match2.png',
             achieved: achievements.match ? achievements.match['last'] : false,
         },
         {
             title: 'TABLE KING/QUEEN',
             subTitle: 'Win ten games in a row without losing',
-            imageURL: 'achiv_match3.png',
+            imageURL: '/assets/images/achievement/achiv_match3.png',
             achieved: achievements.match ? achievements.match['king'] : false,
         },
     ];
