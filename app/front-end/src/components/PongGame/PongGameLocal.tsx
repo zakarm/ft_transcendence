@@ -206,7 +206,6 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
                     paddle2.move(-0.1);
                     break;
                 case 'Space':
-                    console.log(camera.position, camera.rotation);
                     break;
                 default:
                     break;
@@ -300,7 +299,6 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
                             ? { name: data.user1name, imageUrl: data.user1image }
                             : { name: data.user2name, imageUrl: data.user2image };
                     if (!winnerSet && data.setWinner !== null) {
-                        console.log('setting winner');
                         data.setWinner(winner);
                         winnerSet = true;
                     }
@@ -314,7 +312,6 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
             }
         };
         return () => {
-            console.log('PongGameLocal unmounted');
             clearInterval(intervalId11);
             document.removeEventListener('keydown', handleKeyDown);
             document.removeEventListener('keyup', handleKeyUp);

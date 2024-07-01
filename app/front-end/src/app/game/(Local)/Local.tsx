@@ -105,7 +105,6 @@ function Local() {
             return;
         if (winner.name !== '' && winner.imageUrl !== '') {
             setPageState('Winner');
-            console.log('winner-----------');
         }
     }, [winner]);
 

@@ -35,7 +35,6 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ name, imageUrl, stats, index }:
         { subject: 'Ranking', A: stats.eliteTierRanking },
     ];
     const isNameTooLong = name.length > 10;
-    console.log('imageUrl:', imageUrl);
     return (
         <div className={`PlayerCard border ${index === 1 ? 'left' : index === 2 ? 'right' : ''}`}>
             <img className="image" src={imageUrl} alt={name} />

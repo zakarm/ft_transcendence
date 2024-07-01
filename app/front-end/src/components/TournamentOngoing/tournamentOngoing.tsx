@@ -61,17 +61,17 @@ function connectToSocket({ pageUrl }: { pageUrl: string }) {
             );
 
             wss.onopen = () => {
-                console.log('connected to socket successfully');
+                // console.log('connected to socket successfully');
             };
             wss.onmessage = (event) => {
                 data = event.data;
-                console.log(event.data);
+                // console.log(event.data);
             };
             wss.onerror = (error) => {
-                console.log(`Error : ${error}`);
+                // console.log(`Error : ${error}`);
             };
             wss.onclose = () => {
-                console.log('closed connection');
+                // console.log('closed connection');
             };
         } catch (error) {
             console.error(`Error : ${error}`);

@@ -100,7 +100,6 @@ export default function () {
                 const newChatSocket = new WebSocket(`${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/chat/lobby?token=${access}`);
 
                 newChatSocket.onmessage = (e: MessageEvent) => {
-                    console.log('message received');
                     const data = JSON.parse(e.data);
                     setNewMessage({
                         chat_id: data.chat_id,

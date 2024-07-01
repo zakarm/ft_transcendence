@@ -128,7 +128,7 @@ function InputRange({ handleChange = () => {}, index = 0 }: Props) {
         <>
             <div className={`row justify-content-center ${styles.slidecontainer} p-0 mt-2`}>
                 <label className={`col-9 itim-font text-left p-1 ${styles.inputTitle}`} htmlFor="myRange">
-                    Game Difficulty
+                    Ball Speed
                 </label>
                 <div className={`col-9 d-flex justify-content-center p-0 my-3 ${styles.inputTitle}`}>
                     <input
@@ -143,13 +143,13 @@ function InputRange({ handleChange = () => {}, index = 0 }: Props) {
                 </div>
                 <div className={`row justify-content-between p-0 mb-2 ${styles.inputTitle}`}>
                     <div className="col">
-                        <p className={`itim-font`}>Easy</p>
+                        <p className={`itim-font`}>Slow</p>
                     </div>
                     <div className="col d-flex justify-content-center">
                         <p className={`itim-font`}>Medium</p>
                     </div>
                     <div className="col d-flex justify-content-end">
-                        <p className={`itim-font`}>Hard</p>
+                        <p className={`itim-font`}>Fast</p>
                     </div>
                 </div>
             </div>
@@ -226,7 +226,6 @@ function RemoteTournamentForm() {
         if (!isValid) return;
 
         const access = Cookies.get('access');
-        console.log(JSON.stringify(ValuesToPost));
         try {
             const csrftoken = Cookies.get('csrftoken') || '';
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/create-tournament`, {

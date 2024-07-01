@@ -217,7 +217,6 @@ function    findNeedleInHaystack(
             }
         }
     })
-    console.log(filteredArray);
     return tournamentCards;
 
 }

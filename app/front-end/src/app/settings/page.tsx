@@ -147,7 +147,6 @@ const postFormData = async ({
             if ("image_url" in valuesToPost) {
                 await changeImageURL();
             }
-            console.log('------> JSON To Post', JSON.stringify(valuesToPost));
             isFormChanged.current = false;
             const access = Cookies.get('access');
             const csrftoken = Cookies.get('csrftoken') || '';

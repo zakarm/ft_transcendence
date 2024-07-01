@@ -44,7 +44,6 @@ const convertHexColor = (hex: string): number => {
     return parseInt(cleanedHex, 16);
 };
 const convertStringToVector3 = (str: string): THREE.Vector3 => {
-    console.log("str",str);
     const [x, y, z] = str.split(',').map((coord) => parseFloat(coord));
     return new THREE.Vector3(x, y, z);
 }
@@ -291,7 +290,6 @@ const PongGame: React.FC<Props> = ({ webSocket, connectionInfo, players }: Props
         animate();
 
         return () => {
-            console.log('PongGame unmounted');
             webSocket.removeEventListener('message', handleMessage);
             document.removeEventListener('keydown', handleKeyDown);
             document.removeEventListener('keyup', handleKeyUp);

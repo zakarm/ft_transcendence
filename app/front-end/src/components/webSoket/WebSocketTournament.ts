@@ -90,18 +90,14 @@ const useWebSocketTournament = (url: string) => {
         const ws = new WebSocket(url);
 
         ws.onopen = () => {
-            console.log('-> Connected to WebSocket');
         };
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            console.log('-> Message from WebSocket', data.message.action);
             if (data.message.action === 'created') {
-                console.log('-> Room Created', data.message);
                 setGameState('lobby');
             }
             if (data.message.action === 'TournamentData') {
-                console.log('-> TournamentData', data.message);
             setFilteredTournamentData((prevState: any) => ({
                 ...prevState,
                 TournamentName: data.message.tournamentdata.tournament_name,
@@ -151,7 +147,6 @@ const useWebSocketTournament = (url: string) => {
                     paddle_color: data.message.paddle_color,
                     table_position: data.message.table_position,
                 }));
-                console.log('-> Connection Acknowledged', data.message);
             }
 
             if (data.message.action === 'opponents') {
@@ -165,45 +160,35 @@ const useWebSocketTournament = (url: string) => {
                     user2_image: data.message.user2_image_url,
                     username2: data.message.user2_username,
                 }));
-                console.log('-> opponents', data.message);
-                console.log('-> connectionInfo', connectionInfo);
             }
 
             if (data.message.action === 'load_game') {
                 setGameState('load_game');
-                console.log('-> load_game', data.message);
             }
 
             if (data.message.action === 'start_game') {
                 setGameState('start_game');
-                console.log('-> start_game', data.message);
             }
             if (data.message.action === 'reconnected') {
                 setGameState('lobby');
-                console.log('-> reconnected', data.message);
             }
             if (data.message.action === 'reconnecting') {
                 setGameState('reconnecting');
-                console.log('-> reconnecting', data.message);
             }
             if (data.message.action === 'pause') {
                 setGameState('pause');
-                console.log('-> pause', data.message);
             }
             if (data.message.action === 'countdown') {
                 setCountDown(data.message.count);
-                console.log('-> pause', data.message);
             }
             if (data.message.action === 'end_game') {
                 if (data.message.status === 'winner') setGameState('winner');
                 else setGameState('loser');
-                console.log('-> end_game', data.message);
             }
         };
 
         ws.onclose = () => {
             router.back();
-            console.log('Disconnected from WebSocket');
         };
 
         setWebSocket(ws);

@@ -1,7 +1,6 @@
  Mushigarou :
     ----------------------------------------------------------------------------------
     Bugs :
-        - Remove console.log, console.error from all code
         - Remove type "any" from all code
         - Check data before using it or casting the type
         - Handle cases of when color cookies are delete or invalid
@@ -14,7 +13,6 @@
                     }
     ----------------------------------------------------------------------------------
     Feat :
-        - Add "(ball speed)" as a description next to the "Game difficulty" label
         - Background of enble 2FA from white to input's color
         - Group color's cookies in into one object
         - Fix width of label above input in settings to prevent label from moving back and forth on small screen sizes
