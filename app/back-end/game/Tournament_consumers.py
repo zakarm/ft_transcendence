@@ -33,6 +33,8 @@ def get_user(user_id):
         return user
     except User.DoesNotExist:
         return AnonymousUser()
+    except Exception as e:
+        print(f"An error occurred in get_user: {e}", file=sys.stderr)
 
 
 @database_sync_to_async
@@ -42,6 +44,35 @@ def get_tournament_(tournament_id):
         return tournament
     except TournamentModel.DoesNotExist:
         return None
+    except Exception as e:
+        print(f"An error occurred in get_tournament_: {e}", file=sys.stderr)
+
+
+@database_sync_to_async
+def set_user_rank():
+    try:
+        users = User.objects.all().order_by("-level")
+        for index, user in enumerate(users):
+            user.rank = index + 1
+            user.save()
+    except User.DoesNotExist:
+        return AnonymousUser()
+    except Exception as e:
+        print(f"An error occurred in set_user_rank: {e}", file=sys.stderr)
+
+
+@database_sync_to_async
+def set_user_xp(data):
+    try:
+        user = User.objects.get(id=data["id"])
+        user.level = data["level"]
+        user.score = data["score"]
+        user.xp = data["xp"]
+        user.save()
+    except User.DoesNotExist:
+        return AnonymousUser()
+    except Exception as e:
+        print(f"An error occurred in set_user_xp: {e}", file=sys.stderr)
 
 
 @database_sync_to_async
@@ -621,6 +652,10 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                             await self.send_score(match_id, _tournament)
                             await self.add_game_to_db(match_id, _tournament, round)
                             await self.send_winner_message(match_id, _tournament)
+                            data = room.calculate_xp()
+                            await set_user_xp(data["user1"])
+                            await set_user_xp(data["user2"])
+                            await set_user_rank()
                             await asyncio.sleep(2)
                             return room.get_winner_index()
                     await self.opponents(match_id, _tournament)
@@ -651,6 +686,10 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                         room.end_game()
                         await self.add_game_to_db(match_id, _tournament, round)
                         await self.send_winner_message(match_id, _tournament)
+                        data = room.calculate_xp()
+                        await set_user_xp(data["user1"])
+                        await set_user_xp(data["user2"])
+                        await set_user_rank()
                         await asyncio.sleep(2)
                         return room.get_winner_index()
                     room.paddle_reset()

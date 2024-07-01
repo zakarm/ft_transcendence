@@ -36,7 +36,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     dft_img = "/assets/images/gameProfiles/default_profile.png"
     loc_text = "Morocco/Khouribga"
-    quote_text= "Hello, It's me!"
+    quote_text = "Hello, It's me!"
     intro_text = "Life's a ping pong game: focus strategy spin"
     username = models.CharField(max_length=30, validators=[reg_validator], unique=True)
     email = models.EmailField(max_length=55, unique=True)
@@ -49,7 +49,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     intro = models.CharField(max_length=45, blank=True, null=True, default=intro_text)
     cover_url = models.URLField(max_length=350, blank=True, null=True)
     score = models.IntegerField(blank=True, null=True, default=0.0)
-    level = models.FloatField(blank=True, null=True, default=0.0)
+    xp = models.IntegerField(blank=True, null=True, default=100)
+    level = models.FloatField(blank=True, null=True, default=1.0)
     rank = models.IntegerField(blank=True, null=True, default=0)
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
