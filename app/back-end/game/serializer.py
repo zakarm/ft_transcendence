@@ -164,6 +164,8 @@ class GameSettingsSerializer(serializers.ModelSerializer):
     game_table = serializers.SerializerMethodField()
     email = serializers.EmailField(min_length=7, max_length=320, required=False)
     username = serializers.CharField(min_length=4, max_length=20, required=False)
+    quote = serializers.CharField(max_length=25, required=False)
+    intro = serializers.CharField(max_length=45, required=False)
     new_password = serializers.CharField(
         write_only=True, max_length=100, min_length=8, required=False, allow_blank=True
     )
@@ -178,6 +180,8 @@ class GameSettingsSerializer(serializers.ModelSerializer):
             "email",
             "country",
             "city",
+            "quote",
+            "intro",
             "game_table",
             "is_local",
             "is_2fa_enabled",

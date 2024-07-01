@@ -32,6 +32,35 @@ def get_user(user_id):
         return user
     except User.DoesNotExist:
         return AnonymousUser()
+    except Exception as e:
+        print(f"An error occurred in get_user: {e}", file=sys.stderr)
+
+
+@database_sync_to_async
+def set_user_rank():
+    try:
+        users = User.objects.all().order_by("-level")
+        for index, user in enumerate(users):
+            user.rank = index + 1
+            user.save()
+    except User.DoesNotExist:
+        return AnonymousUser()
+    except Exception as e:
+        print(f"An error occurred in set_user_rank: {e}", file=sys.stderr)
+
+
+@database_sync_to_async
+def set_user_xp(data):
+    try:
+        user = User.objects.get(id=data["id"])
+        user.level = data["level"]
+        user.score = data["score"]
+        user.xp = data["xp"]
+        user.save()
+    except User.DoesNotExist:
+        return AnonymousUser()
+    except Exception as e:
+        print(f"An error occurred in set_user_xp: {e}", file=sys.stderr)
 
 
 @database_sync_to_async
@@ -49,6 +78,8 @@ def get_game_data(user):
             table_position="6,8,0",
         )
         return game_data
+    except Exception as e:
+        print(f"An error occurred in get_game_data: {e}", file=sys.stderr)
 
 
 @database_sync_to_async
@@ -62,16 +93,19 @@ def add_match(
     tackle_user_one,
     tackle_user_two,
 ):
-    Match.objects.create(
-        user_one=user_one,
-        user_two=user_two,
-        score_user_one=score_user_one,
-        score_user_two=score_user_two,
-        match_start=match_start,
-        match_end=match_end,
-        tackle_user_one=tackle_user_one,
-        tackle_user_two=tackle_user_two,
-    )
+    try:
+        Match.objects.create(
+            user_one=user_one,
+            user_two=user_two,
+            score_user_one=score_user_one,
+            score_user_two=score_user_two,
+            match_start=match_start,
+            match_end=match_end,
+            tackle_user_one=tackle_user_one,
+            tackle_user_two=tackle_user_two,
+        )
+    except Exception as e:
+        print(f"An error occurred in add_match: {e}", file=sys.stderr)
 
 
 Room_index = 0
@@ -356,6 +390,10 @@ class GameConsumer(AsyncWebsocketConsumer):
                             await self.add_game_to_db()
                             await self.send_winner_message()
                             # delete_room(self.room_name)
+                            data = room.calculate_xp()
+                            await set_user_xp(data["user1"])
+                            await set_user_xp(data["user2"])
+                            await set_user_rank()
                             return
                     await self.opponents()
                     await self.broadcast_message({"action": "start_game"})
@@ -386,6 +424,10 @@ class GameConsumer(AsyncWebsocketConsumer):
                         await self.add_game_to_db()
                         await self.send_winner_message()
                         # delete_room(self.room_name)
+                        data = room.calculate_xp()
+                        await set_user_xp(data["user1"])
+                        await set_user_xp(data["user2"])
+                        await set_user_rank()
                         break
                     room.paddle_reset()
                     await self.reset()
@@ -455,4 +497,4 @@ class GameConsumer(AsyncWebsocketConsumer):
             await self.message({"message": {"action": "created"}})
             return new_room_name, new_room
         except Exception as e:
-            print(f"An error occurred in zfind_or_create_room: {e}", file=sys.stderr)
+            print(f"An error occurred in find_or_create_room: {e}", file=sys.stderr)

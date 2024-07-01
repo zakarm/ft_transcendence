@@ -74,6 +74,8 @@ export default function () {
                 if (!res.ok) throw new Error('Failed to fetch data');
 
                 const data = await res.json();
+                setQuote(data.quote);
+                setIntro(data.intro);
                 setProfile(data);
             } catch (error) {
                 console.error('Error fetching data: ', error);
