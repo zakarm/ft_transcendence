@@ -33,12 +33,13 @@ async function getData(): Promise<StatisticsDataTypes> {
     let data: Partial<Promise<StatisticsDataTypes>> = {};
     const access = Cookies.get('access');
     if (access) {
-        const csrftoken = Cookies.get('csrftoken') || '';
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/statistics`, {
-            method: 'GET',
-            headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
-        });
         try {
+            const csrftoken = Cookies.get('csrftoken') || '';
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/statistics`, {
+                method: 'GET',
+                headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
+            });
+            
             data = await response.json();
         } catch (error: any) {
             console.log(`Error : ${error.message}`);

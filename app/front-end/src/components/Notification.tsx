@@ -46,36 +46,40 @@ function Notification({ notification }: Props) {
 
     const deleteNotification = async (notification_id: number) => {
         const access = Cookies.get('access');
-        if (access)
-        {
-            const csrftoken = Cookies.get('csrftoken') || '';
-            const notif = await fetch(
-                `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/notification-delete/${notification_id}`,
-                {
-                    method: 'DELETE',
-                    headers: {
-                        Authorization: `Bearer ${access}`,
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrftoken,
+        try {
+            if (access)
+            {
+                const csrftoken = Cookies.get('csrftoken') || '';
+                const notif = await fetch(
+                    `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/notification-delete/${notification_id}`,
+                    {
+                        method: 'DELETE',
+                        headers: {
+                            Authorization: `Bearer ${access}`,
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrftoken,
+                        },
                     },
-                },
-            );
-            const notif_data = await notif.json();
-            if (notif.ok) {
-                console.log('Notification deleted');
-            } else {
-                const errors = notif_data;
-                for (const key in errors) {
-                    if (errors.hasOwnProperty(key)) {
-                        errors[key].forEach((errorMessage: string) => {
-                            toast.error(`${key}: ${errorMessage}`);
-                        });
+                );
+                const notif_data = await notif.json();
+                if (notif.ok) {
+                    console.log('Notification deleted');
+                } else {
+                    const errors = notif_data;
+                    for (const key in errors) {
+                        if (errors.hasOwnProperty(key)) {
+                            errors[key].forEach((errorMessage: string) => {
+                                toast.error(`${key}: ${errorMessage}`);
+                            });
+                        }
                     }
                 }
+    
+            } else {
+                toast.error('error: Unauthorized. Invalid credentials provided.');
             }
-
-        } else {
-            toast.error('error: Unauthorized. Invalid credentials provided.');
+        } catch (error) {
+            // console.error('Error :' error)
         }
     }
 

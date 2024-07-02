@@ -146,38 +146,40 @@ const postFormData = async ({
             isFormChanged.current = false;
             const access = Cookies.get('access');
             const csrftoken = Cookies.get('csrftoken') || '';
-            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/game-settings`, {
-                method: 'PUT',
-                headers: {
-                    'content-type': 'application/json',
-                    Authorization: `Bearer ${access}`,
-                    'X-CSRFToken': csrftoken,
-                },
-                body: JSON.stringify(valuesToPost),
-            });
+            try {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/game-settings`, {
+                    method: 'PUT',
+                    headers: {
+                        'content-type': 'application/json',
+                        Authorization: `Bearer ${access}`,
+                        'X-CSRFToken': csrftoken,
+                    },
+                    body: JSON.stringify(valuesToPost),
+                });
+    
+                const   data = await res.json();
+                if (res.ok) {
+                    Object.entries(data).map(([key, value]) => {
+                        toast.success(`${key} ${value}`, notificationStyle);
+                    })
+                    setOldAccountValues(currentAccoutValues);
+                    if ("table_color" in valuesToPost) { Cookies.set('table_color', valuesToPost['table_color'] as string); }
+                    if ("ball_color" in valuesToPost) { Cookies.set('ball_color', valuesToPost['ball_color'] as string); }
+                    if ("paddle_color" in valuesToPost) { Cookies.set('paddle_color', valuesToPost['paddle_color'] as string); }
+    
+                } else {
+                    Object.entries(data).map(([key, value]) => {
+                        toast.error(`Error : ${key} ${value}`, notificationStyle);
+                    })
+                }
 
-            const   data = await res.json();
-            if (res.ok) {
-                Object.entries(data).map(([key, value]) => {
-                    toast.success(`${key} ${value}`, notificationStyle);
-                })
-                setOldAccountValues(currentAccoutValues);
-                if ("table_color" in valuesToPost) { Cookies.set('table_color', valuesToPost['table_color'] as string); }
-                if ("ball_color" in valuesToPost) { Cookies.set('ball_color', valuesToPost['ball_color'] as string); }
-                if ("paddle_color" in valuesToPost) { Cookies.set('paddle_color', valuesToPost['paddle_color'] as string); }
-
-            } else {
-                Object.entries(data).map(([key, value]) => {
-                    toast.error(`Error : ${key} ${value}`, notificationStyle);
-                })
+            } catch (error) {
+                toast.error('Cannot save your changes')
+                // console.error('Unexpected error : ', error);
             }
         };
 
-        try {
-            postData();
-        } catch (error) {
-            console.error('Unexpected error : ', error);
-        }
+        postData();
 };
 let tmp : SettingsProps['currentAccoutValues'] = {};
 
