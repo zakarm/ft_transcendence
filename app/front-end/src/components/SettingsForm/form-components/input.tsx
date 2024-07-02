@@ -207,14 +207,14 @@ function    GetColorInput(
                         type="button"
                         className={`${styles.previewButton} ${inputClassName} `}
                         onClick={ () => {
-                            let color = Cookies.get(inputId);
+                            let color : string | undefined = Cookies.get(inputId);
                             if (!color) {
-                                Cookies.set('table_color', oldAccountValues['table_color']);
-                                Cookies.set('ball_color', oldAccountValues['ball_color']);
-                                Cookies.set('paddle_color', oldAccountValues['paddle_color']);
+                                Cookies.set('table_color', oldAccountValues['table_color'] as string);
+                                Cookies.set('ball_color', oldAccountValues['ball_color'] as string);
+                                Cookies.set('paddle_color', oldAccountValues['paddle_color'] as string);
                                 color = Cookies.get(inputId);
                             }
-                            colorToPreview && updateField(inputId, color);
+                            colorToPreview && updateField(inputId, color as string);
                         } }
                     >
                         Reset
