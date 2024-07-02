@@ -89,7 +89,6 @@ class UserTournamentsSerializer(serializers.ModelSerializer):
 
 
 class TournamentCreationSerializer(serializers.Serializer):
-    # username = serializers.CharField(max_length=30)
     tournament_name = serializers.CharField(max_length=30)
     game_difficulty = serializers.IntegerField()
     tournament_image = serializers.URLField(

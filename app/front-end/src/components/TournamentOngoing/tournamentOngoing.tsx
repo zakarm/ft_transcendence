@@ -8,6 +8,9 @@ import {
     LiveMatchesTypes,
     UserInfoTypes,
     RenderUpcomingMatchesTypes,
+    QuarterFinalMatchTypes,
+    SemiFinalMatchTypes,
+    FinalMatchTypes,
 } from '@/lib/tournament-ongoing-type/ongoingTypes';
 
 let data: LiveMatchesTypes = {
@@ -15,28 +18,37 @@ let data: LiveMatchesTypes = {
     data: {
         quarter_final: {
             match1: {
-                user1: { name: '', photoUrl: '', score: 0 },
-                user2: { name: '', photoUrl: '', score: 0 },
+                user1: { name: '', photoUrl: '', score: 0, status: false },
+                user2: { name: '', photoUrl: '', score: 0, status: false },
             },
             match2: {
-                user1: { name: '', photoUrl: '', score: 0 },
-                user2: { name: '', photoUrl: '', score: 0 },
+                user1: { name: '', photoUrl: '', score: 0, status: false },
+                user2: { name: '', photoUrl: '', score: 0, status: false },
             },
             match3: {
-                user1: { name: '', photoUrl: '', score: 0 },
-                user2: { name: '', photoUrl: '', score: 0 },
+                user1: { name: '', photoUrl: '', score: 0, status: false },
+                user2: { name: '', photoUrl: '', score: 0, status: false },
             },
             match4: {
-                user1: { name: '', photoUrl: '', score: 0 },
-                user2: { name: '', photoUrl: '', score: 0 },
+                user1: { name: '', photoUrl: '', score: 0, status: false },
+                user2: { name: '', photoUrl: '', score: 0, status: false },
             },
         },
         semi_final: {
-            match1: { user1: { name: '', photoUrl: '', score: 0 }, user2: { name: '', photoUrl: '', score: 0 } },
-            match2: { user1: { name: '', photoUrl: '', score: 0 }, user2: { name: '', photoUrl: '', score: 0 } },
+            match1: {
+                user1: { name: '', photoUrl: '', score: 0, status: false },
+                user2: { name: '', photoUrl: '', score: 0, status: false },
+            },
+            match2: {
+                user1: { name: '', photoUrl: '', score: 0, status: false },
+                user2: { name: '', photoUrl: '', score: 0, status: false },
+            },
         },
         final: {
-            match1: { user1: { name: '', photoUrl: '', score: 0 }, user2: { name: '', photoUrl: '', score: 0 } },
+            match1: {
+                user1: { name: '', photoUrl: '', score: 0, status: false },
+                user2: { name: '', photoUrl: '', score: 0, status: false },
+            },
         },
     },
 };
@@ -53,14 +65,19 @@ function connectToSocket({ pageUrl }: { pageUrl: string }) {
                 wss = null;
             }
             wss = new WebSocket(
-                `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/pingpong/tournament/${tournamentID}?token=${access}&watch=true`,
+                `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/pingpong/tournament/${tournamentID}/?token=${access}&watch=true`,
             );
 
             wss.onopen = () => {
                 console.log('connected to socket successfully');
             };
             wss.onmessage = (event) => {
-                data = event.data;
+                const dt = JSON.parse(event.data);
+                if(dt.message.action === 'TournamentData'){
+                    data.data.quarter_final = dt.message.tournamentdata.quarter_final as QuarterFinalMatchTypes;
+                    data.data.semi_final = dt.message.tournamentdata.semi_final as SemiFinalMatchTypes;
+                    data.data.final = dt.message.tournamentdata.final as FinalMatchTypes;
+                }
                 console.log(event.data);
             };
             wss.onerror = (error) => {
@@ -72,6 +89,8 @@ function connectToSocket({ pageUrl }: { pageUrl: string }) {
         } catch (error) {
             console.error(`Error : ${error}`);
         }
+    } else {
+        console.log('Missing tournamentID or access token');
     }
 }
 
