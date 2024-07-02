@@ -167,7 +167,7 @@ function    GetColorInput(
         value=""
     }: Props) {
 
-    const   { updateField } = useContext<SettingsProps>(FormContext);
+    const   { updateField, oldAccountValues } = useContext<SettingsProps>(FormContext);
     const   [colorToPreview, setcolorToPreview] = useState<string>("")
 
     // usestate to pass chosen color to 'onClick' of button
@@ -207,7 +207,14 @@ function    GetColorInput(
                         type="button"
                         className={`${styles.previewButton} ${inputClassName} `}
                         onClick={ () => {
-                            colorToPreview && updateField(inputId, (Cookies.get(inputId) as string))
+                            let color = Cookies.get(inputId);
+                            if (!color) {
+                                Cookies.set('table_color', oldAccountValues['table_color']);
+                                Cookies.set('ball_color', oldAccountValues['ball_color']);
+                                Cookies.set('paddle_color', oldAccountValues['paddle_color']);
+                                color = Cookies.get(inputId);
+                            }
+                            colorToPreview && updateField(inputId, color);
                         } }
                     >
                         Reset
