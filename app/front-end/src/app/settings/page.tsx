@@ -74,10 +74,6 @@ async function getInitialData({
         Cookies.set('pos_horizantal', '0,10,0');
         Cookies.set('pos_vertical', '1,10,0');
 
-        Cookies.set('theme_table_color', '#161625');
-        Cookies.set('theme_ball_color', '#ffffff');
-        Cookies.set('theme_paddle_color', '#ff4655');
-
         Cookies.set('table_color', data['table_color']);
         Cookies.set('ball_color', data['ball_color']);
         Cookies.set('paddle_color', data['paddle_color']);
@@ -166,16 +162,9 @@ const postFormData = async ({
                     toast.success(`${key} ${value}`, notificationStyle);
                 })
                 setOldAccountValues(currentAccoutValues);
-                /* New Chosen Colors */
-                if ("table_color" in valuesToPost) {
-                    Cookies.set('table_color', valuesToPost['table_color'] as string);
-                }
-                if ("ball_color" in valuesToPost) {
-                    Cookies.set('ball_color', valuesToPost['ball_color'] as string);
-                }
-                if ("paddle_color" in valuesToPost) {
-                    Cookies.set('paddle_color', valuesToPost['paddle_color'] as string);
-                }
+                if ("table_color" in valuesToPost) { Cookies.set('table_color', valuesToPost['table_color'] as string); }
+                if ("ball_color" in valuesToPost) { Cookies.set('ball_color', valuesToPost['ball_color'] as string); }
+                if ("paddle_color" in valuesToPost) { Cookies.set('paddle_color', valuesToPost['paddle_color'] as string); }
 
             } else {
                 Object.entries(data).map(([key, value]) => {

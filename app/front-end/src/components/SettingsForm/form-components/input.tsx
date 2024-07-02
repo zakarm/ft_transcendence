@@ -198,6 +198,7 @@ function    GetColorInput(
                         type="button"
                         className={`${styles.previewButton} ${inputClassName} `}
                         onClick={ (e : MouseEvent<HTMLButtonElement>) => {
+                            console.log('--->', e.target.value, inputId)
                             colorToPreview && updateField(inputId, colorToPreview)
                         } }
                         >Preview</button>
@@ -207,6 +208,8 @@ function    GetColorInput(
                         type="button"
                         className={`${styles.previewButton} ${inputClassName} `}
                         onClick={ (e : MouseEvent<HTMLButtonElement>) => {
+                            console.log('--->', e.target.value)
+
                             colorToPreview && updateField(inputId, (Cookies.get(inputId) as string))
                         } }
                     >
@@ -285,7 +288,7 @@ function    GetInput(
         return (
             <div className={`${className} flex-wrap flex-xxl-nowrap`}>
                 <label
-                    className={`col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`}
+                    className={`col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle}`}
                     htmlFor={inputId}>
                     {labelText}
                 </label>

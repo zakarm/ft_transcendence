@@ -24,17 +24,17 @@ function GenerateInputFields() {
     {
       inputId: "table_color",
       labelText: "Table Color",
-      value: oldAccountValues["table_color"],
+      value: currentAccoutValues["table_color"],
     },
     {
       inputId: "ball_color",
       labelText: "Ball Color",
-      value: oldAccountValues["ball_color"],
+      value: currentAccoutValues["ball_color"],
     },
     {
       inputId: "paddle_color",
       labelText: "Paddle Color",
-      value: oldAccountValues["paddle_color"],
+      value: currentAccoutValues["paddle_color"],
     },
     {
       inputId: "table_position",
@@ -86,13 +86,10 @@ function GenerateInputFields() {
             <button
                 type="button"
                 className={`${styles.previewButton} p-0 m-0 my-4 row justify-content-center align-items-center itim-font`}
-                onClick={ (e : MouseEvent<HTMLButtonElement>) => {
-                  updateField(inputProps[0].inputId,
-                    (Cookies.get("theme_table_color") as string) ?? "#161625");
-                  updateField(inputProps[1].inputId,
-                    (Cookies.get("theme_ball_color") as string) ?? "#ffffff");
-                  updateField(inputProps[2].inputId,
-                    (Cookies.get("theme_paddle_color") as string) ?? "#ff4655");
+                onClick={ () => {
+                  updateField(inputProps[0].inputId, "#161625");
+                  updateField(inputProps[1].inputId, "#ffffff");
+                  updateField(inputProps[2].inputId, "#ff4655");
                 } }
                 >
                   Default Colors
@@ -102,7 +99,7 @@ function GenerateInputFields() {
             <button
                 type="button"
                 className={`${styles.previewButton} p-0 m-0 my-4 row justify-content-center align-items-center itim-font`}
-                onClick={ (e : MouseEvent<HTMLButtonElement>) => {
+                onClick={ () => {
                   updateField(inputProps[0].inputId, (Cookies.get(inputProps[0].inputId) as string) ?? "#161625");
                   updateField(inputProps[1].inputId, (Cookies.get(inputProps[1].inputId) as string) ?? "#ffffff");
                   updateField(inputProps[2].inputId, (Cookies.get(inputProps[2].inputId) as string) ?? "#ff4655");
@@ -121,9 +118,9 @@ function GameTab() {
 
   const { updateField, currentAccoutValues } = useContext<SettingsProps>(FormContext);
 
-  const [paddleColor, setPaddleColor] = useState<string>((currentAccoutValues['paddleColor'] as string) ?? "");
-  const [tableColor, setTableColor] = useState<string>((currentAccoutValues['tableColor'] as string) ?? "");
-  const [ballColor, setBallColor] = useState<string>((currentAccoutValues['ballColor'] as string) ?? "");
+  const [paddleColor, setPaddleColor] = useState<string>((currentAccoutValues['paddleColor'] as string) ?? "#ff4655");
+  const [tableColor, setTableColor] = useState<string>((currentAccoutValues['tableColor'] as string) ?? "#161625");
+  const [ballColor, setBallColor] = useState<string>((currentAccoutValues['ballColor'] as string) ?? "#ffffff");
 
   useEffect(() =>{
     setTableColor((currentAccoutValues['table_color'] as string));
@@ -145,7 +142,13 @@ function GameTab() {
               : pos === "horizantal"
               ? "pos_horizantal"
               : "pos_vertical";
-          const pos_v = Cookies.get(view) as string;
+          let pos_v = Cookies.get(view) as string;
+          if (!pos_v) {
+            Cookies.set('pos_default', '6,8,0');
+            Cookies.set('pos_horizantal', '0,10,0');
+            Cookies.set('pos_vertical', '1,10,0');
+            pos_v = Cookies.get(view) as string;
+          }
           updateField("current_table_view", pos_v);
         }, [currentAccoutValues["table_position"]]);
   return (
