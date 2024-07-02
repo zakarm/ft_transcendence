@@ -41,7 +41,7 @@ function GetInput({
 }: Props) {
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (handleChange) {
-            handleChange({ e }, index!); // Wrapping the event in an object
+            handleChange({ e }, index!);
         }
     };
 
@@ -163,36 +163,24 @@ function RenderInputFields({ handleChange = () => {} }: Props) {
             <GetInput
                 className="p-2 mt-2 row justify-content-center"
                 inputType="text"
-                inputId="Username"
-                labelText="Username"
-                inputLength={20}
-                index={0}
-                handleChange={(e: InputEventProps | string) => handleChange(e, 0)}
-            ></GetInput>
-            <GetInput
-                className="p-2 mt-2 row justify-content-center"
-                inputType="text"
                 inputId="Tournament_name"
                 labelText="Tournament name"
                 inputLength={30}
                 index={1}
-                handleChange={(e: InputEventProps | string) => handleChange(e, 1)}
+                handleChange={(e: InputEventProps | string) => handleChange(e, 0)}
             ></GetInput>
-            <GetImageInput handleChange={(e: InputEventProps | string) => handleChange(e, 4)} index={4}></GetImageInput>
-            <InputRange handleChange={(e: InputEventProps | string) => handleChange(e, 5)} index={5}></InputRange>
+            <GetImageInput handleChange={(e: InputEventProps | string) => handleChange(e, 1)} index={1}></GetImageInput>
+            <InputRange handleChange={(e: InputEventProps | string) => handleChange(e, 2)} index={2}></InputRange>
         </>
     );
 }
 
 function RemoteTournamentForm() {
-    const [currentValues, setCurrentValues] = useState<string[]>(['', '', '', '', '', '']);
+    const [currentValues, setCurrentValues] = useState<string[]>(['', '', '']);
 
     const ValuesToPost: InputValuesProps = {
-        username: '', //
         tournament_name: '',
-        tournament_start: '',
-        start_time: '', //
-        tournament_image: '', //
+        tournament_image: '',
         game_difficulty: '1',
     };
 
@@ -227,6 +215,7 @@ function RemoteTournamentForm() {
 
         const access = Cookies.get('access');
         try {
+            console.log(ValuesToPost)
             const csrftoken = Cookies.get('csrftoken') || '';
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/create-tournament`, {
                 method: 'POST',
@@ -242,6 +231,7 @@ function RemoteTournamentForm() {
                 toast.success(data.success, notificationStyle);
             } else {
                 Object.values(data).map((v) => {
+                    console.log('---> ', v, v[0])
                     if (v[0] && typeof v[0] === 'string') {
                         toast.error(v[0], notificationStyle);
                     }
