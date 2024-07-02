@@ -19,6 +19,7 @@ const convertHexColor = (hex: string): number => {
 
 function GenerateInputFields() {
   const { updateField, currentAccoutValues, oldAccountValues } = useContext<SettingsProps>(FormContext);
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
   const inputProps = [
     {
@@ -85,8 +86,11 @@ function GenerateInputFields() {
           <div className="col">
             <button
                 type="button"
+                disabled={isDisabled}
                 className={`${styles.previewButton} p-0 m-0 my-4 row justify-content-center align-items-center itim-font`}
                 onClick={ () => {
+                  setIsDisabled(true)
+                  setTimeout(() => setIsDisabled(false), 3000)
                   updateField(inputProps[0].inputId, "#161625");
                   updateField(inputProps[1].inputId, "#ffffff");
                   updateField(inputProps[2].inputId, "#ff4655");
@@ -98,8 +102,11 @@ function GenerateInputFields() {
           <div className="col">
             <button
                 type="button"
+                disabled={isDisabled}
                 className={`${styles.previewButton} p-0 m-0 my-4 row justify-content-center align-items-center itim-font`}
                 onClick={ () => {
+                  setIsDisabled(true)
+                  setTimeout(() => setIsDisabled(false), 3000)
                   updateField(inputProps[0].inputId, (Cookies.get(inputProps[0].inputId) as string) ?? oldAccountValues[inputProps[0].inputId]);
                   updateField(inputProps[1].inputId, (Cookies.get(inputProps[1].inputId) as string) ?? oldAccountValues[inputProps[1].inputId]);
                   updateField(inputProps[2].inputId, (Cookies.get(inputProps[2].inputId) as string) ?? oldAccountValues[inputProps[2].inputId]);

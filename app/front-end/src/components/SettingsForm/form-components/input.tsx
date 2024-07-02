@@ -41,6 +41,7 @@ function    GetListInput(
     } : ListInputProps) {
 
     const   { updateField } = useContext<SettingsProps>(FormContext);
+    const   [ isDisabled, setIsDisabled ] = useState<boolean>(false)
 
     return (
         <>
@@ -55,9 +56,15 @@ function    GetListInput(
                     <select
                         className={`itim-font ${styles.input} ps-4`}
                         name="tournaments"
+                        disabled={isDisabled}
                         id={id}
                         value={ choosenPosition }
-                        onChange={ (e : ChangeEvent<HTMLSelectElement>) => { updateField(id, e.target.value); } }>
+                        onChange={ (e : ChangeEvent<HTMLSelectElement>) => {
+                                setIsDisabled(true);
+                                setTimeout(() => setIsDisabled(false), 3000);
+                                updateField(id, e.target.value);
+                            }
+                        }>
                         {
                             opt.map((val) => (
                                 <option key={val}
@@ -169,6 +176,7 @@ function    GetColorInput(
 
     const   { updateField, oldAccountValues } = useContext<SettingsProps>(FormContext);
     const   [colorToPreview, setcolorToPreview] = useState<string>("")
+    const   [isDisabled, setIsDisabled] = useState<boolean>(false)
 
     // usestate to pass chosen color to 'onClick' of button
     return (
@@ -196,8 +204,11 @@ function    GetColorInput(
                 <div className="col-4">
                     <button
                         type="button"
+                        disabled={isDisabled}
                         className={`${styles.previewButton} ${inputClassName} `}
                         onClick={ () => {
+                            setIsDisabled(true);
+                            setTimeout(() => setIsDisabled(false), 3000);
                             colorToPreview && updateField(inputId, colorToPreview)
                         } }
                         >Preview</button>
@@ -205,8 +216,11 @@ function    GetColorInput(
                 <div className="col-4">
                     <button
                         type="button"
+                        disabled={isDisabled}
                         className={`${styles.previewButton} ${inputClassName} `}
                         onClick={ () => {
+                            setIsDisabled(true);
+                            setTimeout(() => setIsDisabled(false), 3000);
                             let color : string | undefined = Cookies.get(inputId);
                             if (!color) {
                                 Cookies.set('table_color', oldAccountValues['table_color'] as string);
@@ -241,8 +255,8 @@ function    GetInputRange() {
 
             <div className=" col d-flex justify-content-center p-0 my-3 ms-1">
                 <input type="range"
-                    min="1"
-                    max="3"
+                    min="0"
+                    max="2"
                     step="1"
                     value={ currentAccoutValues['game_difficulty'] as string }
                     className={`${styles.slider}`}

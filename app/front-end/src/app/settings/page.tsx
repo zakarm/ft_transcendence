@@ -15,7 +15,7 @@ import { SettingsProps, UserInfoTypes } from '@/lib/settings-types/gameSettingsT
 
 function checkData(dataAPI: UserInfoTypes) {
     const shouldExist: UserInfoTypes = {
-        is_local : false,
+        is_local : true,
         first_name: '',
         last_name: '',
         username: '',
@@ -35,7 +35,7 @@ function checkData(dataAPI: UserInfoTypes) {
     };
 
     Object.keys(shouldExist).map((key) => {
-        if (dataAPI[key]) {
+        if (dataAPI[key] !== undefined && dataAPI[key] !== null) {
             if (typeof dataAPI[key] === 'string' && dataAPI[key] != 'NaN') shouldExist[key] = dataAPI[key];
             else if (typeof dataAPI[key] !== 'string') shouldExist[key] = dataAPI[key];
         }

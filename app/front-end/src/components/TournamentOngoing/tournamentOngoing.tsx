@@ -6,10 +6,6 @@ import { CSSProperties } from 'react';
 import Cookies from 'js-cookie';
 import {
     LiveMatchesTypes,
-    QuarterFinalMatchTypes,
-    SemiFinalMatchTypes,
-    FinalMatchTypes,
-    UserTypes,
     UserInfoTypes,
     RenderUpcomingMatchesTypes,
 } from '@/lib/tournament-ongoing-type/ongoingTypes';
@@ -19,20 +15,20 @@ let data: LiveMatchesTypes = {
     data: {
         quarter_final: {
             match1: {
-                user1: { name: 'yoru', photoUrl: '/assets/images/gameProfiles/yoru.jpeg', score: 0 },
-                user2: { name: 'sova', photoUrl: '/assets/images/gameProfiles/sova.jpeg', score: 2 },
+                user1: { name: '', photoUrl: '', score: 0 },
+                user2: { name: '', photoUrl: '', score: 0 },
             },
             match2: {
-                user1: { name: 'raze', photoUrl: '/assets/images/gameProfiles/raze.jpeg', score: 1 },
-                user2: { name: 'Phoenix', photoUrl: '/assets/images/gameProfiles/Phoenix.jpeg', score: 0 },
+                user1: { name: '', photoUrl: '', score: 0 },
+                user2: { name: '', photoUrl: '', score: 0 },
             },
             match3: {
-                user1: { name: 'omen', photoUrl: '/assets/images/gameProfiles/omen.jpeg', score: 2 },
-                user2: { name: 'harbor', photoUrl: '/assets/images/gameProfiles/harbor.jpeg', score: 3 },
+                user1: { name: '', photoUrl: '', score: 0 },
+                user2: { name: '', photoUrl: '', score: 0 },
             },
             match4: {
-                user1: { name: 'cypher', photoUrl: '/assets/images/gameProfiles/cypher.jpeg', score: 1 },
-                user2: { name: 'chamber', photoUrl: '/assets/images/gameProfiles/chamber.jpeg', score: 4 },
+                user1: { name: '', photoUrl: '', score: 0 },
+                user2: { name: '', photoUrl: '', score: 0 },
             },
         },
         semi_final: {
@@ -57,21 +53,21 @@ function connectToSocket({ pageUrl }: { pageUrl: string }) {
                 wss = null;
             }
             wss = new WebSocket(
-                `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/pingpong/tournament/${tournamentID}?token=${access}&spect=true`,
+                `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/pingpong/tournament/${tournamentID}?token=${access}&watch=true`,
             );
 
             wss.onopen = () => {
-                // console.log('connected to socket successfully');
+                console.log('connected to socket successfully');
             };
             wss.onmessage = (event) => {
                 data = event.data;
-                // console.log(event.data);
+                console.log(event.data);
             };
             wss.onerror = (error) => {
-                // console.log(`Error : ${error}`);
+                console.log(`Error : ${error}`);
             };
             wss.onclose = () => {
-                // console.log('closed connection');
+                console.log('closed connection');
             };
         } catch (error) {
             console.error(`Error : ${error}`);

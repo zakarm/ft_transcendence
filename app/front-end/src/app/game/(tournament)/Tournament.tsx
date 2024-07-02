@@ -110,7 +110,7 @@ function    RemoteTournamentHTML(
                 imageUrl={obj.image_url}
                 id={obj.tournament_id.toString()}
                 pageUrl={`/game/Tournament/${obj.tournament_id}`}
-                buttonText={obj.tournament_end === null && obj.participantsJoined === 8 ? 'WATCH': 'JOIN' }
+                buttonText={obj.tournament_end === null && currentTab === 'Ongoing' ? 'WATCH': 'JOIN' }
                 setTournamentID={setTournamentID}
                 isDisabled={
                     ((obj.tournament_end !== null))

@@ -37,7 +37,19 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
             </div>
             <hr />
             <div className="Tournament_card_info_row mt-3">
-                    <Link href={pageUrl} >
+                {
+                    buttonText === 'Watch' ?
+                        <Link href={pageUrl} >
+                            <button
+                                className={`${isDisabled ? "button_disabled" : "button_enabled"}`}
+                                onClick={() => setTournamentID(id)}
+                                style={{ fontSize: '100%' }}
+                                disabled={isDisabled}
+                            >
+                                {buttonText}
+                            </button>
+                        </Link>
+                    :
                         <button
                             className={`${isDisabled ? "button_disabled" : "button_enabled"}`}
                             onClick={() => setTournamentID(id)}
@@ -46,7 +58,8 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
                         >
                             {buttonText}
                         </button>
-                    </Link>
+
+                }
                 <div className="Tournament_card_participants">
                     <p>Participants joined</p>
                     <p className="Tournament_card_participants_nbr">{participantsJoined}/8</p>
