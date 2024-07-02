@@ -197,8 +197,7 @@ function    GetColorInput(
                     <button
                         type="button"
                         className={`${styles.previewButton} ${inputClassName} `}
-                        onClick={ (e : MouseEvent<HTMLButtonElement>) => {
-                            console.log('--->', e.target.value, inputId)
+                        onClick={ () => {
                             colorToPreview && updateField(inputId, colorToPreview)
                         } }
                         >Preview</button>
@@ -207,9 +206,7 @@ function    GetColorInput(
                     <button
                         type="button"
                         className={`${styles.previewButton} ${inputClassName} `}
-                        onClick={ (e : MouseEvent<HTMLButtonElement>) => {
-                            console.log('--->', e.target.value)
-
+                        onClick={ () => {
                             colorToPreview && updateField(inputId, (Cookies.get(inputId) as string))
                         } }
                     >
