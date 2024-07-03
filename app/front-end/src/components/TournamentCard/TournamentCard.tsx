@@ -9,7 +9,7 @@ interface TournamentCardProps {
     participantsJoined: number;
     imageUrl: string;
     pageUrl?: string;
-    isDisabled ?: boolean;
+    isDisabled?: boolean;
     buttonText: string;
     id: string;
     setTournamentID?: React.Dispatch<React.SetStateAction<string>>;
@@ -24,7 +24,7 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
     buttonText = 'JOIN',
     id = '',
     setTournamentID = () => {},
-    isDisabled = false
+    isDisabled = false,
 }: TournamentCardProps) => {
     return (
         <div className="Tournament_card">
@@ -37,29 +37,27 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
             </div>
             <hr />
             <div className="Tournament_card_info_row mt-3">
-                {
-                    buttonText === 'Watch' ?
-                        <Link href={pageUrl} >
-                            <button
-                                className={`${isDisabled ? "button_disabled" : "button_enabled"}`}
-                                onClick={() => setTournamentID(id)}
-                                style={{ fontSize: '100%' }}
-                                disabled={isDisabled}
-                            >
-                                {buttonText}
-                            </button>
-                        </Link>
-                    :
+                {buttonText !== 'WATCH' ? (
+                    <Link href={pageUrl}>
                         <button
-                            className={`${isDisabled ? "button_disabled" : "button_enabled"}`}
+                            className={`${isDisabled ? 'button_disabled' : 'button_enabled'}`}
                             onClick={() => setTournamentID(id)}
                             style={{ fontSize: '100%' }}
                             disabled={isDisabled}
                         >
                             {buttonText}
                         </button>
-
-                }
+                    </Link>
+                ) : (
+                    <button
+                        className={`${isDisabled ? 'button_disabled' : 'button_enabled'}`}
+                        onClick={() => setTournamentID(id)}
+                        style={{ fontSize: '100%' }}
+                        disabled={isDisabled}
+                    >
+                        {buttonText}
+                    </button>
+                )}
                 <div className="Tournament_card_participants">
                     <p>Participants joined</p>
                     <p className="Tournament_card_participants_nbr">{participantsJoined}/8</p>

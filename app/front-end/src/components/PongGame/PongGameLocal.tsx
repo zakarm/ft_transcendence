@@ -110,7 +110,7 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
         // camera.position.set(10, 25, 15);
 
         // const targetPosition = new THREE.Vector3(1, 10, 0);
-        const targetPosition = new THREE.Vector3(0, 10, -1);
+        const targetPosition = new THREE.Vector3(0, 10, 0);
         // const targetPosition = new THREE.Vector3(8, 6, 0);
         gsap.to(camera.position, {
             x: targetPosition.x,

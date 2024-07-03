@@ -289,6 +289,8 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                 "match_id": None,
             }
             rooms_items = get_rooms_items()
+            if self.watch == "true":
+                return f"tournament_{self.tournament_id}", None
             for tournament_name, tournament in rooms_items:
                 if tournament_name == f"tournament_{self.tournament_id}":
                     if tournament.is_joined(user.email):
@@ -329,17 +331,17 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                 self.watch = params.get("watch")
                 self.user = await get_user(user_id=self.scope["user"].id)
                 self.t_name, self.tournament = await self.find_tournamnet(self.user)
+                self.spect = self.t_name + "spectator"
+                if self.watch == "true":
+                    await self.channel_layer.group_add(self.spect, self.channel_name)
+                    return
                 if self.tournament is None:
                     await self.close()
                     return
-                if self.watch == "true":
-                    self.spect = self.t_name + "spectator"
-                    await self.channel_layer.group_add(self.spect, self.channel_name)
                 await self.channel_layer.group_add(self.t_name, self.channel_name)
-                if self.tournament.is_ready() and self.tournament.started == False:
+                if self.tournament.is_ready() and self.tournament.started == False and self.watch != "true":
                     asyncio.ensure_future(self.tournament_manager())
-                    asyncio.ensure_future(self.watch())
-                    print("Tournament started", file=sys.stderr)
+                    asyncio.ensure_future(self.watch_tournament())
             else:
                 await self.close()
         except Exception as e:
@@ -348,6 +350,8 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
     # -----------------------> 4. disconnect <-----------------------
     async def disconnect(self, close_code):
         try:
+            if self.tournament is None:
+                return
             match_id = self.tournament.get_match_id(self.user.email)
             room = self.tournament.get_room_game(match_id)
             room.set_reconect(self.user.email)
@@ -386,7 +390,7 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             print(f"An error occurred in receive: {e}", file=sys.stderr)
 
-    async def watch(self):
+    async def watch_tournament(self):
         try:
             while self.tournament.ended == False:
                 await asyncio.sleep(1)

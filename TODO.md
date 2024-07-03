@@ -1,6 +1,16 @@
-Bugs :
-    - (wait PageUrl) in tournaments cards api
-    - starts tournament with only 7 players and sometimes with 8 players
-    - participant joined is not exact
-    - "Join" button on freshly created tournament doesnt display the tournament Lobby
-    - Update user infos after first message from socket is sent (no need to click)
+Bugs:
+    - (wait PageUrl) in tournaments cards API
+    - Participant count is not accurate
+    - Update user info after the first message from the socket is sent (no need to click)
+    - Tournament winner card missing
+    - Achievement missing
+    - Local game customization and responsiveness
+    - Add display name to the database and sign-in form and settings form
+    - Remove Jest on production
+    - Link DevOps in the Docker Compose
+    - Review Makefile
+    - Fix "types" folder (/lib or /types)
+    - Remove unnecessary files (app/front-end/src/services/profile.json, app/front-end/src/components/friends.json)
+    - Test backend for 500 server error
+    - Replace console.error with toast notifications and remove console.log
+    - Add Prettier and run it for the whole project
