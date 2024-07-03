@@ -210,7 +210,6 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def connction_ack(self):
         try:
             game_data = await get_game_data(self.user)
-            print(f"game_data: {game_data.table_position}", file=sys.stderr)
             index = self.room.get_user_index(self.user.email)
             message = {
                 "action": "connection_ack",

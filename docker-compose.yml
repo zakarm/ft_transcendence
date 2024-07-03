@@ -23,7 +23,6 @@ services:
         restart: always
         volumes:
             - ./app/front-end/src:/front-end/src
-            - ./app/front-end/__tests__:/front-end/__tests__
             - ./app/front-end/public:/front-end/public
             - ./app/front-end/package.json:/front-end/package.json
             - ./app/front-end/package-lock.json:/front-end/package-lock.json

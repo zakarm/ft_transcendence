@@ -24,10 +24,11 @@ const ThreeScene = () => {
         controls.enableDamping = true;
         controls.dampingFactor = 0.25;
         controls.enableZoom = true;
-
+        controls.minDistance = 10;
+        controls.maxDistance = 100;
         const ambientLight = new THREE.AmbientLight(0xffffff, 1);
         scene.add(ambientLight);
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
         directionalLight.position.set(0, 0, 1);
         scene.add(directionalLight);
 
@@ -43,12 +44,13 @@ const ThreeScene = () => {
 
         const loader = new GLTFLoader();
         loader.load(
-            '/3D/scene.gltf',
+            '/3D/pong.glb',
+            // '/3D/ping-pong/scene.gltf',
             (gltf: any) => {
                 const model = gltf.scene;
-                model.scale.set(0.005, 0.005, 0.005);
-                model.position.set(1.65, 2, 1.5);
-                model.rotation.y = Math.PI / 2;
+                model.scale.set(0.2, 0.2, 0.2);
+                model.position.set(0, 2, 1);
+                model.rotation.x = 95;
                 scene.add(model);
             },
             undefined,
@@ -84,7 +86,16 @@ const ThreeScene = () => {
         };
         animate();
 
+        const handleResize = () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        };
+
+        window.addEventListener('resize', handleResize);
+
         return () => {
+            window.removeEventListener('resize', handleResize);
             mount?.removeChild(renderer.domElement);
             renderer.dispose();
             controls.dispose();
