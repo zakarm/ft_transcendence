@@ -10,9 +10,6 @@ import Paddle from './Paddle';
 import './PongGame.css';
 import BoardItem from '../BoardItem/BoardItem';
 import gsap from 'gsap';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
-import { AfterimagePass } from 'three/examples/jsm/postprocessing/AfterimagePass';
 
 type SetScore = (
     side: 'side1' | 'side2',
@@ -124,15 +121,6 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
         const renderer = new THREE.WebGLRenderer();
         renderer.setSize(width, height);
         container.appendChild(renderer.domElement);
-
-        // Initialize EffectComposer
-        const composer = new EffectComposer(renderer);
-        composer.addPass(new RenderPass(scene, camera));
-
-        // Create and add AfterimagePass for the ball
-        const afterimagePass = new AfterimagePass();
-        afterimagePass.uniforms['damp'].value = 0.7;
-        composer.addPass(afterimagePass);
 
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableZoom = true;
@@ -252,7 +240,7 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
             renderer.render(scene, camera);
             if (gameStatus === 'gameover') {
                 handleGameOver();
-                cancelAnimationFrame(animateIdRef.current);
+                // cancelAnimationFrame(animateIdRef.current);
             }
             if (gameStatus !== 'playing') return;
             ball.intersect(wall1, wall2, paddle1, paddle2);
@@ -284,7 +272,6 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
                     return newscore;
                 });
             }
-            composer.render();
             light.position.copy(ball.mesh.position);
         };
         animate();

@@ -6,10 +6,7 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "watch": "tsc --watch",
-    "depcheck": "depcheck",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "watch": "tsc --watch"
   },
   "dependencies": {
     "@gsap/react": "^2.1.1",
@@ -32,17 +29,11 @@
     "three": "^0.166.1"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.4.6",
-    "@testing-library/react": "^16.0.0",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20.14.9",
     "@types/react": "^18.3.3",
     "@types/react-bootstrap": "^0.32.36",
     "@types/three": "^0.166.0",
-    "depcheck": "^1.4.7",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
-    "ts-node": "^10.9.2",
     "typescript": "^5.5.3"
   }
 }
