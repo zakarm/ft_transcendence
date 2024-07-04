@@ -95,14 +95,12 @@ check: ## Check the status of the Docker containers
 	@echo "$(BLUE)2. Check for package updates$(RESET)"
 	@echo "$(BLUE)3. Check for Update package versions$(RESET)"
 	@echo "$(BLUE)4. Check for unused dependencies$(RESET)"
-	@echo "$(BLUE)5. Run csslint$(RESET)"
-	@read -p "Select a tool (1-7): " tool_choice; \
+	@read -p "Select a tool (1-4): " tool_choice; \
 	case $$tool_choice in \
 		1) tool_command="npx tsc --noEmit";; \
 		2) tool_command="npx npm-check --skip-unused";; \
 		3) tool_command="npx npm-check-updates --silent";; \
 		4) tool_command="npx depcheck";; \
-		5) tool_command="find src -name "*.css" -exec npx csslint {} + > ./src/lint-results.log";; \
 		*) echo "Invalid choice!"; exit 1;; \
 	esac; \
 	echo "$(YELLOW)Running $$tool_command...$(RESET)"; \
