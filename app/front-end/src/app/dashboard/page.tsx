@@ -197,11 +197,13 @@ export default function Dashboard() {
 
     const handleDropdownSelect2 = async (value: string) => {
         const data: GameReport = await fetchDataForCsv(value);
-        mappedData = data.minutes_per_day.map(([month, day, minutes]) => ({
-            day,
-            month,
-            minutes,
-        }));
+        if (data) {
+            mappedData = data.minutes_per_day.map(([month, day, minutes]) => ({
+                day,
+                month,
+                minutes,
+            }));
+        }
         ExportMinutes(mappedData, 'game_stats_' + value + '_' + new Date().getFullYear() + '.csv');
         toggleDropdown();
     };
