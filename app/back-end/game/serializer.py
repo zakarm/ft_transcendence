@@ -112,11 +112,10 @@ class TournamentCreationSerializer(serializers.Serializer):
 class UserAchievementsSerializer(serializers.ModelSerializer):
     tournament = serializers.SerializerMethodField()
     match = serializers.SerializerMethodField()
-    ai = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ("username", "id", "tournament", "match", "ai")
+        fields = ("username", "id", "tournament", "match")
 
     def get_achievement(self, obj, type: str, names: list) -> dict:
         achievements = {}
@@ -135,10 +134,6 @@ class UserAchievementsSerializer(serializers.ModelSerializer):
     @extend_schema_field(serializers.DictField(child=serializers.BooleanField()))
     def get_match(self, obj) -> dict:
         return self.get_achievement(obj, "match", ["speedy", "last", "king"])
-
-    @extend_schema_field(serializers.DictField(child=serializers.BooleanField()))
-    def get_ai(self, obj) -> dict:
-        return self.get_achievement(obj, "ai", ["challenger", "rivalry", "legend"])
 
 
 class GameTableSerializer(serializers.ModelSerializer):

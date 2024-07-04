@@ -4,7 +4,7 @@ import { ImUserPlus } from 'react-icons/im';
 import styles from './styles/srightBar.module.css';
 import Splayer from './Splayer';
 import Notification from './Notification';
-import React, { forwardRef, useState, useEffect } from 'react';
+import React, { forwardRef, useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface Friend {
@@ -96,10 +96,15 @@ export default function SrightBar({
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const router = useRouter();
 
+    const isFirstLoad = useRef(true);
+
     useEffect(() => {
-        if (notifications_data.length > 0) {
+        if (isFirstLoad.current) {
+            isFirstLoad.current = false;
+        } else if (notifications_data.length > 0) {
             setDropdownOpen(true);
         }
+
     }, [notifications_data]);
 
     return (
@@ -125,7 +130,12 @@ export default function SrightBar({
                                     </span>
                                 </Dropdown.Toggle>
                                 {notifications_data && notifications_data.length > 0 && (
-                                    <Dropdown.Menu className="drop-class border" style={{ background: '#161625' }}>
+                                    <Dropdown.Menu className="drop-class border" style={{
+                                                        background: '#161625',
+                                                        minHeight: '100px',
+                                                        maxHeight: '300px',
+                                                        overflowY: 'auto'
+                                                    }}>
                                         {notifications_data &&
                                             notifications_data.map((key: Notification, index: number) => (
                                                 <Dropdown.Item
