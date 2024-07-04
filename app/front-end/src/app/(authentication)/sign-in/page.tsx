@@ -1,12 +1,10 @@
 'use client';
-import Form from 'react-bootstrap/Form';
 import styles from './styles.module.css';
-import NextImage from 'next/image';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FormEvent } from 'react';
 import Cookies from 'js-cookie';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Link from 'next/link';
 import SocialAuth from '../../../components/socialAuth';
@@ -23,7 +21,6 @@ export default function SignInPage() {
             const email = form.get('email') as string;
             const password = form.get('password') as string;
             const csrftoken = Cookies.get('csrftoken') || '';
-            const host = process.env.NEXT_PUBLIC_BACKEND_HOST;
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/sign-in`, {
                 method: 'POST',
                 headers: {
@@ -64,14 +61,19 @@ export default function SignInPage() {
             <div className={`${styles.flexx}`}>
                 <div className={`${styles.main_card} shadow row`}>
                     <div className={`col-lg-6 ${styles.main_img}`} style={{ position: 'relative', minHeight: '400px' }}>
-                        <NextImage
-                            fill={true}
-                            sizes="100%"
-                            style={{ objectFit: 'cover' }}
+                        <img
+                            loading="eager"
                             src="/assets/images/Backgrounds/pong_background.png"
                             alt="Sign"
                             className={`${styles.main_img}`}
-                            priority={true}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                                position: 'absolute',
+                                top: '0',
+                                left: '0',
+                            }}
                         />
                     </div>
                     <div className={`col-lg-6 mb-5`}>
@@ -107,17 +109,15 @@ export default function SignInPage() {
                                     </button>
                                 </div>
                                 <div className="row p-2 text-center">
-                                    <Form.Label className="" style={{ fontFamily: 'itim', color: '#565A69' }}>
+                                    <div className="" style={{ fontFamily: 'itim', color: '#565A69' }}>
                                         Don't have an account?{' '}
                                         <Link href="/sign-up" style={{ color: '#FF4755', fontFamily: 'itim' }}>
                                             sign up
                                         </Link>
-                                    </Form.Label>
+                                    </div>
                                 </div>
                                 <div className="row text-start mt-3">
-                                    <Form.Label style={{ fontFamily: 'itim', color: '#565A69' }}>
-                                        or sign in with :
-                                    </Form.Label>
+                                    <div style={{ fontFamily: 'itim', color: '#565A69' }}>or sign in with :</div>
                                     <div className="d-flex justify-content-around align-items-center">
                                         <SocialAuth className={`${styles.auth_btn} col-sm-2`} platform="google" />
                                         <SocialAuth className={`${styles.auth_btn} col-sm-2`} platform="github" />

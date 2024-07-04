@@ -86,6 +86,16 @@ def set_tournament_end_date(tournament_id):
     except Exception as e:
         print(f"An error occurred in set_tournament_end_date: {e}", file=sys.stderr)
 
+@database_sync_to_async
+def increment_tournament_participants(tournament_id):
+    try:
+        tournament = TournamentModel.objects.get(tournament_id=tournament_id)
+        tournament.Participants += 1
+        tournament.save()
+    except TournamentModel.DoesNotExist:
+        pass
+    except Exception as e:
+        print(f"An error occurred in increment_tournament_participants: {e}", file=sys.stderr)
 
 @database_sync_to_async
 def set_Tournamentsmatches(tournament, match, round):
@@ -312,6 +322,7 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
             new_tournament_name = f"tournament_{self.tournament_id}"
             add_room(new_tournament_name, new_tournament)
             new_tournament.add_player(player)
+            await increment_tournament_participants(self.tournament_id)
             return new_tournament_name, new_tournament
         except Exception as e:
             print(f"An error occurred in find_tournamnet: {e}", file=sys.stderr)

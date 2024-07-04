@@ -381,7 +381,7 @@ export default function InviteFriend({ show, close }: Props) {
                                     onChange={(e) => {
                                         setSearchTerm(e.target.value);
                                     }}
-                                    autocomplete="username"
+                                    autoComplete="username"
                                 />
                                 <Button
                                     className="border"
