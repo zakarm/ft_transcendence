@@ -90,7 +90,7 @@ def set_tournament_end_date(tournament_id):
 def increment_tournament_participants(tournament_id):
     try:
         tournament = TournamentModel.objects.get(tournament_id=tournament_id)
-        tournament.Participants += 1
+        tournament.participantsJoined += 1
         tournament.save()
     except TournamentModel.DoesNotExist:
         pass
@@ -311,6 +311,7 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                     elif not tournament.is_ready():
                         if not tournament.is_joined(user.email):
                             tournament.add_player(player)
+                            await increment_tournament_participants(self.tournament_id)
                             return tournament_name, tournament
                         else:
                             return None, None
@@ -332,6 +333,7 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
             if self.scope["user"].is_authenticated:
                 # -------------------------------------------------------
                 await self.accept()
+                self.tournament = None
                 self.tournament_id = self.scope["url_route"]["kwargs"]["tournament_id"]
                 self.tournament_obj = await get_tournament_(self.tournament_id)
                 if self.tournament_obj is None or self.tournament_obj.tournament_end:

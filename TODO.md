@@ -1,6 +1,6 @@
-Bugs:
+# Bugs
+
 aimen:
-    - Participant count is not accurate
     - Tournament winner card missing
     - Achievement missing
     - Add display name to the database and sign-in form and settings form
@@ -15,7 +15,8 @@ aimen:
     - cannot quit lobby tournament page via side bar icons, keeps redirecting me back to lobby page
     - increment z-index of "SEARCHING" in tournament looby && remove cursor pointer on the text
 
-----------------------------------------------------------------------------------------------
+---
+
 marouane :
     - (wait PageUrl) in tournaments cards API
     - Update user info after the first message from the socket is sent (no need to click)
@@ -25,12 +26,10 @@ marouane :
     - app/front-end/src/app/api (remove test data from the file here and maybe the test folder)
     - when create a tournament fetch data
 
-othman:
-    - fix right bar icons
-
-------------------------------------------------------------------------------------------------
+---
 
 Othman :
+    - fix right bar icons
     - alert?? in onClick. found in :: add friend button --> blocked tab --> search button
         <Button className="border" variant="dark" id="button-addon2" onClick={() => alert()}>
             Search..
@@ -62,9 +61,10 @@ Othman :
         5 ==> quickly switch and use the mouse wheel outside of container of chat
         6 ==> causes an activation of the scroll for the whole website
 
-    - "Start Chatting :}" appears when i have an already ongoing chat a user (over 300 messages and start chat?)
+    - Start Chatting : appears when i have an already ongoing chat a user (over 300 messages and start chat?)
         Expect : last message sent between me and that user
-------------------------------------------------------------------------------------------------------
+
+---
 
 Zakaria :
     - Notication appears forcefully when switching between pages, cannot not ignore it for later

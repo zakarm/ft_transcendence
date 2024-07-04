@@ -48,8 +48,8 @@ class Tournaments(models.Model):
     tournament_end = models.DateTimeField(blank=True, null=True)
     crated_by_me = models.BooleanField(default=False)
     image_url = models.URLField(max_length=350)
-    game_difficulty = models.IntegerField()
-    Participants = models.IntegerField()
+    game_difficulty = models.IntegerField(default=1)
+    participantsJoined = models.IntegerField(default=0)
 
     class Meta:
         db_table = "Tournaments"

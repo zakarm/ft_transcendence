@@ -44,8 +44,9 @@ const ThreeScene = () => {
 
         const loader = new GLTFLoader();
         loader.load(
-            '/3D/pong.glb',
+            // '/3D/pong.glb',
             // '/3D/ping-pong/scene.gltf',
+            '/3D/Makefile.glb',
             (gltf: any) => {
                 const model = gltf.scene;
                 model.scale.set(0.2, 0.2, 0.2);

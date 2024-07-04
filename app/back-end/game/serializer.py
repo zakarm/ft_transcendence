@@ -26,20 +26,9 @@ class TournamentsmatchesSerializer(serializers.ModelSerializer):
 
 
 class TournamentsSerializer(serializers.ModelSerializer):
-    participantsJoined = serializers.SerializerMethodField()
-
     class Meta:
         model = Tournaments
         fields = "__all__"
-
-    # def get_participantsJoined(self, obj) -> int:
-    #     matches = Match.objects.filter(
-    #         match_id__in=Tournamentsmatches.objects.filter(tournament=obj).values_list(
-    #             "match", flat=True
-    #         )
-    #     )
-    #     participants = set(matches.values_list("user_one", "user_two").distinct())
-    #     return len(participants)
 
 
 class UserTournamentsSerializer(serializers.ModelSerializer):
@@ -115,6 +104,7 @@ class TournamentCreationSerializer(serializers.Serializer):
             game_difficulty=validated_data["game_difficulty"],
             tournament_start=datetime.now(),
             crated_by_me=True,
+            participantsJoined=0,
         )
         return tour_data
 
