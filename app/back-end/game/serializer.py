@@ -32,14 +32,14 @@ class TournamentsSerializer(serializers.ModelSerializer):
         model = Tournaments
         fields = "__all__"
 
-    def get_participantsJoined(self, obj) -> int:
-        matches = Match.objects.filter(
-            match_id__in=Tournamentsmatches.objects.filter(tournament=obj).values_list(
-                "match", flat=True
-            )
-        )
-        participants = set(matches.values_list("user_one", "user_two").distinct())
-        return len(participants)
+    # def get_participantsJoined(self, obj) -> int:
+    #     matches = Match.objects.filter(
+    #         match_id__in=Tournamentsmatches.objects.filter(tournament=obj).values_list(
+    #             "match", flat=True
+    #         )
+    #     )
+    #     participants = set(matches.values_list("user_one", "user_two").distinct())
+    #     return len(participants)
 
 
 class UserTournamentsSerializer(serializers.ModelSerializer):

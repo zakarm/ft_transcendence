@@ -17,3 +17,7 @@ marouan:
     - Remove unnecessary files (app/front-end/src/services/profile.json, app/front-end/src/components/friends.json)
     - Replace console.error with toast notifications and remove console.log
     - app/front-end/src/app/api (remove test data from the file here and maybe the test folder)
+    - when create a tournament fetch data
+
+othman:
+    - fix right bar icons
