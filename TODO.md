@@ -2,7 +2,6 @@ Bugs:
 aimen:
     - Participant count is not accurate
     - Tournament winner card missing
-    - Achievement missing
     - Add display name to the database and sign-in form and settings form
     - Link DevOps in the Docker Compose
     - Review Makefile
