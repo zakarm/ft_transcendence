@@ -1,6 +1,6 @@
-# Bugs
-
+Bugs:
 aimen:
+    - Participant count is not accurate
     - Tournament winner card missing
     - Achievement missing
     - Add display name to the database and sign-in form and settings form
@@ -14,22 +14,16 @@ aimen:
     - after clicking on "join" button, my name and picture doesn't appear on the tournament Looby
     - cannot quit lobby tournament page via side bar icons, keeps redirecting me back to lobby page
     - increment z-index of "SEARCHING" in tournament looby && remove cursor pointer on the text
+    - invite a friend to play a game doesn't work [the button "Pong"]
 
----
-
+----------------------------------------------------------------------------------------------
 marouane :
-    - (wait PageUrl) in tournaments cards API
     - Update user info after the first message from the socket is sent (no need to click)
-    - Fix "types" folder (/lib or /types)
-    - Remove unnecessary files (app/front-end/src/services/profile.json, app/front-end/src/components/friends.json)
     - Replace console.error with toast notifications and remove console.log
-    - app/front-end/src/app/api (remove test data from the file here and maybe the test folder)
-    - when create a tournament fetch data
 
----
+------------------------------------------------------------------------------------------------
 
-Othman :
-    - fix right bar icons
+Othman : 
     - alert?? in onClick. found in :: add friend button --> blocked tab --> search button
         <Button className="border" variant="dark" id="button-addon2" onClick={() => alert()}>
             Search..
@@ -47,12 +41,12 @@ Othman :
 
     - long messages overflow the div on left side that containers the user and last message sent
     - the red circle used to notify the user that a new message is sent [it doesn't disappear even after sending a message back]
-    - browser issues,warning and improvements [for inputs]
-    - Same ID for two input in chat :
+    - browser issues,warning and improvements [for inputs] 
+    - Same ID for two input in chat : 
         <input color="red" aria-label="search" placeholder="Enter for search..." id="search" class="form-control" type="text" style="background-color: rgb(44, 49, 67);">
         <input class="" placeholder="Find a player ..." id="search" type="text" style="background-color: rgb(44, 49, 67); border: 0px;">
     - Z-index for the arrow button in in the right sidebar
-
+    
     - Activate scroll for the whole website from chat :
         1 ==> send a bunch of messages in chat > 100 messages
         2 ==> refresh chat page
@@ -61,14 +55,11 @@ Othman :
         5 ==> quickly switch and use the mouse wheel outside of container of chat
         6 ==> causes an activation of the scroll for the whole website
 
-    - Start Chatting : appears when i have an already ongoing chat a user (over 300 messages and start chat?)
+    - "Start Chatting :}" appears when i have an already ongoing chat a user (over 300 messages and start chat?)
         Expect : last message sent between me and that user
-
----
+------------------------------------------------------------------------------------------------------
 
 Zakaria :
     - Notication appears forcefully when switching between pages, cannot not ignore it for later
-    - activate scroll for the div that holds all the notification
     - after checking notification of chat ==> i disconnect ==> when i reconnect ===> all notifications reappear
         [I've already checked them before disconnecting, they should not appear]
-    - invite a friend to play a game doesn't work [the button "Pong"]

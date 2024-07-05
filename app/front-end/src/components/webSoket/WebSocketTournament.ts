@@ -7,7 +7,7 @@ import type {
     LocalTournamentProps,
     TournamentData_User,
     Tournament_User,
-} from '@/types/game/Tournament';
+} from '@/lib/game/Tournament';
 import { useRouter } from 'next/navigation';
 // Define the interface for the connection information
 interface ConnectionInfo {

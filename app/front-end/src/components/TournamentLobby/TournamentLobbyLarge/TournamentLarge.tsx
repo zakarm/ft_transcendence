@@ -1,7 +1,7 @@
 import React from 'react';
 import './TournamentLarge.css';
 import SafeImage from '@/components/SafeImage/SafeImage';
-import { TournamentData, TournamentData_Match, TournamentData_Side, TournamentData_User } from '@/types/game/Tournament';
+import { TournamentData, TournamentData_Match, TournamentData_Side, TournamentData_User } from '@/lib/game/Tournament';
 
 const TournamentLarge: React.FC<TournamentData> = (data: TournamentData) => {
     return (

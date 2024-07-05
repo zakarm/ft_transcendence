@@ -4,11 +4,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import './Tournament.css';
 import styles from './styles.module.css';
 import NavBar from '@/components/NavBar/NavBar';
-// import { TournamentsData } from '@/app/api/testTournament/route';
+
 import { RemoteTournamentForm } from '@/components/TournamentForm/remoteForm';
 import { LocalTournamentForm } from '@/components/TournamentForm/localForm';
 import TournamentCard from '@/components/TournamentCard/TournamentCard';
-import { LocalTournamentProps } from '@/types/game/Tournament';
+import { LocalTournamentProps } from '@/lib/game/Tournament';
 import TournamentOngoing from '@/components/TournamentOngoing/tournamentOngoing';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify'

@@ -11,7 +11,7 @@ import type {
     LocalTournamentProps,
     TournamentData_User,
     Tournament_User,
-} from '@/types/game/Tournament';
+} from '@/lib/game/Tournament';
 import PongGameLocal from '@/components/PongGame/PongGameLocal';
 import PlayerCard from '@/components/PlayerCard/PlayerCard';
 

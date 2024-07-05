@@ -2,7 +2,7 @@
 
 import TournamentLarge from '@/components/TournamentLobby/TournamentLobbyLarge/TournamentLarge';
 import TournamentSmall from '@/components/TournamentLobby/TournamentLobbySmall/TournamentSmall';
-import { TournamentData } from '@/types/game/Tournament';
+import { TournamentData } from '@/lib/game/Tournament';
 import React, { useState } from 'react';
 
 const TournamentLobby: React.FC<TournamentData> = (data: TournamentData) => {

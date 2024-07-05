@@ -5,7 +5,7 @@ import styles from './localForm.module.css';
 import { notificationStyle } from '../ToastProvider';
 import { toast } from 'react-toastify';
 import getFormattedDateTime from '@/utils/getFormattedDateTime';
-import { LocalTournamentProps } from '@/types/game/Tournament';
+import { LocalTournamentProps } from '@/lib/game/Tournament';
 
 interface getInputProps {
     type: string;
