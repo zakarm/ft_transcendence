@@ -26,13 +26,6 @@ Othman :
             Search..
         </Button>
 
-    - by simulating a failure of the profile API like this :
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/pofile`, { // removing character 'r' from profile
-            headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
-        });
-
-        Result =======> [[ the whole page doesn't render at all ]]
-
     - Max Input of character in chat doesn't get send : (starting from 510 characters up to 512)
         fvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffv
 

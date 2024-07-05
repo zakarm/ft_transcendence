@@ -53,6 +53,30 @@ interface ProfileData {
     monthly_stats: MonthlyStats;
 }
 
+const initProfileData: ProfileData = {
+    id: 0,
+    username: "",
+    email: "",
+    first_name: null,
+    last_name: null,
+    intro: null,
+    quote: null,
+    rank: null,
+    level: null,
+    score: null,
+    cover_url: null,
+    location: null,
+    total_games: 0,
+    win_games: 0,
+    lose_games: 0,
+    image_url: null,
+    monthly_stats: {
+        months: [],
+        win: [],
+        lose: []
+    }
+};
+
 export default function () {
     const [profile, setProfile] = useState<ProfileData | null>(null);
 
@@ -79,6 +103,9 @@ export default function () {
                 setIntro(data.intro);
                 setProfile(data);
             } catch (error) {
+                setQuote("");
+                setIntro("");
+                setProfile(initProfileData);
                 toast.error(`Error : ${error}`);
             }
         } else toast.error('Access token is undefined or falsy');
