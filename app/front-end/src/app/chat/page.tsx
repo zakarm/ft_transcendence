@@ -13,6 +13,7 @@ import { useSearchParams } from 'next/navigation';
 import Spinner from 'react-bootstrap/Spinner';
 import { GiAmericanFootballPlayer } from 'react-icons/gi';
 import { PiChatsFill } from 'react-icons/pi';
+import { toast } from 'react-toastify'
 
 interface Users {
     id: number;
@@ -66,10 +67,10 @@ export default function () {
                     })).reverse();
                 setMessages(storedMessages)
             } catch (error) {
-                console.error('Error fetching data: ', error);
+                toast.error(`Error : ${error}`);
             }
         } else {
-            console.log('Access token is undefined or falsy');
+            toast.error('Access token is undefined or falsy');
         }
     }
 
@@ -86,10 +87,10 @@ export default function () {
                 const data = await res.json();
                 setMe(data.username);
             } catch (error) {
-                console.error('Error fetching data: ', error);
+                toast.error(`Error : ${error}`);
             }
         } else {
-            console.log('Access token is undefined or falsy');
+            toast.error('Access token is undefined or falsy');
         }
     };
 
@@ -118,7 +119,7 @@ export default function () {
                 };
 
                 newChatSocket.onclose = () => {
-                    console.log('Chat socket closed');
+                    // toast.error('Chat socket closed');
                 };
 
                 chatSocketRef.current = newChatSocket;
@@ -127,7 +128,7 @@ export default function () {
                     newChatSocket.close();
                 };
             } catch (error) {
-                console.error('Error fetching data: ', error);
+                toast.error(`Error : ${error}`);
             }
         }
     };

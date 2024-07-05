@@ -6,6 +6,7 @@ import User from '@/components/user';
 import Cookies from 'js-cookie';
 import { CiSearch } from 'react-icons/ci';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 interface User {
     id: number;
@@ -86,10 +87,10 @@ export default function ChatFriendsResp({
                     }));
                 setChatUsers(friendsArray);
             } catch (error) {
-                console.error('Error fetching data: ', error);
+                toast.error(`Error : ${error}`);
             }
         } else {
-            console.log('Access token is undefined or falsy');
+            toast.error('Access token is undefined or falsy');
         }
     };
 

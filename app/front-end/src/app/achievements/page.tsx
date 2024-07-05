@@ -5,6 +5,7 @@ import { useEffect, useState, Dispatch, SetStateAction } from 'react';
 import styles from './styles.module.css';
 import Cookies from 'js-cookie';
 import NavBar from '@/components/NavBar/NavBar';
+import { toast } from 'react-toastify'
 
 declare global {
     namespace JSX {
@@ -177,7 +178,7 @@ const Achievements: React.FC<AchivProps> = React.memo(({ choosenTab, achievement
                 const data = await response.json();
                 setAchievements(data);
             } catch (error) {
-                console.log('An unexpected error happened:', error);
+                toast.error('Error : failed to fetch')
             }
         };
         getAchievements();

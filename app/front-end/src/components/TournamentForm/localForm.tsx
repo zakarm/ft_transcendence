@@ -167,8 +167,7 @@ function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<Reac
             try {
                 tournaments = JSON.parse(data);
             } catch (error) {
-                console.error('Error parsing JSON data from localStorage:', error);
-                toast.error('Error reading stored tournaments data. Please try again later.', notificationStyle);
+                toast.error('Error : cannot read tournaments data', notificationStyle);
                 return;
             }
         }

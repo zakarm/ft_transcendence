@@ -9,6 +9,8 @@ import {
 import styles from '@/app/settings/styles.module.css'
 import Cookies from "js-cookie";
 import TwoFa from '@/components/twoFa';
+import { toast } from 'react-toastify';
+
 interface Props {
     inputType       ?: string;
     placeholder     ?: string | boolean;
@@ -111,7 +113,7 @@ function    GetCheckboxInput(
                     setTwoFaData({ value: url, email });
                 }
             } catch (error) {
-                console.error('An unexpected error happened:', error);
+                toast.error(`Error : ${error}`);
             }
         } else {
             if (oldAccountValues[inputId] as Boolean && !isChk) {

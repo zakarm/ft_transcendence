@@ -150,7 +150,7 @@ function    getLocalTournamentFromStorage() {
         try {
             tournaments = JSON.parse(data);
         } catch (error) {
-            console.error('Error parsing JSON data from localStorage:', error);
+            toast.error(`Error : cannot read tournaments data`);
         }
     }
     return tournaments

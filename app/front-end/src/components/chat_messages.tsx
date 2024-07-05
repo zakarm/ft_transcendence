@@ -9,6 +9,7 @@ import { FaTableTennisPaddleBall } from 'react-icons/fa6';
 import { IoIosSend } from 'react-icons/io';
 import { useEffect, useRef, useState } from 'react';
 import { CgHello } from 'react-icons/cg';
+import { toast } from 'react-toastify';
 
 interface Users {
     id: number;
@@ -87,10 +88,10 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
                 setSearchedChat(friend.length ? friend[0] : undefined);
                 setMe(data.username);
             } catch (error) {
-                console.error('Error fetching data: ', error);
+                toast.error(`Error : ${error}`);
             }
         } else {
-            console.log('Access token is undefined or falsy');
+            toast.error('Access token is undefined or falsy');
         }
     };
 

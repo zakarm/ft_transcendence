@@ -6,6 +6,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import styles from './styles/LandingPage.module.css';
+import { toast } from 'react-toastify'
 
 const ThreeScene = () => {
     const mountRef = useRef<HTMLDivElement | null>(null);
@@ -56,7 +57,7 @@ const ThreeScene = () => {
             },
             undefined,
             (error: any) => {
-                console.log('An error happened while loading the model:', error);
+                toast.error(`Error : ${error}`)
             },
         );
 

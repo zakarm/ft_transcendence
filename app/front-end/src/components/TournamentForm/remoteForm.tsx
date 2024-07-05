@@ -231,14 +231,13 @@ function RemoteTournamentForm() {
                 toast.success(data.success, notificationStyle);
             } else {
                 Object.values(data).map((v) => {
-                    console.log('---> ', v, v[0])
                     if (v[0] && typeof v[0] === 'string') {
                         toast.error(v[0], notificationStyle);
                     }
                 });
             }
         } catch (error) {
-            // console.error('Error : ', error);
+            // toast.error(`Error :  ${error}`);
         }
     };
 

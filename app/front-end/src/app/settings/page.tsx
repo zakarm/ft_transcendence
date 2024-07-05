@@ -81,7 +81,7 @@ async function getInitialData({
         setOldAccountValues(data);
         setCurrentAccoutValues(data);
     } catch (error) {
-        console.error('Unexpected error : ', error);
+        toast.error(`Error : ${error}`);
     }
 }
 
@@ -175,7 +175,6 @@ const postFormData = async ({
 
             } catch (error) {
                 toast.error('Cannot save your changes')
-                // console.error('Unexpected error : ', error);
             }
         };
 

@@ -13,7 +13,7 @@ import {
     FinalMatchTypes,
 } from '@/lib/tournament-ongoing-type/ongoingTypes';
 import React from 'react'
-import page from '@/app/chat/page';
+import { toast } from 'react-toastify';
 
 interface   connectSocketTypes {
     pageUrl: string
@@ -115,7 +115,7 @@ function connectToSocket({ pageUrl, setData } : connectSocketTypes) {
                 console.log('closed connection');
             };
         } catch (error) {
-            console.error(`Error : ${error}`);
+            toast.error(`Error : ${error}`);
         }
     } else {
         console.log('Missing tournamentID or access token');

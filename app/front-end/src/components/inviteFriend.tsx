@@ -66,9 +66,9 @@ export default function InviteFriend({ show, close }: Props) {
 
                 setUsers(transData);
             } catch (error) {
-                console.error('Error fetching data: ', error);
+                toast.error(`Error : ${error}`);
             }
-        } else console.log('Access token is undefined or falsy');
+        } else toast.error('Access token is undefined or falsy');
     };
 
     const fetchSearchUser = async () => {
@@ -101,9 +101,9 @@ export default function InviteFriend({ show, close }: Props) {
                 }));
                 setsearchedFriends(transData);
             } catch (error) {
-                console.error('Error fetching data: ', error);
+                toast.error(`Error : ${error}`);
             }
-        } else console.log('Access token is undefined or falsy');
+        } else toast.error('Access token is undefined or falsy');
     };
 
     const fetchUser = async (api: string, message: string, user_data: Friend_) => {
@@ -164,9 +164,9 @@ export default function InviteFriend({ show, close }: Props) {
                     toast.success(message);
                 }
             } catch (error) {
-                console.error('Error fetching data: ', error);
+                toast.error(`Error : ${error}`);
             }
-        } else console.log('Access token is undefined or falsy');
+        } else toast.error('Access token is undefined or falsy');
     };
 
     const fetchBlockedUsers = async () => {
@@ -197,9 +197,9 @@ export default function InviteFriend({ show, close }: Props) {
 
                 setsearchedBlockedFriends(transData.filter((friend: Friend_) => friend.blocked));
             } catch (error) {
-                console.error(error);
+                toast.error(`Error : ${error}`);
             }
-        } else console.log('');
+        }
     };
 
     const update = () => {

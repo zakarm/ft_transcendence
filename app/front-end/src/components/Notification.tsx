@@ -63,7 +63,7 @@ function Notification({ notification }: Props) {
                 );
                 const notif_data = await notif.json();
                 if (notif.ok) {
-                    console.log('Notification deleted');
+                    // toast.error('Notification deleted');
                 } else {
                     const errors = notif_data;
                     for (const key in errors) {
@@ -79,7 +79,7 @@ function Notification({ notification }: Props) {
                 toast.error('error: Unauthorized. Invalid credentials provided.');
             }
         } catch (error) {
-            // console.error('Error :' error)
+            // toast.error(`Error : ${error}`)
         }
     }
 

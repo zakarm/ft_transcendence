@@ -17,7 +17,6 @@ aimen:
 ----------------------------------------------------------------------------------------------
 marouane :
     - Update user info after the first message from the socket is sent (no need to click)
-    - Replace console.error with toast notifications and remove console.log
 
 ------------------------------------------------------------------------------------------------
 
