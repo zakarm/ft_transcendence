@@ -186,7 +186,7 @@ export default function ChatFriendsResp({
                                 type="text"
                                 color="red"
                                 aria-label="search"
-                                id="search"
+                                id="search2"
                                 placeholder="Enter for search..."
                                 style={{ backgroundColor: '#2C3143' }}
                                 onChange={(e) => setSearch(e.target.value)}

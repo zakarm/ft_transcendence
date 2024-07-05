@@ -11,9 +11,7 @@ aimen:
     - reverse player on board items
     - after passing the "loading" animation, if a user switch the tab during a game (this user can disconnect after switching tab),
         the game stays frozen [no winner, no reconnecting...]
-    - after clicking on "join" button, my name and picture doesn't appear on the tournament Looby
     - cannot quit lobby tournament page via side bar icons, keeps redirecting me back to lobby page
-    - increment z-index of "SEARCHING" in tournament looby && remove cursor pointer on the text
     - invite a friend to play a game doesn't work [the button "Pong"]
 
 ----------------------------------------------------------------------------------------------
@@ -41,10 +39,6 @@ Othman :
 
     - long messages overflow the div on left side that containers the user and last message sent
     - the red circle used to notify the user that a new message is sent [it doesn't disappear even after sending a message back]
-    - browser issues,warning and improvements [for inputs] 
-    - Same ID for two input in chat : 
-        <input color="red" aria-label="search" placeholder="Enter for search..." id="search" class="form-control" type="text" style="background-color: rgb(44, 49, 67);">
-        <input class="" placeholder="Find a player ..." id="search" type="text" style="background-color: rgb(44, 49, 67); border: 0px;">
     - Z-index for the arrow button in in the right sidebar
     
     - Activate scroll for the whole website from chat :
