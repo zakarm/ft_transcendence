@@ -79,7 +79,7 @@ function Notification({ notification }: Props) {
                 toast.error('error: Unauthorized. Invalid credentials provided.');
             }
         } catch (error) {
-            // toast.error(`Error : ${error}`)
+            // console.error(`Error : ${error}`)
         }
     }
 
@@ -137,7 +137,7 @@ function Notification({ notification }: Props) {
                     toast.success(message);
                 }
             } catch (error) {
-                toast.error('No response received from server.');
+                console.error('No response received from server.');
             }
         } else {
             toast.error('error: Unauthorized. Invalid credentials provided.');

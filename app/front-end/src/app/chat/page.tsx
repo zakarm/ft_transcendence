@@ -67,7 +67,7 @@ export default function () {
                     })).reverse();
                 setMessages(storedMessages)
             } catch (error) {
-                toast.error(`Error : ${error}`);
+                console.error(`Error : ${error}`);
             }
         } else {
             toast.error('Access token is undefined or falsy');
@@ -87,7 +87,7 @@ export default function () {
                 const data = await res.json();
                 setMe(data.username);
             } catch (error) {
-                toast.error(`Error : ${error}`);
+                console.error(`Error : ${error}`);
             }
         } else {
             toast.error('Access token is undefined or falsy');
@@ -119,7 +119,7 @@ export default function () {
                 };
 
                 newChatSocket.onclose = () => {
-                    // toast.error('Chat socket closed');
+                    // console.error('Chat socket closed');
                 };
 
                 chatSocketRef.current = newChatSocket;
@@ -128,7 +128,7 @@ export default function () {
                     newChatSocket.close();
                 };
             } catch (error) {
-                toast.error(`Error : ${error}`);
+                console.error(`Error : ${error}`);
             }
         }
     };

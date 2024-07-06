@@ -46,13 +46,13 @@ export default function SignInPage() {
                 for (const key in errors) {
                     if (errors.hasOwnProperty(key)) {
                         errors[key].forEach((errorMessage: string) => {
-                            toast.error(`${key}: ${errorMessage}`);
+                            console.error(`${key}: ${errorMessage}`);
                         });
                     }
                 }
             }
         } catch (error) {
-            toast.error('No response received from server.');
+            console.error('No response received from server.');
         }
     };
     return (

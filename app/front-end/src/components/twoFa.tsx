@@ -50,7 +50,7 @@ export default function TwoFa({ value = '', email, qr, setPassOTP=()=>{} }: QrCo
                     }
                 }
             } catch (error) {
-                toast.error(`Error : ${error}`);
+                console.error(`Error : ${error}`);
             }
         };
 

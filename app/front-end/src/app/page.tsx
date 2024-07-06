@@ -57,7 +57,7 @@ const ThreeScene = () => {
             },
             undefined,
             (error: any) => {
-                toast.error(`Error : ${error}`)
+                console.error(`Error : ${error}`)
             },
         );
 

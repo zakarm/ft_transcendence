@@ -88,7 +88,7 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
                 setSearchedChat(friend.length ? friend[0] : undefined);
                 setMe(data.username);
             } catch (error) {
-                toast.error(`Error : ${error}`);
+                console.error(`Error : ${error}`);
             }
         } else {
             toast.error('Access token is undefined or falsy');

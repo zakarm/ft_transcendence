@@ -37,7 +37,7 @@ const AuthChecker = ({ children }: { children: React.ReactNode }) => {
                     router.push('/sign-in');
                 }
             } catch (error: any) {
-                toast.error(`Error : ${error}`);
+                console.error(`Error : ${error}`);
             }
         };
         authentication();

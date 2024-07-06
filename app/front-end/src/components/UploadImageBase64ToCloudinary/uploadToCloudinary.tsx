@@ -17,7 +17,7 @@ const isBase64 = (str: string): boolean => {
   const handleImageUpload = async (file: string): Promise<string | null> => {
 
     if (!isBase64(file)) {
-      toast.error("Error : Image not base64 encoded string.", notificationStyle);
+      toast.error("Error : image not valid", notificationStyle);
       return null;
     }
 

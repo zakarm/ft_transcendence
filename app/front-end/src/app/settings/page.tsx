@@ -81,7 +81,7 @@ async function getInitialData({
         setOldAccountValues(data);
         setCurrentAccoutValues(data);
     } catch (error) {
-        toast.error(`Error : ${error}`);
+        console.error(`Error : ${error}`);
     }
 }
 
@@ -112,7 +112,7 @@ const validateInput: (oldAccountValues: SettingsProps['oldAccountValues']) => bo
 
     if ( "new_password" in oldAccountValues &&  "repeat_password" in oldAccountValues &&
         oldAccountValues['new_password'] !== oldAccountValues['repeat_password']) {
-        toast.error(`Invalid input : mismatch between password fields`, notificationStyle);
+            toast.error(`Invalid input : mismatch between password fields`, notificationStyle);
         isValid = false;
     }
     return isValid;

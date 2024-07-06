@@ -178,7 +178,7 @@ const Achievements: React.FC<AchivProps> = React.memo(({ choosenTab, achievement
                 const data = await response.json();
                 setAchievements(data);
             } catch (error) {
-                toast.error('Error : failed to fetch')
+                console.error(`Error : ${error}`);
             }
         };
         getAchievements();
