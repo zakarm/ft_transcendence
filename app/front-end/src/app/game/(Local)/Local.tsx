@@ -52,6 +52,7 @@ interface Player {
         eliteTierRanking: number;
     };
     index: number;
+    boxShadowsWinner: boolean;
 }
 
 interface playerdata {
@@ -73,6 +74,7 @@ function Local() {
             eliteTierRanking: 0,
         },
         index: 0,
+        boxShadowsWinner: true,
     });
 
     const setWinner_ = (data: playerdata) => {
@@ -101,8 +103,7 @@ function Local() {
     });
 
     useEffect(() => {
-        if (pageState === 'winner')
-            return;
+        if (pageState === 'winner') return;
         if (winner.name !== '' && winner.imageUrl !== '') {
             setPageState('Winner');
         }
@@ -116,11 +117,12 @@ function Local() {
             {pageState === 'Winner' && (
                 <div className="winner_page ">
                     <div className="winner_container">
-                        <div className="winner_text">WINNER</div>
                         <PlayerCard {...winner} />
-                        <Link href="/game" style={{ textDecoration: 'none' }}>
-                            <div className="go_back">go back</div>
-                        </Link>
+                        <div className="winner_btn">
+                            <Link href="/game" style={{ textDecoration: 'none' }}>
+                                <div className="go_back">go back</div>
+                            </Link>
+                        </div>
                     </div>
                 </div>
             )}

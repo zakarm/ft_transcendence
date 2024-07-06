@@ -1,15 +1,8 @@
 import React from 'react';
 
-import {
-    Radar,
-    RadarChart,
-    PolarGrid,
-    PolarAngleAxis,
-    // PolarRadiusAxis,
-} from 'recharts';
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis } from 'recharts';
 
 import './PlayerCard.css';
-import SafeImage from '../SafeImage/SafeImage';
 
 interface PlayerStats {
     adaptation: number;
@@ -24,9 +17,10 @@ interface PlayerCardProps {
     imageUrl: string;
     stats: PlayerStats;
     index: number;
+    boxShadowsWinner: boolean;
 }
 
-const PlayerCard: React.FC<PlayerCardProps> = ({ name, imageUrl, stats, index }: PlayerCardProps) => {
+const PlayerCard: React.FC<PlayerCardProps> = ({ name, imageUrl, stats, index, boxShadowsWinner }: PlayerCardProps) => {
     const data = [
         { subject: 'Adaptation', A: stats.adaptation },
         { subject: 'Agility', A: stats.agility },
@@ -35,8 +29,11 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ name, imageUrl, stats, index }:
         { subject: 'Ranking', A: stats.eliteTierRanking },
     ];
     const isNameTooLong = name.length > 10;
+    const class_ = index === 1 ? 'left' : index === 2 ? 'right' : '';
+    const class__ = boxShadowsWinner ? 'box_shadow' : '';
+
     return (
-        <div className={`PlayerCard border ${index === 1 ? 'left' : index === 2 ? 'right' : ''}`}>
+        <div className={`PlayerCard ${class_} ${class__}`}>
             <img className="image" src={imageUrl} alt={name} />
             <div className="chart">
                 {isNameTooLong ? (

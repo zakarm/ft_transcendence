@@ -1,17 +1,12 @@
 'use client';
-import './localtour.css';
+import './localTournamentPage.css';
 import { NextPage } from 'next';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, use } from 'react';
 import TournamentLobby from '../(tournamet-lobby)/TournamentLobby';
 import Link from 'next/link';
-import type {
-    TournamentData,
-    LocalTournamentProps,
-    TournamentData_User,
-    Tournament_User,
-} from '@/lib/game/Tournament';
+import type { TournamentData, LocalTournamentProps, TournamentData_User, Tournament_User } from '@/lib/game/Tournament';
 import PongGameLocal from '@/components/PongGame/PongGameLocal';
 import PlayerCard from '@/components/PlayerCard/PlayerCard';
 
@@ -97,6 +92,7 @@ interface Player {
         eliteTierRanking: number;
     };
     index: number;
+    boxShadowsWinner: boolean;
 }
 
 const LocalTournamentPage: NextPage = () => {
@@ -130,6 +126,7 @@ const LocalTournamentPage: NextPage = () => {
             eliteTierRanking: 0,
         },
         index: 0,
+        boxShadowsWinner: true,
     });
     const pathname = usePathname();
     const router = useRouter();
@@ -164,7 +161,7 @@ const LocalTournamentPage: NextPage = () => {
                 };
             });
         } else {
-            router.back();
+            router.push('/game/Tournament');
         }
     }, [pathname, router, localStorage]);
 
@@ -285,6 +282,7 @@ const LocalTournamentPage: NextPage = () => {
                         eliteTierRanking: 0,
                     },
                     index: 0,
+                    boxShadowsWinner: true,
                 });
             }
             return newTournamentData;
@@ -422,26 +420,16 @@ const LocalTournamentPage: NextPage = () => {
                 {pageState === 'TournamentWinner' && (
                     <div className="winner_page">
                         <div className="winner_conatiner">
-                            <div className="winner_text">WINNER</div>
                             <PlayerCard {...winner} />
-                            <Link href="/game/Tournament" style={{ textDecoration: 'none' }}>
-                                <div className="go_back">go back</div>
-                            </Link>
+                            <div className="winner_btn">
+                                <Link href="/game/Tournament" style={{ textDecoration: 'none' }}>
+                                    <div className="go_back">go back</div>
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 )}
             </div>
-
-            {/* <div className="container-fluid d-flex ">
-               <div className="conatiner_t">
-                   <h1>Local Tournament Page</h1>
-                   <pre>{JSON.stringify(LocaltournamentData, null, 2)}</pre>
-               </div>
-               <div className="conatiner_t1">
-                   <h1>Local Tournament Page</h1>
-                   <pre>{JSON.stringify(filteredTournamentData, null, 2)}</pre>
-               </div>
-           </div> */}
         </div>
     );
 };

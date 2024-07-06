@@ -1,16 +1,12 @@
 Bugs:
 aimen:
-    - Participant count is not accurate
-    - Tournament winner card missing
     - Add display name to the database and sign-in form and settings form
     - Link DevOps in the Docker Compose
     - Review Makefile
     - Add Prettier and run it for the whole project
     - Test backend for 500 server error
-    - reverse player on board items
     - after passing the "loading" animation, if a user switch the tab during a game (this user can disconnect after switching tab),
         the game stays frozen [no winner, no reconnecting...]
-    - cannot quit lobby tournament page via side bar icons, keeps redirecting me back to lobby page
     - invite a friend to play a game doesn't work [the button "Pong"]
 
 ----------------------------------------------------------------------------------------------
@@ -19,7 +15,8 @@ marouane :
 
 ------------------------------------------------------------------------------------------------
 
-Othman : 
+Othman :
+    - fix right bar icons
     - alert?? in onClick. found in :: add friend button --> blocked tab --> search button
         <Button className="border" variant="dark" id="button-addon2" onClick={() => alert()}>
             Search..
@@ -31,7 +28,7 @@ Othman :
     - long messages overflow the div on left side that containers the user and last message sent
     - the red circle used to notify the user that a new message is sent [it doesn't disappear even after sending a message back]
     - Z-index for the arrow button in in the right sidebar
-    
+
     - Activate scroll for the whole website from chat :
         1 ==> send a bunch of messages in chat > 100 messages
         2 ==> refresh chat page

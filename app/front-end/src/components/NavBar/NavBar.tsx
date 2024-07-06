@@ -8,11 +8,11 @@ interface TournamentProps {
 }
 
 const NavBar: React.FC<TournamentProps> = ({ options, setChoosenTab = () : void => {} }: TournamentProps) => {
-  const [isSmall, setIsSmall] = useState(window.innerWidth <= 215 * options.length + 200);
+  const [isSmall, setIsSmall] = useState(window.innerWidth <= 215 * options.length + 250);
   const [currentOption, setCurrentOption] = useState<string>("")
 
   window.addEventListener("resize", () => {
-    setIsSmall(window.innerWidth < 215 * options.length + 200);
+    setIsSmall(window.innerWidth < 215 * options.length + 250);
   });
 
   return (

@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import './Tournament.css';
-import styles from './styles.module.css';
 import NavBar from '@/components/NavBar/NavBar';
 
 import { RemoteTournamentForm } from '@/components/TournamentForm/remoteForm';
@@ -301,7 +300,7 @@ const Tournament: React.FC = () => {
             <div className="Tournament_nav_bar">
                 <NavBar options={NavBarOptions} setChoosenTab={setChoosenTab} />
             </div>
-            <section className={`Tournament_section p-0 m-0 ${!isSearching ? styles.visible : styles.hide}`}>
+            <section className={`Tournament_section p-0 m-0 ${!isSearching ? 'visible' : 'hide'}`}>
                 {choosenTab === 'My Tournament' ? (
                     <>
                         <div className={leftStyle}>{tournamentsToRender}</div>
@@ -334,7 +333,7 @@ const Tournament: React.FC = () => {
                 )}
             </section>
             <section
-                className={`text-center itim-font Tournament_section p-0 m-0 ${!isSearching ? styles.hide : styles.visible}`}
+                className={`text-center itim-font Tournament_section p-0 m-0 ${!isSearching ? 'hide' : 'visible'}`}
                 style={{color : "#feebeb"}}
             >
                     <div className="col d-flex flex-wrap justify-content-center">
