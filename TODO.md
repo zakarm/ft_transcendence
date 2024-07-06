@@ -28,21 +28,10 @@ Othman :
     - long messages overflow the div on left side that containers the user and last message sent
     - the red circle used to notify the user that a new message is sent [it doesn't disappear even after sending a message back]
     - Z-index for the arrow button in in the right sidebar
-    
-    - Activate scroll for the whole website from chat :
-        1 ==> send a bunch of messages in chat > 100 messages
-        2 ==> refresh chat page
-        3 ==> open chat with the user (normally it shows the first ever message send)
-        4 ==> start scrolling very quickly the messages
-        5 ==> quickly switch and use the mouse wheel outside of container of chat
-        6 ==> causes an activation of the scroll for the whole website
 
     - "Start Chatting :}" appears when i have an already ongoing chat a user (over 300 messages and start chat?)
         Expect : last message sent between me and that user
 ------------------------------------------------------------------------------------------------------
 
 Zakaria :
-    - Notication appears forcefully when switching between pages, cannot not ignore it for later
-    - after checking notification of chat ==> i disconnect ==> when i reconnect ===> all notifications reappear
-        [I've already checked them before disconnecting, they should not appear]
     - Remove / block , move it to dropdown (search should work)

@@ -105,7 +105,7 @@ export default function SrightBar({
             setDropdownOpen(true);
         }
 
-    }, [notifications_data]);
+    }, []);
 
     return (
         <div className="d-flex flex-column vh-100 py-2">
