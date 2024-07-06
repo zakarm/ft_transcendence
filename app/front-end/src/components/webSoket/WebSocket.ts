@@ -110,6 +110,7 @@ const useWebSocket = (url: string) => {
         };
 
         ws.onclose = () => {
+            // setWebSocket(null);
         };
 
         setWebSocket(ws);

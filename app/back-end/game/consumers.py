@@ -11,10 +11,12 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from django.utils import timezone
-
+from django.conf import settings
+from asgiref.sync import async_to_sync
 # Local application/library specific imports
 from .room import RoomObject
 from .models import Match, GameTable
+from dashboards.models import Notification
 
 User = get_user_model()
 
@@ -107,6 +109,22 @@ def add_match(
     except Exception as e:
         print(f"An error occurred in add_match: {e}", file=sys.stderr)
 
+@database_sync_to_async
+def create_notification(user, user_from):
+    try:
+        notification = Notification.objects.create(
+            user=user,
+            title="New friend !",
+            message=f"{user_from.username} sent you a game invite",
+            image_url=user_from.image_url,
+            link=f"{settings.FRONTEND_HOST}/game/RemoteMatchGame/?room=",
+            is_match_notif=True,
+            action_by=user_from.username,
+        )
+        count = Notification.objects.filter(user=user_from).count()
+        return notification, count
+    except Exception as e:
+        print(f"An error occurred in create_notification: {e}", file=sys.stderr)
 
 Room_index = 0
 Rooms = {}
@@ -161,6 +179,78 @@ def increment_room_index():
         Room_index += 1
     except Exception as e:
         print(f"An error occurred in increment_room_index: {e}", file=sys.stderr)
+
+
+class PrivateGameConsumer(AsyncWebsocketConsumer):
+    async def message(self, event):
+        try:
+            message = event["message"]
+            data = {"message": message, "time": current_time()}
+            await self.send(text_data=json.dumps(data))
+        except Exception as e:
+            print(f"An error occurred in message: {e}", file=sys.stderr)
+
+    async def send_notification(self, event):
+        try:
+            notification_id = event["notification_id"]
+            count = event["count"]
+            is_chat_notif = event["is_chat_notif"]
+            is_friend_notif = event["is_friend_notif"]
+            is_tourn_notif = event["is_tourn_notif"]
+            is_match_notif = event["is_match_notif"]
+            message = {
+                "action": "notification",
+                "notification_id": notification_id,
+                "count": count,
+                "is_chat_notif": is_chat_notif,
+                "is_friend_notif": is_friend_notif,
+                "is_tourn_notif": is_tourn_notif,
+                "is_match_notif": is_match_notif,
+            }
+            await self.send(text_data=json.dumps(message))
+        except Exception as e:
+            print(f"An error occurred in send_notification: {e}", file=sys.stderr)
+
+    async def connect(self):
+        try:
+            if self.scope["user"].is_authenticated:
+                await self.accept()
+                query_string = self.scope["query_string"].decode()
+                params = dict(param.split("=") for param in query_string.split("&"))
+                self.private = params.get("private")
+                print(f"Private: {self.private}", file=sys.stderr)
+                self.ids = self.private.split("_")
+                if len(self.ids) == 2 and self.ids[0] == str(self.scope["user"].id):
+                    self.user = await get_user(user_id=self.ids[0])
+                    self.user2 = await get_user(user_id=self.ids[1])
+                    group_name = f'user_{self.ids[1]}'
+                    notification, count = await create_notification(self.user, self.user2)
+                    await self.channel_layer.group_send(
+                        group_name,
+                        {
+                            "type": "send_notification",
+                            "notification_id": notification.notification_id,
+                            "count": count,
+                            "is_chat_notif": notification.is_chat_notif,
+                            "is_friend_notif": notification.is_friend_notif,
+                            "is_tourn_notif": notification.is_tourn_notif,
+                            "is_match_notif": notification.is_match_notif,
+                        },
+                    )
+                else:
+                    message = {"action": "error", "error": "Invalid user id"}
+                    await self.message({"message": message})
+                    self.close()
+            else:
+                await self.close()
+        except Exception as e:
+            print(f"An error occurred in connect: {e}", file=sys.stderr)
+
+    async def disconnect(self, close_code):
+        pass
+
+    async def receive(self, text_data):
+        pass
 
 
 class GameConsumer(AsyncWebsocketConsumer):
@@ -231,6 +321,11 @@ class GameConsumer(AsyncWebsocketConsumer):
         try:
             if self.scope["user"].is_authenticated:
                 await self.accept()
+                query_string = self.scope["query_string"].decode()
+                params = dict(param.split("=") for param in query_string.split("&"))
+                self.private = params.get("private")
+                print(f"Private: {self.private}", file=sys.stderr)
+                # message = {"action": "generated", }
                 self.user = await get_user(user_id=self.scope["user"].id)
                 self.room_name, self.room = await self.find_or_create_room(self.user)
                 await self.channel_layer.group_add(self.room_name, self.channel_name)
@@ -376,6 +471,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                     while room.is_reconecting():
                         if room.is_both_offline():
                             room.end_game()
+                            self.close()
                             return
                         await asyncio.sleep(1)
                         message = {"action": "reconnecting"}

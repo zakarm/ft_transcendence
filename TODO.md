@@ -1,13 +1,16 @@
 Bugs:
-aimen:
-    - Add display name to the database and sign-in form and settings form
+global:
     - Link DevOps in the Docker Compose
     - Review Makefile
     - Add Prettier and run it for the whole project
     - Test backend for 500 server error
-    - after passing the "loading" animation, if a user switch the tab during a game (this user can disconnect after switching tab),
-        the game stays frozen [no winner, no reconnecting...]
+    - add script makefile to switch docker context
+
+aimen:
+    - Add display name to the database and sign-in form and settings form
     - invite a friend to play a game doesn't work [the button "Pong"]
+    - add rules popup
+    - delete tournament and send match notif
 
 ----------------------------------------------------------------------------------------------
 marouane :

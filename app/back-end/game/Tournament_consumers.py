@@ -113,6 +113,7 @@ def set_Tournamentsmatches(tournament, match, round):
         print(f"An error occurred in set_Tournamentsmatches: {e}", file=sys.stderr)
 
 
+@database_sync_to_async
 def delete_tournament(tournament_id):
     try:
         with transaction.atomic():

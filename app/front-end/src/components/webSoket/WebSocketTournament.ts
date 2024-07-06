@@ -211,7 +211,7 @@ const useWebSocketTournament = (url: string) => {
             }
             if (data.message.action === 'winner') {
                 setGameState('winnerpage');
-                setWinner((prev) => ({
+                setWinner((prev: Player) => ({
                     ...prev,
                     name: data.message.winner.name,
                     imageUrl: data.message.winner.imageUrl,
@@ -224,7 +224,7 @@ const useWebSocketTournament = (url: string) => {
         };
 
         ws.onclose = () => {
-            setWebSocket(null);
+            // setWebSocket(null);
         };
 
         setWebSocket(ws);

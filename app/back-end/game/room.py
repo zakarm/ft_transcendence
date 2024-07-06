@@ -26,7 +26,8 @@ class RoomObject:
         self.paddle2_position = {"x": 4.8, "z": 0}
 
         # users
-        self.reconect_user = []
+        self.reconect_user = {"user1": False, "user2": False}
+
         self.Original_users = {
             "user1": {
                 "id": None,
@@ -197,7 +198,10 @@ class RoomObject:
     def set_reconect(self, user_id):
         if self.game_ended == False:
             self.reconect = True
-            self.reconect_user.append(user_id)
+            if user_id == self.Original_users["user1"]["user_id"]:
+                self.reconect_user.update({"user1": True})
+            elif user_id == self.Original_users["user2"]["user_id"]:
+                self.reconect_user.update({"user2": True})
 
     def get_user2_stat(self):
         if self.game_started == False:
@@ -207,13 +211,16 @@ class RoomObject:
         return False
 
     def get_online_user(self):
-        if self.Original_users["user1"]["user_id"] == self.reconect_user[0]:
-            return self.Original_users["user2"]["user_id"]
-        if self.Original_users["user2"]["user_id"] == self.reconect_user[0]:
+        if self.reconect_user.get("user1") == True:
             return self.Original_users["user1"]["user_id"]
+        if self.reconect_user.get("user2") == True:
+            return self.Original_users["user2"]["user_id"]
 
     def is_both_offline(self):
-        if len(self.reconect_user) == 2:
+        if (
+            self.reconect_user.get("user1") == True
+            and self.reconect_user.get("user2") == True
+        ):
             return True
 
     def remove_user(self, user_id):
