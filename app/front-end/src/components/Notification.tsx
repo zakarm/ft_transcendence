@@ -181,13 +181,15 @@ function Notification({ notification }: Props) {
                         </Button>
                         <Button
                             variant="danger"
-                            onClick={() =>
-                                fetchUserState(
-                                    'friends-remove',
-                                    'Removed from friends',
-                                    notification.action_by,
-                                    notification.notification_id,
-                                )
+                            onClick={
+                                () => deleteNotification(notification.notification_id)
+                                // () =>
+                                // fetchUserState(
+                                //     'friends-remove',
+                                //     'Removed from friends',
+                                //     notification.action_by,
+                                //     notification.notification_id,
+                                // )
                             }>
                             <FaTimes />
                         </Button>
