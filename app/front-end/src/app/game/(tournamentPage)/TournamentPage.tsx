@@ -7,6 +7,7 @@ import PlayerCard from '@/components/PlayerCard/PlayerCard';
 import PongGame from '@/components/PongGame/PongGame';
 import { usePathname } from 'next/navigation';
 import TournamentLobby from '../(tournamet-lobby)/TournamentLobby';
+import Link from 'next/link';
 
 interface Player {
     name: string;
@@ -19,13 +20,14 @@ interface Player {
         eliteTierRanking: number;
     };
     index: number;
+    boxShadowsWinner: boolean;
 }
 
 const TournamentPage: React.FC = () => {
     const pathname = usePathname();
     const id = pathname.split('/').pop();
     const access = Cookies.get('access');
-    const { webSocket, gameState, connectionInfo, countDown, filteredTournamentData } = Web_Socket(
+    const { webSocket, gameState, connectionInfo, countDown, filteredTournamentData, winner } = Web_Socket(
         `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/pingpong/tournament/${id}/?token=${access}&watch=false`,
     );
 
@@ -40,6 +42,7 @@ const TournamentPage: React.FC = () => {
             eliteTierRanking: 0,
         },
         index: 0,
+        boxShadowsWinner: false,
     };
 
     const [myProfile, setMyProfile] = useState<Player>(defaultPlayer);
@@ -72,6 +75,7 @@ const TournamentPage: React.FC = () => {
                     eliteTierRanking: 75,
                 },
                 index: 1,
+                boxShadowsWinner: false,
             },
             {
                 ...defaultPlayer,
@@ -85,23 +89,38 @@ const TournamentPage: React.FC = () => {
                     eliteTierRanking: 75,
                 },
                 index: 2,
+                boxShadowsWinner: false,
             },
         ]);
     }, [connectionInfo]);
 
     return (
         <div className="Lobby_container">
-            {gameState === 'lobby' && (
+            {(gameState === 'TournamentLobby' || gameState === 'winnerpage' || gameState === 'lobby') && (
                 <>
                     <TournamentLobby {...filteredTournamentData} />
-                    <div className="blurred-background"></div>
-                    <div className="t-text">
-                        <div className="search-text">SEARCHING...</div>
-                    </div>
+                    {gameState === 'lobby' && (
+                        <>
+                            <div className="blurred-background"></div>
+                            <div className="t-text">
+                                <div className="search-text">SEARCHING...</div>
+                            </div>
+                        </>
+                    )}
+                    {gameState === 'winnerpage' && (
+                        <div className="winner_page">
+                            <div className="winner_container">
+                                <PlayerCard {...winner} />
+                                <div className="winner_btn">
+                                    <Link href="/game/Tournament" style={{ textDecoration: 'none' }}>
+                                        <div className="go_back">go back</div>
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </>
             )}
-            {gameState === 'TournamentLobby' && <TournamentLobby {...filteredTournamentData} />}
-
             {gameState === 'opponentFound' && (
                 <>
                     <PlayerCard {...opponents[0]} />

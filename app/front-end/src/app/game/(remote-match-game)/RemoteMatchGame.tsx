@@ -18,6 +18,7 @@ interface Player {
         eliteTierRanking: number;
     };
     index: number;
+    boxShadowsWinner: boolean;
 }
 
 const RemoteMatchGame: React.FC = () => {
@@ -37,6 +38,7 @@ const RemoteMatchGame: React.FC = () => {
             eliteTierRanking: 0,
         },
         index: 0,
+        boxShadowsWinner: false,
     };
 
     const [myProfile, setMyProfile] = useState<Player>(defaultPlayer);

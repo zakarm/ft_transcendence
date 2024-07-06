@@ -102,18 +102,13 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
         const maxFOV = 65;
         camera.fov = minFOV - fraction * (minFOV - maxFOV);
         camera.updateProjectionMatrix();
-        // camera.position.set(5, 0, 5);
         camera.position.set(0, 25, 0);
-        // camera.position.set(10, 25, 15);
-
-        // const targetPosition = new THREE.Vector3(1, 10, 0);
         const targetPosition = new THREE.Vector3(0, 10, 0);
-        // const targetPosition = new THREE.Vector3(8, 6, 0);
         gsap.to(camera.position, {
             x: targetPosition.x,
             y: targetPosition.y,
             z: targetPosition.z,
-            duration: 3,
+            duration: 2,
             onUpdate: () => {
                 camera.lookAt(new THREE.Vector3(0, 0, 0));
             },
@@ -124,10 +119,12 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
 
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableZoom = true;
-        controls.enablePan = true;
+        controls.enablePan = false;
+        controls.enableDamping = false;
+        controls.enableRotate = false;
         controls.minDistance = 10;
         controls.maxDistance = 20;
-        controls.update();
+        // controls.update();
 
         // Store references to clean up later
         rendererRef.current = renderer;
@@ -364,16 +361,16 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
         <div className="Pong_Game_container">
             <div className="board">
                 <BoardItem
-                    championName={data.user1name}
-                    hashtag="#TheHacker007"
-                    score={user1score}
-                    imageSrc={data.user1image}
-                />
-                <BoardItem
                     championName={data.user2name}
                     hashtag="#TheHacker007"
                     score={user2score}
                     imageSrc={data.user2image}
+                />
+                <BoardItem
+                    championName={data.user1name}
+                    hashtag="#TheHacker007"
+                    score={user1score}
+                    imageSrc={data.user1image}
                 />
             </div>
             <div className="canvas_div" ref={containerRef} />

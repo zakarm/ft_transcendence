@@ -3,6 +3,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  width: 99%;
   height: 100vh;
   overflow: auto;
 }
@@ -51,4 +52,11 @@
   .Tournament_title {
     font-size: 2rem;
   }
+}
+
+.visible {
+    display : flex;
+}
+.hide {
+    display : none;
 }
