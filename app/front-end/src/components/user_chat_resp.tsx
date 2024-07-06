@@ -48,7 +48,7 @@ export default function UserChatResp ({handleChat, username, last_message, time,
                 </div>
                 <div className={`col d-flex flex-column d-flex justify-content-evenly align-items-start`}>
                     <span>{username}</span>
-                    <span style={{color: '#bebebe'}}>{last_message}</span>
+                    <span style={{color: '#bebebe'}}>{last_message.length < 10 ? last_message : last_message.slice(0,7) + "..."}</span>
                 </div>
                 <div className='col-2 text-end'>
                 <span>
