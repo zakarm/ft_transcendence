@@ -45,7 +45,7 @@ export default function SignUp() {
                 for (const key in errors) {
                     if (errors.hasOwnProperty(key)) {
                         errors[key].forEach((errorMessage: string) => {
-                            console.error(`${key}: ${errorMessage}`);
+                            toast.error(`${key}: ${errorMessage}`);
                         });
                     }
                 }

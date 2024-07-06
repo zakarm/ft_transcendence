@@ -110,7 +110,7 @@ export default function Dashboard() {
                         console.error(`Error : ${response.status}`);
                     }
                 } catch (error) {
-                    console.error(`Error : ${error}`);
+                    toast.error(`Error : ${error}`);
                 }
             } else {
                 toast.error('Unauthorized');
@@ -165,7 +165,7 @@ export default function Dashboard() {
             }
             return null;
         } catch (error) {
-            console.error(`Error : ${error}`);
+            toast.error(`Error : ${error}`);
         }
     };
 
