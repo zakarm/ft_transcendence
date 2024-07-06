@@ -25,9 +25,6 @@ Othman :
             Search..
         </Button>
 
-    - Max Input of character in chat doesn't get send : (starting from 510 characters up to 512)
-        fvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffvdfvfdvfdvdfvdfvdfvdfvfdvdfvdfvdffv
-
     - long messages overflow the div on left side that containers the user and last message sent
     - the red circle used to notify the user that a new message is sent [it doesn't disappear even after sending a message back]
     - Z-index for the arrow button in in the right sidebar
@@ -48,3 +45,4 @@ Zakaria :
     - Notication appears forcefully when switching between pages, cannot not ignore it for later
     - after checking notification of chat ==> i disconnect ==> when i reconnect ===> all notifications reappear
         [I've already checked them before disconnecting, they should not appear]
+    - Remove / block , move it to dropdown (search should work)

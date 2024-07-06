@@ -163,7 +163,7 @@ function Notification({ notification }: Props) {
             <Toast.Body
                 className="d-flex justify-content-between align-items-center"
                 style={{ background: '#161625', borderRadius: '0 0 5px 5px' }}>
-                <marquee className="text-white me-2">{notification.message}</marquee>
+                <p className="text-white me-2">{notification.message}</p>
                 {notification.is_friend_notif == true && (
                     <>
                         <Button
@@ -195,7 +195,7 @@ function Notification({ notification }: Props) {
                 )}
 
                 {notification.is_chat_notif == true && (
-                    <Button variant="success" onClick={goToLink}>
+                    <Button variant="success" onClick={() => {goToLink(); deleteNotification(notification.notification_id);}}>
                         Chat
                     </Button>
                 )}
