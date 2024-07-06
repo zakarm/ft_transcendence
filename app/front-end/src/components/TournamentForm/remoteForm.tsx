@@ -237,7 +237,7 @@ function RemoteTournamentForm() {
                 });
             }
         } catch (error) {
-            // toast.error(`Error :  ${error}`);
+            // console.error(`Error :  ${error}`);
         }
     };
 

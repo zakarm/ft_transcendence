@@ -85,7 +85,7 @@ export default function ({ params }: { params: { username: string } }) {
                 const data = await res.json();
                 setProfile(data);
             } catch (error) {
-                toast.error(`Error : ${error}`);
+                console.error(`Error : ${error}`);
             }
         } else toast.error('Access token is undefined or falsy');
     };
@@ -117,7 +117,7 @@ export default function ({ params }: { params: { username: string } }) {
                     }));
                 if (transData) setUser(transData[0]);
             } catch (error) {
-                toast.error(`Error : ${error}`);
+                console.error(`Error : ${error}`);
             }
         } else toast.error('Unauthorized');
     };
@@ -174,7 +174,7 @@ export default function ({ params }: { params: { username: string } }) {
                     toast.success(message);
                 }
             } catch (error) {
-                toast.error(`Error : ${error}`);
+                console.error(`Error : ${error}`);
             }
         } else toast.error('Unauthorized');
     };

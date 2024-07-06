@@ -106,7 +106,7 @@ export default function () {
                 setQuote("");
                 setIntro("");
                 setProfile(initProfileData);
-                toast.error(`Error : ${error}`);
+                console.error(`Error : ${error}`);
             }
         } else toast.error('Access token is undefined or falsy');
     };
@@ -147,7 +147,7 @@ export default function () {
             fetchProfileData();
             setModalShow(false);
         } catch (error) {
-            toast.error(`Error : ${error}`);
+            console.error(`Error : ${error}`);
         }
     };
 

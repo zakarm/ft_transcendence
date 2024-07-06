@@ -42,7 +42,7 @@ async function getData(): Promise<StatisticsDataTypes> {
             
             data = await response.json();
         } catch (error: any) {
-            toast.error(`Error : ${error.message}`);
+            console.error(`Error : ${error.message}`);
         }
     }
 

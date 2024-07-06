@@ -51,7 +51,7 @@ export default function SignUp() {
                 }
             }
         } catch (error: any) {
-            toast.error('No response received from server.');
+            console.error('No response received from server.');
         }
     };
     return (

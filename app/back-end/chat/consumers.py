@@ -48,7 +48,7 @@ class ChatConsumer(WebsocketConsumer):
         #     self.send(text_data=json.dumps({"error": "You are not friends with the receiver or you have blocked the receiver."}))
         #     return
 
-        if len(message) >= 511:
+        if len(message) > 512:
             self.send(text_data=json.dumps({"error": "Message is too long."}))
             return
 

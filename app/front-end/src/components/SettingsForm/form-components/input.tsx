@@ -113,7 +113,7 @@ function    GetCheckboxInput(
                     setTwoFaData({ value: url, email });
                 }
             } catch (error) {
-                toast.error(`Error : ${error}`);
+                console.error(`Error : ${error}`);
             }
         } else {
             if (oldAccountValues[inputId] as Boolean && !isChk) {

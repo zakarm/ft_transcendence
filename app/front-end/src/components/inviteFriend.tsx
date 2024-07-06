@@ -66,7 +66,7 @@ export default function InviteFriend({ show, close }: Props) {
 
                 setUsers(transData);
             } catch (error) {
-                toast.error(`Error : ${error}`);
+                console.error(`Error : ${error}`);
             }
         } else toast.error('Access token is undefined or falsy');
     };
@@ -101,7 +101,7 @@ export default function InviteFriend({ show, close }: Props) {
                 }));
                 setsearchedFriends(transData);
             } catch (error) {
-                toast.error(`Error : ${error}`);
+                console.error(`Error : ${error}`);
             }
         } else toast.error('Access token is undefined or falsy');
     };
@@ -164,7 +164,7 @@ export default function InviteFriend({ show, close }: Props) {
                     toast.success(message);
                 }
             } catch (error) {
-                toast.error(`Error : ${error}`);
+                console.error(`Error : ${error}`);
             }
         } else toast.error('Access token is undefined or falsy');
     };
@@ -197,7 +197,7 @@ export default function InviteFriend({ show, close }: Props) {
 
                 setsearchedBlockedFriends(transData.filter((friend: Friend_) => friend.blocked));
             } catch (error) {
-                toast.error(`Error : ${error}`);
+                console.error(`Error : ${error}`);
             }
         }
     };

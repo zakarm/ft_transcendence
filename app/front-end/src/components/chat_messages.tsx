@@ -61,6 +61,7 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
     const chatLogRef = useRef<HTMLDivElement | null>(null);
     const [inputValue, setInputValue] = useState<string>('');
     const [me, setMe] = useState<string>('');
+    const [hello, setHello] = useState<boolean>(true);
 
     const fetchSearchUser = async () => {
         const access = Cookies.get('access');
@@ -88,7 +89,7 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
                 setSearchedChat(friend.length ? friend[0] : undefined);
                 setMe(data.username);
             } catch (error) {
-                toast.error(`Error : ${error}`);
+                console.error(`Error : ${error}`);
             }
         } else {
             toast.error('Access token is undefined or falsy');
@@ -122,6 +123,13 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
             setInputValue('');
         }
     };
+
+    useEffect(() => {
+        const  messageBody = document.querySelector('#test');
+        if (messageBody) {
+            messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+        }
+    }, [messages, searchedChat]);
 
     return (
         <>
@@ -180,6 +188,8 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
                     <div
                         className="flex-grow-1 valo-font d-flex row p-0 m-0 py-3 align-items-end"
                         style={{ overflowY: 'auto' }}
+                        id='test'
+                        onChange={() => setHello(!hello)}
                     >
                         {messages &&
                         messages.filter(

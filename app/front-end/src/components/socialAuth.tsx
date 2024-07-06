@@ -14,7 +14,7 @@ export default function SocialAuth({ className, platform }: Props) {
         try {
             window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/social/${platform}/redirect`;
         } catch (error) {
-            toast.error(`Error: ${error}`);
+            console.error(`Error: ${error}`);
         }
     };
 

@@ -115,7 +115,7 @@ function connectToSocket({ pageUrl, setData } : connectSocketTypes) {
                 console.log('closed connection');
             };
         } catch (error) {
-            toast.error(`Error : ${error}`);
+            console.error(`Error : ${error}`);
         }
     } else {
         console.log('Missing tournamentID or access token');
