@@ -10,7 +10,6 @@ import { IoIosSend } from 'react-icons/io';
 import { useEffect, useRef, useState } from 'react';
 import { CgHello } from 'react-icons/cg';
 import { toast } from 'react-toastify';
-import Link from 'next/link';
 
 import { useRouter } from 'next/navigation';
 interface Users {
@@ -182,7 +181,7 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
                 ws.onmessage = (event) => {
                     const data = JSON.parse(event.data);
                     if (data.message.action === 'generated') {
-                        router.push(`/game/RemoteMatchGame/?${data.message.roomName}`);
+                        router.push(`/game/RemoteMatchGame/?room=${data.message.room_name}`);
                     }
                 };
                 ws.onclose = () => {};
@@ -245,7 +244,7 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
                             style={{ backgroundColor: '#161625', borderBottomRightRadius: '25px' }}
                         >
                             <FaTableTennisPaddleBall
-                                className="mx-2 border border-warning"
+                                className="mx-2"
                                 size="1.8em"
                                 style={{ cursor: 'pointer' }}
                                 onClick={() => handlePrivateGame()}

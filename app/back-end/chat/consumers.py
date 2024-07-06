@@ -62,7 +62,7 @@ class ChatConsumer(WebsocketConsumer):
         notification = Notification.objects.create(
             user=receiver_obj,
             title = "New message !",
-            message = f"from {sender_obj.username}: { message[:20] + "..." if len(message) > 20 else message}",
+            message = f"A new message from {sender_obj.username}: { message[:20] + "..." if len(message) > 20 else message}",
             image_url=sender_obj.image_url,
              link=f"{settings.FRONTEND_HOST}/chat?username={sender_obj.username}",
             is_chat_notif=True,
@@ -94,4 +94,3 @@ class ChatConsumer(WebsocketConsumer):
         receiver = event["receiver"]
         timestamp = event["timestamp"]
         self.send(text_data=json.dumps({"message": message, "sender": sender, "receiver": receiver, "timestamp": timestamp, "chat_id": chat_id}))
-        

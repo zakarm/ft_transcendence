@@ -4,13 +4,12 @@ global:
     - Review Makefile
     - Add Prettier and run it for the whole project
     - Test backend for 500 server error
-    - add script makefile to switch docker context
 
 aimen:
     - Add display name to the database and sign-in form and settings form
-    - invite a friend to play a game doesn't work [the button "Pong"]
     - add rules popup
     - delete tournament and send match notif
+    - fix chart player card and ball speed problem
 
 ----------------------------------------------------------------------------------------------
 marouane :

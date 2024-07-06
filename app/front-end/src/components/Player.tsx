@@ -63,8 +63,6 @@ function Player({ nickname, id, image, isConnected }: PlayerProps) {
             />
           </Dropdown.Toggle>
           <Dropdown.Menu className="drop-class">
-            <Dropdown.Item eventKey="1"><GiCrumblingBall /> Pong</Dropdown.Item>
-            <hr className="dropdown-divider" />
             <Dropdown.Item eventKey="2" onClick={() => router.push(`/chat?username=${nickname}`)}><PiChatTextThin /> Message</Dropdown.Item>
             <hr className="dropdown-divider" />
             <Dropdown.Item eventKey="3" onClick={() => router.push(`/profile/${nickname}`)}><GiPlagueDoctorProfile /> Profile</Dropdown.Item>

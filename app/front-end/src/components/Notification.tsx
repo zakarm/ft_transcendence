@@ -47,8 +47,7 @@ function Notification({ notification }: Props) {
     const deleteNotification = async (notification_id: number) => {
         const access = Cookies.get('access');
         try {
-            if (access)
-            {
+            if (access) {
                 const csrftoken = Cookies.get('csrftoken') || '';
                 const notif = await fetch(
                     `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/notification-delete/${notification_id}`,
@@ -74,14 +73,13 @@ function Notification({ notification }: Props) {
                         }
                     }
                 }
-    
             } else {
                 toast.error('error: Unauthorized. Invalid credentials provided.');
             }
         } catch (error) {
             // console.error(`Error : ${error}`)
         }
-    }
+    };
 
     const fetchUserState = async (api: string, message: string, username: string, notification_id: number) => {
         const access = Cookies.get('access');
@@ -145,8 +143,8 @@ function Notification({ notification }: Props) {
     };
 
     return (
-        <Toast className="border" onClose={() => deleteNotification(notification.notification_id)} >
-            <Toast.Header style={{  color: 'white', borderBottom: '1px solid white' }}>
+        <Toast className="border" onClose={() => deleteNotification(notification.notification_id)}>
+            <Toast.Header style={{ color: 'white', borderBottom: '1px solid white' }}>
                 <img
                     src={notification.image_url}
                     width={30}
@@ -156,14 +154,17 @@ function Notification({ notification }: Props) {
                     style={{ height: '30px', width: '30px' }}
                     onClick={goToLink}
                 />
-                <strong className="me-auto link-secondary" onClick={goToLink}>
+                <strong className="me-auto link-secondary" onClick={goToLink} style={{ fontFamily: 'Itim' }}>
                     {notification.title}
                 </strong>
             </Toast.Header>
             <Toast.Body
                 className="d-flex justify-content-between align-items-center"
-                style={{ background: '#161625', borderRadius: '0 0 5px 5px' }}>
-                <p className="text-white me-2">{notification.message}</p>
+                style={{ background: '#161625', borderRadius: '0 0 5px 5px' }}
+            >
+                <div style={{ fontFamily: 'Itim', width: '200px', height: 'auto', textWrap: 'wrap' }}>
+                    <p className="text-white me-2 mt-3">{notification.message}</p>
+                </div>
                 {notification.is_friend_notif == true && (
                     <>
                         <Button
@@ -176,7 +177,8 @@ function Notification({ notification }: Props) {
                                     notification.action_by,
                                     notification.notification_id,
                                 )
-                            }>
+                            }
+                        >
                             <FaCheck />
                         </Button>
                         <Button
@@ -190,14 +192,43 @@ function Notification({ notification }: Props) {
                                 //     notification.action_by,
                                 //     notification.notification_id,
                                 // )
-                            }>
+                            }
+                        >
                             <FaTimes />
                         </Button>
                     </>
                 )}
+                {notification.is_match_notif == true && (
+                    <div className="d-flex justify-content-center align-items-center flex-column">
+                        <Button
+                            style={{ width: '100px', fontFamily: 'Itim' }}
+                            variant="success"
+                            className="mb-1"
+                            onClick={() => {
+                                goToLink();
+                                deleteNotification(notification.notification_id);
+                            }}
+                        >
+                            Accept
+                        </Button>
+                        <Button
+                            style={{ width: '100px', fontFamily: 'Itim' }}
+                            variant="danger"
+                            onClick={() => deleteNotification(notification.notification_id)}
+                        >
+                            Reject
+                        </Button>
+                    </div>
+                )}
 
                 {notification.is_chat_notif == true && (
-                    <Button variant="success" onClick={() => {goToLink(); deleteNotification(notification.notification_id);}}>
+                    <Button
+                        variant="success"
+                        onClick={() => {
+                            goToLink();
+                            deleteNotification(notification.notification_id);
+                        }}
+                    >
                         Chat
                     </Button>
                 )}

@@ -13,6 +13,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.utils import timezone
 from django.conf import settings
 from asgiref.sync import async_to_sync
+
 # Local application/library specific imports
 from .room import RoomObject
 from .models import Match, GameTable
@@ -109,22 +110,25 @@ def add_match(
     except Exception as e:
         print(f"An error occurred in add_match: {e}", file=sys.stderr)
 
+
 @database_sync_to_async
-def create_notification(user, user_from):
+def create_notification(user, user2):
     try:
+        link = f"room_{user.id}_{user2.id}_{get_room_index()}"
         notification = Notification.objects.create(
-            user=user,
-            title="New friend !",
-            message=f"{user_from.username} sent you a game invite",
-            image_url=user_from.image_url,
-            link=f"{settings.FRONTEND_HOST}/game/RemoteMatchGame/?room=",
+            user=user2,
+            title=f"Game Invite",
+            message=f"{user.username} has invited you to a game. Click the link below to join.",
+            image_url=user.image_url,
+            link=f"{settings.FRONTEND_HOST}/game/RemoteMatchGame/?room={link}",
             is_match_notif=True,
-            action_by=user_from.username,
+            action_by=user.username,
         )
-        count = Notification.objects.filter(user=user_from).count()
+        count = Notification.objects.filter(user=user2).count()
         return notification, count
     except Exception as e:
         print(f"An error occurred in create_notification: {e}", file=sys.stderr)
+
 
 Room_index = 0
 Rooms = {}
@@ -218,13 +222,20 @@ class PrivateGameConsumer(AsyncWebsocketConsumer):
                 query_string = self.scope["query_string"].decode()
                 params = dict(param.split("=") for param in query_string.split("&"))
                 self.private = params.get("private")
-                print(f"Private: {self.private}", file=sys.stderr)
                 self.ids = self.private.split("_")
                 if len(self.ids) == 2 and self.ids[0] == str(self.scope["user"].id):
                     self.user = await get_user(user_id=self.ids[0])
                     self.user2 = await get_user(user_id=self.ids[1])
-                    group_name = f'user_{self.ids[1]}'
-                    notification, count = await create_notification(self.user, self.user2)
+                    increment_room_index()
+                    room_name = f"room_{self.ids[0]}_{self.ids[1]}_{get_room_index()}"
+                    message = {"action": "generated", "room_name": room_name}
+                    await self.message({"message": message})
+                    room = RoomObject()
+                    add_room(room_name, room)
+                    group_name = f"user_{self.user2.id}"
+                    notification, count = await create_notification(
+                        self.user, self.user2
+                    )
                     await self.channel_layer.group_send(
                         group_name,
                         {
@@ -317,6 +328,52 @@ class GameConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             print(f"An error occurred in connction_ack: {e}", file=sys.stderr)
 
+    async def find_or_create_room(self, user):
+        try:
+            if self.private != 'false':
+                self.ids = self.private_room.split("_")
+                if self.ids and len(self.ids) == 4:
+                    user_in = user.id == int(self.ids[1]) or user.id == int(self.ids[2])
+                else:
+                    user_in = False
+                if user_in:
+                    room = get_room(self.private_room)
+                    if room:
+                        if room.is_user_joined(user.email):
+                            room.reconecting_user(self.channel_name, user.email)
+                            await self.message({"message": {"action": "reconnected"}})
+                            return self.private_room, room
+                        elif not room.is_ready() and not room.is_user_joined(
+                            user.email
+                        ):
+                            room.add_user(self.channel_name, user.email, user)
+                            await self.message({"message": {"action": "joined"}})
+                            return self.private_room, room
+                    else:
+                        return None, None
+                else:
+                    return None, None
+            rooms_items = get_rooms_items()
+            for room_name, room in rooms_items:
+                if not room.is_ended():
+                    if room.is_user_joined(user.email):
+                        room.reconecting_user(self.channel_name, user.email)
+                        await self.message({"message": {"action": "reconnected"}})
+                        return room_name, room
+                    elif not room.is_ready() and not room.is_user_joined(user.email):
+                        room.add_user(self.channel_name, user.email, user)
+                        await self.message({"message": {"action": "joined"}})
+                        return room_name, room
+            increment_room_index()
+            new_room = RoomObject()
+            new_room_name = f"room_{get_room_index()}"
+            add_room(new_room_name, new_room)
+            new_room.add_user(self.channel_name, user.email, user)
+            await self.message({"message": {"action": "created"}})
+            return new_room_name, new_room
+        except Exception as e:
+            print(f"An error occurred in find_or_create_room: {e}", file=sys.stderr)
+
     async def connect(self):
         try:
             if self.scope["user"].is_authenticated:
@@ -324,10 +381,14 @@ class GameConsumer(AsyncWebsocketConsumer):
                 query_string = self.scope["query_string"].decode()
                 params = dict(param.split("=") for param in query_string.split("&"))
                 self.private = params.get("private")
-                print(f"Private: {self.private}", file=sys.stderr)
-                # message = {"action": "generated", }
+                self.private_room = params.get("room")
                 self.user = await get_user(user_id=self.scope["user"].id)
                 self.room_name, self.room = await self.find_or_create_room(self.user)
+                if self.room is None:
+                    message = {"action": "error", "error": "Invalid user id or room id"}
+                    await self.message({"message": message})
+                    await self.close()
+                    return
                 await self.channel_layer.group_add(self.room_name, self.channel_name)
                 await self.connction_ack()
                 if self.room.is_ready() and self.room.is_started() == False:
@@ -571,25 +632,3 @@ class GameConsumer(AsyncWebsocketConsumer):
             print(f"An error occurred in reset: {e}", file=sys.stderr)
 
     # -----------------------> 5. find_or_create_room <-----------------------
-    async def find_or_create_room(self, user):
-        try:
-            rooms_items = get_rooms_items()
-            for room_name, room in rooms_items:
-                if not room.is_ended():
-                    if room.is_user_joined(user.email):
-                        room.reconecting_user(self.channel_name, user.email)
-                        await self.message({"message": {"action": "reconnected"}})
-                        return room_name, room
-                    elif not room.is_ready() and not room.is_user_joined(user.email):
-                        room.add_user(self.channel_name, user.email, user)
-                        await self.message({"message": {"action": "joined"}})
-                        return room_name, room
-            increment_room_index()
-            new_room = RoomObject()
-            new_room_name = f"room_{get_room_index()}"
-            add_room(new_room_name, new_room)
-            new_room.add_user(self.channel_name, user.email, user)
-            await self.message({"message": {"action": "created"}})
-            return new_room_name, new_room
-        except Exception as e:
-            print(f"An error occurred in find_or_create_room: {e}", file=sys.stderr)

@@ -169,3 +169,7 @@ restorenv: ## Restore the .env file
 datagenerator: ## Generate data
 	@echo "$(YELLOW)Generating data...$(RESET)"
 	@docker exec -it back-end bash -c "python3 generate_users.py"
+
+switch_docker_context: ## Switch Docker context
+	@echo "$(YELLOW)Switching Docker context...$(RESET)"
+	@docker context use default

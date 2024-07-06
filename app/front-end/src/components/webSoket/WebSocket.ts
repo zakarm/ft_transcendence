@@ -1,6 +1,8 @@
 // Web_Socket.ts
 'use client';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 // Define the interface for the connection information
 interface ConnectionInfo {
@@ -23,6 +25,7 @@ interface ConnectionInfo {
 
 // Define the hook function with TypeScript
 const useWebSocket = (url: string) => {
+    const router = useRouter();
     const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
     const [gameState, setGameState] = useState<string>('lobby');
     const [connectionInfo, setConnectionInfo] = useState<ConnectionInfo>({
@@ -106,6 +109,10 @@ const useWebSocket = (url: string) => {
             if (data.message.action === 'end_game') {
                 if (data.message.status === 'winner') setGameState('winner');
                 else setGameState('loser');
+            }
+            if (data.message.action === 'error') {
+                router.push('/game');
+                toast.error(data.message.error);
             }
         };
 
