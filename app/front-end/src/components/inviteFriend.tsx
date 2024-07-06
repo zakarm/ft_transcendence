@@ -37,6 +37,7 @@ export default function InviteFriend({ show, close }: Props) {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [searchedPendingFriends, setsearchedPendingFriends] = useState<Friend_[]>([]);
     const [searchedBlockedFriends, setsearchedBlockedFriends] = useState<Friend_[]>([]);
+    const [blockedUsers, setBlockedUsers] = useState<Friend_[]>([]);
     const [searchedFriends, setsearchedFriends] = useState<Friend_[]>([]);
     const [users, setUsers] = useState<Friend_[]>([]);
     const [selectedTab, setSelectedTab] = useState<string | undefined>('friends');
@@ -136,8 +137,11 @@ export default function InviteFriend({ show, close }: Props) {
                         if (unblockedUser) {
                             setsearchedFriends([...searchedFriends, unblockedUser]);
                             setsearchedBlockedFriends(
-                                searchedBlockedFriends.filter((user) => user.user.username !== user_data.user.username),
+                                searchedBlockedFriends.filter((user) => user.user.username !== user_data.user.username)
                             );
+                            setBlockedUsers(
+                                searchedBlockedFriends.filter((user) => user.user.username !== user_data.user.username)
+                            )
                         }
                     }
                     if (api === 'friends-remove' || api === 'friends-add' || api === 'friends-block') {
@@ -207,6 +211,7 @@ export default function InviteFriend({ show, close }: Props) {
         setsearchedFriends(users.filter((friend) => friend.is_accepted || friend.is_user_from));
         setsearchedPendingFriends(users.filter((friend) => !friend.is_accepted && !friend.is_user_from));
         fetchBlockedUsers();
+        setBlockedUsers(searchedBlockedFriends);
     };
 
     useEffect(() => {
@@ -223,7 +228,7 @@ export default function InviteFriend({ show, close }: Props) {
             if (searchTerm === '') setsearchedFriends(foundFriends);
             else {
                 const data = foundFriends.filter((friend) =>
-                    friend.user.username.toLowerCase().startsWith(searchTerm.toLowerCase()),
+                    friend.user.username.toLowerCase().includes(searchTerm.toLowerCase()),
                 );
                 if (data.length !== 0) setsearchedFriends(data);
                 else fetchSearchUser();
@@ -237,9 +242,22 @@ export default function InviteFriend({ show, close }: Props) {
             if (searchTerm === '') setsearchedPendingFriends(foundPendingFriends);
             else {
                 const foundFriends = foundPendingFriends.filter((friend) =>
-                    friend.user.username.toLowerCase().startsWith(searchTerm.toLowerCase()),
+                    friend.user.username.toLowerCase().includes(searchTerm.toLowerCase()),
                 );
                 setsearchedPendingFriends(foundFriends);
+            }
+        }
+    };
+
+    const handle_blocked_search = () => {
+        if (users) {
+            const foundBlockedFriends = searchedBlockedFriends.filter((friend) => friend.blocked);
+            if (searchTerm === '') setBlockedUsers(foundBlockedFriends);
+            else {
+                const foundFriends = foundBlockedFriends.filter((friend) =>
+                    friend.user.username.toLowerCase().includes(searchTerm.toLowerCase()),
+                );
+                setBlockedUsers(foundFriends);
             }
         }
     };
@@ -444,14 +462,14 @@ export default function InviteFriend({ show, close }: Props) {
                                         setSearchTerm(e.target.value);
                                     }}
                                 />
-                                <Button className="border" variant="dark" id="button-addon2" onClick={() => alert()}>
+                                <Button className="border" variant="dark" id="button-addon2" onClick={handle_blocked_search}>
                                     Search..
                                 </Button>
                             </InputGroup>
                         </Modal.Header>
                         <Modal.Body style={{ height: '200px', overflow: 'auto' }}>
-                            {searchedBlockedFriends &&
-                                searchedBlockedFriends.map((friend, index) => (
+                            {blockedUsers &&
+                                blockedUsers.map((friend, index) => (
                                     <div
                                         key={index}
                                         className="row d-flex flex-row d-flex align-items-center justify-content-between px-3 py-1 m-2"
