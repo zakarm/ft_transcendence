@@ -17,18 +17,9 @@ marouane :
 
 Othman :
     - fix right bar icons
-    - alert?? in onClick. found in :: add friend button --> blocked tab --> search button
-        <Button className="border" variant="dark" id="button-addon2" onClick={() => alert()}>
-            Search..
-        </Button>
-
     - long messages overflow the div on left side that containers the user and last message sent
     - the red circle used to notify the user that a new message is sent [it doesn't disappear even after sending a message back]
     - Z-index for the arrow button in in the right sidebar
-
     - Start Chatting : appears when i have an already ongoing chat a user (over 300 messages and start chat?)
         Expect : last message sent between me and that user
 ------------------------------------------------------------------------------------------------------
-
-Zakaria :
-    - Remove / block , move it to dropdown (search should work)

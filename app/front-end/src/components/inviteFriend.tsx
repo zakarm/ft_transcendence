@@ -15,6 +15,8 @@ import { CgUnblock } from 'react-icons/cg';
 import { ToastContainer, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { MdBlock } from 'react-icons/md';
+
+
 interface Props {
     show: boolean;
     close: () => void;
@@ -136,6 +138,7 @@ export default function InviteFriend({ show, close }: Props) {
                         );
                         if (unblockedUser) {
                             setsearchedFriends([...searchedFriends, unblockedUser]);
+                            setUsers([...users, unblockedUser]);
                             setsearchedBlockedFriends(
                                 searchedBlockedFriends.filter((user) => user.user.username !== user_data.user.username)
                             );
@@ -198,8 +201,8 @@ export default function InviteFriend({ show, close }: Props) {
                     is_user_from: friend.is_user_from,
                     blocked: friend.blocked,
                 }));
-
                 setsearchedBlockedFriends(transData.filter((friend: Friend_) => friend.blocked));
+                setBlockedUsers(transData.filter((friend: Friend_) => friend.blocked));
             } catch (error) {
                 console.error(`Error : ${error}`);
             }
@@ -264,19 +267,6 @@ export default function InviteFriend({ show, close }: Props) {
 
     return (
         <>
-            {/* <ToastContainer
-          position="top-right"
-          autoClose={2000}
-          hideProgressBar={false}
-          newestOnTop
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="colored"
-          transition={Zoom}
-        /> */}
             <Modal contentClassName={`${styles.friend_modal}`} show={show} aria-labelledby="add_friend" centered>
                 <Tabs
                     defaultActiveKey="friends"
@@ -429,10 +419,17 @@ export default function InviteFriend({ show, close }: Props) {
                                         </div>
                                         <div className="col-9 text-end">
                                             <Button
+                                                className='mx-1'
                                                 variant="dark"
                                                 onClick={() => fetchUser('friends-accept', 'added to friends', friend)}
                                             >
                                                 Accept <IoMdCheckmarkCircle color="#FFEBEB" />
+                                            </Button>
+                                            <Button
+                                                variant="dark"
+                                                onClick={() => fetchUser('friends-remove', 'removed from pending', friend)}
+                                            >
+                                                X
                                             </Button>
                                         </div>
                                     </div>
