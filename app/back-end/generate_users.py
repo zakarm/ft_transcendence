@@ -22,6 +22,7 @@ users_data = [
         "first_name": "First1",
         "last_name": "Last1",
         "username": "user1",
+        "display_name": "user1",
     },
     {
         "email": "user2@example.com",
@@ -29,6 +30,7 @@ users_data = [
         "first_name": "First2",
         "last_name": "Last2",
         "username": "user2",
+        "display_name": "user2",
     },
     {
         "email": "user3@example.com",
@@ -36,6 +38,7 @@ users_data = [
         "first_name": "First3",
         "last_name": "Last3",
         "username": "user3",
+        "display_name": "user3",
     },
     {
         "email": "user4@example.com",
@@ -43,6 +46,7 @@ users_data = [
         "first_name": "First4",
         "last_name": "Last4",
         "username": "user4",
+        "display_name": "user4",
     },
     {
         "email": "user5@example.com",
@@ -50,6 +54,7 @@ users_data = [
         "first_name": "First5",
         "last_name": "Last5",
         "username": "user5",
+        "display_name": "user5",
     },
     {
         "email": "user6@example.com",
@@ -57,6 +62,7 @@ users_data = [
         "first_name": "First6",
         "last_name": "Last6",
         "username": "user6",
+        "display_name": "user6",
     },
     {
         "email": "user7@example.com",
@@ -64,6 +70,7 @@ users_data = [
         "first_name": "First7",
         "last_name": "Last7",
         "username": "user7",
+        "display_name": "user7",
     },
     {
         "email": "user8@example.com",
@@ -71,6 +78,7 @@ users_data = [
         "first_name": "First8",
         "last_name": "Last8",
         "username": "user8",
+        "display_name": "user8",
     },
 ]
 
@@ -81,6 +89,7 @@ def create_user_and_generate_token(user_data):
         user = User.objects.create_user(
             email=user_data["email"],
             username=user_data["username"],
+            display_name=user_data["display_name"],
             first_name=user_data["first_name"],
             last_name=user_data["last_name"],
             password=user_data["password"],
