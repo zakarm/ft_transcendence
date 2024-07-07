@@ -19,6 +19,7 @@ function checkData(dataAPI: UserInfoTypes) {
         first_name: '',
         last_name: '',
         username: '',
+        display_name : '',
         email: '',
         country: '',
         city: '',

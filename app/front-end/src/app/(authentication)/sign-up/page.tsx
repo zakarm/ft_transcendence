@@ -19,6 +19,7 @@ export default function SignUp() {
             const first_name = form.get('first_name') as string;
             const last_name = form.get('last_name') as string;
             const username = form.get('user_name') as string;
+            const display_name = form.get('display_name') as string;
             const email = form.get('email') as string;
             const password = form.get('password') as string;
             const csrftoken = Cookies.get('csrftoken') || '';
@@ -29,6 +30,7 @@ export default function SignUp() {
                     first_name,
                     last_name,
                     username,
+                    display_name,
                     email,
                     password,
                 }),
@@ -109,6 +111,16 @@ export default function SignUp() {
                                         autoComplete="off"
                                         placeholder="User Name"
                                         name="user_name"
+                                        required
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <input
+                                        className={`form-control ${styles.input_class} p-3 mb-3 border-0`}
+                                        type="text"
+                                        autoComplete="off"
+                                        placeholder="Display Name"
+                                        name="display_name"
                                         required
                                     />
                                 </div>

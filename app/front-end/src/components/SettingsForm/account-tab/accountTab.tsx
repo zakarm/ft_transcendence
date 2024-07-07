@@ -13,14 +13,14 @@ function GenerateInputFields() {
             labelText: 'First Name',
             inputType: 'text',
             placeholder: oldAccountValues['first_name'],
-            inputLength: 20,
+            inputLength: 30,
         },
         {
             inputId: 'last_name',
             labelText: 'Last Name',
             inputType: 'text',
             placeholder: oldAccountValues['last_name'],
-            inputLength: 20,
+            inputLength: 30,
         },
         {
             inputId: 'username',
@@ -28,6 +28,13 @@ function GenerateInputFields() {
             inputType: 'text',
             placeholder: oldAccountValues['username'],
             inputLength: 20,
+        },
+        {
+            inputId: 'display_name',
+            labelText: 'Display Name',
+            inputType: 'text',
+            placeholder: oldAccountValues['display_name'],
+            inputLength: 30,
         },
         {
             inputId: 'email',
