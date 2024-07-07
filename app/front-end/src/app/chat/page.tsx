@@ -9,6 +9,7 @@ import Modal from 'react-bootstrap/Modal';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Cookies from 'js-cookie';
 import { useSearchParams } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 import Spinner from 'react-bootstrap/Spinner';
 import { GiAmericanFootballPlayer } from 'react-icons/gi';
@@ -35,6 +36,7 @@ export default function () {
 
     const chatSocketRef = useRef<WebSocket | null>(null);
     const searchParams = useSearchParams();
+    const router = useRouter();
 
     const [show, setShow] = useState(false);
     const [showAbout, setAbout] = useState(false);
@@ -155,7 +157,8 @@ export default function () {
     useEffect(() => {
         if (
             newMessage &&
-            (messages?.length === 0 || messages?.at(messages.length - 1)?.timestamp !== newMessage?.timestamp)
+            (messages?.length === 0 || messages?.at(messages.length - 1)?.timestamp !== newMessage?.timestamp) && 
+            (newMessage.sender === me || newMessage.receiver === me)
         )
             setMessages((prevMessages) => [...prevMessages, newMessage]);
     }, [newMessage]);

@@ -20,9 +20,9 @@
 
 ------------------------------------------------------------------------------------------------
 
-- fix right bar icons
-- the red circle used to notify the user that a new message is sent [it doesn't disappear even after sending a message back]
-- Z-index for the arrow button in in the right sidebar
-- Start Chatting : appears when i have an already ongoing chat a user (over 300 messages and start chat?)
+<!-- - fix right bar icons -->
+<!-- - the red circle used to notify the user that a new message is sent [it doesn't disappear even after sending a message back] -->
+<!-- - Z-index for the arrow button in in the right sidebar -->
+<!-- - Start Chatting : appears when i have an already ongoing chat a user (over 300 messages and start chat?)
     Expect : last message sent between me and that user
-- showing last message
+- showing last message -->

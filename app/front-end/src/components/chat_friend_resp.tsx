@@ -7,6 +7,8 @@ import Cookies from 'js-cookie';
 import { CiSearch } from 'react-icons/ci';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import UserChatResp from './user_chat_resp';
+import UserChat from './user_chat';
 
 interface User {
     id: number;
@@ -122,6 +124,36 @@ export default function ChatFriendsResp({
         ));
     };
 
+    const formatDate = (timestamp: string): string => {
+
+        if (timestamp === 'now')
+            return timestamp;
+
+        const date = new Date(timestamp);
+        const now = new Date();
+    
+        // Check if the date is today
+        if (date.toDateString() === now.toDateString()) {
+            // Format as HH:mm for today's messages
+            return `${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}`;
+        }
+    
+        // Check if the date is yesterday
+        const yesterday = new Date(now);
+        yesterday.setDate(now.getDate() - 1);
+        if (date.toDateString() === yesterday.toDateString()) {
+            // Format as "Yesterday, HH:mm" for yesterday's messages
+            return `Yesterday, ${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}`;
+        }
+    
+        // Otherwise, format as "DD/MM/YYYY, HH:mm"
+        const day = ('0' + date.getDate()).slice(-2);
+        const month = ('0' + (date.getMonth() + 1)).slice(-2);
+        const year = date.getFullYear();
+        const time = `${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}`;
+        return `${day}/${month}/${year}, ${time}`;
+    }
+
     useEffect(() => {
         fetchUsersData();
     }, []);
@@ -139,7 +171,7 @@ export default function ChatFriendsResp({
             .filter((msg): msg is LastMesg => msg !== null);
 
         setUsersLastMessage(newMessages);
-    }, [messages, chatUsers]);
+    }, [messages]);
 
     useEffect(() => {
         if (search.length > 2) {
@@ -197,7 +229,55 @@ export default function ChatFriendsResp({
                     <div className={`${styles.usr_container} d-flex overflow-auto`}>{friendsData}</div>
                     <hr className="mt-1" style={{ color: '#FFEBEB', borderWidth: '2px' }} />
                 </div>
-                <div className={`${styles.chat_container} p-2 flex-grow-1`}>{friendsChat}</div>
+                <div className={`${styles.chat_container} p-2 flex-grow-1`}>
+                    {
+                        chatUsers && 
+                        chatUsers.map((friend: User) => (
+                            <div key={friend.id}>
+                            {
+                                (fullscreen) ? 
+                                (<UserChat 
+                                    username={friend.username}
+                                    image_url={friend.image_url}
+                                    waiting_msg={friend.message_waiting}
+                                    handleChat={handleChat}
+                                    handleShow={handleShow}
+                                    handleAbout={handleAbout}
+                                    setChatUsers={setChatUsers} 
+                                    last_message={
+                                        usersLastMessage.filter((msg: LastMesg) => msg.username === friend.username).at(0)?.message ??
+                                        'Start Chatting :}'
+                                    }
+                                    time={
+                                        formatDate(
+                                            usersLastMessage.filter((msg: LastMesg) => msg.username === friend.username).at(0)?.time ??
+                                            'now'
+                                        )
+                                    }
+                                />) :
+                                (<UserChatResp  
+                                    username={friend.username}
+                                    image_url={friend.image_url}
+                                    waiting_msg={friend.message_waiting}
+                                    handleChat={handleChat}
+                                    handleAbout={handleAbout}
+                                    setChatUsers={setChatUsers}
+                                    last_message={
+                                        usersLastMessage.filter((msg: LastMesg) => msg.username === friend.username).at(0)?.message ??
+                                        'Start Chatting :}'
+                                    }
+                                    time={
+                                        formatDate(
+                                            usersLastMessage.filter((msg: LastMesg) => msg.username === friend.username).at(0)?.time ??
+                                            'now'
+                                        )
+                                    }
+                                    />)
+                        }
+                     </div>
+                        ))
+                    }
+                </div>
             </div>
         </>
     );
