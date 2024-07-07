@@ -169,7 +169,6 @@ class GameSettingsSerializer(serializers.ModelSerializer):
             "quote",
             "intro",
             "game_table",
-            "is_local",
             "is_2fa_enabled",
             "new_password",
         )
