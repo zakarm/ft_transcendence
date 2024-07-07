@@ -56,7 +56,7 @@
 .imageContainer {
     height: 350px;
 }
-  
+
 .imageContainer > img {
     position: absolute;
     right: 0;
@@ -67,6 +67,7 @@
 
 .page_body {
     overflow: auto;
+    width:99%;
 }
 
 @media (max-height: 500px)
@@ -86,7 +87,7 @@
 }
 
 @media (max-width: 767px) {
-    
+
     .toglle{
         display: block;
         position: fixed;
