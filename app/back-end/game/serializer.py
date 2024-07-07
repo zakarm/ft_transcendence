@@ -146,8 +146,9 @@ class GameSettingsSerializer(serializers.ModelSerializer):
     country = serializers.SerializerMethodField()
     city = serializers.SerializerMethodField()
     game_table = serializers.SerializerMethodField()
-    email = serializers.EmailField(min_length=7, max_length=320, required=False)
-    username = serializers.CharField(min_length=4, max_length=20, required=False)
+    email = serializers.EmailField(min_length=8, max_length=55, required=False)
+    username = serializers.CharField(min_length=4, max_length=30, required=False)
+    display_name = serializers.CharField(min_length=4, max_length=30, required=False)
     quote = serializers.CharField(max_length=25, required=False)
     intro = serializers.CharField(max_length=45, required=False)
     new_password = serializers.CharField(
@@ -160,6 +161,7 @@ class GameSettingsSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "username",
+            "display_name",
             "image_url",
             "email",
             "country",

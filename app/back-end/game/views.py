@@ -115,23 +115,24 @@ class GameSettingsView(APIView):
         serializer = GameSettingsSerializer(instance=user, data=request.data)
         print("request data: ", request.data, file=sys.stderr)
         if serializer.is_valid():
-            user_data = User.objects.get(id=user.id)
-            user_data.first_name = request.data.get("first_name", user_data.first_name)
-            user_data.last_name = request.data.get("last_name", user_data.last_name)
-            user_data.username = request.data.get("username", user_data.username)
-            user_data.image_url = request.data.get("image_url", user_data.image_url)
-            user_data.email = request.data.get("email", user_data.email)
-            user_data.quote = request.data.get("quote", user_data.quote)
-            user_data.intro = request.data.get("intro", user_data.intro)
-            user_data.is_2fa_enabled = request.data.get(
-                "is_2fa_enabled", user_data.is_2fa_enabled
+            data = User.objects.get(id=user.id)
+            data.first_name = request.data.get("first_name", data.first_name)
+            data.last_name = request.data.get("last_name", data.last_name)
+            data.username = request.data.get("username", data.username)
+            data.display_name = request.data.get("display_name", data.display_name)
+            data.image_url = request.data.get("image_url", data.image_url)
+            data.email = request.data.get("email", data.email)
+            data.quote = request.data.get("quote", data.quote)
+            data.intro = request.data.get("intro", data.intro)
+            data.is_2fa_enabled = request.data.get(
+                "is_2fa_enabled", data.is_2fa_enabled
             )
             if request.data.get("country"):
-                user_data.location = request.data.get("country")
+                data.location = request.data.get("country")
             if request.data.get("city"):
-                user_data.location += "/" + request.data.get("city")
-            user_data.save()
-            game_table, _ = GameTable.objects.get_or_create(
+                data.location += "/" + request.data.get("city")
+            data.save()
+            game, _ = GameTable.objects.get_or_create(
                 user=user,
                 defaults={
                     "table_color": "#161625",
@@ -141,21 +142,11 @@ class GameSettingsView(APIView):
                     "table_position": "6,8,0",
                 },
             )
-            game_table.table_color = request.data.get(
-                "table_color", game_table.table_color
-            )
-            game_table.ball_color = request.data.get(
-                "ball_color", game_table.ball_color
-            )
-            game_table.paddle_color = request.data.get(
-                "paddle_color", game_table.paddle_color
-            )
-            game_table.game_difficulty = request.data.get(
-                "game_difficulty", game_table.game_difficulty
-            )
-            game_table.table_position = request.data.get(
-                "current_table_view", game_table.table_position
-            )
-            game_table.save()
+            game.table_color = request.data.get("table_color", game.table_color)
+            game.ball_color = request.data.get("ball_color", game.ball_color)
+            game.paddle_color = request.data.get("paddle_color", game.paddle_color)
+            game.game_difficulty = request.data.get("game_difficulty", game.game_difficulty)
+            game.table_position = request.data.get( "current_table_view", game.table_position)
+            game.save()
             return Response({"success": "Settings updated"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

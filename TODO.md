@@ -3,15 +3,9 @@
 - Add Prettier and run it for the whole project
 - Test backend for 500 server error
 
-- Add display name to the database
 - add rules popup
 - delete tournament and send match notif
 - fix chart player card and ball speed problem
-- match sign-up with settings inputs length (/components/SettingsForm/account-tab/accountTab.tsx)
-    - username : 30 sign-up // settings 20 (should be 30 in settings)
-    - email : 320 not 55 (should be 320 in settings and backend) || accountTab.tsx || authentication/models.py
-- Uncaught exceptions backend (status 500)
-    - email.length > 55 coming from settings // should be 320 {'email': 'userfdsfdsfdsfdsfdsfdsfdsfdsfdsfdsfsdfdsfdsfdsfdsfd1@example.comf'}
 
 ----------------------------------------------------------------------------------------------
 
@@ -19,7 +13,7 @@
 - "APOLLO" <---------- Statistics || should be empty string IF NO TOP PLAYER IS FOUND
 - Title of tournament card div overflow
 - profile long username
-- right bar long username 
+- right bar long username
 - userSearch friends long username
 - password 100 max (frontend check settings))
 - achiv image in statistics (Response 404)
