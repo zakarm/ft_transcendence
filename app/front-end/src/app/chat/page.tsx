@@ -182,28 +182,12 @@ export default function () {
 
     return (
         <>
-            <div className="row vh-100 p-0 m-0">
+            <div className={`row vh-100 p-0 m-0 ${styles.chat_container_}`}>
                 <div className="col-xl-4 col-md-6 col-sm-12">
                     {fullscreen ? (
-                        <ChatFriends
-                            setSelectedChat={setSelectedChat}
-                            setShow={setShow}
-                            setAbout={setAbout}
-                            fullscreen={fullscreen}
-                            chatUsers={chatUsers}
-                            setChatUsers={setChatUsers}
-                            messages={messages}
-                        />
+                        <ChatFriends setSelectedChat={setSelectedChat} setShow={setShow} setAbout={setAbout} fullscreen={fullscreen} chatUsers={chatUsers} setChatUsers={setChatUsers} messages={messages} />
                     ) : (
-                        <ChatFriendsResp
-                            setSelectedChat={setSelectedChat}
-                            setAbout={setAbout}
-                            setShow={setShow}
-                            fullscreen={fullscreen}
-                            chatUsers={chatUsers}
-                            setChatUsers={setChatUsers}
-                            messages={messages}
-                        />
+                        <ChatFriendsResp setSelectedChat={setSelectedChat} setAbout={setAbout} setShow={setShow} fullscreen={fullscreen} chatUsers={chatUsers} setChatUsers={setChatUsers} messages={messages} />
                     )}
                     &nbsp;
                 </div>
@@ -214,33 +198,15 @@ export default function () {
                                 <PiChatsFill className="mx-2" size="1.8em" color="#FF4755" />
                             </div>
                             <div>
-                                <span style={{ fontFamily: 'itim', color: 'white' }}>
-                                    Please chose a conversation to start chatting!
-                                </span>
+                                <span style={{ fontFamily: 'itim', color: 'white' }}>Please chose a conversation to start chatting!</span>
                             </div>
                         </div>
                     ) : (
-                        <ChatMessages
-                            selectedChat={selectedChat}
-                            setChatUsers={setChatUsers}
-                            chatSocketRef={chatSocketRef}
-                            messages={messages}
-                        />
+                        <ChatMessages selectedChat={selectedChat} setChatUsers={setChatUsers} chatSocketRef={chatSocketRef} messages={messages} />
                     )}
-                    <Modal
-                        contentClassName={`${styles.chat_modal}`}
-                        show={show}
-                        fullscreen="md-down"
-                        onHide={() => setShow(false)}
-                        animation
-                    >
+                    <Modal contentClassName={`${styles.chat_modal}`} show={show} fullscreen="md-down" onHide={() => setShow(false)} animation>
                         <Modal.Header closeButton closeVariant="white"></Modal.Header>
-                        <ChatMessages
-                            selectedChat={selectedChat}
-                            setChatUsers={setChatUsers}
-                            chatSocketRef={chatSocketRef}
-                            messages={messages}
-                        />
+                        <ChatMessages selectedChat={selectedChat} setChatUsers={setChatUsers} chatSocketRef={chatSocketRef} messages={messages} />
                     </Modal>
                     <Offcanvas className={`${styles.canvas}`} show={showAbout} onHide={handleClose} backdrop={false}>
                         <Offcanvas.Body className={`p-0 m-0`}>

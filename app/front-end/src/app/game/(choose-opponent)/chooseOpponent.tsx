@@ -25,7 +25,7 @@ function OptionCard({ cardTitle, imageSrc }: Props) {
 function ChooseOpponent() {
     const [active, setActive] = useState('Local');
     return (
-        <div className={`container-fluid p-0 m-0`}>
+        <div className={`container-fluid p-0 m-0 ${styles.game_container_s}`}>
             <div className={`${styles.header} row justify-content-center align-items-center w-100 p-0 m-0`}>
                 <h1 className={`${styles.header_text} valo-font mt-3`}>CHOOSE YOUR OPPONENT</h1>
             </div>
