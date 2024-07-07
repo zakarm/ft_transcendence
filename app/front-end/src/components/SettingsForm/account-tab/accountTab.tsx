@@ -27,7 +27,7 @@ function GenerateInputFields() {
             labelText: 'Username',
             inputType: 'text',
             placeholder: oldAccountValues['username'],
-            inputLength: 20,
+            inputLength: 30,
         },
         {
             inputId: 'display_name',
@@ -41,7 +41,7 @@ function GenerateInputFields() {
             labelText: 'Email',
             inputType: 'email',
             placeholder: oldAccountValues['email'],
-            inputLength: 256,
+            inputLength: 55,
         },
     ];
 

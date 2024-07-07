@@ -6,16 +6,16 @@
 - add rules popup
 - delete tournament and send match notif
 - fix chart player card and ball speed problem
-
+- github auth error
+- "APOLLO" <---------- Statistics || should be empty string IF NO TOP PLAYER IS FOUND
 ----------------------------------------------------------------------------------------------
 
 - Update user info after the first message from the socket is sent (no need to click)
-- "APOLLO" <---------- Statistics || should be empty string IF NO TOP PLAYER IS FOUND
 - Title of tournament card div overflow
 - profile long username
 - right bar long username
 - userSearch friends long username
-- password 100 max (frontend check settings))
+- ppassword **********
 - achiv image in statistics (Response 404)
 
 ------------------------------------------------------------------------------------------------

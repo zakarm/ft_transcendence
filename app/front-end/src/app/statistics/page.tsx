@@ -18,15 +18,15 @@ import { StatisticCard } from '@/components/statistics/playerCard';
 import { PlayerStats } from '@/components/statistics/playerStats';
 
 const achivImage: { [key: string]: string } = {
-    early: 'achiv_tourn1.png',
-    triple: 'achiv_tourn2.png',
-    front: 'achiv_tourn3.png',
-    speedy: 'achiv_match1.png',
-    last: 'achiv_match2.png',
-    king: 'achiv_match3.png',
-    challenger: 'achiv_ai1.png',
-    rivalry: 'achiv_ai2.png',
-    legend: 'achiv_ai3.png',
+    early: '/assets/images/achievement/achiv_tourn1.png',
+    triple: '/assets/images/achievement/achiv_tourn2.png',
+    front: '/assets/images/achievement/achiv_tourn3.png',
+    speedy: '/assets/images/achievement/achiv_match1.png',
+    last: '/assets/images/achievement/achiv_match2.png',
+    king: '/assets/images/achievement/achiv_match3.png',
+    challenger: '/assets/images/achievement/achiv_ai1.png',
+    rivalry: '/assets/images/achievement/achiv_ai2.png',
+    legend: '/assets/images/achievement/achiv_ai3.png',
 };
 
 async function getData(): Promise<StatisticsDataTypes> {
@@ -39,7 +39,7 @@ async function getData(): Promise<StatisticsDataTypes> {
                 method: 'GET',
                 headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
             });
-            
+
             data = await response.json();
         } catch (error: any) {
             console.error(`Error : ${error.message}`);
