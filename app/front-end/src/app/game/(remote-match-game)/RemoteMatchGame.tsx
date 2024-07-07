@@ -6,6 +6,8 @@ import './RemoteMatchGame.css';
 import PlayerCard from '@/components/PlayerCard/PlayerCard';
 import PongGame from '@/components/PongGame/PongGame';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+
 
 interface Player {
     name: string;
@@ -18,12 +20,16 @@ interface Player {
         eliteTierRanking: number;
     };
     index: number;
+    boxShadowsWinner: boolean;
 }
 
 const RemoteMatchGame: React.FC = () => {
+    const searchParams = useSearchParams();
+    const room = searchParams.get('room');
+    const status = room ? true : false;
     const access = Cookies.get('access');
     const { webSocket, gameState, connectionInfo, countDown } = Web_Socket(
-        `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/pingpong/?token=${access}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/pingpong/?token=${access}&private=${status}&room=${room}`,
     );
 
     const defaultPlayer: Player = {
@@ -37,6 +43,7 @@ const RemoteMatchGame: React.FC = () => {
             eliteTierRanking: 0,
         },
         index: 0,
+        boxShadowsWinner: false,
     };
 
     const [myProfile, setMyProfile] = useState<Player>(defaultPlayer);

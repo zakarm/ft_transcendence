@@ -9,7 +9,9 @@ import { FaTableTennisPaddleBall } from 'react-icons/fa6';
 import { IoIosSend } from 'react-icons/io';
 import { useEffect, useRef, useState } from 'react';
 import { CgHello } from 'react-icons/cg';
+import { toast } from 'react-toastify';
 
+import { useRouter } from 'next/navigation';
 interface Users {
     id: number;
     username: string;
@@ -55,11 +57,41 @@ interface Message {
     timestamp: string;
 }
 
+const Web_Socket = (url: string) => {
+    const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
+
+    const router = useRouter();
+    useEffect(() => {
+        const ws = new WebSocket(url);
+
+        ws.onopen = () => {};
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.message.action === 'generated') {
+                router.push(`/game/RemoteMatchGame/?${data.message.roomName}`);
+            }
+        };
+
+        ws.onclose = () => {
+            // setWebSocket(null);
+        };
+        setWebSocket(ws);
+        return () => {
+            ws.close();
+        };
+    }, [url]);
+
+    return webSocket;
+};
+
 export default function ChatMessages({ selectedChat, setChatUsers, messages, chatSocketRef }: Props) {
     const [searchedChat, setSearchedChat] = useState<Friend | undefined>(undefined);
     const chatLogRef = useRef<HTMLDivElement | null>(null);
     const [inputValue, setInputValue] = useState<string>('');
+    const [myId, setMyId] = useState<number>(-1);
     const [me, setMe] = useState<string>('');
+    const [hello, setHello] = useState<boolean>(true);
 
     const fetchSearchUser = async () => {
         const access = Cookies.get('access');
@@ -72,7 +104,7 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
 
                 if (!res.ok) throw new Error('Failed to fetch data');
                 const data = await res.json();
-
+                console.log(data);
                 const friendsArray = data.friends.map((friend: Friends) => ({
                     id: friend.user.id,
                     username: friend.user.username,
@@ -86,11 +118,12 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
                 );
                 setSearchedChat(friend.length ? friend[0] : undefined);
                 setMe(data.username);
+                setMyId(data.id);
             } catch (error) {
-                console.error('Error fetching data: ', error);
+                console.error(`Error : ${error}`);
             }
         } else {
-            console.log('Access token is undefined or falsy');
+            toast.error('Access token is undefined or falsy');
         }
     };
 
@@ -119,6 +152,43 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
                 prevUsers.map((user) => (user.username === selectedChat ? { ...user, message_waiting: false } : user)),
             );
             setInputValue('');
+        }
+    };
+
+    useEffect(() => {
+        const messageBody = document.querySelector('#test');
+        if (messageBody) {
+            messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+        }
+    }, [messages, searchedChat]);
+
+    // WebSocket initialization
+    const SocketRef = useRef<WebSocket | null>(null);
+    const router = useRouter();
+
+    // Function to handle private game WebSocket connection
+    const handlePrivateGame = () => {
+        if (searchedChat) {
+            const access = Cookies.get('access');
+            if (access) {
+                const url = `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/pingpong/private/?token=${access}&private=${
+                    myId + '_' + searchedChat.id
+                }`;
+                const ws = new WebSocket(url);
+                ws.onopen = () => {
+                    console.log('WebSocket connection established');
+                };
+                ws.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+                    if (data.message.action === 'generated') {
+                        router.push(`/game/RemoteMatchGame/?room=${data.message.room_name}`);
+                    }
+                };
+                ws.onclose = () => {};
+                return () => {
+                    ws.close();
+                };
+            }
         }
     };
 
@@ -173,12 +243,19 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
                             className="col-3 py-3 d-flex align-items-center justify-content-end"
                             style={{ backgroundColor: '#161625', borderBottomRightRadius: '25px' }}
                         >
-                            <FaTableTennisPaddleBall className="mx-2" size="1.8em" style={{ cursor: 'pointer' }} />
+                            <FaTableTennisPaddleBall
+                                className="mx-2"
+                                size="1.8em"
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => handlePrivateGame()}
+                            />
                         </div>
                     </div>
                     <div
                         className="flex-grow-1 valo-font d-flex row p-0 m-0 py-3 align-items-end"
                         style={{ overflowY: 'auto' }}
+                        id="test"
+                        onChange={() => setHello(!hello)}
                     >
                         {messages &&
                         messages.filter(

@@ -2,6 +2,7 @@
 
 import { FaGoogle, FaGithub } from 'react-icons/fa';
 import { Si42 } from 'react-icons/si';
+import { toast } from 'react-toastify';
 
 interface Props {
     className?: string;
@@ -13,7 +14,7 @@ export default function SocialAuth({ className, platform }: Props) {
         try {
             window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/social/${platform}/redirect`;
         } catch (error) {
-            console.error('Error:', error);
+            console.error(`Error: ${error}`);
         }
     };
 

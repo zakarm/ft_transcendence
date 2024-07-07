@@ -141,7 +141,12 @@ export default function RightBar({
                                                 {notifications_data && notifications_data.length > 0 && (
                                                 <Dropdown.Menu
                                                     className={`${styles.drop_class} border`}
-                                                    style={{ background: '#161625' }}>
+                                                    style={{
+                                                        background: '#161625',
+                                                        minHeight: '100px',
+                                                        maxHeight: '300px',
+                                                        overflowY: 'auto'
+                                                    }}>
                                                     {notifications_data &&
                                                         notifications_data.map((key: Notification, index: number) => (
                                                             <Dropdown.Item
@@ -182,7 +187,7 @@ export default function RightBar({
                                                     className={`${styles.place} ${styles.data}`}
                                                     type="text"
                                                     placeholder="Find a player ..."
-                                                    id="search"
+                                                    id="search1"
                                                     onChange={(e) => searchOnlineFriends(e)}
                                                     style={{ backgroundColor: '#2C3143', border: 0 }}
                                                 />

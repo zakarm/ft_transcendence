@@ -26,20 +26,9 @@ class TournamentsmatchesSerializer(serializers.ModelSerializer):
 
 
 class TournamentsSerializer(serializers.ModelSerializer):
-    participantsJoined = serializers.SerializerMethodField()
-
     class Meta:
         model = Tournaments
         fields = "__all__"
-
-    def get_participantsJoined(self, obj) -> int:
-        matches = Match.objects.filter(
-            match_id__in=Tournamentsmatches.objects.filter(tournament=obj).values_list(
-                "match", flat=True
-            )
-        )
-        participants = set(matches.values_list("user_one", "user_two").distinct())
-        return len(participants)
 
 
 class UserTournamentsSerializer(serializers.ModelSerializer):
@@ -89,7 +78,6 @@ class UserTournamentsSerializer(serializers.ModelSerializer):
 
 
 class TournamentCreationSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=30)
     tournament_name = serializers.CharField(max_length=30)
     game_difficulty = serializers.IntegerField()
     tournament_image = serializers.URLField(
@@ -116,6 +104,7 @@ class TournamentCreationSerializer(serializers.Serializer):
             game_difficulty=validated_data["game_difficulty"],
             tournament_start=datetime.now(),
             crated_by_me=True,
+            participantsJoined=0,
         )
         return tour_data
 
@@ -123,11 +112,10 @@ class TournamentCreationSerializer(serializers.Serializer):
 class UserAchievementsSerializer(serializers.ModelSerializer):
     tournament = serializers.SerializerMethodField()
     match = serializers.SerializerMethodField()
-    ai = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ("username", "id", "tournament", "match", "ai")
+        fields = ("username", "id", "tournament", "match")
 
     def get_achievement(self, obj, type: str, names: list) -> dict:
         achievements = {}
@@ -147,10 +135,6 @@ class UserAchievementsSerializer(serializers.ModelSerializer):
     def get_match(self, obj) -> dict:
         return self.get_achievement(obj, "match", ["speedy", "last", "king"])
 
-    @extend_schema_field(serializers.DictField(child=serializers.BooleanField()))
-    def get_ai(self, obj) -> dict:
-        return self.get_achievement(obj, "ai", ["challenger", "rivalry", "legend"])
-
 
 class GameTableSerializer(serializers.ModelSerializer):
     class Meta:
@@ -164,6 +148,8 @@ class GameSettingsSerializer(serializers.ModelSerializer):
     game_table = serializers.SerializerMethodField()
     email = serializers.EmailField(min_length=7, max_length=320, required=False)
     username = serializers.CharField(min_length=4, max_length=20, required=False)
+    quote = serializers.CharField(max_length=25, required=False)
+    intro = serializers.CharField(max_length=45, required=False)
     new_password = serializers.CharField(
         write_only=True, max_length=100, min_length=8, required=False, allow_blank=True
     )
@@ -178,6 +164,8 @@ class GameSettingsSerializer(serializers.ModelSerializer):
             "email",
             "country",
             "city",
+            "quote",
+            "intro",
             "game_table",
             "is_local",
             "is_2fa_enabled",

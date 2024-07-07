@@ -1,6 +1,8 @@
 // Web_Socket.ts
 'use client';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 // Define the interface for the connection information
 interface ConnectionInfo {
@@ -23,6 +25,7 @@ interface ConnectionInfo {
 
 // Define the hook function with TypeScript
 const useWebSocket = (url: string) => {
+    const router = useRouter();
     const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
     const [gameState, setGameState] = useState<string>('lobby');
     const [connectionInfo, setConnectionInfo] = useState<ConnectionInfo>({
@@ -48,13 +51,11 @@ const useWebSocket = (url: string) => {
         const ws = new WebSocket(url);
 
         ws.onopen = () => {
-            console.log('-> Connected to WebSocket');
         };
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
             if (data.message.action === 'created') {
-                console.log('-> Room Created', data.message);
                 setGameState('lobby');
             }
 
@@ -71,7 +72,6 @@ const useWebSocket = (url: string) => {
                     paddle_color: data.message.paddle_color,
                     table_position: data.message.table_position,
                 }));
-                console.log('-> Connection Acknowledged', data.message);
             }
 
             if (data.message.action === 'opponents') {
@@ -85,44 +85,39 @@ const useWebSocket = (url: string) => {
                     user2_image: data.message.user2_image_url,
                     username2: data.message.user2_username,
                 }));
-                console.log('-> opponents', data.message);
-                console.log('-> connectionInfo', connectionInfo);
             }
 
             if (data.message.action === 'load_game') {
                 setGameState('load_game');
-                console.log('-> load_game', data.message);
             }
 
             if (data.message.action === 'start_game') {
                 setGameState('start_game');
-                console.log('-> start_game', data.message);
             }
             if (data.message.action === 'reconnected') {
                 setGameState('lobby');
-                console.log('-> reconnected', data.message);
             }
             if (data.message.action === 'reconnecting') {
                 setGameState('reconnecting');
-                console.log('-> reconnecting', data.message);
             }
             if (data.message.action === 'pause') {
                 setGameState('pause');
-                console.log('-> pause', data.message);
             }
             if (data.message.action === 'countdown') {
                 setCountDown(data.message.count);
-                console.log('-> pause', data.message);
             }
             if (data.message.action === 'end_game') {
                 if (data.message.status === 'winner') setGameState('winner');
                 else setGameState('loser');
-                console.log('-> end_game', data.message);
+            }
+            if (data.message.action === 'error') {
+                router.push('/game');
+                toast.error(data.message.error);
             }
         };
 
         ws.onclose = () => {
-            console.log('Disconnected from WebSocket');
+            // setWebSocket(null);
         };
 
         setWebSocket(ws);

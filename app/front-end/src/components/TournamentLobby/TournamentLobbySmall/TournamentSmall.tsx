@@ -6,7 +6,7 @@ import {
     TournamentMatchProps,
     TournamentStageProps,
     TournamentUserProps,
-} from '@/types/game/Tournament';
+} from '@/lib/game/Tournament';
 
 const User: React.FC<TournamentUserProps> = ({ user }: TournamentUserProps) => {
     return (

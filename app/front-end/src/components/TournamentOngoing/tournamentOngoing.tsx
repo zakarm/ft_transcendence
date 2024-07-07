@@ -6,76 +6,119 @@ import { CSSProperties } from 'react';
 import Cookies from 'js-cookie';
 import {
     LiveMatchesTypes,
+    UserInfoTypes,
+    RenderUpcomingMatchesTypes,
     QuarterFinalMatchTypes,
     SemiFinalMatchTypes,
     FinalMatchTypes,
-    UserTypes,
-    UserInfoTypes,
-    RenderUpcomingMatchesTypes,
 } from '@/lib/tournament-ongoing-type/ongoingTypes';
+import React from 'react'
+import { toast } from 'react-toastify';
 
-let data: LiveMatchesTypes = {
+interface   connectSocketTypes {
+    pageUrl: string
+    setData : React.Dispatch<React.SetStateAction<LiveMatchesTypes>>
+}
+
+const   initData = {
     action: 'update_live',
     data: {
         quarter_final: {
             match1: {
-                user1: { name: 'yoru', photoUrl: '/assets/images/gameProfiles/yoru.jpeg', score: 0 },
-                user2: { name: 'sova', photoUrl: '/assets/images/gameProfiles/sova.jpeg', score: 2 },
+                user1: { name: '', photoUrl: '', score: 0, status: false },
+                user2: { name: '', photoUrl: '', score: 0, status: false },
             },
             match2: {
-                user1: { name: 'raze', photoUrl: '/assets/images/gameProfiles/raze.jpeg', score: 1 },
-                user2: { name: 'Phoenix', photoUrl: '/assets/images/gameProfiles/Phoenix.jpeg', score: 0 },
+                user1: { name: '', photoUrl: '', score: 0, status: false },
+                user2: { name: '', photoUrl: '', score: 0, status: false },
             },
             match3: {
-                user1: { name: 'omen', photoUrl: '/assets/images/gameProfiles/omen.jpeg', score: 2 },
-                user2: { name: 'harbor', photoUrl: '/assets/images/gameProfiles/harbor.jpeg', score: 3 },
+                user1: { name: '', photoUrl: '', score: 0, status: false },
+                user2: { name: '', photoUrl: '', score: 0, status: false },
             },
             match4: {
-                user1: { name: 'cypher', photoUrl: '/assets/images/gameProfiles/cypher.jpeg', score: 1 },
-                user2: { name: 'chamber', photoUrl: '/assets/images/gameProfiles/chamber.jpeg', score: 4 },
+                user1: { name: '', photoUrl: '', score: 0, status: false },
+                user2: { name: '', photoUrl: '', score: 0, status: false },
             },
         },
         semi_final: {
-            match1: { user1: { name: '', photoUrl: '', score: 0 }, user2: { name: '', photoUrl: '', score: 0 } },
-            match2: { user1: { name: '', photoUrl: '', score: 0 }, user2: { name: '', photoUrl: '', score: 0 } },
+            match1: {
+                user1: { name: '', photoUrl: '', score: 0, status: false },
+                user2: { name: '', photoUrl: '', score: 0, status: false },
+            },
+            match2: {
+                user1: { name: '', photoUrl: '', score: 0, status: false },
+                user2: { name: '', photoUrl: '', score: 0, status: false },
+            },
         },
         final: {
-            match1: { user1: { name: '', photoUrl: '', score: 0 }, user2: { name: '', photoUrl: '', score: 0 } },
+            match1: {
+                user1: { name: '', photoUrl: '', score: 0, status: false },
+                user2: { name: '', photoUrl: '', score: 0, status: false },
+            },
         },
     },
 };
 
-let wss: WebSocket | null = null;
 
-function connectToSocket({ pageUrl }: { pageUrl: string }) {
-    const tournamentID: string | undefined = pageUrl.split('/').pop();
+let wss: WebSocket | null = null;
+let oldpg = '';
+function connectToSocket({ pageUrl, setData } : connectSocketTypes) {
+    let   tmpData: LiveMatchesTypes = initData;
+    const tournamentID: string = pageUrl;
     const access: string | undefined = Cookies.get('access');
+
+    const   reinitializeData = () => {
+        oldpg = '';
+        setData(initData);
+        tmpData = initData;
+    }
+
     if (tournamentID && access) {
         try {
-            if (wss) {
-                wss.close();
-                wss = null;
-            }
-            wss = new WebSocket(
-                `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/pingpong/tournament/${tournamentID}?token=${access}&spect=true`,
-            );
+                if (wss && oldpg !== tournamentID) {
+                    reinitializeData();
+                    wss.close();
+                    wss = null;
+                }
+                wss = new WebSocket(
+                    `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/pingpong/tournament/${tournamentID}/?token=${access}&watch=true`,
+                );
+                
+                wss.onopen = () => {
+                    setData(initData);
+                    tmpData = initData
+                    console.log('connected to socket successfully');
+                    oldpg = tournamentID;
+                    if (wss) {
+                        wss.onmessage = (event) => {
+                            const dt = JSON.parse(event.data);
+                            if(dt.message.action === 'TournamentData'){
+                                tmpData = initData;
+                                tmpData.data.quarter_final = dt.message.tournamentdata.quarter_final as QuarterFinalMatchTypes;
+                                tmpData.data.semi_final = dt.message.tournamentdata.semi_final as SemiFinalMatchTypes;
+                                tmpData.data.final = dt.message.tournamentdata.final as FinalMatchTypes;
+                                setData(tmpData);
+                                console.log('l----<;------>>>>> ', tmpData)
+                            }
+                            console.log(event.data);
+                        };
+                    }
+            };
 
-            wss.onopen = () => {
-                console.log('connected to socket successfully');
-            };
-            wss.onmessage = (event) => {
-                data = event.data;
-                console.log(event.data);
-            };
             wss.onerror = (error) => {
+                reinitializeData();
                 console.log(`Error : ${error}`);
             };
             wss.onclose = () => {
+                reinitializeData();
                 console.log('closed connection');
             };
         } catch (error) {
             console.error(`Error : ${error}`);
         }
+    } else {
+        console.log('Missing tournamentID or access token');
     }
 }
 
@@ -111,7 +154,7 @@ function RenderUpcomingMatches({ round, setmatchToRenderLive }: RenderUpcomingMa
     );
 }
 
-function TournamentOngoing(pageUrl: { pageUrl: string }): JSX.Element {
+function TournamentOngoing({ pageUrl }: { pageUrl: string }): JSX.Element {
     const options = ['Quarter Final', 'Semi Final', 'Final'];
     const [currentOptionTab, setcurrentOptionTab] = useState<string>('Quarter Final');
     const [matchToRenderLive, setmatchToRenderLive] = useState<string>('match1');
@@ -130,9 +173,11 @@ function TournamentOngoing(pageUrl: { pageUrl: string }): JSX.Element {
         height: '100%',
         zIndex: '1',
     };
+
+    const [data, setData] = useState<LiveMatchesTypes>(initData)
     // Disconnect from old socket endpoint and connect to a new one
     useEffect(() => {
-        connectToSocket(pageUrl);
+        connectToSocket({ pageUrl, setData });
     }, [pageUrl]);
 
     return (

@@ -8,7 +8,7 @@ canvas {
     justify-content: flex-start;
     align-items: flex-start;
     height: 100vh;
-    width: 100%;
+    width: 99%;
     position: relative;
     text-transform: uppercase;
 }

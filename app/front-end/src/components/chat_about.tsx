@@ -7,8 +7,7 @@ import { ChartOptions, ChartData, RadarController } from 'chart.js';
 import { IoCloseCircleSharp } from 'react-icons/io5';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-
-import dynamic from 'next/dynamic';
+import { toast } from 'react-toastify';
 
 interface Props {
     handleClose: () => void;
@@ -60,9 +59,9 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
                 const data = await res.json();
                 setProfile(data);
             } catch (error) {
-                console.error('Error fetching data: ', error);
+                console.error(`Error : ${error}`);
             }
-        } else console.log('Access token is undefined or falsy');
+        } else toast.error('Access token is undefined or falsy');
     };
 
     useEffect(() => {

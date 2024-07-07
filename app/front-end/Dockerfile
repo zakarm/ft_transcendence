@@ -13,3 +13,8 @@ RUN npm run build
 EXPOSE 3000
 
 CMD ["npm", "run", "dev"]
+
+#npm install --package-lock
+#npm i --package-lock-only
+#npm prune
+#npm dedupe

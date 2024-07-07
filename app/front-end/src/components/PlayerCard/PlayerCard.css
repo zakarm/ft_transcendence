@@ -8,6 +8,7 @@
     align-items: center;
     justify-content: center;
     border-radius: 10px;
+    border: 1px solid white;
     box-shadow: 0px 0px 20px rgb(255, 255, 255);
 }
 
@@ -39,6 +40,11 @@
     text-transform: uppercase;
     font-family: Valorax;
     color: white;
+}
+
+.box_shadow {
+    box-shadow: 0px 0px 20px rgb(118, 191, 66);
+    border: 1px solid rgb(118, 191, 66);
 }
 
 @keyframes fadeIn {
@@ -173,27 +179,16 @@
     .PlayerCard.right .chart {
         transform: rotate(90deg);
     }
+    .PlayerCard.box_shadow {
+        transform: scale(0.3) rotate(90deg);
+    }
+    .PlayerCard.box_shadow img,
+    .PlayerCard.box_shadow .chart {
+        transform: rotate(-90deg);
+    }
 }
 
-/* @media screen and (max-width: 500px){
-  .PlayerCard {
-    transform: scale(0.3);
-  }
-  .PlayerCard.left {
-    animation: slideLeftSHH 1s forwards;
-  }
-  .PlayerCard.right {
-    animation: slideRightSHH 1s forwards;
-  }
-  .PlayerCard.left img,.PlayerCard.left .chart {
-    transform: rotate(-90deg);
-  }
-  .PlayerCard.right img,.PlayerCard.right .chart{
-    transform: rotate(90deg);
-  }
-} */
-
-@media screen and (max-height: 700px) and (min-width: 1000px) {
+@media screen and (min-width: 1000px) and (max-height: 700px) {
     .PlayerCard {
         transform: scale(0.6);
     }
@@ -202,5 +197,12 @@
     }
     .PlayerCard.right {
         animation: slideRightSH 1s forwards;
+    }
+    .PlayerCard.box_shadow {
+        transform: scale(0.6) rotate(90deg);
+    }
+    .PlayerCard.box_shadow img,
+    .PlayerCard.box_shadow .chart {
+        transform: rotate(-90deg);
     }
 }

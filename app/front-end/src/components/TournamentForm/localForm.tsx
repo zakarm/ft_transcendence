@@ -5,7 +5,7 @@ import styles from './localForm.module.css';
 import { notificationStyle } from '../ToastProvider';
 import { toast } from 'react-toastify';
 import getFormattedDateTime from '@/utils/getFormattedDateTime';
-import { LocalTournamentProps } from '@/types/game/Tournament';
+import { LocalTournamentProps } from '@/lib/game/Tournament';
 
 interface getInputProps {
     type: string;
@@ -22,7 +22,7 @@ function InputRange({ id, updatePlayersList }: { id: string; updatePlayersList: 
             <div className={`row justify-content-center ${styles.slidecontainer} p-0 m-0`}>
                 <div className={`row p-0 m-0 ${styles.rangeTitle}`}>
                     <label className={`col itim-font text-left p-1  p-0 m-0`} htmlFor="myRange">
-                        Game Difficulty
+                        Ball Speed
                     </label>
                 </div>
                 <div className={`row p-0 m-0 d-flex justify-content-center p-0 m-0 ${styles.rangeTitle}`}>
@@ -40,13 +40,13 @@ function InputRange({ id, updatePlayersList }: { id: string; updatePlayersList: 
                 </div>
                 <div className={`row p-0 m-0 justify-content-center ${styles.rangeTitle}`}>
                     <div className="col-4 ">
-                        <p className={`itim-font`}>Easy</p>
+                        <p className={`itim-font`}>Slow</p>
                     </div>
                     <div className="col-4 d-flex justify-content-center">
                         <p className={`itim-font`}>Medium</p>
                     </div>
                     <div className="col-4 d-flex justify-content-end">
-                        <p className={`itim-font`}>Hard</p>
+                        <p className={`itim-font`}>Fast</p>
                     </div>
                 </div>
             </div>
@@ -167,8 +167,7 @@ function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<Reac
             try {
                 tournaments = JSON.parse(data);
             } catch (error) {
-                console.error('Error parsing JSON data from localStorage:', error);
-                toast.error('Error reading stored tournaments data. Please try again later.', notificationStyle);
+                toast.error('Error : cannot read tournaments data', notificationStyle);
                 return;
             }
         }

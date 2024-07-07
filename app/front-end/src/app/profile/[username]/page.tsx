@@ -85,9 +85,9 @@ export default function ({ params }: { params: { username: string } }) {
                 const data = await res.json();
                 setProfile(data);
             } catch (error) {
-                console.error('Error fetching data: ', error);
+                console.error(`Error : ${error}`);
             }
-        } else console.log('Access token is undefined or falsy');
+        } else toast.error('Access token is undefined or falsy');
     };
 
     const fetchUser = async () => {
@@ -117,7 +117,7 @@ export default function ({ params }: { params: { username: string } }) {
                     }));
                 if (transData) setUser(transData[0]);
             } catch (error) {
-                console.error('Error fetching data: ', error);
+                console.error(`Error : ${error}`);
             }
         } else toast.error('Unauthorized');
     };
@@ -174,7 +174,7 @@ export default function ({ params }: { params: { username: string } }) {
                     toast.success(message);
                 }
             } catch (error) {
-                console.error('Error fetching data: ', error);
+                console.error(`Error : ${error}`);
             }
         } else toast.error('Unauthorized');
     };

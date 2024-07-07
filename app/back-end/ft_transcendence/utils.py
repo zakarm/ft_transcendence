@@ -17,7 +17,6 @@ signin_response_schema = {
     },
 }
 
-
 error_response_schema = {
     "type": "object",
     "properties": {

@@ -9,6 +9,8 @@ import {
 import styles from '@/app/settings/styles.module.css'
 import Cookies from "js-cookie";
 import TwoFa from '@/components/twoFa';
+import { toast } from 'react-toastify';
+
 interface Props {
     inputType       ?: string;
     placeholder     ?: string | boolean;
@@ -41,6 +43,7 @@ function    GetListInput(
     } : ListInputProps) {
 
     const   { updateField } = useContext<SettingsProps>(FormContext);
+    const   [ isDisabled, setIsDisabled ] = useState<boolean>(false)
 
     return (
         <>
@@ -55,9 +58,15 @@ function    GetListInput(
                     <select
                         className={`itim-font ${styles.input} ps-4`}
                         name="tournaments"
+                        disabled={isDisabled}
                         id={id}
                         value={ choosenPosition }
-                        onChange={ (e : ChangeEvent<HTMLSelectElement>) => { updateField(id, e.target.value); } }>
+                        onChange={ (e : ChangeEvent<HTMLSelectElement>) => {
+                                setIsDisabled(true);
+                                setTimeout(() => setIsDisabled(false), 3000);
+                                updateField(id, e.target.value);
+                            }
+                        }>
                         {
                             opt.map((val) => (
                                 <option key={val}
@@ -104,7 +113,7 @@ function    GetCheckboxInput(
                     setTwoFaData({ value: url, email });
                 }
             } catch (error) {
-                console.error('An unexpected error happened:', error);
+                console.error(`Error : ${error}`);
             }
         } else {
             if (oldAccountValues[inputId] as Boolean && !isChk) {
@@ -115,7 +124,6 @@ function    GetCheckboxInput(
     };
 
     useEffect(() => {
-        console.log(passOTP)
         setIsChecked(passOTP)
         updateField(inputId, passOTP);
     }, [passOTP])
@@ -137,7 +145,7 @@ function    GetCheckboxInput(
                     {labelText}
                 </label>
                 <div className={`${styles.inputHolder} ${styles.checkbox} row justify-content-start p-0 m-1`}>
-                    <label className="col-3">
+                    {/* <label className="col-3" > */}
                         <input
                             type={inputType}
                             className={`${styles.input}`}
@@ -151,7 +159,7 @@ function    GetCheckboxInput(
                                 setIsChecked(!isChecked);
                             } }
                             />
-                    </label>
+                    {/* </label> */}
                 </div>
             </div>
         );
@@ -168,8 +176,9 @@ function    GetColorInput(
         value=""
     }: Props) {
 
-    const   { updateField } = useContext<SettingsProps>(FormContext);
+    const   { updateField, oldAccountValues } = useContext<SettingsProps>(FormContext);
     const   [colorToPreview, setcolorToPreview] = useState<string>("")
+    const   [isDisabled, setIsDisabled] = useState<boolean>(false)
 
     // usestate to pass chosen color to 'onClick' of button
     return (
@@ -197,8 +206,11 @@ function    GetColorInput(
                 <div className="col-4">
                     <button
                         type="button"
+                        disabled={isDisabled}
                         className={`${styles.previewButton} ${inputClassName} `}
-                        onClick={ (e : MouseEvent<HTMLButtonElement>) => {
+                        onClick={ () => {
+                            setIsDisabled(true);
+                            setTimeout(() => setIsDisabled(false), 3000);
                             colorToPreview && updateField(inputId, colorToPreview)
                         } }
                         >Preview</button>
@@ -206,9 +218,19 @@ function    GetColorInput(
                 <div className="col-4">
                     <button
                         type="button"
+                        disabled={isDisabled}
                         className={`${styles.previewButton} ${inputClassName} `}
-                        onClick={ (e : MouseEvent<HTMLButtonElement>) => {
-                            colorToPreview && updateField(inputId, (Cookies.get(inputId) as string))
+                        onClick={ () => {
+                            setIsDisabled(true);
+                            setTimeout(() => setIsDisabled(false), 3000);
+                            let color : string | undefined = Cookies.get(inputId);
+                            if (!color) {
+                                Cookies.set('table_color', oldAccountValues['table_color'] as string);
+                                Cookies.set('ball_color', oldAccountValues['ball_color'] as string);
+                                Cookies.set('paddle_color', oldAccountValues['paddle_color'] as string);
+                                color = Cookies.get(inputId);
+                            }
+                            colorToPreview && updateField(inputId, color as string);
                         } }
                     >
                         Reset
@@ -229,14 +251,14 @@ function    GetInputRange() {
             <label
                 className={`col-8 col-sm-3 itim-font d-flex align-items-center  p-0 m-0 ${styles.inputTitle} `}
                 htmlFor="myRange">
-                    Game Difficulty
+                    Ball Speed
             </label>
             <div className={`${styles.inputHolder} row p-0 m-1 align-items-center justify-content-center`}>
 
             <div className=" col d-flex justify-content-center p-0 my-3 ms-1">
                 <input type="range"
-                    min="1"
-                    max="3"
+                    min="0"
+                    max="2"
                     step="1"
                     value={ currentAccoutValues['game_difficulty'] as string }
                     className={`${styles.slider}`}
@@ -255,13 +277,13 @@ function    GetInputRange() {
             </label>
         <div className={`row  p-0 m-0 justify-content-center ${styles.rangeTitle}`}>
                     <div className="col-4 ">
-                        <p className={`itim-font`}>Easy</p>
+                        <p className={`itim-font`}>Slow</p>
                     </div>
                     <div className="col-4 d-flex justify-content-center">
                         <p className={`itim-font`}>Medium</p>
                     </div>
                     <div className="col-4 d-flex justify-content-end">
-                        <p className={`itim-font`}>Hard</p>
+                        <p className={`itim-font`}>Fast</p>
                     </div>
             </div>
             </div>
@@ -286,7 +308,7 @@ function    GetInput(
         return (
             <div className={`${className} flex-wrap flex-xxl-nowrap`}>
                 <label
-                    className={`col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`}
+                    className={`col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle}`}
                     htmlFor={inputId}>
                     {labelText}
                 </label>

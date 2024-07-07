@@ -9,9 +9,6 @@ import Paddle from './Paddle';
 import './PongGame.css';
 import BoardItem from '../BoardItem/BoardItem';
 import gsap from 'gsap';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
-import { AfterimagePass } from 'three/examples/jsm/postprocessing/AfterimagePass';
 
 interface ConnectionInfo {
     index: number;
@@ -44,7 +41,6 @@ const convertHexColor = (hex: string): number => {
     return parseInt(cleanedHex, 16);
 };
 const convertStringToVector3 = (str: string): THREE.Vector3 => {
-    console.log("str",str);
     const [x, y, z] = str.split(',').map((coord) => parseFloat(coord));
     return new THREE.Vector3(x, y, z);
 }
@@ -116,15 +112,6 @@ const PongGame: React.FC<Props> = ({ webSocket, connectionInfo, players }: Props
         const renderer = new THREE.WebGLRenderer();
         renderer.setSize(width, height);
         container.appendChild(renderer.domElement);
-
-        // Initialize EffectComposer
-        const composer = new EffectComposer(renderer);
-        composer.addPass(new RenderPass(scene, camera));
-
-        // Create and add AfterimagePass for the ball
-        const afterimagePass = new AfterimagePass();
-        afterimagePass.uniforms['damp'].value = 0.7;
-        composer.addPass(afterimagePass);
 
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableZoom = true;
@@ -286,12 +273,10 @@ const PongGame: React.FC<Props> = ({ webSocket, connectionInfo, players }: Props
         const animate = () => {
             animateIdRef.current = requestAnimationFrame(animate);
             renderer.render(scene, camera);
-            composer.render();
         };
         animate();
 
         return () => {
-            console.log('PongGame unmounted');
             webSocket.removeEventListener('message', handleMessage);
             document.removeEventListener('keydown', handleKeyDown);
             document.removeEventListener('keyup', handleKeyUp);

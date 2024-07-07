@@ -11,6 +11,7 @@ import InviteFriend from './inviteFriend';
 import { useGlobalContext } from './webSocket';
 import Spinner from 'react-bootstrap/Spinner';
 import Cookies from 'js-cookie';
+import { toast } from 'react-toastify';
 
 interface FriendSocket {
     id: number;
@@ -125,12 +126,12 @@ export default function MainContainer({ children }: { children: React.ReactNode 
                         setFriendsFetched(transformedData);
                         setuserData({ id: data.id, username: data.username, image_url: data.image_url, is_online: 1 });
                     } else if (response.status === 401) {
-                        console.log('Unauthorized');
+                        toast.error('Unauthorized');
                     } else {
-                        console.error('An unexpected error happened:', response.status);
+                        toast.error('Error : cannot get data');
                     }
                 } catch (error) {
-                    console.error('An unexpected error happened:', error);
+                    console.error(`Error: ${error}`);
                 }
             }
         };
@@ -160,12 +161,12 @@ export default function MainContainer({ children }: { children: React.ReactNode 
                         }));
                         setNotificationFetch(notificationFetch);
                     } else if (response.status === 401) {
-                        console.log('Unauthorized');
+                        toast.error('Unauthorized');
                     } else {
-                        console.error('An unexpected error happened:', response.status);
+                        console.error(`An unexpected error happened ${response.status}`);
                     }
                 } catch (error) {
-                    console.error('An unexpected error happened:', error);
+                    console.error(`Error: ${error}`);
                 }
             }
         };

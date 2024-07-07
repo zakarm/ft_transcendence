@@ -27,3 +27,4 @@ chat/migrations/
 .DS_Store
 
 data.log
+urls.log

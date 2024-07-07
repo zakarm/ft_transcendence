@@ -5,6 +5,7 @@ import { useEffect, useState, Dispatch, SetStateAction } from 'react';
 import styles from './styles.module.css';
 import Cookies from 'js-cookie';
 import NavBar from '@/components/NavBar/NavBar';
+import { toast } from 'react-toastify'
 
 declare global {
     namespace JSX {
@@ -177,7 +178,7 @@ const Achievements: React.FC<AchivProps> = React.memo(({ choosenTab, achievement
                 const data = await response.json();
                 setAchievements(data);
             } catch (error) {
-                console.log('An unexpected error happened:', error);
+                console.error(`Error : ${error}`);
             }
         };
         getAchievements();
@@ -191,12 +192,12 @@ const Achievements: React.FC<AchivProps> = React.memo(({ choosenTab, achievement
             imageURL: '/assets/images/achievement/achiv_tourn1.png',
             achieved: achievements.tournament ? achievements.tournament['early'] : false,
         },
-        {
-            title: 'GRAND SLAM',
-            subTitle: 'Win three consecutive tournaments',
-            imageURL: '/assets/images/achievement/achiv_tourn4.png',
-            achieved: achievements.tournament ? achievements.tournament['slam'] : false,
-        },
+        // {
+        //     title: 'GRAND SLAM',
+        //     subTitle: 'Win three consecutive tournaments',
+        //     imageURL: '/assets/images/achievement/achiv_tourn4.png',
+        //     achieved: achievements.tournament ? achievements.tournament['slam'] : false,
+        // },
         {
             title: 'TRIPLE THREAT',
             subTitle: 'Score a hat-trick (three consecutive points) at least twice in a match',
@@ -210,12 +211,12 @@ const Achievements: React.FC<AchivProps> = React.memo(({ choosenTab, achievement
             achieved: achievements.tournament ? achievements.tournament['front'] : false,
         },
         // MATCH GAME achievements
-        {
-            title: 'IRON DEFENSE',
-            subTitle: 'Win a game without letting your opponent score more than five points',
-            imageURL: '/assets/images/achievement/achiv_match4.png',
-            achieved: achievements.match ? achievements.match['iron'] : false,
-        },
+        // {
+        //     title: 'IRON DEFENSE',
+        //     subTitle: 'Win a game without letting your opponent score more than five points',
+        //     imageURL: '/assets/images/achievement/achiv_match4.png',
+        //     achieved: achievements.match ? achievements.match['iron'] : false,
+        // },
         {
             title: 'SPEEDY VICTORY',
             subTitle: 'Win a game with a score of 7-0 within three minutes',
@@ -241,9 +242,9 @@ const Achievements: React.FC<AchivProps> = React.memo(({ choosenTab, achievement
             {choosenTab === 'All' ? (
                 <RenderBadges content={badgeContent} />
             ) : choosenTab === 'Match' ? (
-                <RenderBadges content={badgeContent.slice(4, 8)} />
+                <RenderBadges content={badgeContent.slice(3, 6)} />
             ) : (
-                <RenderBadges content={badgeContent.slice(0, 4)} />
+                <RenderBadges content={badgeContent.slice(0, 3)} />
             )}
         </>
     );

@@ -2,13 +2,12 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import './Tournament.css';
-import styles from './styles.module.css';
 import NavBar from '@/components/NavBar/NavBar';
-// import { TournamentsData } from '@/app/api/testTournament/route';
+
 import { RemoteTournamentForm } from '@/components/TournamentForm/remoteForm';
 import { LocalTournamentForm } from '@/components/TournamentForm/localForm';
 import TournamentCard from '@/components/TournamentCard/TournamentCard';
-import { LocalTournamentProps } from '@/types/game/Tournament';
+import { LocalTournamentProps } from '@/lib/game/Tournament';
 import TournamentOngoing from '@/components/TournamentOngoing/tournamentOngoing';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify'
@@ -110,7 +109,7 @@ function    RemoteTournamentHTML(
                 imageUrl={obj.image_url}
                 id={obj.tournament_id.toString()}
                 pageUrl={`/game/Tournament/${obj.tournament_id}`}
-                buttonText={obj.tournament_end === null && obj.participantsJoined === 8 ? 'WATCH': 'JOIN' }
+                buttonText={obj.tournament_end === null && currentTab === 'Ongoing' ? 'WATCH': 'JOIN' }
                 setTournamentID={setTournamentID}
                 isDisabled={
                     ((obj.tournament_end !== null))
@@ -150,7 +149,7 @@ function    getLocalTournamentFromStorage() {
         try {
             tournaments = JSON.parse(data);
         } catch (error) {
-            console.error('Error parsing JSON data from localStorage:', error);
+            toast.error(`Error : cannot read tournaments data`);
         }
     }
     return tournaments
@@ -217,7 +216,6 @@ function    findNeedleInHaystack(
             }
         }
     })
-    console.log(filteredArray);
     return tournamentCards;
 
 }
@@ -302,7 +300,7 @@ const Tournament: React.FC = () => {
             <div className="Tournament_nav_bar">
                 <NavBar options={NavBarOptions} setChoosenTab={setChoosenTab} />
             </div>
-            <section className={`Tournament_section p-0 m-0 ${!isSearching ? styles.visible : styles.hide}`}>
+            <section className={`Tournament_section p-0 m-0 ${!isSearching ? 'visible' : 'hide'}`}>
                 {choosenTab === 'My Tournament' ? (
                     <>
                         <div className={leftStyle}>{tournamentsToRender}</div>
@@ -335,7 +333,7 @@ const Tournament: React.FC = () => {
                 )}
             </section>
             <section
-                className={`text-center itim-font Tournament_section p-0 m-0 ${!isSearching ? styles.hide : styles.visible}`}
+                className={`text-center itim-font Tournament_section p-0 m-0 ${!isSearching ? 'hide' : 'visible'}`}
                 style={{color : "#feebeb"}}
             >
                     <div className="col d-flex flex-wrap justify-content-center">

@@ -1,127 +1,126 @@
-@import url("https://fonts.googleapis.com/css2?family=Itim&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Itim&display=swap');
 
 .main_card {
-  background-color: #161625;
-  border-radius: 15px;
+    background-color: #161625;
+    border-radius: 15px;
 }
 
 .main_img {
-  border-radius: 15px 0 0 15px;
+    border-radius: 15px 0 0 15px;
 }
 .auth_btn {
-  width: 100px;
-  height: 50px;
-  background-color: #ff4755;
-  font-family: "valorax";
-  font-size: 1.2em;
-  border-radius: 15px;
-  border: 1px solid black;
-  color: #ffebeb;
-  transition: 0.5s ease;
+    width: 100px;
+    height: 50px;
+    background-color: #ff4755;
+    font-family: 'valorax';
+    font-size: 1.2em;
+    border-radius: 15px;
+    border: 1px solid black;
+    color: #ffebeb;
+    transition: 0.5s ease;
 }
 
 .auth_btn:hover {
-  color: #161625;
-  background-color: #ffebeb;
+    color: #161625;
+    background-color: #ffebeb;
 }
 
 .input_class:focus {
-  background-color: #2c3143;
-  color: #ffebeb;
-  border: 0;
-  outline: none;
-  border: none;
+    background-color: #2c3143;
+    color: #ffebeb;
+    border: 0;
+    outline: none;
+    border: none;
 }
 
 .input_class {
-  color: #565a69;
-  background-color: #2c3143;
-  border-radius: 15px;
-  font-family: "itim";
-  border: 0;
-  outline: none;
-  border: none;
+    color: #565a69;
+    background-color: #2c3143;
+    border-radius: 15px;
+    font-family: 'itim';
+    border: 0;
+    outline: none;
+    border: none;
 }
 
 .input_class::placeholder {
-  color: #565a69;
+    color: #565a69;
 }
 
 .sign_btn {
-  background-color: #ff4755;
-  font-family: "valorax";
-  font-size: 1.4em;
-  border-radius: 15px;
-  color: #ffebeb;
-  border: 0;
-  height: 60px;
-  transition: 0.5s ease;
+    background-color: #ff4755;
+    font-family: 'valorax';
+    font-size: 1.4em;
+    border-radius: 15px;
+    color: #ffebeb;
+    border: 0;
+    height: 60px;
+    transition: 0.5s ease;
 }
 
 .sign_btn:hover {
-  color: #161625;
-  background-color: #ffebeb;
+    color: #161625;
+    background-color: #ffebeb;
 }
 
 .flexx {
-  padding-top: 5%;
-  padding-left: 13%;
-  padding-right: 13%;
+    padding-top: 5%;
+    padding-left: 13%;
+    padding-right: 13%;
 }
 
 @media screen and (min-width: 1400px) and (min-height: 700px) {
-  .flexx {
-    padding-top: 30%;
-    padding-left: 5%;
-    padding-right: 5%;
-  }
+    .flexx {
+        padding-top: 30%;
+        padding-left: 5%;
+        padding-right: 5%;
+    }
 }
 
 @media screen and (min-width: 1100px) and (min-height: 700px) {
-  .flexx {
-    padding-top: 17%;
-    padding-left: 6%;
-    padding-right: 6%;
-  }
+    .flexx {
+        padding-top: 17%;
+        padding-left: 6%;
+        padding-right: 6%;
+    }
 }
 
 @media screen and (max-height: 1000px) {
-  .flexx {
-    padding-top: 10%;
-    padding-left: 6%;
-    padding-right: 6%;
-  }
+    .flexx {
+        padding-top: 10%;
+        padding-left: 6%;
+        padding-right: 6%;
+    }
 }
 
 @media screen and (max-width: 992px) {
-  .main_img {
-    border-top-right-radius: 15px;
-    border-top-left-radius: 15px;
+    .main_img {
+        border-top-right-radius: 15px;
+        border-top-left-radius: 15px;
         border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .forml {
-    width: 80% !important;
-  }
+        border-bottom-right-radius: 0;
+    }
+    .forml {
+        width: 80% !important;
+    }
 }
 
 @media screen and (max-width: 792px) {
-  .main_img {
-    border-top-right-radius: 15px;
-    border-top-left-radius: 15px;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .forml {
-    width: 90% !important;
-  }
+    .main_img {
+        border-top-right-radius: 15px;
+        border-top-left-radius: 15px;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .forml {
+        width: 90% !important;
+    }
 }
 
 @media screen and (max-height: 730px) {
-  .flexx {
-    padding-top: 6%;
-    padding-left: 6%;
-    padding-right: 6%;
-  }
+    .flexx {
+        padding-top: 6%;
+        padding-left: 6%;
+        padding-right: 6%;
+    }
 }
-

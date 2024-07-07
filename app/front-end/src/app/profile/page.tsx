@@ -25,6 +25,7 @@ import { LineController } from 'chart.js/auto';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { RiProgress1Line } from 'react-icons/ri';
+import { toast } from 'react-toastify'
 
 interface MonthlyStats {
     months: string[];
@@ -52,6 +53,30 @@ interface ProfileData {
     monthly_stats: MonthlyStats;
 }
 
+const initProfileData: ProfileData = {
+    id: 0,
+    username: "",
+    email: "",
+    first_name: null,
+    last_name: null,
+    intro: null,
+    quote: null,
+    rank: null,
+    level: null,
+    score: null,
+    cover_url: null,
+    location: null,
+    total_games: 0,
+    win_games: 0,
+    lose_games: 0,
+    image_url: null,
+    monthly_stats: {
+        months: [],
+        win: [],
+        lose: []
+    }
+};
+
 export default function () {
     const [profile, setProfile] = useState<ProfileData | null>(null);
 
@@ -74,11 +99,16 @@ export default function () {
                 if (!res.ok) throw new Error('Failed to fetch data');
 
                 const data = await res.json();
+                setQuote(data.quote);
+                setIntro(data.intro);
                 setProfile(data);
             } catch (error) {
-                console.error('Error fetching data: ', error);
+                setQuote("");
+                setIntro("");
+                setProfile(initProfileData);
+                console.error(`Error : ${error}`);
             }
-        } else console.log('Access token is undefined or falsy');
+        } else toast.error('Access token is undefined or falsy');
     };
 
     useEffect(() => {
@@ -117,7 +147,7 @@ export default function () {
             fetchProfileData();
             setModalShow(false);
         } catch (error) {
-            console.error('Error submitting data: ', error);
+            console.error(`Error : ${error}`);
         }
     };
 

@@ -13,6 +13,7 @@ import { useSearchParams } from 'next/navigation';
 import Spinner from 'react-bootstrap/Spinner';
 import { GiAmericanFootballPlayer } from 'react-icons/gi';
 import { PiChatsFill } from 'react-icons/pi';
+import { toast } from 'react-toastify'
 
 interface Users {
     id: number;
@@ -66,10 +67,10 @@ export default function () {
                     })).reverse();
                 setMessages(storedMessages)
             } catch (error) {
-                console.error('Error fetching data: ', error);
+                console.error(`Error : ${error}`);
             }
         } else {
-            console.log('Access token is undefined or falsy');
+            toast.error('Access token is undefined or falsy');
         }
     }
 
@@ -86,10 +87,11 @@ export default function () {
                 const data = await res.json();
                 setMe(data.username);
             } catch (error) {
-                console.error('Error fetching data: ', error);
+                console.log('----> ', error)
+                // console.error(`Error : ${error}`);
             }
         } else {
-            console.log('Access token is undefined or falsy');
+            toast.error('Access token is undefined or falsy');
         }
     };
 
@@ -100,7 +102,6 @@ export default function () {
                 const newChatSocket = new WebSocket(`${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/chat/lobby?token=${access}`);
 
                 newChatSocket.onmessage = (e: MessageEvent) => {
-                    console.log('message received');
                     const data = JSON.parse(e.data);
                     setNewMessage({
                         chat_id: data.chat_id,
@@ -119,7 +120,7 @@ export default function () {
                 };
 
                 newChatSocket.onclose = () => {
-                    console.log('Chat socket closed');
+                    // console.error('Chat socket closed');
                 };
 
                 chatSocketRef.current = newChatSocket;
@@ -128,7 +129,7 @@ export default function () {
                     newChatSocket.close();
                 };
             } catch (error) {
-                console.error('Error fetching data: ', error);
+                console.error(`Error : ${error}`);
             }
         }
     };

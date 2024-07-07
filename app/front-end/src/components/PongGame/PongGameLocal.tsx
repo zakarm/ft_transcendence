@@ -10,9 +10,6 @@ import Paddle from './Paddle';
 import './PongGame.css';
 import BoardItem from '../BoardItem/BoardItem';
 import gsap from 'gsap';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
-import { AfterimagePass } from 'three/examples/jsm/postprocessing/AfterimagePass';
 
 type SetScore = (
     side: 'side1' | 'side2',
@@ -105,18 +102,13 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
         const maxFOV = 65;
         camera.fov = minFOV - fraction * (minFOV - maxFOV);
         camera.updateProjectionMatrix();
-        // camera.position.set(5, 0, 5);
         camera.position.set(0, 25, 0);
-        // camera.position.set(10, 25, 15);
-
-        // const targetPosition = new THREE.Vector3(1, 10, 0);
-        const targetPosition = new THREE.Vector3(0, 10, -1);
-        // const targetPosition = new THREE.Vector3(8, 6, 0);
+        const targetPosition = new THREE.Vector3(0, 10, 0);
         gsap.to(camera.position, {
             x: targetPosition.x,
             y: targetPosition.y,
             z: targetPosition.z,
-            duration: 3,
+            duration: 2,
             onUpdate: () => {
                 camera.lookAt(new THREE.Vector3(0, 0, 0));
             },
@@ -125,21 +117,14 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
         renderer.setSize(width, height);
         container.appendChild(renderer.domElement);
 
-        // Initialize EffectComposer
-        const composer = new EffectComposer(renderer);
-        composer.addPass(new RenderPass(scene, camera));
-
-        // Create and add AfterimagePass for the ball
-        const afterimagePass = new AfterimagePass();
-        afterimagePass.uniforms['damp'].value = 0.7;
-        composer.addPass(afterimagePass);
-
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableZoom = true;
-        controls.enablePan = true;
+        controls.enablePan = false;
+        controls.enableDamping = false;
+        controls.enableRotate = false;
         controls.minDistance = 10;
         controls.maxDistance = 20;
-        controls.update();
+        // controls.update();
 
         // Store references to clean up later
         rendererRef.current = renderer;
@@ -206,7 +191,6 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
                     paddle2.move(-0.1);
                     break;
                 case 'Space':
-                    console.log(camera.position, camera.rotation);
                     break;
                 default:
                     break;
@@ -253,7 +237,7 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
             renderer.render(scene, camera);
             if (gameStatus === 'gameover') {
                 handleGameOver();
-                cancelAnimationFrame(animateIdRef.current);
+                // cancelAnimationFrame(animateIdRef.current);
             }
             if (gameStatus !== 'playing') return;
             ball.intersect(wall1, wall2, paddle1, paddle2);
@@ -285,7 +269,6 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
                     return newscore;
                 });
             }
-            composer.render();
             light.position.copy(ball.mesh.position);
         };
         animate();
@@ -300,7 +283,6 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
                             ? { name: data.user1name, imageUrl: data.user1image }
                             : { name: data.user2name, imageUrl: data.user2image };
                     if (!winnerSet && data.setWinner !== null) {
-                        console.log('setting winner');
                         data.setWinner(winner);
                         winnerSet = true;
                     }
@@ -314,7 +296,6 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
             }
         };
         return () => {
-            console.log('PongGameLocal unmounted');
             clearInterval(intervalId11);
             document.removeEventListener('keydown', handleKeyDown);
             document.removeEventListener('keyup', handleKeyUp);
@@ -380,16 +361,16 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
         <div className="Pong_Game_container">
             <div className="board">
                 <BoardItem
-                    championName={data.user1name}
-                    hashtag="#TheHacker007"
-                    score={user1score}
-                    imageSrc={data.user1image}
-                />
-                <BoardItem
                     championName={data.user2name}
                     hashtag="#TheHacker007"
                     score={user2score}
                     imageSrc={data.user2image}
+                />
+                <BoardItem
+                    championName={data.user1name}
+                    hashtag="#TheHacker007"
+                    score={user1score}
+                    imageSrc={data.user1image}
                 />
             </div>
             <div className="canvas_div" ref={containerRef} />

@@ -35,7 +35,7 @@ function checkData(dataAPI: UserInfoTypes) {
     };
 
     Object.keys(shouldExist).map((key) => {
-        if (dataAPI[key]) {
+        if (dataAPI[key] !== undefined && dataAPI[key] !== null) {
             if (typeof dataAPI[key] === 'string' && dataAPI[key] != 'NaN') shouldExist[key] = dataAPI[key];
             else if (typeof dataAPI[key] !== 'string') shouldExist[key] = dataAPI[key];
         }
@@ -68,16 +68,11 @@ async function getInitialData({
         });
 
         let data = await response.json();
-        console.log('---->', data);
         data = checkData(data);
 
         Cookies.set('pos_default', '6,8,0');
         Cookies.set('pos_horizantal', '0,10,0');
         Cookies.set('pos_vertical', '1,10,0');
-
-        Cookies.set('theme_table_color', '#161625');
-        Cookies.set('theme_ball_color', '#ffffff');
-        Cookies.set('theme_paddle_color', '#ff4655');
 
         Cookies.set('table_color', data['table_color']);
         Cookies.set('ball_color', data['ball_color']);
@@ -86,7 +81,7 @@ async function getInitialData({
         setOldAccountValues(data);
         setCurrentAccoutValues(data);
     } catch (error) {
-        console.error('Unexpected error : ', error);
+        console.error(`Error : ${error}`);
     }
 }
 
@@ -117,7 +112,7 @@ const validateInput: (oldAccountValues: SettingsProps['oldAccountValues']) => bo
 
     if ( "new_password" in oldAccountValues &&  "repeat_password" in oldAccountValues &&
         oldAccountValues['new_password'] !== oldAccountValues['repeat_password']) {
-        toast.error(`Invalid input : mismatch between password fields`, notificationStyle);
+            toast.error(`Invalid input : mismatch between password fields`, notificationStyle);
         isValid = false;
     }
     return isValid;
@@ -148,49 +143,42 @@ const postFormData = async ({
             if ("image_url" in valuesToPost) {
                 await changeImageURL();
             }
-            console.log('------> JSON To Post', JSON.stringify(valuesToPost));
             isFormChanged.current = false;
             const access = Cookies.get('access');
             const csrftoken = Cookies.get('csrftoken') || '';
-            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/game-settings`, {
-                method: 'PUT',
-                headers: {
-                    'content-type': 'application/json',
-                    Authorization: `Bearer ${access}`,
-                    'X-CSRFToken': csrftoken,
-                },
-                body: JSON.stringify(valuesToPost),
-            });
+            try {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/game-settings`, {
+                    method: 'PUT',
+                    headers: {
+                        'content-type': 'application/json',
+                        Authorization: `Bearer ${access}`,
+                        'X-CSRFToken': csrftoken,
+                    },
+                    body: JSON.stringify(valuesToPost),
+                });
+    
+                const   data = await res.json();
+                if (res.ok) {
+                    Object.entries(data).map(([key, value]) => {
+                        toast.success(`${key} ${value}`, notificationStyle);
+                    })
+                    setOldAccountValues(currentAccoutValues);
+                    if ("table_color" in valuesToPost) { Cookies.set('table_color', valuesToPost['table_color'] as string); }
+                    if ("ball_color" in valuesToPost) { Cookies.set('ball_color', valuesToPost['ball_color'] as string); }
+                    if ("paddle_color" in valuesToPost) { Cookies.set('paddle_color', valuesToPost['paddle_color'] as string); }
+    
+                } else {
+                    Object.entries(data).map(([key, value]) => {
+                        toast.error(`Error : ${key} ${value}`, notificationStyle);
+                    })
+                }
 
-            const   data = await res.json();
-            if (res.ok) {
-                Object.entries(data).map(([key, value]) => {
-                    toast.success(`${key} ${value}`, notificationStyle);
-                })
-                setOldAccountValues(currentAccoutValues);
-                /* New Chosen Colors */
-                if ("table_color" in valuesToPost) {
-                    Cookies.set('table_color', valuesToPost['table_color'] as string);
-                }
-                if ("ball_color" in valuesToPost) {
-                    Cookies.set('ball_color', valuesToPost['ball_color'] as string);
-                }
-                if ("paddle_color" in valuesToPost) {
-                    Cookies.set('paddle_color', valuesToPost['paddle_color'] as string);
-                }
-
-            } else {
-                Object.entries(data).map(([key, value]) => {
-                    toast.error(`Error : ${key} ${value}`, notificationStyle);
-                })
+            } catch (error) {
+                toast.error('Cannot save your changes')
             }
         };
 
-        try {
-            postData();
-        } catch (error) {
-            console.error('Unexpected error : ', error);
-        }
+        postData();
 };
 let tmp : SettingsProps['currentAccoutValues'] = {};
 

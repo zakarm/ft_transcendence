@@ -7,8 +7,9 @@ import type {
     LocalTournamentProps,
     TournamentData_User,
     Tournament_User,
-} from '@/types/game/Tournament';
+} from '@/lib/game/Tournament';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 // Define the interface for the connection information
 interface ConnectionInfo {
     index: number;
@@ -60,8 +61,20 @@ const initialTournamentData = {
         finals: [{ ...initialMatchFinal }],
     },
 };
+interface Player {
+    name: string;
+    imageUrl: string;
+    stats: {
+        adaptation: number;
+        agility: number;
+        winStreaks: number;
+        endurance: number;
+        eliteTierRanking: number;
+    };
+    index: number;
+    boxShadowsWinner: boolean;
+}
 
-// Define the hook function with TypeScript
 const useWebSocketTournament = (url: string) => {
     const router = useRouter();
     const [filteredTournamentData, setFilteredTournamentData] = useState<TournamentData>(initialTournamentData);
@@ -84,57 +97,64 @@ const useWebSocketTournament = (url: string) => {
         paddle_color: '#ff4655',
         table_position: '6,8,0',
     });
-
+    const [winner, setWinner] = useState<Player>({
+        name: '',
+        imageUrl: '',
+        stats: {
+            adaptation: 0,
+            agility: 0,
+            winStreaks: 0,
+            endurance: 0,
+            eliteTierRanking: 0,
+        },
+        index: 0,
+        boxShadowsWinner: true,
+    });
     const [countDown, setCountDown] = useState<number>(15);
     useEffect(() => {
         const ws = new WebSocket(url);
 
-        ws.onopen = () => {
-            console.log('-> Connected to WebSocket');
-        };
+        ws.onopen = () => {};
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            console.log('-> Message from WebSocket', data.message.action);
             if (data.message.action === 'created') {
-                console.log('-> Room Created', data.message);
                 setGameState('lobby');
             }
             if (data.message.action === 'TournamentData') {
-                console.log('-> TournamentData', data.message);
-            setFilteredTournamentData((prevState: any) => ({
-                ...prevState,
-                TournamentName: data.message.tournamentdata.tournament_name,
-                difficulty: data.message.tournamentdata.difficulty,
-                side1: {
-                    ...prevState.side1,
-                    quarterfinals: [
-                        data.message.tournamentdata.quarter_final.match1 as TournamentData_Match,
-                        data.message.tournamentdata.quarter_final.match2 as TournamentData_Match,
-                    ],
-                    semifinals: [data.message.tournamentdata.semi_final.match1 as TournamentData_Match],
-                    finals: [
-                        {
-                            ...prevState.side1.finals[0],
-                            user1: data.message.tournamentdata.final.match1.user1 as TournamentData_User,
-                        },
-                    ],
-                },
-                side2: {
-                    ...prevState.side2,
-                    quarterfinals: [
-                        data.message.tournamentdata.quarter_final.match3 as TournamentData_Match,
-                        data.message.tournamentdata.quarter_final.match4 as TournamentData_Match,
-                    ],
-                    semifinals: [data.message.tournamentdata.semi_final.match2 as TournamentData_Match],
-                    finals: [
-                        {
-                            ...prevState.side2.finals[0],
-                            user1: data.message.tournamentdata.final.match1.user2 as TournamentData_User,
-                        },
-                    ],
-                },
-            }));
+                setFilteredTournamentData((prevState: any) => ({
+                    ...prevState,
+                    TournamentName: data.message.tournamentdata.tournament_name,
+                    difficulty: data.message.tournamentdata.difficulty,
+                    side1: {
+                        ...prevState.side1,
+                        quarterfinals: [
+                            data.message.tournamentdata.quarter_final.match1 as TournamentData_Match,
+                            data.message.tournamentdata.quarter_final.match2 as TournamentData_Match,
+                        ],
+                        semifinals: [data.message.tournamentdata.semi_final.match1 as TournamentData_Match],
+                        finals: [
+                            {
+                                ...prevState.side1.finals[0],
+                                user1: data.message.tournamentdata.final.match1.user1 as TournamentData_User,
+                            },
+                        ],
+                    },
+                    side2: {
+                        ...prevState.side2,
+                        quarterfinals: [
+                            data.message.tournamentdata.quarter_final.match3 as TournamentData_Match,
+                            data.message.tournamentdata.quarter_final.match4 as TournamentData_Match,
+                        ],
+                        semifinals: [data.message.tournamentdata.semi_final.match2 as TournamentData_Match],
+                        finals: [
+                            {
+                                ...prevState.side2.finals[0],
+                                user1: data.message.tournamentdata.final.match1.user2 as TournamentData_User,
+                            },
+                        ],
+                    },
+                }));
                 setGameState('TournamentLobby');
             }
 
@@ -151,7 +171,6 @@ const useWebSocketTournament = (url: string) => {
                     paddle_color: data.message.paddle_color,
                     table_position: data.message.table_position,
                 }));
-                console.log('-> Connection Acknowledged', data.message);
             }
 
             if (data.message.action === 'opponents') {
@@ -165,45 +184,47 @@ const useWebSocketTournament = (url: string) => {
                     user2_image: data.message.user2_image_url,
                     username2: data.message.user2_username,
                 }));
-                console.log('-> opponents', data.message);
-                console.log('-> connectionInfo', connectionInfo);
             }
 
             if (data.message.action === 'load_game') {
                 setGameState('load_game');
-                console.log('-> load_game', data.message);
             }
 
             if (data.message.action === 'start_game') {
                 setGameState('start_game');
-                console.log('-> start_game', data.message);
             }
             if (data.message.action === 'reconnected') {
                 setGameState('lobby');
-                console.log('-> reconnected', data.message);
             }
             if (data.message.action === 'reconnecting') {
                 setGameState('reconnecting');
-                console.log('-> reconnecting', data.message);
             }
             if (data.message.action === 'pause') {
                 setGameState('pause');
-                console.log('-> pause', data.message);
             }
             if (data.message.action === 'countdown') {
                 setCountDown(data.message.count);
-                console.log('-> pause', data.message);
             }
             if (data.message.action === 'end_game') {
                 if (data.message.status === 'winner') setGameState('winner');
                 else setGameState('loser');
-                console.log('-> end_game', data.message);
+            }
+            if (data.message.action === 'winner') {
+                setGameState('winnerpage');
+                setWinner((prev: Player) => ({
+                    ...prev,
+                    name: data.message.winner.name,
+                    imageUrl: data.message.winner.imageUrl,
+                }));
+            }
+            if (data.message.action === 'info') {
+                router.push('/game/Tournament');
+                toast.info(data.message.info);
             }
         };
 
         ws.onclose = () => {
-            router.back();
-            console.log('Disconnected from WebSocket');
+            // setWebSocket(null);
         };
 
         setWebSocket(ws);
@@ -213,7 +234,7 @@ const useWebSocketTournament = (url: string) => {
         };
     }, [url]);
 
-    return { webSocket, gameState, connectionInfo, countDown, filteredTournamentData};
+    return { webSocket, gameState, connectionInfo, countDown, filteredTournamentData, winner };
 };
 
 export default useWebSocketTournament;

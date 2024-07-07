@@ -1,5 +1,5 @@
-#This script is not for django, it is a custom script to check if the database is available and
-#then run the migrations and start the server [Kolchi moujtahid, m3ndnach m3a lkousala]
+# This script is not for django, it is a custom script to check if the database is available and
+# then run the migrations and start the server [Kolchi moujtahid, m3ndnach m3a lkousala]
 
 import socket
 import time
@@ -53,15 +53,15 @@ def database_connection():
 def migrate_and_run_server():
 
     logging.info("Applying migrations...")
-    make_migrations_cmd = "python manage.py makemigrations authentication"
+    make_migrations_cmd = "python manage.py makemigrations authentication --noinput"
     subprocess.run(make_migrations_cmd.split(), check=True)
-    make_migrations_cmd = "python manage.py makemigrations compu_ai"
+    make_migrations_cmd = "python manage.py makemigrations compu_ai --noinput"
     subprocess.run(make_migrations_cmd.split(), check=True)
-    make_migrations_cmd = "python manage.py makemigrations dashboards"
+    make_migrations_cmd = "python manage.py makemigrations dashboards --noinput"
     subprocess.run(make_migrations_cmd.split(), check=True)
-    make_migrations_cmd = "python manage.py makemigrations game"
+    make_migrations_cmd = "python manage.py makemigrations game --noinput"
     subprocess.run(make_migrations_cmd.split(), check=True)
-    make_migrations_cmd = "python manage.py makemigrations chat"
+    make_migrations_cmd = "python manage.py makemigrations chat --noinput"
     subprocess.run(make_migrations_cmd.split(), check=True)
     migrate_cmd = "python manage.py migrate"
     subprocess.run(migrate_cmd.split(), check=True)

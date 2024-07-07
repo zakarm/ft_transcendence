@@ -6,6 +6,7 @@ interface   UserInfoTypes {
     name : string;
     photoUrl : string;
     score : number;
+    status: boolean;
 }
 
 interface   UserTypes {

@@ -107,10 +107,10 @@ export default function Dashboard() {
                     } else if (response.status === 401) {
                         toast.error('Unauthorized');
                     } else {
-                        console.error('An unexpected error happened:', response.status);
+                        console.error(`Error : ${response.status}`);
                     }
                 } catch (error) {
-                    console.error('An unexpected error happened:', error);
+                    toast.error(`Error : ${error}`);
                 }
             } else {
                 toast.error('Unauthorized');
@@ -161,11 +161,11 @@ export default function Dashboard() {
             } else if (response.status === 401) {
                 toast.error('Unauthorized');
             } else {
-                console.error('An unexpected error happened:', response.status);
+                console.error(`Error : ${response.status}`);
             }
             return null;
         } catch (error) {
-            console.error('An unexpected error happened:', error);
+            toast.error(`Error : ${error}`);
         }
     };
 
@@ -197,11 +197,13 @@ export default function Dashboard() {
 
     const handleDropdownSelect2 = async (value: string) => {
         const data: GameReport = await fetchDataForCsv(value);
-        mappedData = data.minutes_per_day.map(([month, day, minutes]) => ({
-            day,
-            month,
-            minutes,
-        }));
+        if (data) {
+            mappedData = data.minutes_per_day.map(([month, day, minutes]) => ({
+                day,
+                month,
+                minutes,
+            }));
+        }
         ExportMinutes(mappedData, 'game_stats_' + value + '_' + new Date().getFullYear() + '.csv');
         toggleDropdown();
     };

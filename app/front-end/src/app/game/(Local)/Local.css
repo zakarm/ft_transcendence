@@ -1,12 +1,16 @@
-
 .container_local {
-    width: 100%;
+    width: 99%;
     /* height: 100vh; */
     position: relative;
 }
 
-.winner_page {
+.page_state {
+    position: absolute;
     width: 100%;
+}
+
+.winner_page {
+    width: 98%;
     height: 100vh;
     position: absolute;
     z-index: 4;
@@ -22,10 +26,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-}
-.page_state {
-    position: absolute;
-    width: 100%;
 }
 
 .go_back {
@@ -51,17 +51,14 @@
     background-color: white;
     color: black;
 }
-.winner_text {
-    font-size: 50px;
-    font-family: valorax;
-    text-shadow: 0px 0px 20px rgba(255, 255, 255, 0.6);
-    -webkit-text-stroke: 1px black;
-    color: rgba(70, 198, 70, 0.5);
-    margin-bottom: 20px;
-}
 
-@media screen and (max-height: 800px) {
-    .winner_page{
-        display: none;
+@media screen and (max-height: 700px) and (max-width: 1000px) {
+    .winner_btn {
+        transform: scale(0.3) translateY(-800px);
+    }
+}
+@media screen and (max-height: 700px) and (min-width: 1000px) {
+    .winner_btn {
+        transform: scale(0.6) translateY(-300px);
     }
 }

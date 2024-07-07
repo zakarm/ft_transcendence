@@ -33,6 +33,8 @@ def get_user(user_id):
         return user
     except User.DoesNotExist:
         return AnonymousUser()
+    except Exception as e:
+        print(f"An error occurred in get_user: {e}", file=sys.stderr)
 
 
 @database_sync_to_async
@@ -42,6 +44,35 @@ def get_tournament_(tournament_id):
         return tournament
     except TournamentModel.DoesNotExist:
         return None
+    except Exception as e:
+        print(f"An error occurred in get_tournament_: {e}", file=sys.stderr)
+
+
+@database_sync_to_async
+def set_user_rank():
+    try:
+        users = User.objects.all().order_by("-level")
+        for index, user in enumerate(users):
+            user.rank = index + 1
+            user.save()
+    except User.DoesNotExist:
+        return AnonymousUser()
+    except Exception as e:
+        print(f"An error occurred in set_user_rank: {e}", file=sys.stderr)
+
+
+@database_sync_to_async
+def set_user_xp(data):
+    try:
+        user = User.objects.get(id=data["id"])
+        user.level = data["level"]
+        user.score = data["score"]
+        user.xp = data["xp"]
+        user.save()
+    except User.DoesNotExist:
+        return AnonymousUser()
+    except Exception as e:
+        print(f"An error occurred in set_user_xp: {e}", file=sys.stderr)
 
 
 @database_sync_to_async
@@ -57,6 +88,20 @@ def set_tournament_end_date(tournament_id):
 
 
 @database_sync_to_async
+def increment_participants(tournament_id):
+    try:
+        tournament = TournamentModel.objects.get(tournament_id=tournament_id)
+        if tournament.participantsJoined == 8:
+            return
+        tournament.participantsJoined += 1
+        tournament.save()
+    except TournamentModel.DoesNotExist:
+        pass
+    except Exception as e:
+        print(f"An error occurred in increment_participants: {e}", file=sys.stderr)
+
+
+@database_sync_to_async
 def set_Tournamentsmatches(tournament, match, round):
     try:
         Tournamentsmatches.objects.create(
@@ -68,6 +113,7 @@ def set_Tournamentsmatches(tournament, match, round):
         print(f"An error occurred in set_Tournamentsmatches: {e}", file=sys.stderr)
 
 
+@database_sync_to_async
 def delete_tournament(tournament_id):
     try:
         with transaction.atomic():
@@ -100,6 +146,7 @@ def get_game_data(user):
         return game_data
     except Exception as e:
         print(f"An error occurred in get_game_data: {e}", file=sys.stderr)
+
 
 @database_sync_to_async
 def add_match(
@@ -258,6 +305,8 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                 "match_id": None,
             }
             rooms_items = get_rooms_items()
+            if self.watch == "true":
+                return f"tournament_{self.tournament_id}", None
             for tournament_name, tournament in rooms_items:
                 if tournament_name == f"tournament_{self.tournament_id}":
                     if tournament.is_joined(user.email):
@@ -268,6 +317,7 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                     elif not tournament.is_ready():
                         if not tournament.is_joined(user.email):
                             tournament.add_player(player)
+                            await increment_participants(self.tournament_id)
                             return tournament_name, tournament
                         else:
                             return None, None
@@ -279,6 +329,7 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
             new_tournament_name = f"tournament_{self.tournament_id}"
             add_room(new_tournament_name, new_tournament)
             new_tournament.add_player(player)
+            await increment_participants(self.tournament_id)
             return new_tournament_name, new_tournament
         except Exception as e:
             print(f"An error occurred in find_tournamnet: {e}", file=sys.stderr)
@@ -288,27 +339,33 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
             if self.scope["user"].is_authenticated:
                 # -------------------------------------------------------
                 await self.accept()
+                self.tournament = None
                 self.tournament_id = self.scope["url_route"]["kwargs"]["tournament_id"]
                 self.tournament_obj = await get_tournament_(self.tournament_id)
                 if self.tournament_obj is None or self.tournament_obj.tournament_end:
-                    await self.close()
+                    if self.tournament_obj is None:
+                        message = {"action": "info", "info": "Tournament not found"}
+                    else:
+                        message = {"action": "info", "info": "Tournament has ended"}
+                    await self.send_message_to_channel(self.channel_name, message)
                     return
                 query_string = self.scope["query_string"].decode()
                 params = dict(param.split("=") for param in query_string.split("&"))
                 self.watch = params.get("watch")
                 self.user = await get_user(user_id=self.scope["user"].id)
                 self.t_name, self.tournament = await self.find_tournamnet(self.user)
-                if self.tournament is None:
-                    await self.close()
-                    return
+                self.spect = self.t_name + "spectator"
                 if self.watch == "true":
-                    self.spect = self.t_name + "spectator"
                     await self.channel_layer.group_add(self.spect, self.channel_name)
+                    return
+                if self.tournament is None:
+                    message = {"action": "info", "message": "Tournament is full"}
+                    await self.send_message_to_channel(self.channel_name, message)
+                    return
                 await self.channel_layer.group_add(self.t_name, self.channel_name)
                 if self.tournament.is_ready() and self.tournament.started == False:
                     asyncio.ensure_future(self.tournament_manager())
-                    asyncio.ensure_future(self.watch())
-                    print("Tournament started", file=sys.stderr)
+                    asyncio.ensure_future(self.watch_tournament())
             else:
                 await self.close()
         except Exception as e:
@@ -317,6 +374,8 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
     # -----------------------> 4. disconnect <-----------------------
     async def disconnect(self, close_code):
         try:
+            if self.tournament is None:
+                return
             match_id = self.tournament.get_match_id(self.user.email)
             room = self.tournament.get_room_game(match_id)
             room.set_reconect(self.user.email)
@@ -355,7 +414,7 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             print(f"An error occurred in receive: {e}", file=sys.stderr)
 
-    async def watch(self):
+    async def watch_tournament(self):
         try:
             while self.tournament.ended == False:
                 await asyncio.sleep(1)
@@ -431,18 +490,32 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
             while True:
                 if task_1 and task_1.done():
                     await self.send_tournament_data(group_name1)
+                    if task_1 == None:
+                        break
                 if task_2 and task_2.done():
                     await self.send_tournament_data(group_name2)
+                    if task_2 == None:
+                        break
                 if task_3 and task_3.done():
                     await self.send_tournament_data(group_name3)
+                    if task_3 == None:
+                        break
                 if task_4 and task_4.done():
                     await self.send_tournament_data(group_name4)
+                    if task_4 == None:
+                        break
                 if task_5 and task_5.done():
                     await self.send_tournament_data(group_name5)
+                    if task_4 == None:
+                        break
                 if task_6 and task_6.done():
                     await self.send_tournament_data(group_name6)
+                    if task_5 == None:
+                        break
                 if task_7 and task_7.done():
                     await self.send_tournament_data(group_name7)
+                    if task_6 == None:
+                        break
                     break
 
                 if task_1 and task_2 and task_1.done() and task_2.done() and not task_5:
@@ -456,9 +529,7 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                     self.tournament.promote_qf_winner(2, resault2)
                     for player in self.tournament.get_player_by_maych_id(group_name5):
                         await self.connction_ack(player)
-                    task_5 = asyncio.ensure_future(
-                        self.start_game(group_name5, round2)
-                    )
+                    task_5 = asyncio.ensure_future(self.start_game(group_name5, round2))
 
                 if task_3 and task_4 and task_3.done() and task_4.done() and not task_6:
                     resault3 = task_3.result()
@@ -471,9 +542,7 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                     self.tournament.promote_qf_winner(4, resault4)
                     for player in self.tournament.get_player_by_maych_id(group_name6):
                         await self.connction_ack(player)
-                    task_6 = asyncio.ensure_future(
-                        self.start_game(group_name6, round2)
-                    )
+                    task_6 = asyncio.ensure_future(self.start_game(group_name6, round2))
 
                 if task_5 and task_6 and task_5.done() and task_6.done() and not task_7:
                     resault5 = task_5.result()
@@ -491,10 +560,13 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                 await asyncio.sleep(1)
             self.tournament.ended = True
             await set_tournament_end_date(self.tournament_id)
-            # winner = self.tournament.get_final_winner()
-            # message = {
-            #     "action": "winner",
-            # }
+            winner = self.tournament.get_final_winner()
+            message = {
+                "action": "winner",
+                "name": winner["data"]["name"],
+                "image_url": winner["data"]["photoUrl"],
+            }
+            await self.tournamnet_broadcast_message(message)
 
         except Exception as e:
             print(f"An error occurred in tournament_manager: {e}", file=sys.stderr)
@@ -621,6 +693,10 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                             await self.send_score(match_id, _tournament)
                             await self.add_game_to_db(match_id, _tournament, round)
                             await self.send_winner_message(match_id, _tournament)
+                            data = room.calculate_xp()
+                            await set_user_xp(data["user1"])
+                            await set_user_xp(data["user2"])
+                            await set_user_rank()
                             await asyncio.sleep(2)
                             return room.get_winner_index()
                     await self.opponents(match_id, _tournament)
@@ -651,6 +727,10 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                         room.end_game()
                         await self.add_game_to_db(match_id, _tournament, round)
                         await self.send_winner_message(match_id, _tournament)
+                        data = room.calculate_xp()
+                        await set_user_xp(data["user1"])
+                        await set_user_xp(data["user2"])
+                        await set_user_rank()
                         await asyncio.sleep(2)
                         return room.get_winner_index()
                     room.paddle_reset()

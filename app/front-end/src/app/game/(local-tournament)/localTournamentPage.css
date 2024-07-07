@@ -1,41 +1,11 @@
-.conatiner_t {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #181b20;
-    color: #ffebeb;
-    font-family: 'itim';
-    height: 100vh;
-    width: 30%;
-    font-size: 10px;
-    overflow: auto;
-    border: 1px solid #ffebeb;
-}
-
-.conatiner_t1 {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #181b20;
-    color: #ffebeb;
-    font-family: 'itim';
-    height: 100vh;
-    width: 70%;
-    font-size: 10px;
-    overflow: auto;
-    border: 1px solid #ffebeb;
-}
-
 .container_localtournament {
-    width: 100%;
+    width: 99%;
     /* height: 100vh; */
     position: relative;
 }
 
 .winner_page {
-    width: 100%;
+    width: 98%;
     height: 100vh;
     position: absolute;
     z-index: 4;
@@ -43,8 +13,10 @@
     justify-content: center;
     align-items: center;
     /* background-color: black; */
+    border:1px solid black;
     backdrop-filter: blur(2px);
 }
+
 .winner_conatiner {
     display: flex;
     flex-direction: column;
@@ -88,8 +60,19 @@
     margin-bottom: 20px;
 }
 
-@media screen and (max-height: 800px) {
-    .winner_page{
-        display: none;
+@media screen and (max-height: 700px) and (max-width: 1000px) {
+    .winner_page {
+        overflow: hidden;
+    }
+    .winner_btn {
+        transform: scale(0.3) translateY(-800px);
+    }
+}
+@media screen and (max-height: 700px) and (min-width: 1000px) {
+    .winner_page {
+        overflow: hidden;
+    }
+    .winner_btn {
+        transform: scale(0.6) translateY(-300px);
     }
 }

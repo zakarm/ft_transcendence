@@ -59,25 +59,31 @@ class User2FASerializer(serializers.Serializer):
 
     def validate(self, data):
         email = data.get("email")
-        user = User.objects.get(email=email)
-        if not user:
-            raise serializers.ValidationError("Invalid email.")
-        verifier = pyotp.TOTP(user.two_fa_secret_key)
-        server_time = datetime.now()
-        print(f"Server time: {server_time}", file=sys.stderr)
-        print(f"User email: {user.email}", file=sys.stderr)
-        print(f"User 2FA Secret Key: {user.two_fa_secret_key}", file=sys.stderr)
-        print(f"OTP provided by user: {data.get('otp')}", file=sys.stderr)
-        print(f"Current OTP from TOTP: {verifier.now()}", file=sys.stderr)
-        print(
-            f"OTP verification result: {verifier.verify(data.get('otp'))}",
-            file=sys.stderr,
-        )
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise serializers.ValidationError({"error": "Invalid email."})
+        try:
+            if not user:
+                raise serializers.ValidationError({"error": "Invalid email."})
+            verifier = pyotp.TOTP(user.two_fa_secret_key)
+            server_time = datetime.now()
+            print(f"Server time: {server_time}", file=sys.stderr)
+            print(f"User email: {user.email}", file=sys.stderr)
+            print(f"User 2FA Secret Key: {user.two_fa_secret_key}", file=sys.stderr)
+            print(f"OTP provided by user: {data.get('otp')}", file=sys.stderr)
+            print(f"Current OTP from TOTP: {verifier.now()}", file=sys.stderr)
+            print(
+                f"OTP verification result: {verifier.verify(data.get('otp'))}",
+                file=sys.stderr,
+            )
 
-        if not pyotp.TOTP(user.two_fa_secret_key).verify(
-            data.get("otp"), valid_window=1
-        ):
-            raise serializers.ValidationError("Invalid 2FA code.")
+            if not pyotp.TOTP(user.two_fa_secret_key).verify(
+                data.get("otp"), valid_window=1
+            ):
+                raise serializers.ValidationError({"error": "Invalid 2FA code."})
+        except Exception as e:
+            raise serializers.ValidationError({"error": "Invalid 2FA code."})
         return user
 
 

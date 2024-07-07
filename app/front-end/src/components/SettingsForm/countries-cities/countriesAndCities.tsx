@@ -88,6 +88,7 @@ function    CountriesAndCities(
                             name="countries"
                             autoComplete="off"
                             id={id}
+                            data-testid={id}
                             onChange={ (e: ChangeEvent<HTMLSelectElement>) => {
                                 setselectedCountry(e.target.value);
                                 updateField("country", e.target.value);
@@ -116,6 +117,7 @@ function    CountriesAndCities(
                         className={`itim-font ${styles.input} ps-4`}
                         name="city"
                         id="city"
+                        data-testid="city"
                         autoComplete="off"
                         onChange={ (e : ChangeEvent<HTMLSelectElement>) => {
                             setSelectedCity(e.target.value);

@@ -45,14 +45,12 @@ export default function TwoFa({ value = '', email, qr, setPassOTP=()=>{} }: QrCo
                             toast.success('Save changes to enable 2fa !');
                             setShowModal(false);
                         }
-                    } else if (response.status === 401) {
-                        toast.error('Invalid otp!');
-                    } else if (response.status === 500) {
-                        toast.error('Server error!');
+                    } else {
+                        toast.error('Failed to set up otp')
                     }
                 }
             } catch (error) {
-                console.error('An unexpected error happened:', error);
+                console.error(`Error : ${error}`);
             }
         };
 

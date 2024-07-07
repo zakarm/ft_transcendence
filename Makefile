@@ -95,16 +95,12 @@ check: ## Check the status of the Docker containers
 	@echo "$(BLUE)2. Check for package updates$(RESET)"
 	@echo "$(BLUE)3. Check for Update package versions$(RESET)"
 	@echo "$(BLUE)4. Check for unused dependencies$(RESET)"
-	@echo "$(BLUE)5. Run frontend tests$(RESET)"
-	@echo "$(BLUE)6. Run csslint$(RESET)"
-	@read -p "Select a tool (1-6): " tool_choice; \
+	@read -p "Select a tool (1-4): " tool_choice; \
 	case $$tool_choice in \
 		1) tool_command="npx tsc --noEmit";; \
 		2) tool_command="npx npm-check --skip-unused";; \
 		3) tool_command="npx npm-check-updates --silent";; \
-		4) tool_command="npm run depcheck";; \
-		5) tool_command="npm test";; \
-		6) tool_command="find src -name "*.css" -exec npx csslint {} + > lint-results.log";; \
+		4) tool_command="npx depcheck";; \
 		*) echo "Invalid choice!"; exit 1;; \
 	esac; \
 	echo "$(YELLOW)Running $$tool_command...$(RESET)"; \
@@ -173,3 +169,7 @@ restorenv: ## Restore the .env file
 datagenerator: ## Generate data
 	@echo "$(YELLOW)Generating data...$(RESET)"
 	@docker exec -it back-end bash -c "python3 generate_users.py"
+
+switch_docker_context: ## Switch Docker context
+	@echo "$(YELLOW)Switching Docker context...$(RESET)"
+	@docker context use default

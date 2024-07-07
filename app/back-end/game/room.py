@@ -26,7 +26,8 @@ class RoomObject:
         self.paddle2_position = {"x": 4.8, "z": 0}
 
         # users
-        self.reconect_user = []
+        self.reconect_user = {"user1": False, "user2": False}
+
         self.Original_users = {
             "user1": {
                 "id": None,
@@ -56,6 +57,34 @@ class RoomObject:
         print("Room deleted")
 
     # ------------------------> game <------------------------
+
+    def calculate_xp(self):
+        data = {}
+        for user in self.Original_users:
+            user_data = self.Original_users[user]["id"]
+            xp_to_next_level = user_data.xp
+            total_xp = (
+                user_data.score
+                + self.score[user] * 2
+                + self.Original_users[user]["tackle"] * 5
+            )
+            lvl = user_data.level
+            while total_xp >= xp_to_next_level:
+                total_xp -= xp_to_next_level
+                lvl += 1
+                xp_to_next_level += 50
+            xp_fraction = total_xp / xp_to_next_level if xp_to_next_level != 0 else 0
+            lvl += xp_fraction
+            user_data.score = total_xp
+            user_data.level = round(lvl, 2)
+            user_data.xp = xp_to_next_level
+            data[user] = {
+                "id": user_data.id,
+                "score": user_data.score,
+                "level": user_data.level,
+                "xp": user_data.xp,
+            }
+        return data
 
     def start_game(self):
         self.game_started = True
@@ -102,7 +131,7 @@ class RoomObject:
     def update_score(self):
         if self.ball_position["x"] < -5:
             if self.score["user1"] < 7:
-                 self.score["user1"] += 1
+                self.score["user1"] += 1
         elif self.ball_position["x"] > 5:
             if self.score["user2"] < 7:
                 self.score["user2"] += 1
@@ -169,7 +198,10 @@ class RoomObject:
     def set_reconect(self, user_id):
         if self.game_ended == False:
             self.reconect = True
-            self.reconect_user.append(user_id)
+            if user_id == self.Original_users["user1"]["user_id"]:
+                self.reconect_user.update({"user1": True})
+            elif user_id == self.Original_users["user2"]["user_id"]:
+                self.reconect_user.update({"user2": True})
 
     def get_user2_stat(self):
         if self.game_started == False:
@@ -178,15 +210,17 @@ class RoomObject:
             return False
         return False
 
-
     def get_online_user(self):
-        if self.Original_users["user1"]["user_id"] == self.reconect_user[0]:
-            return self.Original_users["user2"]["user_id"]
-        if self.Original_users["user2"]["user_id"] == self.reconect_user[0]:
+        if self.reconect_user.get("user1") == True:
             return self.Original_users["user1"]["user_id"]
+        if self.reconect_user.get("user2") == True:
+            return self.Original_users["user2"]["user_id"]
 
     def is_both_offline(self):
-        if len(self.reconect_user) == 2:
+        if (
+            self.reconect_user.get("user1") == True
+            and self.reconect_user.get("user2") == True
+        ):
             return True
 
     def remove_user(self, user_id):

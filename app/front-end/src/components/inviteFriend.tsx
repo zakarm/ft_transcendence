@@ -15,6 +15,8 @@ import { CgUnblock } from 'react-icons/cg';
 import { ToastContainer, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { MdBlock } from 'react-icons/md';
+
+
 interface Props {
     show: boolean;
     close: () => void;
@@ -37,6 +39,7 @@ export default function InviteFriend({ show, close }: Props) {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [searchedPendingFriends, setsearchedPendingFriends] = useState<Friend_[]>([]);
     const [searchedBlockedFriends, setsearchedBlockedFriends] = useState<Friend_[]>([]);
+    const [blockedUsers, setBlockedUsers] = useState<Friend_[]>([]);
     const [searchedFriends, setsearchedFriends] = useState<Friend_[]>([]);
     const [users, setUsers] = useState<Friend_[]>([]);
     const [selectedTab, setSelectedTab] = useState<string | undefined>('friends');
@@ -66,9 +69,9 @@ export default function InviteFriend({ show, close }: Props) {
 
                 setUsers(transData);
             } catch (error) {
-                console.error('Error fetching data: ', error);
+                console.error(`Error : ${error}`);
             }
-        } else console.log('Access token is undefined or falsy');
+        } else toast.error('Access token is undefined or falsy');
     };
 
     const fetchSearchUser = async () => {
@@ -101,9 +104,9 @@ export default function InviteFriend({ show, close }: Props) {
                 }));
                 setsearchedFriends(transData);
             } catch (error) {
-                console.error('Error fetching data: ', error);
+                console.error(`Error : ${error}`);
             }
-        } else console.log('Access token is undefined or falsy');
+        } else toast.error('Access token is undefined or falsy');
     };
 
     const fetchUser = async (api: string, message: string, user_data: Friend_) => {
@@ -135,9 +138,13 @@ export default function InviteFriend({ show, close }: Props) {
                         );
                         if (unblockedUser) {
                             setsearchedFriends([...searchedFriends, unblockedUser]);
+                            setUsers([...users, unblockedUser]);
                             setsearchedBlockedFriends(
-                                searchedBlockedFriends.filter((user) => user.user.username !== user_data.user.username),
+                                searchedBlockedFriends.filter((user) => user.user.username !== user_data.user.username)
                             );
+                            setBlockedUsers(
+                                searchedBlockedFriends.filter((user) => user.user.username !== user_data.user.username)
+                            )
                         }
                     }
                     if (api === 'friends-remove' || api === 'friends-add' || api === 'friends-block') {
@@ -164,9 +171,9 @@ export default function InviteFriend({ show, close }: Props) {
                     toast.success(message);
                 }
             } catch (error) {
-                console.error('Error fetching data: ', error);
+                console.error(`Error : ${error}`);
             }
-        } else console.log('Access token is undefined or falsy');
+        } else toast.error('Access token is undefined or falsy');
     };
 
     const fetchBlockedUsers = async () => {
@@ -194,12 +201,12 @@ export default function InviteFriend({ show, close }: Props) {
                     is_user_from: friend.is_user_from,
                     blocked: friend.blocked,
                 }));
-
                 setsearchedBlockedFriends(transData.filter((friend: Friend_) => friend.blocked));
+                setBlockedUsers(transData.filter((friend: Friend_) => friend.blocked));
             } catch (error) {
-                console.error(error);
+                console.error(`Error : ${error}`);
             }
-        } else console.log('');
+        }
     };
 
     const update = () => {
@@ -207,6 +214,7 @@ export default function InviteFriend({ show, close }: Props) {
         setsearchedFriends(users.filter((friend) => friend.is_accepted || friend.is_user_from));
         setsearchedPendingFriends(users.filter((friend) => !friend.is_accepted && !friend.is_user_from));
         fetchBlockedUsers();
+        setBlockedUsers(searchedBlockedFriends);
     };
 
     useEffect(() => {
@@ -223,7 +231,7 @@ export default function InviteFriend({ show, close }: Props) {
             if (searchTerm === '') setsearchedFriends(foundFriends);
             else {
                 const data = foundFriends.filter((friend) =>
-                    friend.user.username.toLowerCase().startsWith(searchTerm.toLowerCase()),
+                    friend.user.username.toLowerCase().includes(searchTerm.toLowerCase()),
                 );
                 if (data.length !== 0) setsearchedFriends(data);
                 else fetchSearchUser();
@@ -237,28 +245,28 @@ export default function InviteFriend({ show, close }: Props) {
             if (searchTerm === '') setsearchedPendingFriends(foundPendingFriends);
             else {
                 const foundFriends = foundPendingFriends.filter((friend) =>
-                    friend.user.username.toLowerCase().startsWith(searchTerm.toLowerCase()),
+                    friend.user.username.toLowerCase().includes(searchTerm.toLowerCase()),
                 );
                 setsearchedPendingFriends(foundFriends);
             }
         }
     };
 
+    const handle_blocked_search = () => {
+        if (users) {
+            const foundBlockedFriends = searchedBlockedFriends.filter((friend) => friend.blocked);
+            if (searchTerm === '') setBlockedUsers(foundBlockedFriends);
+            else {
+                const foundFriends = foundBlockedFriends.filter((friend) =>
+                    friend.user.username.toLowerCase().includes(searchTerm.toLowerCase()),
+                );
+                setBlockedUsers(foundFriends);
+            }
+        }
+    };
+
     return (
         <>
-            {/* <ToastContainer
-          position="top-right"
-          autoClose={2000}
-          hideProgressBar={false}
-          newestOnTop
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="colored"
-          transition={Zoom}
-        /> */}
             <Modal contentClassName={`${styles.friend_modal}`} show={show} aria-labelledby="add_friend" centered>
                 <Tabs
                     defaultActiveKey="friends"
@@ -381,7 +389,7 @@ export default function InviteFriend({ show, close }: Props) {
                                     onChange={(e) => {
                                         setSearchTerm(e.target.value);
                                     }}
-                                    autocomplete="username"
+                                    autoComplete="username"
                                 />
                                 <Button
                                     className="border"
@@ -411,10 +419,17 @@ export default function InviteFriend({ show, close }: Props) {
                                         </div>
                                         <div className="col-9 text-end">
                                             <Button
+                                                className='mx-1'
                                                 variant="dark"
                                                 onClick={() => fetchUser('friends-accept', 'added to friends', friend)}
                                             >
                                                 Accept <IoMdCheckmarkCircle color="#FFEBEB" />
+                                            </Button>
+                                            <Button
+                                                variant="dark"
+                                                onClick={() => fetchUser('friends-remove', 'removed from pending', friend)}
+                                            >
+                                                X
                                             </Button>
                                         </div>
                                     </div>
@@ -444,14 +459,14 @@ export default function InviteFriend({ show, close }: Props) {
                                         setSearchTerm(e.target.value);
                                     }}
                                 />
-                                <Button className="border" variant="dark" id="button-addon2" onClick={() => alert()}>
+                                <Button className="border" variant="dark" id="button-addon2" onClick={handle_blocked_search}>
                                     Search..
                                 </Button>
                             </InputGroup>
                         </Modal.Header>
                         <Modal.Body style={{ height: '200px', overflow: 'auto' }}>
-                            {searchedBlockedFriends &&
-                                searchedBlockedFriends.map((friend, index) => (
+                            {blockedUsers &&
+                                blockedUsers.map((friend, index) => (
                                     <div
                                         key={index}
                                         className="row d-flex flex-row d-flex align-items-center justify-content-between px-3 py-1 m-2"
