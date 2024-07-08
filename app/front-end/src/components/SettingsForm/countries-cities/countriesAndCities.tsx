@@ -82,7 +82,8 @@ function    CountriesAndCities(
                     htmlFor={id}>
                     {labelText1}
                 </label>
-                <div className={`col-6 ${styles.inputHolder} row justify-content-center p-0 m-1`}>
+                <div className={`${styles.inputHolder} row p-0 m-1`}>
+                    <div className={`col d-flex align-items-center  ${styles.inputContainer}`}>
                         <select
                             className={`itim-font ${styles.input} ps-4`}
                             name="countries"
@@ -103,37 +104,38 @@ function    CountriesAndCities(
                             { countryOptions }
 
                         </select>
+                    </div>
                 </div>
             </div>
-            <div className={`${className} flex-wrap flex-xl-nowrap`}>
+            <div className={`${className} flex-wrap flex-xl-nowrap align-items-center`}>
                 <label
-                    className={`col-8 col-sm-3  itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle}`}
+                    className={`col-8 col-sm-3 itim-font d-flex  p-0 m-0 ${styles.inputTitle}`}
                     htmlFor={id}>
                     {labelText2}
                 </label>
-                <div className={`col-6 ${styles.inputHolder} row justify-content-center p-0 mb-4`}>
+                <div className={`${styles.inputHolder} row p-0 m-1`}>
+                    <div className={`col d-flex align-items-center  ${styles.inputContainer}`}>
+                        <select
+                            className={`itim-font ${styles.input} ps-4`}
+                            name="city"
+                            id="city"
+                            data-testid="city"
+                            autoComplete="off"
+                            onChange={ (e : ChangeEvent<HTMLSelectElement>) => {
+                                setSelectedCity(e.target.value);
+                                updateField("city", e.target.value);
+                            } }>
+                            <option
+                                className={`itim-font`}
+                                hidden
+                                value={ selectedCity as string}>
+                                    { selectedCity as string  || "--"}
+                            </option>
 
-                    <select
-                        className={`itim-font ${styles.input} ps-4`}
-                        name="city"
-                        id="city"
-                        data-testid="city"
-                        autoComplete="off"
-                        onChange={ (e : ChangeEvent<HTMLSelectElement>) => {
-                            setSelectedCity(e.target.value);
-                            updateField("city", e.target.value);
-                        } }>
-                        <option
-                            className={`itim-font`}
-                            hidden
-                            value={ selectedCity as string}>
-                                { selectedCity as string  || "--"}
-                        </option>
+                            { citiesOptions }
 
-                        { citiesOptions }
-
-
-                    </select>
+                        </select>
+                    </div>
                 </div>
             </div>
         </>

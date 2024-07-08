@@ -3,6 +3,7 @@ import CountriesAndCities from '../countries-cities/countriesAndCities';
 import { ChangeEvent, useContext } from 'react';
 import { FormContext, SettingsProps } from '../form-components/formContext';
 import { GetInput, Props } from '../form-components/input';
+import { toast } from 'react-toastify';
 
 function GenerateInputFields() {
     const { oldAccountValues } = useContext<SettingsProps>(FormContext);
@@ -23,17 +24,17 @@ function GenerateInputFields() {
             inputLength: 30,
         },
         {
-            inputId: 'username',
-            labelText: 'Username',
-            inputType: 'text',
-            placeholder: oldAccountValues['username'],
-            inputLength: 30,
-        },
-        {
             inputId: 'display_name',
             labelText: 'Display Name',
             inputType: 'text',
             placeholder: oldAccountValues['display_name'],
+            inputLength: 30,
+        },
+        {
+            inputId: 'username',
+            labelText: 'Username',
+            inputType: 'text',
+            placeholder: oldAccountValues['username'],
             inputLength: 30,
         },
         {
@@ -109,7 +110,6 @@ function AccountTab() {
                                     'image/jpg',
                                     'image/webp',
                                 ];
-
                                 if (validImageTypes.includes(files[0].type)) {
                                     reader.readAsDataURL(files[0]);
                                     reader.onloadend = () => {
@@ -117,6 +117,8 @@ function AccountTab() {
                                             updateField('image_url', reader.result);
                                         }
                                     };
+                                } else {
+                                    toast.warn('the file is not an image')
                                 }
                             }
                         }}

@@ -6,6 +6,7 @@
   border-radius: 25px;
   width: 96%;
   min-width: 300px;
+  max-width: 1600px;
   background-color: var(--clr-ldark);
   height: 900px;
   transition: box-shadow 0.4s ease-in-out, border 0.4s ease-in-out;
@@ -45,10 +46,23 @@
   outline: none;
   color: #706f71;
   background-color: var(--clr--grey);
-  height: 60px;
-  border-radius: 25px;
+  height: 50px;
+  border-radius: 20px;
   /* accent-color: red; */
   border : none;
+}
+
+.inputContainer {
+  position : relative;
+}
+
+.eye_image {
+  position : absolute;
+  z-index: 1;
+  cursor: pointer;
+  left: calc(100% - 60px);
+  width : 32px;
+  height :32px;
 }
 
 .previewButton {
@@ -101,7 +115,8 @@
 .input:hover,
 .inputColor:hover,
 .checkbox:hover,
-.previewButton:hover {
+.previewButton:hover,
+.eye_image:hover {
   scale: 1.01;
 }
 
@@ -240,6 +255,11 @@
 
   .form_container {
     width: 80%;
+  }
+  .eye_image {
+    left: 80%;
+    width : 25px;
+    height : 25px;
   }
 }
 

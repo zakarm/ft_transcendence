@@ -10,12 +10,14 @@ function GenerateInputFields() {
         {
             inputId: 'new_password',
             labelText: 'New Password',
-            inputLength: 200,
+            inputType: 'password',
+            inputLength: 100,
         },
         {
             inputId: 'repeat_password',
             labelText: 'Repeat Password',
-            inputLength: 200,
+            inputType: 'password',
+            inputLength: 100,
         },
         {
             inputType: 'checkbox',
@@ -29,12 +31,12 @@ function GenerateInputFields() {
         <>
             {inputProps
                 .slice(0, 2)
-                .map(({ className, inputType, inputId, labelText, placeholder, inputLength }: Props) => {
+                .map(({ inputId, labelText, placeholder, inputLength, inputType }: Props) => {
                     return (
                         <div key={inputId}>
                             <GetInput
                                 className="p-0 m-0 mt-4 row justify-content-center itim-font"
-                                inputType="text"
+                                inputType={inputType}
                                 inputId={inputId}
                                 labelText={labelText}
                                 placeholder={placeholder}

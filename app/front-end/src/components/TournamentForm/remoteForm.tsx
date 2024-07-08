@@ -80,12 +80,27 @@ function GetImageInput({ handleChange = () => {}, index = 0 }: Props) {
 
         setImageName(e.target.value); // used to display name of uploaded image
         if (files && files.length > 0) {
-            reader.readAsDataURL(files[0]);
-            reader.onloadend = async () => {
-                if (reader.result && typeof reader.result === 'string') {
-                    if (handleChange) handleChange(reader.result, index);
-                }
-            };
+            const reader = new FileReader();
+            const validImageTypes = [
+                'image/gif',
+                'image/jpeg',
+                'image/png',
+                'image/webp',
+                'image/svg',
+                'image/jpg',
+                'image/webp',
+            ];
+
+            if (validImageTypes.includes(files[0].type)) {
+                reader.readAsDataURL(files[0]);
+                reader.onloadend = async () => {
+                    if (reader.result && typeof reader.result === 'string') {
+                        if (handleChange) handleChange(reader.result, index);
+                    }
+                };
+            } else {
+                toast.warn('the file is not an image')
+            }
         }
     };
 
@@ -215,7 +230,6 @@ function RemoteTournamentForm() {
 
         const access = Cookies.get('access');
         try {
-            console.log(ValuesToPost)
             const csrftoken = Cookies.get('csrftoken') || '';
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/create-tournament`, {
                 method: 'POST',
@@ -237,7 +251,7 @@ function RemoteTournamentForm() {
                 });
             }
         } catch (error) {
-            // console.error(`Error :  ${error}`);
+            toast.error('Error : cannot create the tournament');
         }
     };
 

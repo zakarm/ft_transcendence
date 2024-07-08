@@ -15,8 +15,7 @@
 - profile long username
 - right bar long username
 - userSearch friends long username
-- ppassword **********
-- achiv image in statistics (Response 404)
+- Missing tournamentID or access token
 
 ------------------------------------------------------------------------------------------------
 
