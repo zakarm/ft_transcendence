@@ -27,8 +27,7 @@ export default function SideBar() {
     useEffect(() => {
         const pathUrls = ['/dashboard', '/game', '/chat', '/achievements', '/statistics', '/settings'];
         const index = pathUrls.indexOf(pathname);
-        if (index === -1) return;
-        setActiveIcon(index);
+        setActiveIcon((index === -1) ? 1 : index);
         gsap.to(`.icon_${index}`, { rotation: '45' });
         gsap.to('.logo', { rotation: '+=1080', duration: 1 });
     }, [pathname]);

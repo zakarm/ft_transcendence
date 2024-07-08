@@ -1,5 +1,6 @@
 .page_container {
     height: 100vh;
+    width: 98%;
     overflow: auto;
 }
 

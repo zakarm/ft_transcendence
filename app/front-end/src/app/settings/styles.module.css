@@ -15,6 +15,7 @@
 
 .wrapper {
   overflow: auto;
+  width: 98%;
 }
 
 .form_container:hover {
@@ -40,7 +41,7 @@
     width : 400px;
     max-width: 100%;
 }
-  
+
 .input {
   width : 100%;
   outline: none;

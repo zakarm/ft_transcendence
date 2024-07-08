@@ -50,7 +50,7 @@ export default function UserChatResp ({handleChat, username, last_message, time,
                     <span>{username}</span>
                     <span style={{color: '#bebebe'}}>{last_message.length < 10 ? last_message : last_message.slice(0,7) + "..."}</span>
                 </div>
-                <div className='col-2 text-end'>
+                <div className='col-5 m-0 p-0 text-end'>
                 <span>
                     {
                         (waiting_msg) ? 

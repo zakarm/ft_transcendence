@@ -1,11 +1,10 @@
 from django.db import models
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MinLengthValidator
 from django.contrib.auth.models import (
     PermissionsMixin,
     AbstractBaseUser,
     BaseUserManager,
 )
-
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -28,12 +27,15 @@ class UserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 
-class User(AbstractBaseUser, PermissionsMixin):
-    reg_validator = RegexValidator(
+only_alphabet_validator = RegexValidator(regex=r'^[a-zA-Z]*$',
+                                         message='Only alphabetic characters are allowed.')
+reg_validator = RegexValidator(
         regex="^[a-zA-Z0-9_ ]*$",
         message="Username or display name can only contain alphanumeric characters and underscores.",
         code="invalid_username",
     )
+
+class User(AbstractBaseUser, PermissionsMixin):
     dft_img = "/assets/images/gameProfiles/default_profile.png"
     loc_text = "Morocco/Khouribga"
     quote_text = "Hello, It's me!"
@@ -42,13 +44,19 @@ class User(AbstractBaseUser, PermissionsMixin):
     display_name = models.CharField(max_length=30, validators=[reg_validator], unique=True)
     email = models.EmailField(max_length=55, unique=True)
     password = models.CharField(max_length=100, blank=True, null=True)
-    first_name = models.CharField(max_length=30, blank=True, null=True)
-    last_name = models.CharField(max_length=30, blank=True, null=True)
+    first_name = models.CharField(max_length=30, blank=True, null=True, validators=[
+            MinLengthValidator(3),
+            only_alphabet_validator,
+        ])
+    last_name = models.CharField(max_length=30, blank=True, null=True
+            , validators=[
+            MinLengthValidator(3),
+            only_alphabet_validator,
+        ])
     image_url = models.URLField(max_length=350, blank=True, null=True, default=dft_img)
     location = models.CharField(max_length=100, blank=True, null=True, default=loc_text)
     quote = models.CharField(max_length=25, blank=True, null=True, default=quote_text)
     intro = models.CharField(max_length=45, blank=True, null=True, default=intro_text)
-    cover_url = models.URLField(max_length=350, blank=True, null=True)
     score = models.IntegerField(blank=True, null=True, default=0.0)
     xp = models.IntegerField(blank=True, null=True, default=100)
     level = models.FloatField(blank=True, null=True, default=1.0)
@@ -60,7 +68,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_online = models.IntegerField(default=False)
     is_superuser = models.BooleanField(default=False)
-    is_email_verified = models.BooleanField(default=False)
     is_2fa_enabled = models.BooleanField(default=False)
     two_fa_secret_key = models.CharField(max_length=200, blank=True, null=True)
 

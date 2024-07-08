@@ -25,7 +25,7 @@ import { LineController } from 'chart.js/auto';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { RiProgress1Line } from 'react-icons/ri';
-import { toast } from 'react-toastify'
+import { toast } from 'react-toastify';
 
 interface MonthlyStats {
     months: string[];
@@ -55,8 +55,8 @@ interface ProfileData {
 
 const initProfileData: ProfileData = {
     id: 0,
-    username: "",
-    email: "",
+    username: '',
+    email: '',
     first_name: null,
     last_name: null,
     intro: null,
@@ -73,8 +73,8 @@ const initProfileData: ProfileData = {
     monthly_stats: {
         months: [],
         win: [],
-        lose: []
-    }
+        lose: [],
+    },
 };
 
 export default function () {
@@ -103,8 +103,8 @@ export default function () {
                 setIntro(data.intro);
                 setProfile(data);
             } catch (error) {
-                setQuote("");
-                setIntro("");
+                setQuote('');
+                setIntro('');
                 setProfile(initProfileData);
                 console.error(`Error : ${error}`);
             }
@@ -194,13 +194,7 @@ export default function () {
             {profile && (
                 <div className={`${styles.container} vh-100 border border-dark`}>
                     <div className={`${styles.flag}`}>
-                        <img
-                            className={`${styles.eagle}`}
-                            width={200}
-                            height={200}
-                            src="/assets/images/eagle2.png"
-                            alt="flag"
-                        />
+                        <img className={`${styles.eagle}`} width={200} height={200} src="/assets/images/eagle2.png" alt="flag" />
                         <div className={`${styles.square}`}></div>
                         <div className={`${styles.triangle} my-1`}></div>
                     </div>
@@ -209,13 +203,7 @@ export default function () {
                         <div className="text-center">
                             <div className="row m-0 p-0">
                                 <div className="col-xl-2 order-xl-2 my-3 text-center">
-                                    <img
-                                        className={`${styles.profile_img}`}
-                                        width={200}
-                                        height={200}
-                                        src={profile?.image_url ?? '/assets/images/gameProfiles/default_profile.png'}
-                                        alt="Profile"
-                                    />
+                                    <img className={`${styles.profile_img}`} width={200} height={200} src={profile?.image_url ?? '/assets/images/gameProfiles/default_profile.png'} alt="Profile" />
                                     <div>
                                         <span className="valo-font" style={{ color: '#FFEBEB', fontSize: '1.5em' }}>
                                             {profile.username}
@@ -225,10 +213,7 @@ export default function () {
                                         <div className={`col-md-5 col-8 ${styles.btn}`}>
                                             <button onClick={() => router.push('/game')}>Play</button>
                                         </div>
-                                        <div
-                                            className={`col-md-5 col-8 ${styles.btn_delete}`}
-                                            onClick={() => router.push('/settings')}
-                                        >
+                                        <div className={`col-md-5 col-8 ${styles.btn_delete}`} onClick={() => router.push('/settings')}>
                                             <button>Settings</button>
                                         </div>
                                     </div>
@@ -272,20 +257,12 @@ export default function () {
                                                     borderRight: '1px solid #61627C',
                                                 }}
                                             >
-                                                {profile.total_games !== 0
-                                                    ? ((profile.win_games / profile.total_games) * 100).toFixed(1)
-                                                    : '0.0'}
-                                                %
+                                                {profile.total_games !== 0 ? ((profile.win_games / profile.total_games) * 100).toFixed(1) : '0.0'}%
                                             </span>
                                         </div>
                                         <div className="col d-flex flex-column justify-content-end ">
                                             <h4>Lose</h4>
-                                            <span>
-                                                {profile.total_games !== 0
-                                                    ? ((profile.lose_games / profile.total_games) * 100).toFixed(1)
-                                                    : '0.0'}
-                                                %
-                                            </span>
+                                            <span>{profile.total_games !== 0 ? ((profile.lose_games / profile.total_games) * 100).toFixed(1) : '0.0'}%</span>
                                         </div>
                                     </div>
                                 </div>
@@ -296,28 +273,19 @@ export default function () {
                             <div className={`${styles.data_holder} col-xl-4 col-lg-12 p-4 my-1`}>
                                 <div className="d-flex align-items-center">
                                     <CiUser size="2em" color="#FFEBEB" />
-                                    <span style={{ color: '#FFEBEB', fontFamily: 'itim', fontSize: '1.8em' }}>
-                                        About
-                                    </span>
+                                    <span style={{ color: '#FFEBEB', fontFamily: 'itim', fontSize: '1.8em' }}>About</span>
                                 </div>
                                 <hr className=" my-3" style={{ color: '#61627C', borderWidth: '2px' }} />
-                                <p
-                                    className="text-center px-3 py-3"
-                                    style={{ color: '#61627C', fontSize: '1.2em', fontFamily: 'itim' }}
-                                >
+                                <p className="text-center px-3 py-3" style={{ color: '#61627C', fontSize: '1.2em', fontFamily: 'itim' }}>
                                     {profile.intro}
                                 </p>
                                 <h2 className="text-center" style={{ color: '#ACACAC', fontFamily: 'itim' }}>
                                     {profile.quote}
                                 </h2>
-                                <ProgressBar
-                                    className={`${styles.progres_bar} my-5`}
-                                    now={(profile?.level ?? 0) * 10}
-                                    label={`${profile.level}`}
-                                    striped
-                                    variant="danger"
-                                    animated
-                                />
+                                <div>
+                                    <p style={{ fontFamily: 'Valorax', color: 'white' }}> level : {profile.level + '%'}</p>
+                                    <ProgressBar className={`${styles.progres_bar}`} now={((profile?.level ?? 0) % 1) * 100} striped variant="danger" animated />
+                                </div>
                                 <hr className=" my-2 mx-2" style={{ color: '#61627C', borderWidth: '2px' }} />
                                 <span style={{ color: '#61627C', fontFamily: 'itim' }}>Rank</span>
                                 <div className="d-flex flex-row my-4">
@@ -334,13 +302,7 @@ export default function () {
                                         <span style={{ color: '#FFEBEB', fontFamily: 'itim' }}>{profile.score}</span>
                                     </div>
                                 </div>
-                                <img
-                                    className={`${styles.rank}`}
-                                    width={200}
-                                    height={200}
-                                    src="/assets/images/rank.png"
-                                    alt="rank"
-                                />
+                                <img className={`${styles.rank}`} width={200} height={200} src="/assets/images/rank.png" alt="rank" />
                                 <div
                                     className={`col-6 ${styles.edit_btn} valo-font text-center p-2 m-2`}
                                     onClick={() => {
@@ -393,9 +355,7 @@ export default function () {
                                                         defaultValue={profile.quote || ''}
                                                         style={{ backgroundColor: '#2C3143' }}
                                                     />
-                                                    <Form.Control.Feedback type="invalid">
-                                                        Please choose a Quote.
-                                                    </Form.Control.Feedback>
+                                                    <Form.Control.Feedback type="invalid">Please choose a Quote.</Form.Control.Feedback>
                                                 </InputGroup>
                                                 <InputGroup hasValidation className="mb-3">
                                                     <InputGroup.Text style={{ backgroundColor: '#2C3143' }}>
@@ -412,9 +372,7 @@ export default function () {
                                                         defaultValue={profile.intro || ''}
                                                         style={{ backgroundColor: '#2C3143' }}
                                                     />
-                                                    <Form.Control.Feedback type="invalid">
-                                                        Please talk about yourslef.
-                                                    </Form.Control.Feedback>
+                                                    <Form.Control.Feedback type="invalid">Please talk about yourslef.</Form.Control.Feedback>
                                                 </InputGroup>
                                                 <div className="row d-flex justify-content-center pb-1 m-0">
                                                     <div
@@ -431,9 +389,7 @@ export default function () {
                                                             Cancel
                                                         </button>
                                                     </div>
-                                                    <div
-                                                        className={`${styles.edit_btn} col-md-3 col-sm-5 valo-font text-center m-2 px-2`}
-                                                    >
+                                                    <div className={`${styles.edit_btn} col-md-3 col-sm-5 valo-font text-center m-2 px-2`}>
                                                         <button type="submit">Save</button>
                                                     </div>
                                                 </div>
@@ -445,9 +401,7 @@ export default function () {
                             <div className={`${styles.data_holder} col-xl-6 col-lg-12 p-4 my-1`}>
                                 <div className="d-flex align-items-center">
                                     <FaFileInvoice size="2em" color="#FFEBEB" />
-                                    <span style={{ color: '#FFEBEB', fontFamily: 'itim', fontSize: '1.8em' }}>
-                                        Summary
-                                    </span>
+                                    <span style={{ color: '#FFEBEB', fontFamily: 'itim', fontSize: '1.8em' }}>Summary</span>
                                 </div>
                                 <hr className=" my-3" style={{ color: '#61627C', borderWidth: '2px' }} />
                                 <div className="col p-0 m-0">

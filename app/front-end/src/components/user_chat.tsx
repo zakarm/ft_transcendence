@@ -47,7 +47,7 @@ export default function UserChat ( {handleChat, username, last_message, time, im
                     <span>{username}</span>
                     <span style={{color: '#bebebe'}}>{last_message}</span>
                 </div>
-                <div className='col-2 text-end'>
+                <div className='col-5 m-0 p-0 text-end'>
                     <span>
                     {
                         (waiting_msg) ? 
