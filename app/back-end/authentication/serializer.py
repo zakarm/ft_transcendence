@@ -122,6 +122,7 @@ class SocialAuthSerializer(serializers.Serializer):
                         user.last_name = ""
                     user.email = email
                     user.username = user_info.get("login")
+                    user.display_name = user_info.get("login")
                     data_img = user_info.get("avatar_url")
                     default_img = "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Aatrox_0.jpg"
                     user.image_url = data_img if data_img else default_img
@@ -151,6 +152,7 @@ class SocialAuthSerializer(serializers.Serializer):
                     user.last_name = lastname
                     user.image_url = image_url
                     user.username = username if username else user.email.split("@")[0]
+                    user.display_name = user.username
                     user.is_local = False
                     user.save()
                 data["email"] = email
@@ -171,6 +173,7 @@ class SocialAuthSerializer(serializers.Serializer):
                 user, created = User.objects.get_or_create(email=email)
                 if created:
                     user.username = user_info["login"]
+                    user.display_name = user_info["login"]
                     user.first_name = user_info["first_name"]
                     user.last_name = user_info["last_name"]
                     user.image_url = user_info["image"]["link"]

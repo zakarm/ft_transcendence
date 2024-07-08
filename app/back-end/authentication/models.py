@@ -27,7 +27,7 @@ class UserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 
-only_alphabet_validator = RegexValidator(regex=r'^[a-zA-Z]*$', 
+only_alphabet_validator = RegexValidator(regex=r'^[a-zA-Z]*$',
                                          message='Only alphabetic characters are allowed.')
 reg_validator = RegexValidator(
         regex="^[a-zA-Z0-9_ ]*$",
@@ -57,13 +57,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     location = models.CharField(max_length=100, blank=True, null=True, default=loc_text)
     quote = models.CharField(max_length=25, blank=True, null=True, default=quote_text)
     intro = models.CharField(max_length=45, blank=True, null=True, default=intro_text)
-    cover_url = models.URLField(max_length=350, blank=True, null=True)
     score = models.IntegerField(blank=True, null=True, default=0.0)
     xp = models.IntegerField(blank=True, null=True, default=100)
     level = models.FloatField(blank=True, null=True, default=1.0)
     rank = models.IntegerField(blank=True, null=True, default=0)
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
+    is_local = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_online = models.IntegerField(default=False)

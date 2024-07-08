@@ -33,13 +33,13 @@ class MainDashboardSerializer(serializers.ModelSerializer):
         matches = Match.objects.filter(user_one=obj)[:10]
         serializer = MatchSerializer(matches, many=True)
         return serializer.data
-    
+
     @extend_schema_field(serializers.ListField(child=MatchSerializer()))
     def get_matches_as_user_two(self, obj) -> list:
         matches = Match.objects.filter(user_two=obj)[:10]
         serializer = MatchSerializer(matches, many=True)
         return serializer.data
-    
+
     @extend_schema_field(serializers.IntegerField())
     def get_total_minutes(self, obj) -> int:
         return get_total_minutes(obj)
@@ -53,22 +53,22 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'first_name', 'last_name',
-                    'intro', 'quote', 'rank', 'level', 'score', 'cover_url',
+                    'intro', 'quote', 'rank', 'level', 'score',
                     'location', 'total_games', 'win_games', 'image_url',
                     'lose_games', 'monthly_stats')
-    
+
     @extend_schema_field(serializers.IntegerField())
     def get_total_games(self, obj) -> int:
         return get_total_games(obj)
-    
+
     @extend_schema_field(serializers.IntegerField())
     def get_win_games(self, obj) -> int:
         return get_win_games(obj)
-    
+
     @extend_schema_field(serializers.IntegerField())
     def get_lose_games(self, obj) -> int:
         return get_lose_games(obj)
-    
+
     @extend_schema_field(serializers.JSONField())
     def get_monthly_stats(self, obj) -> dict:
         return get_monthly_game_stats(obj)
@@ -89,7 +89,7 @@ class FriendshipSerializer(serializers.ModelSerializer):
     class Meta:
         model = Friendship
         fields = ('user', 'freindship_id', 'is_accepted', 'blocked', 'is_user_from')
-    
+
     @extend_schema_field(UserSerializer())
     def get_user(self, obj) -> list:
         if obj.user_from.id == self.context['id']:
@@ -107,7 +107,7 @@ class FriendshipSerializer(serializers.ModelSerializer):
         else:
             blocked = obj.u_two_is_blocked_u_one
         return blocked
-    
+
     @extend_schema_field(serializers.BooleanField())
     def get_is_user_from(self, obj) -> bool:
         return obj.user_from.id == self.context['id']
@@ -117,7 +117,7 @@ class FriendsSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'image_url', 'friends')
-    
+
     @extend_schema_field(serializers.ListField(child=FriendshipSerializer()))
     def get_friends(self, obj) -> list:
         friends_data = Friendship.objects.filter((Q(user_from = obj)| Q(user_to= obj)) &
@@ -161,7 +161,7 @@ class BlockedFriendsSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'image_url', 'friends')
-    
+
     @extend_schema_field(serializers.ListField(child=BlockedFriendshipSerializer()))
     def get_friends(self, obj) -> list:
         friends_data = Friendship.objects.filter(Q(user_from = obj)| Q(user_to= obj))
@@ -175,7 +175,7 @@ class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         fields = '__all__'
-    
+
     @extend_schema_field(serializers.IntegerField())
     def get_count(self, obj) -> int:
         return Notification.objects.filter(user = self.context.get('user')).count()

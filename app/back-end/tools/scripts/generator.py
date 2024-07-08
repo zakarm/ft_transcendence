@@ -32,7 +32,6 @@ for _ in range(50):
     first_name = faker.first_name()
     last_name = faker.last_name()
     image_url = faker.image_url()
-    cover_url = faker.image_url()
     location = faker.city()
     is_staff = faker.boolean()
     is_active = True
@@ -44,10 +43,10 @@ for _ in range(50):
     is_online = 0
 
     insert_query = """
-        INSERT INTO authentication_users (username, email, password, first_name, last_name, image_url, cover_url, location, is_staff, is_active, date_joined, is_superuser, last_login, is_2fa_enabled, is_email_verified, is_online)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+        INSERT INTO authentication_users (username, email, password, first_name, last_name, image_url, location, is_staff, is_active, date_joined, is_superuser, last_login, is_2fa_enabled, is_email_verified, is_online)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
     """
-    cursor.execute(insert_query, (username, email, password, first_name, last_name, image_url, cover_url, location, is_staff, is_active, date_joined, is_superuser, last_login, is_2fa_enabled, is_email_verified, is_online))
+    cursor.execute(insert_query, (username, email, password, first_name, last_name, image_url, location, is_staff, is_active, date_joined, is_superuser, last_login, is_2fa_enabled, is_email_verified, is_online))
 
 # Generate fake matches
 cursor.execute("SELECT id FROM authentication_users;")

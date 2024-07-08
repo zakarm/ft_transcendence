@@ -94,8 +94,8 @@ def create_superuser():
         ]
         subprocess.run(create_superuser_cmd, text=True, check=True)
         time.sleep(0.3)
-        query = "UPDATE authentication_users SET username = %s WHERE email = %s"
-        cursor.execute(query, (username, email,))
+        query = "UPDATE authentication_users SET username = %s, display_name = %s WHERE email = %s"
+        cursor.execute(query, (username,username, email))
         conn.commit()
     else:
         logging.info("Superuser already exists in the database")

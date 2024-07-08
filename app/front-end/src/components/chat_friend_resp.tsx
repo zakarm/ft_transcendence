@@ -131,13 +131,13 @@ export default function ChatFriendsResp({
 
         const date = new Date(timestamp);
         const now = new Date();
-    
+
         // Check if the date is today
         if (date.toDateString() === now.toDateString()) {
             // Format as HH:mm for today's messages
             return `${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}`;
         }
-    
+
         // Check if the date is yesterday
         const yesterday = new Date(now);
         yesterday.setDate(now.getDate() - 1);
@@ -145,7 +145,7 @@ export default function ChatFriendsResp({
             // Format as "Yesterday, HH:mm" for yesterday's messages
             return `Yesterday, ${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}`;
         }
-    
+
         // Otherwise, format as "DD/MM/YYYY, HH:mm"
         const day = ('0' + date.getDate()).slice(-2);
         const month = ('0' + (date.getMonth() + 1)).slice(-2);
@@ -201,13 +201,6 @@ export default function ChatFriendsResp({
                                 & PLAY
                             </span>
                         </span>
-                        <img
-                            className={`${styles.welcome_img}`}
-                            width={300}
-                            height={300}
-                            src="/assets/images/welcome.png"
-                            alt="welcome"
-                        />
                     </div>
                     <div className={`mx-3 mb-2`}>
                         <InputGroup size="lg">
@@ -231,19 +224,19 @@ export default function ChatFriendsResp({
                 </div>
                 <div className={`${styles.chat_container} p-2 flex-grow-1`}>
                     {
-                        chatUsers && 
+                        chatUsers &&
                         chatUsers.map((friend: User) => (
                             <div key={friend.id}>
                             {
-                                (fullscreen) ? 
-                                (<UserChat 
+                                (fullscreen) ?
+                                (<UserChat
                                     username={friend.username}
                                     image_url={friend.image_url}
                                     waiting_msg={friend.message_waiting}
                                     handleChat={handleChat}
                                     handleShow={handleShow}
                                     handleAbout={handleAbout}
-                                    setChatUsers={setChatUsers} 
+                                    setChatUsers={setChatUsers}
                                     last_message={
                                         usersLastMessage.filter((msg: LastMesg) => msg.username === friend.username).at(0)?.message ??
                                         'Start Chatting :}'
@@ -255,7 +248,7 @@ export default function ChatFriendsResp({
                                         )
                                     }
                                 />) :
-                                (<UserChatResp  
+                                (<UserChatResp
                                     username={friend.username}
                                     image_url={friend.image_url}
                                     waiting_msg={friend.message_waiting}
