@@ -5,6 +5,7 @@ interface   UserInfoTypes {
     first_name: string;
     last_name: string;
     username: string;
+    display_name : string;
     email: string;
     country: string;
     city: string;

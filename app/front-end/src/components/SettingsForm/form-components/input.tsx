@@ -1,15 +1,13 @@
 import { FormContext, SettingsProps } from './formContext'
-import {
+import React, {
     ChangeEvent,
-    MouseEvent,
     useContext,
     useState,
-    useEffect
+    useEffect,
 } from 'react'
 import styles from '@/app/settings/styles.module.css'
 import Cookies from "js-cookie";
 import TwoFa from '@/components/twoFa';
-import { toast } from 'react-toastify';
 
 interface Props {
     inputType       ?: string;
@@ -144,8 +142,8 @@ function    GetCheckboxInput(
                     htmlFor={inputId}>
                     {labelText}
                 </label>
-                <div className={`${styles.inputHolder} ${styles.checkbox} row justify-content-start p-0 m-1`}>
-                    {/* <label className="col-3" > */}
+                <div className={`${styles.checkbox} ${styles.inputHolder} row p-0 m-1`}>
+                    <div className={`col d-flex align-items-center ms-1  ${styles.inputContainer}`}>
                         <input
                             type={inputType}
                             className={`${styles.input}`}
@@ -158,8 +156,8 @@ function    GetCheckboxInput(
                                 fetchData(!isChecked);
                                 setIsChecked(!isChecked);
                             } }
-                            />
-                    {/* </label> */}
+                        />
+                    </div>
                 </div>
             </div>
         );
@@ -244,7 +242,6 @@ function    GetColorInput(
 function    GetInputRange() {
     const   { updateField, currentAccoutValues } = useContext<SettingsProps>(FormContext);
 
-
     return (
         <>
         <div className={` p-0 m-0 mt-4 row justify-content-center itim-font  flex-wrap flex-xxl-nowrap`}>
@@ -304,29 +301,68 @@ function    GetInput(
     }: Props) {
 
     const   { updateField } = useContext<SettingsProps>(FormContext);
+    const   [isPasswordHidden, setIsPasswordHidden] = useState<boolean>(true);
+    const   [isRepeatHidden, setIsRepeatHidden] = useState<boolean>(true);
+    const   [inputTogglePassType, setInputTogglePassType] = useState<string>("password");
+    const   [inputToggleRepeatType, setInputToggleRepeatType] = useState<string>("password");
+    
+    const   showPassword = (inputId : string) => {
+        const   elem = document.getElementById(inputId) as HTMLInputElement;
+        if (elem) {
+            if (inputId === 'new_password') {
+                isPasswordHidden ? elem.type = "text" : elem.type = "password";
+                setInputTogglePassType(elem.type);
+                setIsPasswordHidden(!isPasswordHidden);
+            }
+            else {
+                isRepeatHidden ? elem.type = "text" : elem.type = "password";
+                setInputToggleRepeatType(elem.type)
+                setIsRepeatHidden(!isRepeatHidden);
+            }
+        }
+    }
 
-        return (
-            <div className={`${className} flex-wrap flex-xxl-nowrap`}>
-                <label
-                    className={`col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle}`}
-                    htmlFor={inputId}>
-                    {labelText}
-                </label>
-                <div className={`${styles.inputHolder} row p-0 m-1`}>
-                        <input
-                            type={inputType}
-                            placeholder={placeholder as string}
-                            className={`${styles.input} ${inputClassName} ps-4`}
-                            id={inputId}
-                            data-testid={inputId}
-                            maxLength={inputLength}
-                            autoComplete="off"
-                            onChange={ (e : ChangeEvent<HTMLInputElement>) => { updateField(inputId, e.target.value) } }
-                            >
-                        </input>
+    return (
+        <div className={`${className} flex-wrap flex-xxl-nowrap`}>
+            <label
+                className={`col-8 col-sm-3 itim-font d-flex align-items-center p-0 m-0 ${styles.inputTitle}`}
+                htmlFor={inputId}>
+                {labelText}
+            </label>
+            <div className={`${styles.inputHolder} row p-0 m-1`}>
+                <div className={`col d-flex align-items-center  ${styles.inputContainer}`}>
+                    <input
+                        type={
+                            inputId === 'new_password' ? inputTogglePassType : inputId === 'repeat_password' ?
+                            inputToggleRepeatType : inputType}
+                        placeholder={placeholder as string}
+                        className={`${styles.input} ${inputClassName} ps-4 `}
+                        id={inputId}
+                        maxLength={inputLength}
+                        autoComplete="off"
+                        onChange={ (e : ChangeEvent<HTMLInputElement>) => {
+                            updateField(inputId, e.target.value);
+                            e.target.type = "text"
+                        } }
+                        />
+                    {
+                        inputId === 'new_password' || inputId === 'repeat_password' ?
+                        <img
+                            src={
+                                inputId === 'new_password' ?
+                                    (isPasswordHidden ? `/assets/images/hiddenEye.png` : `/assets/images/openEye.png`)
+                                    : (isRepeatHidden ? `/assets/images/hiddenEye.png` : `/assets/images/openEye.png`)
+                            }
+                            alt="eye icon"
+                            className={` ${styles.eye_image}`}
+                            onClick={ () => showPassword(inputId) }
+                            />
+                        : <></>
+                    }
                 </div>
             </div>
-        );
+        </div>
+    );
 }
 
 export type { Props as Props }

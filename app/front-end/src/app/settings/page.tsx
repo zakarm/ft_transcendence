@@ -11,125 +11,25 @@ import GameTab from '@/components/SettingsForm/GameTab/gameTab';
 import NavBar from '@/components/NavBar/NavBar';
 import handleImageUpload from '@/components/UploadImageBase64ToCloudinary/uploadToCloudinary';
 import { FormContext } from '@/components/SettingsForm/form-components/formContext';
-import { SettingsProps, UserInfoTypes } from '@/lib/settings-types/gameSettingsTypes';
+import { SettingsProps } from '@/lib/settings-types/gameSettingsTypes';
+import {
+    validateInput,
+    getInitialData,
+} from '@/lib/settingsUtils/utils'
 
-function checkData(dataAPI: UserInfoTypes) {
-    const shouldExist: UserInfoTypes = {
-        is_local : true,
-        first_name: '',
-        last_name: '',
-        username: '',
-        email: '',
-        country: '',
-        city: '',
-        image_url: '',
-        new_password: '',
-        repeat_password: '',
-        is_2fa_enabled: false,
-        table_color: '#161625',
-        ball_color: '#ffffff',
-        paddle_color: '#ff4655',
-        table_position: 'default',
-        current_table_view: '6,8,0',
-        game_difficulty: '1',
-    };
-
-    Object.keys(shouldExist).map((key) => {
-        if (dataAPI[key] !== undefined && dataAPI[key] !== null) {
-            if (typeof dataAPI[key] === 'string' && dataAPI[key] != 'NaN') shouldExist[key] = dataAPI[key];
-            else if (typeof dataAPI[key] !== 'string') shouldExist[key] = dataAPI[key];
-        }
-    });
-
-    shouldExist['current_table_view'] = shouldExist['table_position'];
-    if (shouldExist['table_position'] === '1,10,0') {
-        shouldExist['table_position'] = 'vertical'
-    } else if (shouldExist['table_position'] === '6,8,0') {
-        shouldExist['table_position'] = 'default'
-    } else if (shouldExist['table_position'] === '0,10,0') {
-        shouldExist['table_position'] = 'horizantal'
-    }
-    return shouldExist;
+interface   PostFormDataTypes {
+    valuesToPost: SettingsProps['currentAccoutValues'];
+    isFormChanged: MutableRefObject<boolean>;
+    setOldAccountValues : SettingsProps['setCurrentAccoutValues']
+    currentAccoutValues : SettingsProps['currentAccoutValues']
 }
-
-async function getInitialData({
-    setOldAccountValues,
-    setCurrentAccoutValues,
-}: {
-    setOldAccountValues: SettingsProps['setOldAccountValues'];
-    setCurrentAccoutValues: SettingsProps['setCurrentAccoutValues'];
-}) {
-    try {
-        const access = Cookies.get('access');
-        const csrftoken = Cookies.get('csrftoken') || '';
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/game-settings`, {
-            method: 'GET',
-            headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
-        });
-
-        let data = await response.json();
-        data = checkData(data);
-
-        Cookies.set('pos_default', '6,8,0');
-        Cookies.set('pos_horizantal', '0,10,0');
-        Cookies.set('pos_vertical', '1,10,0');
-
-        Cookies.set('table_color', data['table_color']);
-        Cookies.set('ball_color', data['ball_color']);
-        Cookies.set('paddle_color', data['paddle_color']);
-
-        setOldAccountValues(data);
-        setCurrentAccoutValues(data);
-    } catch (error) {
-        console.error(`Error : ${error}`);
-    }
-}
-
-const validateInput: (oldAccountValues: SettingsProps['oldAccountValues']) => boolean = (
-    oldAccountValues: SettingsProps['oldAccountValues'],
-) => {
-    const validateEmail: (email: string) => boolean = (email) => {
-        // const rgx: RegExp = /^([a-zA-Z0-9\._]+)@([a-zA-Z0-9])+.([a-z]+)(.[a-z]+)?$/;
-        const rgx: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return rgx.test(email) && email.length >= 8;
-    };
-
-    const toCheck: string[] = ['first_name', 'last_name', 'nickname'];
-    let isValid: boolean = true;
-
-    toCheck.map((key) => {
-        if (oldAccountValues[key] === '') {
-            toast.error(`Invalid input : ${key}`, notificationStyle);
-            isValid = false;
-        }
-    });
-
-    if ("email" in oldAccountValues &&
-            !validateEmail(oldAccountValues['email'] as string)) {
-        toast.error(`Invalid input : email - ensure 8 characters long`, notificationStyle);
-        isValid = false;
-    }
-
-    if ( "new_password" in oldAccountValues &&  "repeat_password" in oldAccountValues &&
-        oldAccountValues['new_password'] !== oldAccountValues['repeat_password']) {
-            toast.error(`Invalid input : mismatch between password fields`, notificationStyle);
-        isValid = false;
-    }
-    return isValid;
-};
-
 /* Submits the form */
 const postFormData = async ({
     valuesToPost,
     isFormChanged,
     setOldAccountValues,
     currentAccoutValues
-}: {
-    valuesToPost: SettingsProps['currentAccoutValues'];
-    isFormChanged: MutableRefObject<boolean>;
-    setOldAccountValues : SettingsProps['setCurrentAccoutValues']
-    currentAccoutValues : SettingsProps['currentAccoutValues']
-}) => {
+}: PostFormDataTypes) => {
         const changeImageURL = async () => {
             if (typeof valuesToPost['image_url'] === 'string') {
                 const promise = await handleImageUpload(valuesToPost['image_url']);
@@ -156,7 +56,6 @@ const postFormData = async ({
                     },
                     body: JSON.stringify(valuesToPost),
                 });
-    
                 const   data = await res.json();
                 if (res.ok) {
                     Object.entries(data).map(([key, value]) => {
@@ -169,10 +68,9 @@ const postFormData = async ({
     
                 } else {
                     Object.entries(data).map(([key, value]) => {
-                        toast.error(`Error : ${key} ${value}`, notificationStyle);
+                        toast.error(`${key} : ${value}`, notificationStyle);
                     })
                 }
-
             } catch (error) {
                 toast.error('Cannot save your changes')
             }
@@ -180,7 +78,6 @@ const postFormData = async ({
 
         postData();
 };
-let tmp : SettingsProps['currentAccoutValues'] = {};
 
 function SettingsPage() {
     const [valuesToPost, setValuesToPost] = useState<SettingsProps['oldAccountValues']>({});
@@ -188,6 +85,10 @@ function SettingsPage() {
     const [currentAccoutValues, setCurrentAccoutValues] = useState<SettingsProps['currentAccoutValues']>({});
     const [tab, setTab] = useState<string>('Account');
     const isFormChanged = useRef<boolean>(false);
+    const options = ['Account'];
+    if (currentAccoutValues.is_local) { options.push('Security') }
+    options.push('Game');
+    
     /* Updates a specific field of the input */
     const updateField = (key: string, value: string | boolean) => {
         setCurrentAccoutValues((prevValues: SettingsProps['currentAccoutValues']) => {
@@ -196,16 +97,18 @@ function SettingsPage() {
             return newValues;
         });
     };
-    const options = ['Account'];
-    if (currentAccoutValues.is_local) { options.push('Security') }
-    options.push('Game');
 
     /* Compares values in  [currentAccoutValues, oldAccountValues] */
     const checkDifferences = () => {
         const compareDictValues = (d1: SettingsProps['currentAccoutValues'], d2: SettingsProps['oldAccountValues']) => {
+            let tmp : SettingsProps['currentAccoutValues'] = {};
             let isValuesChanged : boolean = false;
             for (const key in d1) {
                 if (d1[key] !== d2[key]) {
+                    if (typeof d1[key] === 'string' && d1[key] === '' && key !== 'city') {
+                        updateField(key, oldAccountValues[key]);
+                        continue ;
+                    }
                     tmp[key] = d1[key];
                     isValuesChanged = true
                 }
@@ -221,7 +124,6 @@ function SettingsPage() {
                 newValues[key] = value;
             }
             if (compareDictValues(currentAccoutValues, oldAccountValues)) {
-                // setOldAccountValues(newValues);
                 isFormChanged.current = true;
             }
         };

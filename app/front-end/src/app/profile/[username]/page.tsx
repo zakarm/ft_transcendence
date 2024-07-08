@@ -73,12 +73,9 @@ export default function ({ params }: { params: { username: string } }) {
         if (access) {
             try {
                 const csrftoken = Cookies.get('csrftoken') || '';
-                const res = await fetch(
-                    `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/profile${params ? '/' + params.username : ''}`,
-                    {
-                        headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
-                    },
-                );
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/profile${params ? '/' + params.username : ''}`, {
+                    headers: { Authorization: `Bearer ${access}`, 'X-CSRFToken': csrftoken },
+                });
 
                 if (!res.ok) throw new Error('Failed to fetch data');
 
@@ -230,13 +227,7 @@ export default function ({ params }: { params: { username: string } }) {
             {profile && (
                 <div className={`${styles.container} vh-100 border border-dark`}>
                     <div className={`${styles.flag}`}>
-                        <img
-                            className={`${styles.eagle}`}
-                            width={200}
-                            height={200}
-                            src="/assets/images/eagle2.png"
-                            alt="flag"
-                        />
+                        <img className={`${styles.eagle}`} width={200} height={200} src="/assets/images/eagle2.png" alt="flag" />
                         <div className={`${styles.square}`}></div>
                         <div className={`${styles.triangle} my-1`}></div>
                     </div>
@@ -245,13 +236,7 @@ export default function ({ params }: { params: { username: string } }) {
                         <div className="text-center">
                             <div className="row m-0 p-0">
                                 <div className="col-xl-2 order-xl-2 my-3 text-center">
-                                    <img
-                                        className={`${styles.profile_img}`}
-                                        width={200}
-                                        height={200}
-                                        src={profile?.image_url ?? '/assets/images/gameProfiles/default_profile.png'}
-                                        alt="Profile"
-                                    />
+                                    <img className={`${styles.profile_img}`} width={200} height={200} src={profile?.image_url ?? '/assets/images/gameProfiles/default_profile.png'} alt="Profile" />
                                     <div>
                                         <span className="valo-font" style={{ color: '#FFEBEB', fontSize: '1.5em' }}>
                                             {profile.username}
@@ -261,26 +246,11 @@ export default function ({ params }: { params: { username: string } }) {
                                         {user ? (
                                             user.is_accepted ? (
                                                 <div className="row d-flex justify-content-center">
-                                                    <div
-                                                        className={`col-md-5 col-8 ${styles.btn}`}
-                                                        onClick={() =>
-                                                            router.push(`/chat?username=${profile.username}`)
-                                                        }
-                                                    >
+                                                    <div className={`col-md-5 col-8 ${styles.btn}`} onClick={() => router.push(`/chat?username=${profile.username}`)}>
                                                         <button>Message</button>
                                                     </div>
                                                     <div className={`col-md-5 col-8 ${styles.btn}`}>
-                                                        <button
-                                                            onClick={() =>
-                                                                fetchUserState(
-                                                                    'friends-remove',
-                                                                    'Removed from friends',
-                                                                    params.username,
-                                                                )
-                                                            }
-                                                        >
-                                                            Remove
-                                                        </button>
+                                                        <button onClick={() => fetchUserState('friends-remove', 'Removed from friends', params.username)}>Remove</button>
                                                     </div>
                                                 </div>
                                             ) : user.is_user_from ? (
@@ -289,32 +259,12 @@ export default function ({ params }: { params: { username: string } }) {
                                                 </div>
                                             ) : (
                                                 <div className={`col-md-5 col-8 ${styles.btn}`}>
-                                                    <button
-                                                        onClick={() =>
-                                                            fetchUserState(
-                                                                'friends-accept',
-                                                                'added to friends',
-                                                                params.username,
-                                                            )
-                                                        }
-                                                    >
-                                                        Accept
-                                                    </button>
+                                                    <button onClick={() => fetchUserState('friends-accept', 'added to friends', params.username)}>Accept</button>
                                                 </div>
                                             )
                                         ) : (
                                             <div className={`col-md-5 col-8 ${styles.btn}`}>
-                                                <button
-                                                    onClick={() =>
-                                                        fetchUserState(
-                                                            'friends-add',
-                                                            'Friend Request Sent',
-                                                            params.username,
-                                                        )
-                                                    }
-                                                >
-                                                    Invite
-                                                </button>
+                                                <button onClick={() => fetchUserState('friends-add', 'Friend Request Sent', params.username)}>Invite</button>
                                             </div>
                                         )}
                                     </div>
@@ -358,20 +308,12 @@ export default function ({ params }: { params: { username: string } }) {
                                                     borderRight: '1px solid #61627C',
                                                 }}
                                             >
-                                                {profile.total_games !== 0
-                                                    ? ((profile.win_games / profile.total_games) * 100).toFixed(1)
-                                                    : '0.0'}
-                                                %
+                                                {profile.total_games !== 0 ? ((profile.win_games / profile.total_games) * 100).toFixed(1) : '0.0'}%
                                             </span>
                                         </div>
                                         <div className="col d-flex flex-column justify-content-end ">
                                             <h4>Lose</h4>
-                                            <span>
-                                                {profile.total_games !== 0
-                                                    ? ((profile.lose_games / profile.total_games) * 100).toFixed(1)
-                                                    : '0.0'}
-                                                %
-                                            </span>
+                                            <span>{profile.total_games !== 0 ? ((profile.lose_games / profile.total_games) * 100).toFixed(1) : '0.0'}%</span>
                                         </div>
                                     </div>
                                 </div>
@@ -382,9 +324,7 @@ export default function ({ params }: { params: { username: string } }) {
                             <div className={`${styles.data_holder} col-xl-4 col-lg-12 p-4 my-1`}>
                                 <div className="d-flex align-items-center">
                                     <CiUser size="2em" color="#FFEBEB" />
-                                    <span style={{ color: '#FFEBEB', fontFamily: 'itim', fontSize: '1.8em' }}>
-                                        About
-                                    </span>
+                                    <span style={{ color: '#FFEBEB', fontFamily: 'itim', fontSize: '1.8em' }}>About</span>
                                 </div>
                                 <hr className=" my-3" style={{ color: '#61627C', borderWidth: '2px' }} />
                                 <p className="text-center px-3 py-3" style={{ color: '#61627C', fontSize: '1.2em' }}>
@@ -393,14 +333,16 @@ export default function ({ params }: { params: { username: string } }) {
                                 <h2 className="text-center" style={{ color: '#ACACAC', fontFamily: 'itim' }}>
                                     {profile.quote}
                                 </h2>
-                                <ProgressBar
-                                    className={`${styles.progres_bar} my-5`}
-                                    now={(profile?.level ?? 0) * 10}
-                                    label={`${profile.level} %`}
-                                    striped
-                                    variant="danger"
-                                    animated
-                                />
+                                <div>
+                                    <p style={{ fontFamily: 'Valorax', color: 'white' }}> level : {profile.level + '%'}</p>
+                                    <ProgressBar
+                                        className={`${styles.progres_bar}`}
+                                        now={((profile?.level ?? 0) % 1) * 100}
+                                        striped
+                                        variant="danger"
+                                        animated
+                                    />
+                                </div>
                                 <hr className=" my-2 mx-2" style={{ color: '#61627C', borderWidth: '2px' }} />
                                 <span style={{ color: '#61627C', fontFamily: 'itim' }}>Rank</span>
                                 <div className="d-flex flex-row my-4">
@@ -417,20 +359,12 @@ export default function ({ params }: { params: { username: string } }) {
                                         <span style={{ color: '#FFEBEB', fontFamily: 'itim' }}>{profile.score}</span>
                                     </div>
                                 </div>
-                                <img
-                                    className={`${styles.rank}`}
-                                    width={200}
-                                    height={200}
-                                    src="/assets/images/rank.png"
-                                    alt="rank"
-                                />
+                                <img className={`${styles.rank}`} width={200} height={200} src="/assets/images/rank.png" alt="rank" />
                             </div>
                             <div className={`${styles.data_holder} col-xl-6 col-lg-12 p-4 my-1`}>
                                 <div className="d-flex align-items-center">
                                     <FaFileInvoice size="2em" color="#FFEBEB" />
-                                    <span style={{ color: '#FFEBEB', fontFamily: 'itim', fontSize: '1.8em' }}>
-                                        Summary
-                                    </span>
+                                    <span style={{ color: '#FFEBEB', fontFamily: 'itim', fontSize: '1.8em' }}>Summary</span>
                                 </div>
                                 <hr className=" my-3" style={{ color: '#61627C', borderWidth: '2px' }} />
                                 <div className="col p-0 m-0">

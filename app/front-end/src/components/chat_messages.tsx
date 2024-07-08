@@ -104,7 +104,6 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
 
                 if (!res.ok) throw new Error('Failed to fetch data');
                 const data = await res.json();
-                console.log(data);
                 const friendsArray = data.friends.map((friend: Friends) => ({
                     id: friend.user.id,
                     username: friend.user.username,

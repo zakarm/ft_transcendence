@@ -107,9 +107,12 @@ function GenerateInputFields() {
                 onClick={ () => {
                   setIsDisabled(true)
                   setTimeout(() => setIsDisabled(false), 3000)
-                  updateField(inputProps[0].inputId, (Cookies.get(inputProps[0].inputId) as string) ?? oldAccountValues[inputProps[0].inputId]);
-                  updateField(inputProps[1].inputId, (Cookies.get(inputProps[1].inputId) as string) ?? oldAccountValues[inputProps[1].inputId]);
-                  updateField(inputProps[2].inputId, (Cookies.get(inputProps[2].inputId) as string) ?? oldAccountValues[inputProps[2].inputId]);
+                  updateField(inputProps[0].inputId, (Cookies.get(inputProps[0].inputId) as string) ?? 
+                    oldAccountValues[inputProps[0].inputId]);
+                  updateField(inputProps[1].inputId, (Cookies.get(inputProps[1].inputId) as string) ?? 
+                    oldAccountValues[inputProps[1].inputId]);
+                  updateField(inputProps[2].inputId, (Cookies.get(inputProps[2].inputId) as string) ?? 
+                    oldAccountValues[inputProps[2].inputId]);
                 } }
                 >
                   Your Colors
@@ -125,9 +128,18 @@ function GameTab() {
 
   const { updateField, currentAccoutValues } = useContext<SettingsProps>(FormContext);
 
-  const [paddleColor, setPaddleColor] = useState<string>((currentAccoutValues['paddleColor'] as string) ?? "#ff4655");
-  const [tableColor, setTableColor] = useState<string>((currentAccoutValues['tableColor'] as string) ?? "#161625");
-  const [ballColor, setBallColor] = useState<string>((currentAccoutValues['ballColor'] as string) ?? "#ffffff");
+  const [paddleColor, setPaddleColor] = useState<string>(
+    (currentAccoutValues['paddleColor'] as string) ?? "#ff4655"
+  );
+  const [tableColor, setTableColor] = useState<string>(
+    (currentAccoutValues['tableColor'] as string) ?? "#161625"
+  );
+  const [ballColor, setBallColor] = useState<string>(
+    (currentAccoutValues['ballColor'] as string) ?? "#ffffff"
+  );
+  const [tableView, setTableView] = useState<string>(
+    (currentAccoutValues['current_table_view'] as string) ?? "6,8,0"
+  );
 
   useEffect(() =>{
     setTableColor((currentAccoutValues['table_color'] as string));
@@ -141,23 +153,28 @@ function GameTab() {
       setPaddleColor((currentAccoutValues['paddle_color'] as string));
     }, [currentAccoutValues['paddle_color'],])
 
-        useEffect(() => {
-          const pos = currentAccoutValues["table_position"] as string;
-          const view =
-            pos === "default"
-              ? "pos_default"
-              : pos === "horizantal"
-              ? "pos_horizantal"
-              : "pos_vertical";
-          let pos_v = Cookies.get(view) as string;
-          if (!pos_v) {
-            Cookies.set('pos_default', '6,8,0');
-            Cookies.set('pos_horizantal', '0,10,0');
-            Cookies.set('pos_vertical', '1,10,0');
-            pos_v = Cookies.get(view) as string;
-          }
-          updateField("current_table_view", pos_v);
-        }, [currentAccoutValues["table_position"]]);
+    useEffect(() => {
+      const pos = currentAccoutValues["table_position"] as string;
+      const view =
+        pos === "default"
+          ? "pos_default"
+          : pos === "horizantal"
+          ? "pos_horizantal"
+          : "pos_vertical";
+      let pos_v = Cookies.get(view) as string;
+      if (!pos_v) {
+        Cookies.set('pos_default', '6,8,0');
+        Cookies.set('pos_horizantal', '0,10,0');
+        Cookies.set('pos_vertical', '1,10,0');
+        pos_v = Cookies.get(view) as string;
+      }
+      updateField("current_table_view", pos_v);
+    }, [currentAccoutValues["table_position"]]);
+
+    useEffect(() => {
+      setTableView((currentAccoutValues['current_table_view'] as string));
+    }, [currentAccoutValues['current_table_view']])
+    
   return (
     <>
       <fieldset className="col-12 col-xxl-6 p-0 m-0 d-flex justify-content-center align-items-center">
@@ -169,9 +186,9 @@ function GameTab() {
             TableColor={convertHexColor(tableColor)}
             BallColor={convertHexColor(ballColor)}
             paddleColor={convertHexColor(paddleColor)}
-            Gameposition_x={parseInt((currentAccoutValues["current_table_view"] as string).split(",")[0])}
-            Gameposition_y={parseInt((currentAccoutValues["current_table_view"] as string).split(",")[1])}
-            Gameposition_z={parseInt((currentAccoutValues["current_table_view"] as string).split(",")[2])}
+            Gameposition_x={parseInt(tableView ? tableView.split(",")[0] : "6")}
+            Gameposition_y={parseInt(tableView ? tableView.split(",")[1] : "8")}
+            Gameposition_z={parseInt(tableView ? tableView.split(",")[2] : "0")}
           />
         </div>
       </fieldset>

@@ -1,6 +1,3 @@
-import sys
-from datetime import datetime
-
 import requests
 import pyotp
 from rest_framework import serializers
@@ -18,7 +15,7 @@ class UsersSignUpSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("email", "password", "first_name", "last_name", "username")
+        fields = ("email", "password", "first_name", "last_name", "username", "display_name")
 
     def create(self, validated_data):
         password = validated_data.pop("password")
@@ -66,18 +63,6 @@ class User2FASerializer(serializers.Serializer):
         try:
             if not user:
                 raise serializers.ValidationError({"error": "Invalid email."})
-            verifier = pyotp.TOTP(user.two_fa_secret_key)
-            server_time = datetime.now()
-            print(f"Server time: {server_time}", file=sys.stderr)
-            print(f"User email: {user.email}", file=sys.stderr)
-            print(f"User 2FA Secret Key: {user.two_fa_secret_key}", file=sys.stderr)
-            print(f"OTP provided by user: {data.get('otp')}", file=sys.stderr)
-            print(f"Current OTP from TOTP: {verifier.now()}", file=sys.stderr)
-            print(
-                f"OTP verification result: {verifier.verify(data.get('otp'))}",
-                file=sys.stderr,
-            )
-
             if not pyotp.TOTP(user.two_fa_secret_key).verify(
                 data.get("otp"), valid_window=1
             ):
@@ -122,6 +107,7 @@ class SocialAuthSerializer(serializers.Serializer):
                         user.last_name = ""
                     user.email = email
                     user.username = user_info.get("login")
+                    user.display_name = user_info.get("login")
                     data_img = user_info.get("avatar_url")
                     default_img = "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Aatrox_0.jpg"
                     user.image_url = data_img if data_img else default_img
@@ -151,6 +137,7 @@ class SocialAuthSerializer(serializers.Serializer):
                     user.last_name = lastname
                     user.image_url = image_url
                     user.username = username if username else user.email.split("@")[0]
+                    user.display_name = user.username
                     user.is_local = False
                     user.save()
                 data["email"] = email
@@ -166,11 +153,11 @@ class SocialAuthSerializer(serializers.Serializer):
                 response = requests.get(url, headers=headers, timeout=1000)
                 response.raise_for_status()
                 user_info = response.json()
-                print(f"user info {user_info}", file=sys.stderr)
                 email = user_info["email"]
                 user, created = User.objects.get_or_create(email=email)
                 if created:
                     user.username = user_info["login"]
+                    user.display_name = user_info["login"]
                     user.first_name = user_info["first_name"]
                     user.last_name = user_info["last_name"]
                     user.image_url = user_info["image"]["link"]

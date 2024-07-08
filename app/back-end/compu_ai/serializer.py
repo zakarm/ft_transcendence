@@ -1,17 +1,10 @@
 from game.models import Match, UserAchievements, Achievements
 from drf_spectacular.utils import extend_schema_field, OpenApiTypes
-from dashboards.serializer import MatchSerializer
 from django.db.models import Count, F, Q, Avg
 from authentication.models import User
 from rest_framework import serializers
-from django.utils import timezone
-from datetime import timedelta
-from datetime import datetime
 from prophet import Prophet
-import numpy as np
 import pandas as pd
-import random
-import sys
 from dashboards.utils import (
     get_lose_games,
     get_win_games,
