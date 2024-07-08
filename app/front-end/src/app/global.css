@@ -70,3 +70,7 @@ input[type='checkbox']:checked {
   border-radius: 5px;
   margin-left: 50px;
 }
+
+*::-webkit-scrollbar {
+  display: none;
+}
