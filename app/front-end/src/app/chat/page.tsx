@@ -157,7 +157,7 @@ export default function () {
     useEffect(() => {
         if (
             newMessage &&
-            (messages?.length === 0 || messages?.at(messages.length - 1)?.timestamp !== newMessage?.timestamp) && 
+            (messages?.length === 0 || messages?.at(messages.length - 1)?.timestamp !== newMessage?.timestamp) &&
             (newMessage.sender === me || newMessage.receiver === me)
         )
             setMessages((prevMessages) => [...prevMessages, newMessage]);
@@ -218,7 +218,7 @@ export default function () {
                     </Offcanvas>
                 </div>
                 <div className={`${styles.about_container} ${styles.about} col-xl-3 p-0 m-0`}>
-                    {selectedChat === 'none' ? (
+                    {/* {selectedChat === 'none' ? (
                         <div className="vh-100 d-flex flex-column align-items-center justify-content-center border border-dark">
                             <div>
                                 <GiAmericanFootballPlayer className="mx-2" size="2em" color="#FF4755" />
@@ -227,9 +227,9 @@ export default function () {
                                 <Spinner variant="danger" />
                             </div>
                         </div>
-                    ) : (
+                    ) : ( */}
                         <ChatAbout selectedChat={selectedChat} handleClose={handleClose} />
-                    )}
+                    {/* )} */}
                 </div>
             </div>
         </>

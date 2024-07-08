@@ -14,7 +14,7 @@ function    doughnutChart( stats : PlayerStatsTypes) {
           'wins',
         ],
         datasets: [{
-          label: 'My First Dataset',
+          label: 'Dataset',
           data: [stats.wins, stats.loses],
           backgroundColor: [
             'rgb(39, 178, 153)',

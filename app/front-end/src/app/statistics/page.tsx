@@ -4,13 +4,7 @@ import { toast } from 'react-toastify';
 import Cookies from 'js-cookie';
 import { useLayoutEffect, useState, useEffect } from 'react';
 
-import {
-    FuturePredictionsTypes,
-    StatisticsDataTypes,
-    AchivementTypes,
-    PlayerMatchesTypes,
-    PlayerStatsTypes,
-} from '@/lib/StatisticsPageTypes/StatisticsPageTypes';
+import { FuturePredictionsTypes, StatisticsDataTypes, AchivementTypes, PlayerMatchesTypes, PlayerStatsTypes } from '@/lib/StatisticsPageTypes/StatisticsPageTypes';
 import styles from './styles.module.css';
 import { FuturePredictionGraph } from '@/components/statistics/graph';
 import { GameHistoryTable, GameHistoryTableTypes } from '@/components/statistics/historyTable';
@@ -82,11 +76,11 @@ function StatisticsPage() {
             data = await getData();
             setTopPlayer(data.top_player ?? '');
             setFuturePredictions(data.future_predictions ?? []);
-            setAvgScore(data.avg_score ? +((data.avg_score).toFixed(2)) : 0);
+            setAvgScore(data.avg_score ? +data.avg_score.toFixed(2) : 0);
             setLastAchiv((data.last_achiev as AchivementTypes) ?? (data.last_achiev as undefined));
             setPlayerMatches(data.player_matches ?? []);
             setPlayerStats(getPlayerStatsFromData(data));
-            setImageURL(data.image_url ?? "");
+            setImageURL(data.image_url ?? '');
         })();
     }, []);
 
@@ -105,32 +99,18 @@ function StatisticsPage() {
                         </section>
 
                         <section className="col-12 m-2 order-1 order-xxl-1 ">
-                            <div
-                                className={`row mt-3  justify-content-around flex-nowrap justify-content-xxl-between ${styles.outter_player_card_container}`}
-                            >
+                            <div className={`row mt-3 flex-nowrap justify-content-around ${styles.outter_player_card_container}`}>
                                 <div className={`col-3 mt-3 mx-1 ${styles.player_card} `}>
-                                    <StatisticCard
-                                        title="Top Player"
-                                        body={topPlayer}
-                                        imgSrc="/assets/images/Top_Player.png"
-                                    />
+                                    <StatisticCard title="Top Player" body={topPlayer} imgSrc="/assets/images/Top_Player.png" />
                                 </div>
                                 <div className={`col-3 mt-3 mx-1 ${styles.player_card} `}>
-                                    <StatisticCard
-                                        title="Average Score"
-                                        body={avgScore}
-                                        imgSrc="/assets/images/Average_Score.png"
-                                    />
+                                    <StatisticCard title="Average Score" body={avgScore} imgSrc="/assets/images/Average_Score.png" />
                                 </div>
                                 <div className={`col-3 mt-3 mx-1 ${styles.player_card} `}>
                                     <StatisticCard
                                         title="Last Achivement"
                                         body={lastAchiv && lastAchiv.achievement_name ? lastAchiv.achievement_name : ''}
-                                        imgSrc={
-                                            lastAchiv && lastAchiv.achievement_name
-                                                ? achivImage[lastAchiv.achievement_name]
-                                                : ''
-                                        }
+                                        imgSrc={lastAchiv && lastAchiv.achievement_name ? achivImage[lastAchiv.achievement_name] : ''}
                                     />
                                 </div>
                             </div>

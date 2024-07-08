@@ -18,6 +18,9 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  /* -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none; */
 }
 
 body {
@@ -71,6 +74,12 @@ input[type='checkbox']:checked {
   margin-left: 50px;
 }
 
-*::-webkit-scrollbar {
+/* Hide the vertical scrollbar */
+*::-webkit-scrollbar:vertical {
   display: none;
+}
+
+/* Show the horizontal scrollbar */
+*::-webkit-scrollbar:horizontal {
+  display: block;
 }

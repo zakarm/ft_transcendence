@@ -43,7 +43,25 @@ interface ProfileData {
 export default function ChatAbout({ handleClose, selectedChat }: Props) {
     Chart.register(RadarController);
 
-    const [profile, setProfile] = useState<ProfileData | undefined>(undefined);
+    const [profile, setProfile] = useState<ProfileData | undefined>({
+        id: 0,
+        username: '.....',
+        email: '...',
+        first_name: '...',
+        last_name: '...',
+        intro: '...',
+        quote: '...',
+        rank: '0',
+        level: 0,
+        score: 0,
+        cover_url: '',
+        location: '...',
+        total_games: 0,
+        win_games: 0,
+        lose_games: 0,
+        image_url: '/assets/images/gameProfiles/default_profile.png',
+        summary: { months: [], win: [], lose: [] },
+    });
 
     const fetchProfileData = async () => {
         const access = Cookies.get('access');
@@ -76,12 +94,13 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
         labels: ['Win', 'Loss', 'High score', 'Time', 'totale games'],
         datasets: [
             {
-                label: 'My First Dataset',
+                label: 'Dataset',
                 data: [
                     profile?.win_games ?? 0,
                     profile?.lose_games ?? 0,
                     profile?.score ?? 0,
-                    81,
+                    // profile?.time ?? 0,
+                    0,
                     profile?.total_games ?? 0,
                 ],
                 fill: true,
@@ -103,7 +122,7 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
             },
             title: {
                 display: true,
-                text: `Win/Loss for test`,
+                text: `Win/Lose/High score/Time/totale games`,
             },
         },
         scales: {
@@ -189,7 +208,7 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
                     </div> */}
                     </div>
                 </div>
-            )}
+             )}
         </>
     );
 }

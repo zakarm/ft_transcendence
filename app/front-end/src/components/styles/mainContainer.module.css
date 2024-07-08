@@ -40,6 +40,8 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
+    width: 100vw;
+    backdrop-filter: blur(5px);
 }
 
 .sidebar_toggle {
