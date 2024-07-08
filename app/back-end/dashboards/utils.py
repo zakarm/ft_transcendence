@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from game.models import Match
 from django.db.models import F, Q, Sum
+import sys
 
 def get_total_games(obj):
     user_matches_as_one = Match.objects.filter(user_one=obj)
@@ -52,6 +53,7 @@ def get_monthly_game_stats(obj):
     months = [(start_date + timedelta(days=30*i)).strftime('%B') for i in range(1, 7)]
     for i in range(1, 7):
         month = (current_month - i) % 12 + 1
+
         win = (
             Match.objects.filter(
                 Q(user_one=obj) &
@@ -95,6 +97,7 @@ def get_total_minutes(obj):
 
     for i in range(1, 7):
         month = (current_month - i) % 12 + 1
+
         matches = Match.objects.filter(
             Q(user_one=obj) &
             Q(match_start__month=month) &
@@ -117,6 +120,6 @@ def get_total_minutes(obj):
             match_durations.append(match_duration.total_seconds() / 60)
 
         total_minutes = sum(match_durations)
-        minutes_months.insert(0, int(total_minutes))
+        minutes_months.insert(0, total_minutes)
 
     return {"months": months, "minutes_months": minutes_months}

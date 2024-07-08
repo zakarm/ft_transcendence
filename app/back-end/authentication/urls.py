@@ -1,6 +1,3 @@
-"""
-Module providing urls utils
-"""
 from django.urls import path, re_path
 from .views import (SignIn2Fa, SignInView, SocialAuthExchangeView,
                     SocialAuthRedirectView, SignUpView, SignOutView, 

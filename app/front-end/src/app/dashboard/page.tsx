@@ -205,7 +205,7 @@ export default function Dashboard() {
             }));
         }
         ExportMinutes(mappedData, 'game_stats_' + value + '_' + new Date().getFullYear() + '.csv');
-        toggleDropdown();
+        toggleDropdownGameStats();
     };
 
     function clickButton() {
