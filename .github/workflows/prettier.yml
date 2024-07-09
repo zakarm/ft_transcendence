@@ -1,0 +1,42 @@
+name: Prettier Check
+
+on:
+  pull_request:
+    branches:
+      - master
+      - production
+
+jobs:
+  prettier:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Prettier
+        run: npx prettier --check "app/front-end/**/*.{tsx,ts,js,jsx,css}"
+
+      - name: Run Prettier on PR
+        if: failure()
+        run: npx prettier --write "app/front-end/**/*.{tsx,ts,js,jsx,css}"
+
+      - name: Commit and Push Changes
+        if: failure()
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          git checkout -B ${{ github.head_ref }}
+          git add .
+          git commit -m "Style: Prettier fixes"
+          git push origin HEAD:${{ github.head_ref }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
