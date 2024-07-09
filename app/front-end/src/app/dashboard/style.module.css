@@ -1,135 +1,132 @@
-.drag_class:hover{
-    border: 1px solid white;
-    box-shadow: #383838 0 0px 20px 0;
-    box-sizing: border-box;
-    opacity: 1;
+.drag_class:hover {
+  border: 1px solid white;
+  box-shadow: #383838 0 0px 20px 0;
+  box-sizing: border-box;
+  opacity: 1;
 }
 
 .sidebar_toggle {
-    background-color: #161625;
+  background-color: #161625;
 }
 
-.toglle{
-    display: none;
+.toglle {
+  display: none;
 }
 
-.slider{
-    display: none;
+.slider {
+  display: none;
 }
 
-.close_btn{
-    color: #F4E6E6;
+.close_btn {
+  color: #f4e6e6;
 }
 
 .card {
-    border-radius: 15px;
-    height: 100%;
+  border-radius: 15px;
+  height: 100%;
 }
 
 .buttom_cards {
-    background-color: #161625;
+  background-color: #161625;
 }
 
 .titles {
-    color: #FFEBEB;
+  color: #ffebeb;
 }
 
 .tabs {
-    border-radius: 15px;
-    background-color: #1B1E2C;
+  border-radius: 15px;
+  background-color: #1b1e2c;
 }
 
 .all_down {
-    color: #FFEBEB;
-    font-size: small;
+  color: #ffebeb;
+  font-size: small;
 }
 
 .med_titles {
-    color: #FFEBEB;
-    font-size: medium;
-    width: 100%;
+  color: #ffebeb;
+  font-size: medium;
+  width: 100%;
 }
 .small_title {
-    color: #FF4755;
+  color: #ff4755;
 }
 
 .imageContainer {
-    height: 350px;
+  height: 350px;
 }
 
 .imageContainer > img {
-    position: absolute;
-    right: 0;
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
+  position: absolute;
+  right: 0;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 .page_body {
-    overflow: auto;
-    width:99%;
+  overflow: auto;
+  width: 99%;
 }
 
-@media (max-height: 500px)
-{
-    .logo{
-        height: 30px;
-        width: 30px;;
-    }
+@media (max-height: 500px) {
+  .logo {
+    height: 30px;
+    width: 30px;
+  }
 
-    .med_titles {
-        font-size: small;
-    }
+  .med_titles {
+    font-size: small;
+  }
 
-    .titles {
-        font-size: large;
-    }
+  .titles {
+    font-size: large;
+  }
 }
 
 @media (max-width: 767px) {
+  .toglle {
+    display: block;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    border-radius: 25px;
+    box-shadow: white 0 0px 20px 0;
+    box-sizing: border-box;
+    opacity: 1;
+    cursor: pointer;
+    z-index: 10;
+  }
 
-    .toglle{
-        display: block;
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        border-radius: 25px;
-        box-shadow: white 0 0px 20px 0;
-        box-sizing: border-box;
-        opacity: 1;
-        cursor: pointer;
-        z-index: 10;
-    }
-
-    .slider {
-        display: block;
-        position: fixed;
-        top: 50%;
-        right: 0;
-        transform: translateY(-50%);
-        border-radius: 25px 0 25px 25px;
-        background-color: hwb(240 9% 85%);
-        border: 1px solid white;
-        background-color: #161625;
-        cursor: pointer;
-        height: 64px;
-    }
-    .imageContainer > img {
-        position: static;
-        margin: 0 auto;
-      }
-      .chart_grid {
-          margin-top: 20px;
-      }
-      .card {
-          height: 100%;
-          border-radius: 15px;
-      }
+  .slider {
+    display: block;
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    border-radius: 25px 0 25px 25px;
+    background-color: hwb(240 9% 85%);
+    border: 1px solid white;
+    background-color: #161625;
+    cursor: pointer;
+    height: 64px;
+  }
+  .imageContainer > img {
+    position: static;
+    margin: 0 auto;
+  }
+  .chart_grid {
+    margin-top: 20px;
+  }
+  .card {
+    height: 100%;
+    border-radius: 15px;
+  }
 }
 
-@media (max-width: 996px)
-{
-    .chart_grid {
-        margin-top: 20px;
-    }
+@media (max-width: 996px) {
+  .chart_grid {
+    margin-top: 20px;
+  }
 }

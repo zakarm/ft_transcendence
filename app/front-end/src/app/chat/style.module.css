@@ -1,28 +1,28 @@
 .about_container {
-    background-color: #181b20;
-    color: #ffebeb;
-    font-family: 'itim';
+  background-color: #181b20;
+  color: #ffebeb;
+  font-family: 'itim';
 }
 .chat_container_ {
-    width: 98%;
+  width: 98%;
 }
 .chat_modal {
-    background-color: #000000;
+  background-color: #000000;
 }
 
 .canvas {
-    background-color: #181b20;
-    z-index: 10;
+  background-color: #181b20;
+  z-index: 10;
 }
 
 @media (max-width: 1199px) {
-    .about {
-        display: none;
-    }
+  .about {
+    display: none;
+  }
 }
 
 @media (max-width: 768px) {
-    .chat {
-        display: none;
-    }
+  .chat {
+    display: none;
+  }
 }

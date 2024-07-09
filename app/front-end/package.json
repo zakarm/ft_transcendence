@@ -1,42 +1,43 @@
 {
-    "name": "front-end",
-    "version": "0.1.0",
-    "private": true,
-    "scripts": {
-        "dev": "next dev --turbo",
-        "build": "next build",
-        "start": "next start",
-        "watch": "tsc --watch",
-        "format": "prettier --write .",
-        "format:check": "prettier --check ."
-    },
-    "dependencies": {
-        "@gsap/react": "^2.1.1",
-        "bootstrap": "^5.3.3",
-        "chart.js": "^4.4.3",
-        "cloudinary": "^2.2.0",
-        "gsap": "^3.12.5",
-        "js-cookie": "^3.0.5",
-        "next": "^14.2.4",
-        "react": "^18.3.1",
-        "react-bootstrap": "^2.10.4",
-        "react-chartjs-2": "^5.2.0",
-        "react-dom": "^18.3.1",
-        "react-icons": "^5.2.1",
-        "react-otp-input": "^3.1.1",
-        "react-qr-code": "^2.0.15",
-        "react-toastify": "^10.0.5",
-        "recharts": "^2.12.7",
-        "sharp": "^0.33.4",
-        "three": "^0.166.1"
-    },
-    "devDependencies": {
-        "@types/js-cookie": "^3.0.6",
-        "@types/node": "^20.14.10",
-        "@types/react": "^18.3.3",
-        "@types/react-bootstrap": "^0.32.36",
-        "@types/three": "^0.166.0",
-        "prettier": "^3.3.2",
-        "typescript": "^5.5.3"
-    }
+  "name": "front-end",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbo",
+    "build": "next build",
+    "start": "next start",
+    "watch": "tsc --watch",
+    "tsc": "tsc --noEmit",
+    "format": "prettier --write ./**/*.{tsx,ts,css}",
+    "format:check": "prettier --check ./**/*.{tsx,ts,css}"
+  },
+  "dependencies": {
+    "@gsap/react": "^2.1.1",
+    "bootstrap": "^5.3.3",
+    "chart.js": "^4.4.3",
+    "cloudinary": "^2.2.0",
+    "gsap": "^3.12.5",
+    "js-cookie": "^3.0.5",
+    "next": "^14.2.4",
+    "react": "^18.3.1",
+    "react-bootstrap": "^2.10.4",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.2.1",
+    "react-otp-input": "^3.1.1",
+    "react-qr-code": "^2.0.15",
+    "react-toastify": "^10.0.5",
+    "recharts": "^2.12.7",
+    "sharp": "^0.33.4",
+    "three": "^0.166.1"
+  },
+  "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
+    "@types/node": "^20.14.10",
+    "@types/react": "^18.3.3",
+    "@types/react-bootstrap": "^0.32.36",
+    "@types/three": "^0.166.0",
+    "prettier": "^3.3.2",
+    "typescript": "^5.5.3"
+  }
 }

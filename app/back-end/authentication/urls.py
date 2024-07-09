@@ -14,4 +14,5 @@ urlpatterns = [
             SocialAuthRedirectView.as_view(), name='social-redirect'),
     re_path(r'^social/(?P<platform>(github|42|google))/callback$',
             SocialAuthExchangeView.as_view(), name='social-callback'),
+
 ]

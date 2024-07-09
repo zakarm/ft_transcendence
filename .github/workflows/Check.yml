@@ -1,0 +1,57 @@
+name: TypeScript and Prettier Check
+
+on: [push, pull_request]
+
+jobs:
+  typescript-prettier-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          cd app/front-end/
+          npm install
+
+      - name: Run TypeScript Check
+        run: |
+          cd app/front-end/
+          npm run tsc --noEmit
+          typescript_exit_code=$?
+          if [ $typescript_exit_code -ne 0 ]; then
+            echo "TypeScript check failed. Aborting workflow."
+            exit $typescript_exit_code
+          else
+            echo "TypeScript check passed."
+          fi
+
+    #   - name: Run Prettier Check
+    #     run: |
+    #       cd app/front-end/
+    #       npm run check || npm run format
+    #       prettier_exit_code=$?
+    #       if [ $prettier_exit_code -ne 0 ]; then
+    #         echo "Prettier check failed. Proceeding to commit changes."
+    #       else
+    #         echo "Prettier check passed. No further action needed."
+    #         exit 0  # Exit successfully if Prettier check passed
+    #       fi
+
+    #   - name: Commit and Push Changes
+    # if: ${{ success() }}
+    #     run: |
+    #       git config --global user.email "ael-mouz@student.1337.ma"
+    #       git config --global user.name "ael-mouz"
+    #       git checkout -B ${{ github.ref_name }}
+    #       git add .
+    #       git commit -m "[Style] Prettier fixes"
+    #       git push origin HEAD:${{ github.ref_name }}
+    #     env:
+    #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

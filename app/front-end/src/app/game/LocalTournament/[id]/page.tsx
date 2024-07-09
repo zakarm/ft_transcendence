@@ -1,5 +1,5 @@
-import LocalTournamentPage from "../../(local-tournament)/LocalTournamentPage";
+import LocalTournamentPage from '../../(local-tournament)/LocalTournamentPage';
 
 export default function () {
-    return <LocalTournamentPage />;
+  return <LocalTournamentPage />;
 }

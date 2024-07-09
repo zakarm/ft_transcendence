@@ -2,3 +2,6 @@
 .next
 out
 public
+package-lock.json
+package.json
+countries.min.json

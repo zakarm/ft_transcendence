@@ -55,8 +55,8 @@
 }
 
 .visible {
-    display : flex;
+  display: flex;
 }
 .hide {
-    display : none;
+  display: none;
 }

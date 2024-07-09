@@ -9,9 +9,10 @@
   max-width: 1600px;
   background-color: var(--clr-ldark);
   height: 900px;
-  transition: box-shadow 0.4s ease-in-out, border 0.4s ease-in-out;
+  transition:
+    box-shadow 0.4s ease-in-out,
+    border 0.4s ease-in-out;
 }
-
 
 .wrapper {
   overflow: auto;
@@ -31,45 +32,45 @@
 }
 
 .inputHolder {
-    font-size: clamp(1rem, -0.268rem + 2.6144vw, 1.2rem);
-    color : var(--clr-ldark);
-    width : 400px;
+  font-size: clamp(1rem, -0.268rem + 2.6144vw, 1.2rem);
+  color: var(--clr-ldark);
+  width: 400px;
 }
 
 .rangeTitle {
-    color: var(--clr--grey);
-    width : 400px;
-    max-width: 100%;
+  color: var(--clr--grey);
+  width: 400px;
+  max-width: 100%;
 }
 
 .input {
-  width : 100%;
+  width: 100%;
   outline: none;
   color: #706f71;
   background-color: var(--clr--grey);
   height: 50px;
   border-radius: 20px;
   /* accent-color: red; */
-  border : none;
+  border: none;
 }
 
 .inputContainer {
-  position : relative;
+  position: relative;
 }
 
 .eye_image {
-  position : absolute;
+  position: absolute;
   z-index: 1;
   cursor: pointer;
   left: calc(100% - 60px);
-  width : 32px;
-  height :32px;
+  width: 32px;
+  height: 32px;
 }
 
 .previewButton {
-  width : 100%;
+  width: 100%;
   min-width: 60px;
-  border : none;
+  border: none;
   height: 70px;
   border-radius: 25px;
   background-color: #706f71;
@@ -77,36 +78,36 @@
 }
 
 .inputHolderColor {
-    font-size: clamp(1rem, -0.268rem + 2.6144vw, 1.2rem);
-    width : 400px;
+  font-size: clamp(1rem, -0.268rem + 2.6144vw, 1.2rem);
+  width: 400px;
 }
 
 .inputColor {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    width : 100%;
-    cursor: pointer;
-  }
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 100%;
+  cursor: pointer;
+}
 
-  .inputColor::-webkit-color-swatch {
-    width: 100%;
-    border-radius: 25px;
-    border: 2px solid var(--clr--white);
-  }
+.inputColor::-webkit-color-swatch {
+  width: 100%;
+  border-radius: 25px;
+  border: 2px solid var(--clr--white);
+}
 
-  .inputColor::-moz-color-swatch {
-    width: 100%;
-    border-radius: 25px;
-    border: 2px solid var(--clr--white);
-  }
+.inputColor::-moz-color-swatch {
+  width: 100%;
+  border-radius: 25px;
+  border: 2px solid var(--clr--white);
+}
 
 .inputColor {
-    background-color: var(--clr--grey);
-    height: 70px;
-    border-radius: 25px;
-    /* accent-color: red; */
-    border : none;
+  background-color: var(--clr--grey);
+  height: 70px;
+  border-radius: 25px;
+  /* accent-color: red; */
+  border: none;
 }
 
 .input:focus {
@@ -128,8 +129,8 @@
   border-radius: 25px;
   background: var(--clr--grey);
   outline: none;
-  -webkit-transition: .2s;
-  transition: opacity .2s;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
 }
 
 .slider::-webkit-slider-thumb {
@@ -204,15 +205,19 @@
   min-width: 180px;
   max-width: 400px;
   font-size: clamp(1.2rem, -0.268rem + 2.6144vw, 3rem);
-  box-shadow: 0px 100px 100px -10px rgba(255, 71, 85, 0.7),
+  box-shadow:
+    0px 100px 100px -10px rgba(255, 71, 85, 0.7),
     0px 10px 100px 10px var(--clr-dark);
-  transition: box-shadow 0.6s ease-in-out, transform 0.6s ease-in-out;
+  transition:
+    box-shadow 0.6s ease-in-out,
+    transform 0.6s ease-in-out;
 }
 
 .create_button:hover {
   background-color: var(--clr--white);
   color: var(--clr-dark);
-  box-shadow: 0px 100px 100px -10px rgba(255, 235, 235, 0.7),
+  box-shadow:
+    0px 100px 100px -10px rgba(255, 235, 235, 0.7),
     0px 10px 100px 10px var(--clr-dark);
 }
 
@@ -221,25 +226,30 @@
     font-size: 1rem;
   }
 
-  .inputHolder, .rangeTitle {
+  .inputHolder,
+  .rangeTitle {
     width: 350px;
   }
 
-  .profilePic, .qr_code {
+  .profilePic,
+  .qr_code {
     width: 200px;
     height: 200px;
   }
 
-    .input, .inputColor, .select, .previewButton {
-        height: 50px;
-        border-radius: 15px;
-    }
-    .inputColor::-webkit-color-swatch {
-      border-radius: 15px;
-    }
-    .form_container {
-        height: auto;
-    }
+  .input,
+  .inputColor,
+  .select,
+  .previewButton {
+    height: 50px;
+    border-radius: 15px;
+  }
+  .inputColor::-webkit-color-swatch {
+    border-radius: 15px;
+  }
+  .form_container {
+    height: auto;
+  }
 }
 
 @media only screen and (max-width: 776px) {
@@ -250,7 +260,8 @@
     font-size: 1rem;
   }
 
-  .inputHolder, .rangeTitle {
+  .inputHolder,
+  .rangeTitle {
     width: 250px;
   }
 
@@ -259,8 +270,8 @@
   }
   .eye_image {
     left: 80%;
-    width : 25px;
-    height : 25px;
+    width: 25px;
+    height: 25px;
   }
 }
 
@@ -269,11 +280,13 @@
     font-size: 1rem;
   }
 
-  .inputHolder, .rangeTitle {
+  .inputHolder,
+  .rangeTitle {
     width: 200px;
   }
 
-  .profilePic, .qr_code {
+  .profilePic,
+  .qr_code {
     width: 100px;
     height: 100px;
   }

@@ -1,16 +1,14 @@
-'use client'
-import MainContainer from "../../components/mainContainer";
-import AuthChecker from "../../components/authChecker"
-import { WebSocketProvider } from '@/components/webSocket'
+'use client';
+import MainContainer from '../../components/mainContainer';
+import AuthChecker from '../../components/authChecker';
+import { WebSocketProvider } from '@/components/webSocket';
 import React, { useState } from 'react';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <AuthChecker>
       <WebSocketProvider>
-        <MainContainer>
-          {children}
-        </MainContainer>
+        <MainContainer>{children}</MainContainer>
       </WebSocketProvider>
     </AuthChecker>
   );

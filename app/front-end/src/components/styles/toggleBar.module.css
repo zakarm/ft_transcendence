@@ -1,35 +1,34 @@
-.title:hover{
-    border: 1px solid white;
-    border-radius: 25px;
-    box-shadow: #383838 0 0px 20px 0;
-    box-sizing: border-box;
-    opacity: 1;
-    background-color: #606060;
-    cursor: pointer;
+.title:hover {
+  border: 1px solid white;
+  border-radius: 25px;
+  box-shadow: #383838 0 0px 20px 0;
+  box-sizing: border-box;
+  opacity: 1;
+  background-color: #606060;
+  cursor: pointer;
 }
 
-.link{
-    text-decoration: none;
+.link {
+  text-decoration: none;
 }
 
 @media (max-height: 570px) and (min-height: 350px) {
-    .title div{
-        font-size: small;
-    }
+  .title div {
+    font-size: small;
+  }
 
-    .title .icon{
-        font-size: 0.5em;
-    }
+  .title .icon {
+    font-size: 0.5em;
+  }
 }
 
-@media (max-height: 400px)
-{
-    .title div{
-        font-size: xx-small;
-        padding-bottom: 2px;
-    }
+@media (max-height: 400px) {
+  .title div {
+    font-size: xx-small;
+    padding-bottom: 2px;
+  }
 
-    .title .icon{
-        font-size: 0.2em;
-    }
+  .title .icon {
+    font-size: 0.2em;
+  }
 }

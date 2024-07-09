@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Itim&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Itim&display=swap');
 
 :root {
   --clr-red: #ff4755;
@@ -10,14 +10,17 @@
 }
 
 @font-face {
-  font-family: "valorax";
-  src: url("/fonts/valorax.otf") format("opentype");
+  font-family: 'valorax';
+  src: url('/fonts/valorax.otf') format('opentype');
 }
 
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  /* -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none; */
 }
 
 body {
@@ -25,15 +28,15 @@ body {
 }
 
 .itim-font {
-  font-family: "itim", cursive !important;
+  font-family: 'itim', cursive !important;
 }
 
 .valo-font {
-  font-family: "valorax", Georgia, "Times New Roman", Times, serif;
+  font-family: 'valorax', Georgia, 'Times New Roman', Times, serif;
   color: #ffebeb;
 }
 
-input[type="file"].imageInput {
+input[type='file'].imageInput {
   display: none;
 }
 
@@ -54,7 +57,7 @@ input[type='checkbox']:checked {
 }
 
 .font-color {
-  color : var(--clr--white);
+  color: var(--clr--white);
 }
 
 *::-webkit-scrollbar {
@@ -69,4 +72,14 @@ input[type='checkbox']:checked {
   background: #df3d4b;
   border-radius: 5px;
   margin-left: 50px;
+}
+
+/* Hide the vertical scrollbar */
+*::-webkit-scrollbar:vertical {
+  display: none;
+}
+
+/* Show the horizontal scrollbar */
+*::-webkit-scrollbar:horizontal {
+  display: block;
 }
