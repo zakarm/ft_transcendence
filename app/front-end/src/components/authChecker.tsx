@@ -6,79 +6,77 @@ import Cookies from 'js-cookie';
 import Spinner from 'react-bootstrap/Spinner';
 import styles from './styles/authChecker.module.css';
 import MainContainer from './mainContainer';
+import { toast } from 'react-toastify';
 
 const AuthChecker = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
-<<<<<<< HEAD
-    useEffect(() => {
-
-        const refreshAccessToken = async (refreshToken: string) => {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/refresh`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ refresh: refreshToken }),
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    Cookies.set('access', data.access);
-                    return data.access;
+  useEffect(() => {
+    const refreshAccessToken = async (refreshToken: string) => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/refresh`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ refresh: refreshToken }),
+        });
+        if (response.ok) {
+          const data = await response.json();
+          Cookies.set('access', data.access);
+          return data.access;
+        } else {
+          return null;
+        }
+      } catch (error) {
+        console.error(`Error refreshing token: ${error}`);
+        return null;
+      }
+    };
+    const authentication = async () => {
+      try {
+        const access = Cookies.get('access');
+        const csrftoken = Cookies.get('csrftoken') || '';
+        if (access) {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/verify`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({ token: access }),
+          });
+          if (response.ok) {
+            setIsAuthenticated(true);
+          } else {
+            if (response.status === 401) {
+              const refresh = Cookies.get('refresh');
+              if (refresh) {
+                const newAccess = await refreshAccessToken(refresh);
+                if (newAccess) {
+                  Cookies.set('access', newAccess, { path: '/' });
+                  setIsAuthenticated(true);
                 } else {
-                    return null;
+                  setIsAuthenticated(false);
+                  router.push('/sign-in');
                 }
-            } catch (error) {
-                console.error(`Error refreshing token: ${error}`);
-                return null;
+              } else {
+                setIsAuthenticated(false);
+                router.push('/sign-in');
+              }
             }
-        };
-
-        const authentication = async () => {
-            try {
-                const access = Cookies.get('access');
-                const csrftoken = Cookies.get('csrftoken') || '';
-                if (access) {
-                    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/verify`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrftoken,
-                        },
-                        body: JSON.stringify({ token: access }),
-                    });
-                    if (response.ok) {
-                        setIsAuthenticated(true);
-                    } else {
-                        if (response.status === 401) {
-                            const refresh = Cookies.get('refresh');
-                            if (refresh) {
-                                const newAccess = await refreshAccessToken(refresh);
-                                if (newAccess) {
-                                    Cookies.set('access', newAccess, { path : '/' });
-                                    setIsAuthenticated(true);
-                                } else {
-                                    setIsAuthenticated(false);
-                                    router.push('/sign-in');
-                                }
-                            } else {
-                                setIsAuthenticated(false);
-                                router.push('/sign-in');
-                            }
-                        }
-                    }
-                } else {
-                    setIsAuthenticated(false);
-                    router.push('/sign-in');
-                }
-            } catch (error: any) {
-                console.error(`Error : ${error}`);
-            }
-        };
-        authentication();
-    }, [router]);
+          }
+        } else {
+          setIsAuthenticated(false);
+          router.push('/sign-in');
+        }
+      } catch (error: any) {
+        console.error(`Error : ${error}`);
+      }
+    };
+    authentication();
+  }, [router]);
 
   if (isAuthenticated === null) {
     return (
