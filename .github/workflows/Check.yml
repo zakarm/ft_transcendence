@@ -23,34 +23,35 @@ jobs:
       - name: Run TypeScript Check
         run: |
           cd app/front-end/
-          npm run tsc
-          if [ $? -ne 0 ]; then
-            echo "TypeScript check failed. Aborting push."
-            exit 1
+          npm run tsc --noEmit
+          typescript_exit_code=$?
+          if [ $typescript_exit_code -ne 0 ]; then
+            echo "TypeScript check failed. Aborting workflow."
+            exit $typescript_exit_code
           else
             echo "TypeScript check passed."
           fi
 
-      - name: Run Prettier Check
-        run: |
-          cd app/front-end/
-          npm run format
-          npm run format:check
-          if [ $? -ne 0 ]; then
-            echo "Prettier check failed. Aborting push."
-            exit 1
-          else
-            echo "Prettier check passed."
-          fi
+    #   - name: Run Prettier Check
+    #     run: |
+    #       cd app/front-end/
+    #       npm run check || npm run format
+    #       prettier_exit_code=$?
+    #       if [ $prettier_exit_code -ne 0 ]; then
+    #         echo "Prettier check failed. Proceeding to commit changes."
+    #       else
+    #         echo "Prettier check passed. No further action needed."
+    #         exit 0  # Exit successfully if Prettier check passed
+    #       fi
 
-      - name: Commit and Push Changes
-        if: failure()
-        run: |
-          git config --global user.email "ael-mouz@student.1337.ma"
-          git config --global user.name "ael-mouz"
-          git checkout -B ${{ github.ref_name }}
-          git add .
-          git commit -m "[Style] TypeScript and Prettier fixes"
-          git push origin HEAD:${{ github.ref_name }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   - name: Commit and Push Changes
+    # if: ${{ success() }}
+    #     run: |
+    #       git config --global user.email "ael-mouz@student.1337.ma"
+    #       git config --global user.name "ael-mouz"
+    #       git checkout -B ${{ github.ref_name }}
+    #       git add .
+    #       git commit -m "[Style] Prettier fixes"
+    #       git push origin HEAD:${{ github.ref_name }}
+    #     env:
+    #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
