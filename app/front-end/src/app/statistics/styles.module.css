@@ -1,140 +1,142 @@
 .page_container {
-    height: 100vh;
-    width: 98%;
-    overflow: auto;
+  height: 100vh;
+  width: 98%;
+  overflow: auto;
 }
 
 .table_container {
-    background-color: var(--clr-ldark);
-    border-radius: 25px;
-    height: 100%;
+  background-color: var(--clr-ldark);
+  border-radius: 25px;
+  height: 100%;
 }
 
 .table_title {
-    color : #A6A0A0;
+  color: #a6a0a0;
 }
 
 .graph_container {
-    background-color: var(--clr-ldark);
-    border-radius: 25px;
+  background-color: var(--clr-ldark);
+  border-radius: 25px;
 }
 
 .canvas_container {
-    display : relative;
-    width : 100vw;
-    height: 30vh;
-    min-width: 300px;
+  display: relative;
+  width: 100vw;
+  height: 30vh;
+  min-width: 300px;
 }
 
 .outter_player_card_container {
-    position: relative;
-    scroll-snap-type: x mandatory;
-    scroll-padding: 0 24px;
-    height: 100%;
+  position: relative;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0 24px;
+  height: 100%;
 }
 
 .player_card_container {
-    scroll-snap-align: start;
-    position: relative;
-    height: 100%;
+  scroll-snap-align: start;
+  position: relative;
+  height: 100%;
 }
 
 .player_card {
-    background-color: var(--clr-ldark);
-    border-radius: 25px;
-    width : 31%;
-    height: 260px;
-    min-width: 300px;
-    max-width: 390px;
+  background-color: var(--clr-ldark);
+  border-radius: 25px;
+  width: 31%;
+  height: 260px;
+  min-width: 300px;
+  max-width: 390px;
 }
 
 .player_card_title {
-    height: 25%;
-    z-index: 2;
-    color : #A6A0A0;
+  height: 25%;
+  z-index: 2;
+  color: #a6a0a0;
 }
 
 .player_card_body {
-    position: absolute;
-    font-size: 2.5rem;
-    z-index: 2;
-    height: 100%;
+  position: absolute;
+  font-size: 2.5rem;
+  z-index: 2;
+  height: 100%;
 }
 
 .card_image {
-    /* max-width: 95%; */
-    max-height: 100%;
-    filter: drop-shadow(0px 0px 15px #dddd);
-    z-index: 0;
+  /* max-width: 95%; */
+  max-height: 100%;
+  filter: drop-shadow(0px 0px 15px #dddd);
+  z-index: 0;
 }
 
-.image_container, .image_container_player, .image_container_hits, .image_container_achiv {
-    position: absolute;
-    bottom: 0%;
+.image_container,
+.image_container_player,
+.image_container_hits,
+.image_container_achiv {
+  position: absolute;
+  bottom: 0%;
 }
 
 .image_container_player {
-    top: 0%;
-    left: 0%;
-    /* transform: translate( +10%,0); */
-    height: 100%;
-    width: 100%;
+  top: 0%;
+  left: 0%;
+  /* transform: translate( +10%,0); */
+  height: 100%;
+  width: 100%;
 }
 
 .image_container_hits {
-    top: 0%;
-    left: 0%;
-    transform: translate( +90%,0);
-    height: 100%;
-    width: 50%;
+  top: 0%;
+  left: 0%;
+  transform: translate(+90%, 0);
+  height: 100%;
+  width: 50%;
 }
 
 .image_container_achiv {
-    top: 0%;
-    left: 0%;
-    transform: translate( +90%,0);
-    height: 100%;
-    width: 50%;
+  top: 0%;
+  left: 0%;
+  transform: translate(+90%, 0);
+  height: 100%;
+  width: 50%;
 }
 
 .stats_container {
-    background-color: var(--clr-ldark);
-    border-radius: 25px;
-    height: auto;
-    min-width: 300px;
+  background-color: var(--clr-ldark);
+  border-radius: 25px;
+  height: auto;
+  min-width: 300px;
 }
 
 .rectangle_text {
-    max-width: 300px;
-    box-shadow: inset 0px 0px 70px 2px var(--clr-ldark);
-    border-radius: 25px;
-    height: 70px;
+  max-width: 300px;
+  box-shadow: inset 0px 0px 70px 2px var(--clr-ldark);
+  border-radius: 25px;
+  height: 70px;
 }
 
 .doughnut_chart_container {
-    position : relative;
-    height: 24vh;
-    min-width: 300px;
+  position: relative;
+  height: 24vh;
+  min-width: 300px;
 }
 
 .win_rate_text {
-    font-size: 100%;
-    position: absolute;
-    top : 45%;
-    height: 25%;
-    width: 200px;
-    z-index: 10;
+  font-size: 100%;
+  position: absolute;
+  top: 45%;
+  height: 25%;
+  width: 200px;
+  z-index: 10;
 }
 
-@media screen and (max-width : 776px) {
-    .player_card {
-        width : 300px;
-    }
+@media screen and (max-width: 776px) {
+  .player_card {
+    width: 300px;
+  }
 }
 
-
-@media screen and (max-width : 1700px) {
-    .outter_player_card_container {
-        overflow-x: auto;
-    }
+@media screen and (max-width: 1700px) {
+  .outter_player_card_container {
+    overflow-x: auto;
+  }
 }

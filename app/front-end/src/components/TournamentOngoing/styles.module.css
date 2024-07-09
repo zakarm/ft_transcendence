@@ -11,95 +11,95 @@
 } */
 
 .live_wrapper {
-    height: 47vh;
-    min-width: 300px;
-    border-radius: 25px;
+  height: 47vh;
+  min-width: 300px;
+  border-radius: 25px;
 }
 
 .liveMatchContainer {
-    position: relative;
-    height: 100%;
-    width: 100%;
+  position: relative;
+  height: 100%;
+  width: 100%;
 }
 
 .liveMatchBackground {
-    background-image: url('/assets/images/Backgrounds/back.png');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    border-radius: 25px;
-    filter: blur(2px);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
+  background-image: url('/assets/images/Backgrounds/back.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 25px;
+  filter: blur(2px);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
 }
 
 .liveMatchInfo {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-    text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  text-align: center;
 }
 
 .upcoming_match {
-    border-radius: 25px;
-    background-color: var(--clr-ldark);
-    height: 140px;
-    max-width: 650px;
-    min-width: 320px;
+  border-radius: 25px;
+  background-color: var(--clr-ldark);
+  height: 140px;
+  max-width: 650px;
+  min-width: 320px;
 }
 .upcoming_match:hover {
-    scale: 1.01;
-    cursor: pointer;
+  scale: 1.01;
+  cursor: pointer;
 }
 
 .navbar {
-    height: 70px;
+  height: 70px;
 }
 
 .player_image,
 .player_image_small {
-    border-radius: 25px;
-    box-shadow: 0 0 25px 0px var(--clr--white);
-    /* min-width: 200px; */
+  border-radius: 25px;
+  box-shadow: 0 0 25px 0px var(--clr--white);
+  /* min-width: 200px; */
 }
 
 .vs_text {
-    font-size: clamp(1.3rem, 0.895rem + 0.561vw, 3rem);
+  font-size: clamp(1.3rem, 0.895rem + 0.561vw, 3rem);
 }
 
 .match_score {
-    font-size: clamp(2rem, 1.75rem + 0.667vw, 3rem);
+  font-size: clamp(2rem, 1.75rem + 0.667vw, 3rem);
 }
 
 .match_title {
-    font-size: clamp(1.5rem, 0.5rem + 1.333vw, 3rem);
+  font-size: clamp(1.5rem, 0.5rem + 1.333vw, 3rem);
 }
 
 .live_match_text {
-    height: 15%;
+  height: 15%;
 }
 .live_players_match {
-    height: 75%;
+  height: 75%;
 }
 .live_player_container {
-    height: 270px;
+  height: 270px;
 }
 @media screen and (max-width: 576px) {
-    .player_image {
-        width: 130px !important;
-        height: 130px !important;
-    }
+  .player_image {
+    width: 130px !important;
+    height: 130px !important;
+  }
 
-    .live_player_container {
-        height: 200px;
-    }
-    .live_wrapper {
-        height: 53vh;
-    }
+  .live_player_container {
+    height: 200px;
+  }
+  .live_wrapper {
+    height: 53vh;
+  }
 }

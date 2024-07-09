@@ -4,11 +4,11 @@ import { useCallback } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 
 interface GameData {
-    image: string;
-    player: string;
-    score: number;
-    date: string;
-    result: 'WIN' | 'LOSS';
+  image: string;
+  player: string;
+  score: number;
+  date: string;
+  result: 'WIN' | 'LOSS';
 }
 
 const convertToCSV = (data: GameData[]) => {
@@ -22,12 +22,7 @@ const convertToCSV = (data: GameData[]) => {
   csvRows.push(headers.join(','));
 
   for (const row of data) {
-    const values = [
-      row.player,
-      row.score.toString(),
-      row.date,
-      row.result,
-    ];
+    const values = [row.player, row.score.toString(), row.date, row.result];
     csvRows.push(values.join(','));
   }
 
@@ -35,11 +30,11 @@ const convertToCSV = (data: GameData[]) => {
 };
 
 interface ExportCSVProps {
-    data: GameData[];
-    filename?: string;
+  data: GameData[];
+  filename?: string;
 }
 
-export const ExportCSV = ( data: GameData[], filename: string = 'data.csv' ) => {
+export const ExportCSV = (data: GameData[], filename: string = 'data.csv') => {
   if (!data || Object.keys(data).length === 0) {
     toast.error('No data to export !');
     return;

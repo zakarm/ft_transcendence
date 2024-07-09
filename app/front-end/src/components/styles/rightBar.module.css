@@ -1,14 +1,14 @@
 .offcanvas {
-  background-color: rgba(255,255,255,0);
+  background-color: rgba(255, 255, 255, 0);
 }
 
 .notification {
-    color: #FFEBEB;
-    text-decoration: none;
-    position: relative;
-    display: inline-block;
-    cursor: pointer;
-  }
+  color: #ffebeb;
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
 
 .notification .badge {
   position: absolute;
@@ -23,169 +23,161 @@
   text-align: center;
 }
 
-.img_class{
+.img_class {
   width: 100px;
   height: 100px;
   border-radius: 50%;
   overflow: hidden; /* Hide overflowing parts of the image */
-  border: 1px solid #27B299;
-  box-shadow: #27B299 0 0px 20px 0;
+  border: 1px solid #27b299;
+  box-shadow: #27b299 0 0px 20px 0;
   box-sizing: border-box;
   opacity: 1;
 }
 
-.search_inpt{
-  background-color: #2C3143;
+.search_inpt {
+  background-color: #2c3143;
   border: 1px solid #161625;
   border-radius: 15px;
   overflow: hidden;
   margin: 2px;
 }
 
-.search_inpt2{
-  background-color: #2C3143;
+.search_inpt2 {
+  background-color: #2c3143;
   border: 0;
   border-radius: 15px;
   overflow: hidden;
 }
 
-.search_inpt:hover{
-  border: 1px solid #FFEBEB;
+.search_inpt:hover {
+  border: 1px solid #ffebeb;
   box-shadow: #383838 0 0px 20px 0;
   box-sizing: border-box;
   opacity: 1;
 }
 
-.search_inpt2:hover{
-  border: 1px solid #FFEBEB;
+.search_inpt2:hover {
+  border: 1px solid #ffebeb;
   box-shadow: #383838 0 0px 20px 0;
   box-sizing: border-box;
   opacity: 1;
 }
 
-.drop_class{
+.drop_class {
   background-color: #ffffff;
 }
 
-.drag_class:hover{
-  border: 1px solid #FFEBEB;
+.drag_class:hover {
+  border: 1px solid #ffebeb;
 }
 
-.data:focus{
+.data:focus {
   outline: none;
   box-shadow: none;
   cursor: text;
 }
 
-.data::placeholder{
-  color: #FFEBEB;
+.data::placeholder {
+  color: #ffebeb;
   font-family: 'itim';
 }
 
 /* Change input text color when not empty */
 .data:not(:placeholder-shown) {
-  color: #FFEBEB; /* Adjust text color as needed */
+  color: #ffebeb; /* Adjust text color as needed */
 }
 
 /* For modern browsers */
 .data::placeholder {
-  color: #FFEBEB; /* Adjust placeholder color as needed */
+  color: #ffebeb; /* Adjust placeholder color as needed */
 }
 
-
-@media (max-height: 500px)
-{
-  .img_class{
+@media (max-height: 500px) {
+  .img_class {
     width: 40px;
-    height: 40px;;
+    height: 40px;
   }
 
-  .profile h3{
+  .profile h3 {
     font-size: small;
   }
 
-  .profile h4{
+  .profile h4 {
     font-size: small;
   }
 
-  .search_inpt{
+  .search_inpt {
     height: 30px;
     margin: 0;
   }
 
-  .search_inpt2{
+  .search_inpt2 {
     height: 35px;
     margin: 0;
   }
 
-
-  .search_inpt .ico{
+  .search_inpt .ico {
     height: 15px;
     width: 15px;
   }
 
-  .search_inpt .place{
+  .search_inpt .place {
     font-size: smaller;
   }
 
-  .search_inpt2 .place{
+  .search_inpt2 .place {
     font-size: smaller;
     padding: 0;
   }
 
-  .search_inpt2 .ico{
+  .search_inpt2 .ico {
     height: 15px;
     width: 15px;
     padding: 0;
   }
 }
 
-@media (max-width: 500px)
-{
-  .img_class{
+@media (max-width: 500px) {
+  .img_class {
     width: 40px;
-    height: 40px;;
+    height: 40px;
   }
 
-  .profile h3{
+  .profile h3 {
     font-size: small;
   }
 
-  .profile h4{
+  .profile h4 {
     font-size: small;
   }
 
-  .search_inpt{
+  .search_inpt {
     height: 30px;
     margin: 0;
   }
 
-  .search_inpt2{
+  .search_inpt2 {
     height: 35px;
     margin: 0;
   }
 
-
-  .search_inpt .ico{
+  .search_inpt .ico {
     height: 15px;
     width: 15px;
   }
 
-  .search_inpt .place{
+  .search_inpt .place {
     font-size: smaller;
   }
 
-  .search_inpt2 .place{
+  .search_inpt2 .place {
     font-size: smaller;
     padding: 0;
   }
 
-  .search_inpt2 .ico{
+  .search_inpt2 .ico {
     height: 15px;
     width: 15px;
     padding: 0;
   }
 }
-
-
-

@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 
 export default class Boundary {
   width: number;
@@ -10,13 +10,7 @@ export default class Boundary {
   material: THREE.MeshStandardMaterial;
   mesh: THREE.Mesh;
 
-  constructor(
-    width: number,
-    height: number,
-    depth: number,
-    positions: number[],
-    color: number
-  ) {
+  constructor(width: number, height: number, depth: number, positions: number[], color: number) {
     this.width = width;
     this.height = height;
     this.depth = depth;

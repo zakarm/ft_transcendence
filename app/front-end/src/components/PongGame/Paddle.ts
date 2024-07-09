@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 
 export default class Paddle {
   width: number;
@@ -11,13 +11,7 @@ export default class Paddle {
   material: THREE.MeshStandardMaterial;
   mesh: THREE.Mesh;
 
-  constructor(
-    width: number,
-    height: number,
-    depth: number,
-    color: number,
-    positions: number[]
-  ) {
+  constructor(width: number, height: number, depth: number, color: number, positions: number[]) {
     this.width = width;
     this.height = height;
     this.depth = depth;

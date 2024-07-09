@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
-import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import Surface from "./Surface";
-import Boundary from "./Boundary";
-import Wall from "./Wall";
-import Ball from "./Ball";
-import Paddle from "./Paddle";
-import gsap from "gsap";
-import "./PongGame.css";
+import React, { useState, useEffect, useRef } from 'react';
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import Surface from './Surface';
+import Boundary from './Boundary';
+import Wall from './Wall';
+import Ball from './Ball';
+import Paddle from './Paddle';
+import gsap from 'gsap';
+import './PongGame.css';
 
 interface Props {
   paddleColor: number;
@@ -53,9 +53,7 @@ const GameContainer: React.FC<Props> = ({
             object.material.dispose();
           } else if (Array.isArray(object.material)) {
             if (Array.isArray(object.material)) {
-              object.material.forEach((material: THREE.Material) =>
-                material.dispose()
-              );
+              object.material.forEach((material: THREE.Material) => material.dispose());
             }
           }
         }
@@ -77,11 +75,7 @@ const GameContainer: React.FC<Props> = ({
     camera.updateProjectionMatrix();
     camera.position.set(25, 15, 16);
 
-    const targetPosition = new THREE.Vector3(
-      Gameposition_x,
-      Gameposition_y,
-      Gameposition_z
-    );
+    const targetPosition = new THREE.Vector3(Gameposition_x, Gameposition_y, Gameposition_z);
     gsap.to(camera.position, {
       x: targetPosition.x,
       y: targetPosition.y,
@@ -125,13 +119,7 @@ const GameContainer: React.FC<Props> = ({
       { width: 0.05, height: 0.02, depth: 5, positions: [0, 0.01, 0] },
     ];
     boundaries.forEach(({ width, height, depth, positions }) => {
-      const boundary = new Boundary(
-        width,
-        height,
-        depth,
-        positions,
-        paddleColor
-      );
+      const boundary = new Boundary(width, height, depth, positions, paddleColor);
       boundary.addToScene(scene);
     });
 
@@ -172,7 +160,7 @@ const GameContainer: React.FC<Props> = ({
       renderer.setSize(width, height);
     };
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
 
     const animate = () => {
       animateIdRef.current = requestAnimationFrame(animate);
@@ -181,7 +169,7 @@ const GameContainer: React.FC<Props> = ({
     animate();
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
       controls.dispose();
       if (animateIdRef.current !== null) {
         cancelAnimationFrame(animateIdRef.current);
@@ -195,9 +183,7 @@ const GameContainer: React.FC<Props> = ({
           if (object.material instanceof THREE.Material) {
             object.material.dispose();
           } else if (Array.isArray(object.material)) {
-            object.material.forEach((material: THREE.Material) =>
-              material.dispose()
-            );
+            object.material.forEach((material: THREE.Material) => material.dispose());
           }
         }
       });
@@ -208,14 +194,7 @@ const GameContainer: React.FC<Props> = ({
       controlsRef.current = null;
       animateIdRef.current = null;
     };
-  }, [
-    BallColor,
-    Gameposition_x,
-    Gameposition_y,
-    Gameposition_z,
-    TableColor,
-    paddleColor,
-  ]);
+  }, [BallColor, Gameposition_x, Gameposition_y, Gameposition_z, TableColor, paddleColor]);
 
   return <div className="canvas-div1" ref={containerRef} />;
 };
