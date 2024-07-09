@@ -19,17 +19,17 @@ jobs:
         run: cd app/front-end/ && npm install
 
       - name: Run Prettier
-        run: pwd && npm run format:check
+        run: cd app/front-end/ && npm run format:check
 
       - name: Commit and Push Changes
         if: failure()
         run: |
-          echo -->${{ github.head_ref }}<--
+          echo -->${{ github.ref_name }}<--
           git config --global user.email "ael-mouz@student.1337.ma"
           git config --global user.name "ael-mouz"
-          git checkout -B ${{ github.head_ref }}
+          git checkout -B ${{ github.ref_name }}
           git add .
           git commit -m "[Style] Prettier fixes"
-          git push origin HEAD:${{ github.head_ref }}
+          git push origin HEAD:${{ github.ref_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
