@@ -1,10 +1,10 @@
+- script to generate data for test all cases
 - Link DevOps in the Docker Compose
-- Review Makefile
-- Add Prettier and run it for the whole project
 - Test backend for 500 server error
+- Review Makefile
 
 - delete tournament and send match notif
-- fix chart player card and ball speed problem
+- fix chart player card and time dosent exist and ball speed problem
 ----------------------------------------------------------------------------------------------
 
 - Update user info after the first message from the socket is sent (no need to click)

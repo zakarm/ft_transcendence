@@ -65,7 +65,7 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
 
     const fetchProfileData = async () => {
         const access = Cookies.get('access');
-        if (access) {
+        if (access && selectedChat !== 'none') {
             try {
                 const csrftoken = Cookies.get('csrftoken') || '';
                 const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/profile/${selectedChat}`, {
@@ -79,7 +79,7 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
             } catch (error) {
                 console.error(`Error : ${error}`);
             }
-        } else toast.error('Access token is undefined or falsy');
+        } else if(selectedChat !== 'none') toast.error('Access token is undefined or falsy');
     };
 
     useEffect(() => {

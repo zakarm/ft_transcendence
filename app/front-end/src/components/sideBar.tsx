@@ -26,8 +26,19 @@ export default function SideBar() {
 
     useEffect(() => {
         const pathUrls = ['/dashboard', '/game', '/chat', '/achievements', '/statistics', '/settings'];
-        const index = pathUrls.indexOf(pathname);
-        setActiveIcon((index === -1) ? 1 : index);
+        var index = pathUrls.indexOf(pathname);
+        // check if th pathnam start with profile
+        if (pathname.startsWith('/profile')) {
+            setActiveIcon(-1);;
+            return;
+        }
+        else if (pathname.startsWith('/game')) {
+            setActiveIcon(1);
+            index = 1;
+        }
+        else
+            setActiveIcon(index);
+        console.log(index);
         gsap.to(`.icon_${index}`, { rotation: '45' });
         gsap.to('.logo', { rotation: '+=1080', duration: 1 });
     }, [pathname]);

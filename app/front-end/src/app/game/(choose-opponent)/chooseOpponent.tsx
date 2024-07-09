@@ -37,12 +37,13 @@ const Dialog = ({ isOpen, onClose }: DialogProps) => {
 
     return (
         <div className={`${styles.overlay_}`}>
-            <div className={`${styles.dialog}`}>
-                <div className={`d-flex justify-content-end ${styles.buttonContainer}`}>
+            <div className=' h-100 w-100'>
+                <div className={`d-flex justify-content-end align-items-start ${styles.buttonContainer}`}>
                     <button onClick={onClose} className={`${styles.closeButton}`}>
                         ×
                     </button>
                 </div>
+            <div className={`${styles.dialog}`}>
                 <h2 className={`${styles.title}`}>GAME RULES</h2>
                 <div className={`${styles.content}`}>
                     <h3 className={`${styles.semiTitle}`}>1 - Objective:</h3>
@@ -99,6 +100,7 @@ const Dialog = ({ isOpen, onClose }: DialogProps) => {
                     </p>
                 </div>
             </div>
+            </div>
         </div>
     );
 };
@@ -112,10 +114,10 @@ function ChooseOpponent() {
     return (
         <div className={`container-fluid p-0 m-0 ${styles.game_container_s}`}>
             <div className={`${styles.header} row justify-content-center align-items-center w-100 p-0 m-0`}>
-                <h1 className={`${styles.header_text} valo-font mt-3`}>CHOOSE YOUR OPPONENT</h1>
+                <h1 className={`${styles.header_text} valo-font mt-5`}>CHOOSE YOUR OPPONENT</h1>
             </div>
             <div className="d-flex justify-content-end" style={{ width: '95%', height: '40px' }}>
-                <div className="bg-white d-flex justify-content-center align-items-center" style={{ width: '40px', height: '40px', borderRadius: '50%', fontSize: '24px' }}>
+                <div className=" bg-white d-flex justify-content-center align-items-center" style={{ width: '40px', height: '40px', borderRadius: '50%', fontSize: '24px' }}>
                     <button onClick={openDialog} style={{ background: 'none', border: 'none' }}>
                         ?
                     </button>

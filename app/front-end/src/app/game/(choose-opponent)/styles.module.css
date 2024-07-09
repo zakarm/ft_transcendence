@@ -54,14 +54,12 @@ img.cards {
     color: white;
 }
 
-/* Dialog.module.css */
 .overlay_ {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 5;
-    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -69,7 +67,7 @@ img.cards {
     height: 80%;
     overflow: auto;
     border-radius: 8px;
-    border: 1px solid #ffffff;
+    border: 0;
     color: #ffffff;
 }
 
@@ -82,22 +80,26 @@ img.cards {
     background-color: #161625;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border: 0;
     height: max-content;
 }
 
 .buttonContainer {
     position: sticky;
-    top: 10px;
+    top: 0px;
     width: 100%;
+    z-index: 6;
+    border: 0;
 }
 
 .closeButton {
+    margin-right: 15px;
     background: none;
     border: none;
     color: #ffffff;
     font-size: 40px;
     cursor: pointer;
+        border: 0;
 }
 
 .title {
@@ -109,6 +111,7 @@ img.cards {
 .content {
     line-height: 2;
     font-family: 'itim';
+        border: 0;
 }
 
 .semiTitle {

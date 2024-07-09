@@ -9,7 +9,7 @@
     display: inline-block;
     cursor: pointer;
   }
-  
+
 .notification .badge {
   position: absolute;
   top: 20px;
@@ -36,10 +36,10 @@
 
 .search_inpt{
   background-color: #2C3143;
-  border: 0;
+  border: 1px solid #161625;
   border-radius: 15px;
   overflow: hidden;
-  margin: 2px;;
+  margin: 2px;
 }
 
 .search_inpt2{
@@ -118,16 +118,16 @@
     margin: 0;
   }
 
-  
+
   .search_inpt .ico{
     height: 15px;
     width: 15px;
   }
-  
+
   .search_inpt .place{
     font-size: smaller;
   }
-  
+
   .search_inpt2 .place{
     font-size: smaller;
     padding: 0;
@@ -165,16 +165,16 @@
     margin: 0;
   }
 
-  
+
   .search_inpt .ico{
     height: 15px;
     width: 15px;
   }
-  
+
   .search_inpt .place{
     font-size: smaller;
   }
-  
+
   .search_inpt2 .place{
     font-size: smaller;
     padding: 0;
