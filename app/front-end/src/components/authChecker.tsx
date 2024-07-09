@@ -14,7 +14,7 @@ const AuthChecker = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const refreshAccessToken = async (refreshToken: string) => {
-       try {
+      try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/refresh`, {
           method: 'POST',
           headers: {

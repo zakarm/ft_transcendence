@@ -19,15 +19,12 @@ jobs:
         run: cd app/front-end/ && npm install
 
       - name: Run Prettier
-        run: npx prettier --check "app/front-end/**/*.{tsx,ts,js,jsx,css}"
-
-      - name: Run Prettier on PR
-        if: failure()
-        run: npx prettier --write "app/front-end/**/*.{tsx,ts,js,jsx,css}"
+        run: pwd && npm run format:check
 
       - name: Commit and Push Changes
         if: failure()
         run: |
+          echo -->${{ github.head_ref }}<--
           git config --global user.email "ael-mouz@student.1337.ma"
           git config --global user.name "ael-mouz"
           git checkout -B ${{ github.head_ref }}
