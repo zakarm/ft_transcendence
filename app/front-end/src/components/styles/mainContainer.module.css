@@ -1,107 +1,109 @@
 @media (max-width: 250px) {
-    .mainContainer {
-        width: 250px;
-        overflow: hidden;
-        overflow-x: hidden;
-        margin: 0;
-        padding: 0;
-    }
+  .mainContainer {
+    width: 250px;
+    overflow: hidden;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+  }
 }
 
 @media (max-height: 390px) {
-    .mainContainer {
-        height: 390px;
-        overflow-x: hidden;
-        overflow: hidden;
-        margin: 0;
-        padding: 0;
-    }
+  .mainContainer {
+    height: 390px;
+    overflow-x: hidden;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+  }
 }
 
 .drag_class:hover {
-    border: 1px solid white;
-    box-shadow: #383838 0 0px 20px 0;
-    box-sizing: border-box;
-    opacity: 1;
+  border: 1px solid white;
+  box-shadow: #383838 0 0px 20px 0;
+  box-sizing: border-box;
+  opacity: 1;
 }
 
 .loadingMessage {
-    margin-top: 1rem;
+  margin-top: 1rem;
 }
 
 .darkBackground {
-    background-color: #161625;
-    color: #fff;
+  background-color: #161625;
+  color: #fff;
 }
 
 .spinnerContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  backdrop-filter: blur(5px);
 }
 
 .sidebar_toggle {
-    background-color: #161625;
+  background-color: #161625;
 }
 
 .spinnerOverlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
 }
 
 .containerRelative {
-    position: relative;
+  position: relative;
 }
 
 .toglle {
-    display: none;
+  display: none;
 }
 
 .slider {
-    display: none;
+  display: none;
 }
 
 .close_btn {
-    color: #f4e6e6;
+  color: #f4e6e6;
 }
 
 @media (max-width: 767px) {
-    .toglle {
-        display: block;
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        border-radius: 25px;
-        box-shadow: white 0 0px 20px 0;
-        box-sizing: border-box;
-        opacity: 1;
-        cursor: pointer;
-        z-index: 10;
-    }
+  .toglle {
+    display: block;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    border-radius: 25px;
+    box-shadow: white 0 0px 20px 0;
+    box-sizing: border-box;
+    opacity: 1;
+    cursor: pointer;
+    z-index: 10;
+  }
 
-    .slider {
-        display: block;
-        position: fixed;
-        top: 50%;
-        right: 0;
-        transform: translateY(-50%);
-        border-radius: 25px 0 25px 25px;
-        background-color: #161625;
-        border: 1px solid white;
-        background-color: 161625;
-        cursor: pointer;
-        height: 64px;
-    }
+  .slider {
+    display: block;
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    border-radius: 25px 0 25px 25px;
+    background-color: #161625;
+    border: 1px solid white;
+    background-color: 161625;
+    cursor: pointer;
+    height: 64px;
+  }
 }
 
 @media (max-height: 500px) {
-    .logo {
-        height: 30px;
-        width: 30px;
-    }
+  .logo {
+    height: 30px;
+    width: 30px;
+  }
 }

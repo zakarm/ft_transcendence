@@ -1,27 +1,25 @@
-"use client";
+'use client';
 
-import React from 'react'
-import { ToastContainer } from "react-toastify";
+import React from 'react';
+import { ToastContainer } from 'react-toastify';
 
 interface ToastProviderProps {
   children: React.ReactNode;
 }
 
-const   notificationStyle : {} = 
-{
-    position: "top-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "dark",
-    // transition: Bounce,
-}
+const notificationStyle: {} = {
+  position: 'top-right',
+  autoClose: 5000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  theme: 'dark',
+  // transition: Bounce,
+};
 
 function ToastProvider({ children }: ToastProviderProps) {
-
   return (
     <>
       <ToastContainer
@@ -35,7 +33,7 @@ function ToastProvider({ children }: ToastProviderProps) {
         draggable
         pauseOnHover
         theme="dark"
-    //   transition="Bounce"
+        //   transition="Bounce"
       />
       {children}
     </>
@@ -43,4 +41,4 @@ function ToastProvider({ children }: ToastProviderProps) {
 }
 
 export default ToastProvider;
-export { notificationStyle }
+export { notificationStyle };

@@ -1,6 +1,6 @@
-import React from "react";
-import "./GameCard.css";
-import  Link  from "next/link";
+import React from 'react';
+import './GameCard.css';
+import Link from 'next/link';
 
 interface GameCardProps {
   title: string;

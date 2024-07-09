@@ -18,15 +18,14 @@
 
 .titles {
   background-color: #161625 !important;
-  color: #FFEBEB !important;
+  color: #ffebeb !important;
   border: none;
 }
 
 .game_row {
   border-radius: 25px !important;
-  color: #FFEBEB !important;
+  color: #ffebeb !important;
   background-color: transparent !important;
-
 }
 
 .left_col {
@@ -39,14 +38,13 @@
   border-bottom-right-radius: 25px;
 }
 
-.game_main_col{
+.game_main_col {
   margin: 50px !important;
   padding: 50px !important;
 }
 
-.game_col 
-{
+.game_col {
   border: none;
-  background-color: #1B1E2C !important;
-  color : #FFEBEB !important;
+  background-color: #1b1e2c !important;
+  color: #ffebeb !important;
 }

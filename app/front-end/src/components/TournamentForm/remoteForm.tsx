@@ -9,274 +9,274 @@ import handleImageUpload from '../UploadImageBase64ToCloudinary/uploadToCloudina
 import Cookies from 'js-cookie';
 
 interface InputEventProps {
-    e: ChangeEvent<HTMLInputElement>;
+  e: ChangeEvent<HTMLInputElement>;
 }
 
 interface Props {
-    inputType?: string;
-    placeholder?: string;
-    className?: string;
-    inputClassName?: string;
-    inputId?: string;
-    labelText?: string;
-    inputLength?: number;
-    index?: number;
-    handleChange?: (e: InputEventProps | string, i: number) => void;
+  inputType?: string;
+  placeholder?: string;
+  className?: string;
+  inputClassName?: string;
+  inputId?: string;
+  labelText?: string;
+  inputLength?: number;
+  index?: number;
+  handleChange?: (e: InputEventProps | string, i: number) => void;
 }
 
 interface InputValuesProps {
-    [key: string]: string;
+  [key: string]: string;
 }
 
 function GetInput({
-    className = 'col',
-    inputClassName = '',
-    inputType = 'text',
-    placeholder = '',
-    inputId = '',
-    labelText = '',
-    handleChange,
-    inputLength,
-    index = 0,
+  className = 'col',
+  inputClassName = '',
+  inputType = 'text',
+  placeholder = '',
+  inputId = '',
+  labelText = '',
+  handleChange,
+  inputLength,
+  index = 0,
 }: Props) {
-    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (handleChange) {
-            handleChange({ e }, index!);
-        }
-    };
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (handleChange) {
+      handleChange({ e }, index!);
+    }
+  };
 
-    return (
-        <>
-            <div className={`${className}`}>
-                <label
-                    htmlFor={inputId}
-                    className={`col-9 itim-font text-left p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`}
-                >
-                    {labelText}
-                </label>
-                <div className={`col-9 ${styles.inputHolder} row justify-content-center p-0 m-2`}>
-                    <input
-                        type={inputType}
-                        placeholder={placeholder}
-                        className={`${styles.input} ${inputClassName} ps-4`}
-                        id={inputId}
-                        maxLength={inputLength}
-                        onChange={handleInputChange}
-                        autoComplete="off"
-                        required
-                    />
-                </div>
-            </div>
-        </>
-    );
+  return (
+    <>
+      <div className={`${className}`}>
+        <label
+          htmlFor={inputId}
+          className={`col-9 itim-font text-left p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`}
+        >
+          {labelText}
+        </label>
+        <div className={`col-9 ${styles.inputHolder} row justify-content-center p-0 m-2`}>
+          <input
+            type={inputType}
+            placeholder={placeholder}
+            className={`${styles.input} ${inputClassName} ps-4`}
+            id={inputId}
+            maxLength={inputLength}
+            onChange={handleInputChange}
+            autoComplete="off"
+            required
+          />
+        </div>
+      </div>
+    </>
+  );
 }
 
 function GetImageInput({ handleChange = () => {}, index = 0 }: Props) {
-    const [imageName, setImageName] = useState<string>('');
+  const [imageName, setImageName] = useState<string>('');
 
-    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const reader = new FileReader();
-        const files: FileList | null = e.target.files;
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const reader = new FileReader();
+    const files: FileList | null = e.target.files;
 
-        setImageName(e.target.value); // used to display name of uploaded image
-        if (files && files.length > 0) {
-            const reader = new FileReader();
-            const validImageTypes = [
-                'image/gif',
-                'image/jpeg',
-                'image/png',
-                'image/webp',
-                'image/svg',
-                'image/jpg',
-                'image/webp',
-            ];
+    setImageName(e.target.value); // used to display name of uploaded image
+    if (files && files.length > 0) {
+      const reader = new FileReader();
+      const validImageTypes = [
+        'image/gif',
+        'image/jpeg',
+        'image/png',
+        'image/webp',
+        'image/svg',
+        'image/jpg',
+        'image/webp',
+      ];
 
-            if (validImageTypes.includes(files[0].type)) {
-                reader.readAsDataURL(files[0]);
-                reader.onloadend = async () => {
-                    if (reader.result && typeof reader.result === 'string') {
-                        if (handleChange) handleChange(reader.result, index);
-                    }
-                };
-            } else {
-                toast.warn('the file is not an image')
-            }
-        }
-    };
+      if (validImageTypes.includes(files[0].type)) {
+        reader.readAsDataURL(files[0]);
+        reader.onloadend = async () => {
+          if (reader.result && typeof reader.result === 'string') {
+            if (handleChange) handleChange(reader.result, index);
+          }
+        };
+      } else {
+        toast.warn('the file is not an image');
+      }
+    }
+  };
 
-    return (
-        <>
-            <div className={`p-2 mt-2 row justify-content-center`}>
-                <label className={`col-9 ${styles.inputTitle} itim-font mb-2 p-0`} htmlFor="imageInput">
-                    Tournament Image
-                </label>
-                <div className={`${styles.inputHolder} row justify-content-center p-0 m-2`}>
-                    <label
-                        className={`col-9 itim-font text-end d-flex justify-content-between ${styles.input} ${styles.imageFile}`}
-                        htmlFor="imageInput"
-                    >
-                        <marquee className={`text-nowrap ms-2`}>{imageName.split('\\').pop()}</marquee>
-                        <div className="ps-2">
-                            <img src="/assets/images/icons/imageUpload.png" height="15px" />
-                        </div>
-                    </label>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        placeholder="upload an image"
-                        className={`imageInput`}
-                        id="imageInput"
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange(e)}
-                    />
-                </div>
+  return (
+    <>
+      <div className={`p-2 mt-2 row justify-content-center`}>
+        <label className={`col-9 ${styles.inputTitle} itim-font mb-2 p-0`} htmlFor="imageInput">
+          Tournament Image
+        </label>
+        <div className={`${styles.inputHolder} row justify-content-center p-0 m-2`}>
+          <label
+            className={`col-9 itim-font text-end d-flex justify-content-between ${styles.input} ${styles.imageFile}`}
+            htmlFor="imageInput"
+          >
+            <marquee className={`text-nowrap ms-2`}>{imageName.split('\\').pop()}</marquee>
+            <div className="ps-2">
+              <img src="/assets/images/icons/imageUpload.png" height="15px" />
             </div>
-        </>
-    );
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            placeholder="upload an image"
+            className={`imageInput`}
+            id="imageInput"
+            onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange(e)}
+          />
+        </div>
+      </div>
+    </>
+  );
 }
 
 function InputRange({ handleChange = () => {}, index = 0 }: Props) {
-    const handleRangeChange = (e: ChangeEvent<HTMLInputElement>) => {
-        handleChange({ e }, index);
-    };
+  const handleRangeChange = (e: ChangeEvent<HTMLInputElement>) => {
+    handleChange({ e }, index);
+  };
 
-    return (
-        <>
-            <div className={`row justify-content-center ${styles.slidecontainer} p-0 mt-2`}>
-                <label className={`col-9 itim-font text-left p-1 ${styles.inputTitle}`} htmlFor="myRange">
-                    Ball Speed
-                </label>
-                <div className={`col-9 d-flex justify-content-center p-0 my-3 ${styles.inputTitle}`}>
-                    <input
-                        type="range"
-                        min="1"
-                        max="3"
-                        step="1"
-                        className={`${styles.slider}`}
-                        onChange={handleRangeChange}
-                        id="myRange"
-                    />
-                </div>
-                <div className={`row justify-content-between p-0 mb-2 ${styles.inputTitle}`}>
-                    <div className="col">
-                        <p className={`itim-font`}>Slow</p>
-                    </div>
-                    <div className="col d-flex justify-content-center">
-                        <p className={`itim-font`}>Medium</p>
-                    </div>
-                    <div className="col d-flex justify-content-end">
-                        <p className={`itim-font`}>Fast</p>
-                    </div>
-                </div>
-            </div>
-        </>
-    );
+  return (
+    <>
+      <div className={`row justify-content-center ${styles.slidecontainer} p-0 mt-2`}>
+        <label className={`col-9 itim-font text-left p-1 ${styles.inputTitle}`} htmlFor="myRange">
+          Ball Speed
+        </label>
+        <div className={`col-9 d-flex justify-content-center p-0 my-3 ${styles.inputTitle}`}>
+          <input
+            type="range"
+            min="1"
+            max="3"
+            step="1"
+            className={`${styles.slider}`}
+            onChange={handleRangeChange}
+            id="myRange"
+          />
+        </div>
+        <div className={`row justify-content-between p-0 mb-2 ${styles.inputTitle}`}>
+          <div className="col">
+            <p className={`itim-font`}>Slow</p>
+          </div>
+          <div className="col d-flex justify-content-center">
+            <p className={`itim-font`}>Medium</p>
+          </div>
+          <div className="col d-flex justify-content-end">
+            <p className={`itim-font`}>Fast</p>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
 
 function RenderInputFields({ handleChange = () => {} }: Props) {
-    return (
-        <>
-            <GetInput
-                className="p-2 mt-2 row justify-content-center"
-                inputType="text"
-                inputId="Tournament_name"
-                labelText="Tournament name"
-                inputLength={30}
-                index={1}
-                handleChange={(e: InputEventProps | string) => handleChange(e, 0)}
-            ></GetInput>
-            <GetImageInput handleChange={(e: InputEventProps | string) => handleChange(e, 1)} index={1}></GetImageInput>
-            <InputRange handleChange={(e: InputEventProps | string) => handleChange(e, 2)} index={2}></InputRange>
-        </>
-    );
+  return (
+    <>
+      <GetInput
+        className="p-2 mt-2 row justify-content-center"
+        inputType="text"
+        inputId="Tournament_name"
+        labelText="Tournament name"
+        inputLength={30}
+        index={1}
+        handleChange={(e: InputEventProps | string) => handleChange(e, 0)}
+      ></GetInput>
+      <GetImageInput handleChange={(e: InputEventProps | string) => handleChange(e, 1)} index={1}></GetImageInput>
+      <InputRange handleChange={(e: InputEventProps | string) => handleChange(e, 2)} index={2}></InputRange>
+    </>
+  );
 }
 
 function RemoteTournamentForm() {
-    const [currentValues, setCurrentValues] = useState<string[]>(['', '', '']);
+  const [currentValues, setCurrentValues] = useState<string[]>(['', '', '']);
 
-    const ValuesToPost: InputValuesProps = {
-        tournament_name: '',
-        tournament_image: '',
-        game_difficulty: '1',
-    };
+  const ValuesToPost: InputValuesProps = {
+    tournament_name: '',
+    tournament_image: '',
+    game_difficulty: '1',
+  };
 
-    const handleChange = (e: InputEventProps | string, i: number) => {
-        const newValues = [...currentValues];
+  const handleChange = (e: InputEventProps | string, i: number) => {
+    const newValues = [...currentValues];
 
-        typeof e === 'string' ? (newValues[i] = e) : (newValues[i] = e.e.target.value);
-        setCurrentValues(newValues);
-    };
+    typeof e === 'string' ? (newValues[i] = e) : (newValues[i] = e.e.target.value);
+    setCurrentValues(newValues);
+  };
 
-    const formValidation: () => Promise<boolean> = async () => {
-        let i: number = 0;
-        let isChanged: boolean = false;
-        for (const [key, value] of Object.entries(ValuesToPost)) {
-            if (currentValues[i] && currentValues[i] !== '' && currentValues[i] !== value) {
-                if (key === 'tournament_image') {
-                    const imageURL: string | null = await handleImageUpload(currentValues[i]);
-                    imageURL !== null ? (currentValues[i] = imageURL) : toast.error('Error : cannot upload image');
-                }
-                ValuesToPost[key] = currentValues[i];
-                isChanged = true;
-            }
-            i++;
+  const formValidation: () => Promise<boolean> = async () => {
+    let i: number = 0;
+    let isChanged: boolean = false;
+    for (const [key, value] of Object.entries(ValuesToPost)) {
+      if (currentValues[i] && currentValues[i] !== '' && currentValues[i] !== value) {
+        if (key === 'tournament_image') {
+          const imageURL: string | null = await handleImageUpload(currentValues[i]);
+          imageURL !== null ? (currentValues[i] = imageURL) : toast.error('Error : cannot upload image');
         }
-        return isChanged;
-    };
+        ValuesToPost[key] = currentValues[i];
+        isChanged = true;
+      }
+      i++;
+    }
+    return isChanged;
+  };
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const isValid: boolean = await formValidation();
-        if (!isValid) return;
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const isValid: boolean = await formValidation();
+    if (!isValid) return;
 
-        const access = Cookies.get('access');
-        try {
-            const csrftoken = Cookies.get('csrftoken') || '';
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/create-tournament`, {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json',
-                    Authorization: `Bearer ${access}`,
-                    'X-CSRFToken': csrftoken,
-                },
-                body: JSON.stringify(ValuesToPost),
-            });
-            const data: Record<string, string> = await response.json();
-            if (response.ok) {
-                toast.success(data.success, notificationStyle);
-            } else {
-                Object.values(data).map((v) => {
-                    if (v[0] && typeof v[0] === 'string') {
-                        toast.error(v[0], notificationStyle);
-                    }
-                });
-            }
-        } catch (error) {
-            toast.error('Error : cannot create the tournament');
-        }
-    };
+    const access = Cookies.get('access');
+    try {
+      const csrftoken = Cookies.get('csrftoken') || '';
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/create-tournament`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          Authorization: `Bearer ${access}`,
+          'X-CSRFToken': csrftoken,
+        },
+        body: JSON.stringify(ValuesToPost),
+      });
+      const data: Record<string, string> = await response.json();
+      if (response.ok) {
+        toast.success(data.success, notificationStyle);
+      } else {
+        Object.values(data).map((v) => {
+          if (v[0] && typeof v[0] === 'string') {
+            toast.error(v[0], notificationStyle);
+          }
+        });
+      }
+    } catch (error) {
+      toast.error('Error : cannot create the tournament');
+    }
+  };
 
-    return (
-        <form
-            className={`${styles.formWrapper} row justify-content-center p-0 m-0`}
-            onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleSubmit(e)}
-        >
-            <fieldset className={`row justify-content-center p-0 m-0`}>
-                <div className="row">
-                    <div className="col text-center p-4 mt-2">
-                        <legend className={`valo-font text ${styles.formTitle}`}>CREATE TOURNAMENT</legend>
-                    </div>
-                </div>
-                <div className="row justify-content-center">
-                    <RenderInputFields handleChange={handleChange}></RenderInputFields>
-                </div>
-            </fieldset>
-            <div className="row p-0 my-2">
-                <div className="col d-flex justify-content-center">
-                    <button className={`valo-font mb-3 ${styles.create_button}`}>CREATE</button>
-                </div>
-            </div>
-        </form>
-    );
+  return (
+    <form
+      className={`${styles.formWrapper} row justify-content-center p-0 m-0`}
+      onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleSubmit(e)}
+    >
+      <fieldset className={`row justify-content-center p-0 m-0`}>
+        <div className="row">
+          <div className="col text-center p-4 mt-2">
+            <legend className={`valo-font text ${styles.formTitle}`}>CREATE TOURNAMENT</legend>
+          </div>
+        </div>
+        <div className="row justify-content-center">
+          <RenderInputFields handleChange={handleChange}></RenderInputFields>
+        </div>
+      </fieldset>
+      <div className="row p-0 my-2">
+        <div className="col d-flex justify-content-center">
+          <button className={`valo-font mb-3 ${styles.create_button}`}>CREATE</button>
+        </div>
+      </div>
+    </form>
+  );
 }
 
 export { RemoteTournamentForm, InputRange };

@@ -1,12 +1,11 @@
-
-.user_img{
-    width: 64px;
-    height: 64px;
-    border-radius: 25px;
-    overflow: hidden; /* Hide overflowing parts of the image */
-    border: 1px solid;
+.user_img {
+  width: 64px;
+  height: 64px;
+  border-radius: 25px;
+  overflow: hidden; /* Hide overflowing parts of the image */
+  border: 1px solid;
 }
 
 .user_img:hover {
-    cursor: pointer;
+  cursor: pointer;
 }

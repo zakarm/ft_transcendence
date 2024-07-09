@@ -1,12 +1,12 @@
-.about_img{
-    width: 200px;
-    height: 200px;
-    border-radius: 999px;
-    border: 2px solid #27B299;
+.about_img {
+  width: 200px;
+  height: 200px;
+  border-radius: 999px;
+  border: 2px solid #27b299;
 }
 
-@media (min-width: 1198px){
-    .close_btn{
-        display: none;
-    }
+@media (min-width: 1198px) {
+  .close_btn {
+    display: none;
+  }
 }

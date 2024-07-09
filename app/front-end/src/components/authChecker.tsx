@@ -8,9 +8,10 @@ import styles from './styles/authChecker.module.css';
 import MainContainer from './mainContainer';
 
 const AuthChecker = ({ children }: { children: React.ReactNode }) => {
-    const router = useRouter();
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
+<<<<<<< HEAD
     useEffect(() => {
 
         const refreshAccessToken = async (refreshToken: string) => {
@@ -79,19 +80,18 @@ const AuthChecker = ({ children }: { children: React.ReactNode }) => {
         authentication();
     }, [router]);
 
-    if (isAuthenticated === null) {
-        return (
-            <MainContainer>
-                <div className={`${styles.spinnerContainer}`}>
-                    <Spinner animation="border" variant="danger" />
-                    <p className={`${styles.loadingMessage} valo-font`}>LOADING ...</p>
-                </div>
-            </MainContainer>
+  if (isAuthenticated === null) {
+    return (
+      <MainContainer>
+        <div className={`${styles.spinnerContainer}`}>
+          <Spinner animation="border" variant="danger" />
+          <p className={`${styles.loadingMessage} valo-font`}>LOADING ...</p>
+        </div>
+      </MainContainer>
+    );
+  }
 
-        );
-    }
-
-    return isAuthenticated ? <>{children}</> : null;
+  return isAuthenticated ? <>{children}</> : null;
 };
 
 export default AuthChecker;

@@ -1,55 +1,125 @@
 h1.cards {
-    font-size: clamp(1rem, 0.8182rem + 0.5818vw, 3rem);
-    color: var(--clr-red);
-    border-top: var(--clr--white);
-    background-color: var(--clr-ldark);
-    border-bottom-left-radius: 25px;
-    border-bottom-right-radius: 25px;
-    width: 250px;
+  font-size: clamp(1rem, 0.8182rem + 0.5818vw, 3rem);
+  color: var(--clr-red);
+  border-top: var(--clr--white);
+  background-color: var(--clr-ldark);
+  border-bottom-left-radius: 25px;
+  border-bottom-right-radius: 25px;
+  width: 250px;
 }
 .game_container_s {
-    width: 98%;
+  width: 98%;
 }
 .wrapper {
-    gap: 10px 30px;
-    overflow: auto;
+  gap: 10px 30px;
+  overflow: auto;
 }
 
 div.option {
-    width: 250px;
-    height: 500px;
-    cursor: pointer;
-    transition: all 1s ease;
-    filter: grayscale(80%);
-    border-radius: 25px;
+  width: 250px;
+  height: 500px;
+  cursor: pointer;
+  transition: all 1s ease;
+  filter: grayscale(80%);
+  border-radius: 25px;
 }
 
 div.option:hover {
-    filter: grayscale(0%);
-    scale: 1.1;
+  filter: grayscale(0%);
+  scale: 1.1;
 }
 
 img.cards {
-    background-color: var(--clr-ldark);
-    border-top-right-radius: 25px;
-    border-top-left-radius: 25px;
-    height: 400px;
-    width: 250px;
+  background-color: var(--clr-ldark);
+  border-top-right-radius: 25px;
+  border-top-left-radius: 25px;
+  height: 400px;
+  width: 250px;
 }
 
 .buttonS {
-    background-color: white;
-    color: black;
-    border-radius: 15px;
-    border: 0;
-    padding: 10px;
-    width: 100px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 1s ease;
+  background-color: white;
+  color: black;
+  border-radius: 15px;
+  border: 0;
+  padding: 10px;
+  width: 100px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 1s ease;
 }
 
 .buttonS:hover {
-    background-color: black;
-    color: white;
+  background-color: black;
+  color: white;
+}
+
+.overlay_ {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  height: 80%;
+  overflow: auto;
+  border-radius: 8px;
+  border: 0;
+  color: #ffffff;
+}
+
+.dialog {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #161625;
+  padding: 20px;
+  border-radius: 8px;
+  border: 0;
+  height: max-content;
+}
+
+.buttonContainer {
+  position: sticky;
+  top: 0px;
+  width: 100%;
+  z-index: 6;
+  border: 0;
+}
+
+.closeButton {
+  margin-right: 15px;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 40px;
+  cursor: pointer;
+  border: 0;
+}
+
+.title {
+  color: #ff3e3e;
+  margin-bottom: 10px;
+  font-family: 'Valorax';
+}
+
+.content {
+  line-height: 2;
+  font-family: 'itim';
+  border: 0;
+}
+
+.semiTitle {
+  margin: 0 0 0 20px;
+  font-size: 30px;
+}
+
+.p {
+  margin: 0 0 0 40px;
+  font-size: 20px;
 }

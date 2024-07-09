@@ -1,41 +1,41 @@
-.friend_modal{
-    background-color: #2C3143;
+.friend_modal {
+  background-color: #2c3143;
 }
-.form_control{
+.form_control {
   font-family: 'itim';
 }
 
-.form_control:focus{
- color:#bebebe;
+.form_control:focus {
+  color: #bebebe;
 }
 
-.form_control::placeholder{
-  color: #7C7C7C;
+.form_control::placeholder {
+  color: #7c7c7c;
 }
 
-.edit_btn{
-    border-radius: 25px;
-    background-color: #FF4755;
-    cursor: pointer;
+.edit_btn {
+  border-radius: 25px;
+  background-color: #ff4755;
+  cursor: pointer;
 }
 
-.edit_btn button{
-    border: none;
-    background-color: transparent;
+.edit_btn button {
+  border: none;
+  background-color: transparent;
 }
 
-.tabs{
-  color: #FFEBEB;
+.tabs {
+  color: #ffebeb;
 }
 
-.tabs_friend:hover{
-  color: #27B299;
+.tabs_friend:hover {
+  color: #27b299;
 }
 
-.tabs_pending:hover{
+.tabs_pending:hover {
   color: #6d6f76;
 }
 
-.tabs_blocked:hover{
-  color: #FF4755;
+.tabs_blocked:hover {
+  color: #ff4755;
 }

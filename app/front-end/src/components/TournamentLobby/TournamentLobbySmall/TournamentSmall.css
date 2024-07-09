@@ -1,115 +1,115 @@
 .container_sm {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: black;
-    font-family: valorax;
-    color: #feebeb;
-    height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: black;
+  font-family: valorax;
+  color: #feebeb;
+  height: auto;
 }
 
 .Tournament_container_sm {
-    padding-top: 25px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-family: valorax;
-    color: #feebeb;
+  padding-top: 25px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: valorax;
+  color: #feebeb;
 }
 
 .Tournament_name {
-    font-size: 2rem;
-    height: 5%;
-    width: 100%;
-    margin-top: 15px;
-    text-align: center;
+  font-size: 2rem;
+  height: 5%;
+  width: 100%;
+  margin-top: 15px;
+  text-align: center;
 }
 
 .Tournament_container_sm img {
-    width: 100%;
-    height: 100px;
-    border-radius: 10px;
-    object-fit: cover;
+  width: 100%;
+  height: 100px;
+  border-radius: 10px;
+  object-fit: cover;
 }
 
 .Tournament_quarterfinals,
 .Tournament_semifinals,
 .Tournament_finals {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .quarterfinals_title,
 .semifinals_title,
 .finals_title {
-    color: #df3d4b;
+  color: #df3d4b;
 }
 .teams_sm {
-    width: 80%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .match {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    height: 180px;
-    border-radius: 10px;
-    margin: 10px 0;
-    /* border: 1px solid #feebeb; */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 180px;
+  border-radius: 10px;
+  margin: 10px 0;
+  /* border: 1px solid #feebeb; */
 }
 
 .user_sm {
-    width: 100%;
-    min-width: 100px;
-    height: 170px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-direction: column;
+  width: 100%;
+  min-width: 100px;
+  height: 170px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
 }
 
 .tour_score {
-    text-align: center;
-    font-size: large;
-    height: 30px;
-    width: 40px;
-    border-radius: 10px;
-    margin-bottom: 5px;
-    color: black;
-    background-color: #feebeb;
+  text-align: center;
+  font-size: large;
+  height: 30px;
+  width: 40px;
+  border-radius: 10px;
+  margin-bottom: 5px;
+  color: black;
+  background-color: #feebeb;
 }
 
 .placeholder_image_sm {
-    width: 100px;
-    height: 100px;
-    border-radius: 10px;
-    background-color: #feebeb;
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+  background-color: #feebeb;
 }
 
 .garyscaleimg {
-    filter: grayscale(100%);
+  filter: grayscale(100%);
 }
 
 .user_hr {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 100%;
 }
 
 .user_hr .vs {
-    font-size: 1.5rem;
-    color: #feebeb;
+  font-size: 1.5rem;
+  color: #feebeb;
 }

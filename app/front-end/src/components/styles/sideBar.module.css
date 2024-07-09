@@ -1,72 +1,64 @@
-
-.side_container{
-    background-color: #161625;
-    border-radius: 0px 25px 25px 0px;
+.side_container {
+  background-color: #161625;
+  border-radius: 0px 25px 25px 0px;
 }
 
-.side_icon{
-    height: 34px;
-    width: auto;
+.side_icon {
+  height: 34px;
+  width: auto;
 }
 
-.side_icon:hover
-{
-    border: 1px solid #FF4755;
-    border-radius: 50%; 
+.side_icon:hover {
+  border: 1px solid #ff4755;
+  border-radius: 50%;
+  padding: 5px;
+}
+
+.icon_5 {
+  cursor: pointer;
+}
+
+.logo {
+  cursor: pointer;
+  height: 64px;
+  width: 64px;
+}
+
+@media (min-width: 1150px) and (max-width: 1300px) {
+  .side_icon {
+    height: 32px;
+    width: 32px;
+  }
+
+  .side_icon:hover {
+    border: 1px solid #ff4755;
+    border-radius: 50%;
     padding: 5px;
+  }
 }
 
-.icon_5{
-    cursor: pointer;
+@media (min-width: 950px) and (max-width: 1149px) {
+  .side_icon {
+    height: 30px;
+    width: 30px;
+  }
+
+  .side_icon:hover {
+    border: 1px solid #ff4755;
+    border-radius: 50%;
+    padding: 5px;
+  }
 }
 
-.logo{
-    cursor: pointer;
-    height: 64px;
-    width: 64px;
-}
+@media (min-width: 768px) and (max-width: 949px) {
+  .side_icon {
+    height: 25px;
+    width: 25px;
+  }
 
-@media (min-width: 1150px) and (max-width: 1300px)
-{
-    .side_icon{
-        height: 32px;
-        width: 32px;
-    }
-
-    .side_icon:hover
-    {
-        border: 1px solid #FF4755;
-        border-radius: 50%; 
-        padding: 5px;
-    }
-}
-
-@media (min-width: 950px) and (max-width: 1149px)
-{
-    .side_icon{
-        height: 30px;
-        width: 30px;
-    }
-
-    .side_icon:hover
-    {
-        border: 1px solid #FF4755;
-        border-radius: 50%; 
-        padding: 5px;
-    }
-}
-
-@media (min-width: 768px) and (max-width: 949px)
-{
-    .side_icon{
-        height: 25px;
-        width: 25px;
-    }
-
-    .side_icon:hover
-    {
-        border: 1px solid #FF4755;
-        border-radius: 50%; 
-        padding: 5px;
-    }
+  .side_icon:hover {
+    border: 1px solid #ff4755;
+    border-radius: 50%;
+    padding: 5px;
+  }
 }

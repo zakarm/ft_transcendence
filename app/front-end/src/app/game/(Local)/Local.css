@@ -1,64 +1,64 @@
 .container_local {
-    width: 98%;
-    /* height: 100vh; */
-    position: relative;
+  width: 98%;
+  /* height: 100vh; */
+  position: relative;
 }
 
 .page_state {
-    position: absolute;
-    width: 100%;
+  position: absolute;
+  width: 100%;
 }
 
 .winner_page {
-    width: 98%;
-    height: 100vh;
-    position: absolute;
-    z-index: 4;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    /* background-color: black; */
-    backdrop-filter: blur(2px);
+  width: 98%;
+  height: 100vh;
+  position: absolute;
+  z-index: 4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /* background-color: black; */
+  backdrop-filter: blur(2px);
 }
 .winner_container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .go_back {
-    margin-top: 20px;
-    width: 150px;
-    height: 60px;
-    border-color: white;
-    background-color: black;
-    color: white;
-    border-radius: 10px;
-    border: 1px solid white;
-    font-size: 20px;
-    font-family: valorax;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: 0.5s;
-    text-align: center;
+  margin-top: 20px;
+  width: 150px;
+  height: 60px;
+  border-color: white;
+  background-color: black;
+  color: white;
+  border-radius: 10px;
+  border: 1px solid white;
+  font-size: 20px;
+  font-family: valorax;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.5s;
+  text-align: center;
 }
 
 .go_back:hover {
-    border-color: black;
-    background-color: white;
-    color: black;
+  border-color: black;
+  background-color: white;
+  color: black;
 }
 
 @media screen and (max-height: 700px) and (max-width: 1000px) {
-    .winner_btn {
-        transform: scale(0.3) translateY(-800px);
-    }
+  .winner_btn {
+    transform: scale(0.3) translateY(-800px);
+  }
 }
 @media screen and (max-height: 700px) and (min-width: 1000px) {
-    .winner_btn {
-        transform: scale(0.6) translateY(-300px);
-    }
+  .winner_btn {
+    transform: scale(0.6) translateY(-300px);
+  }
 }
