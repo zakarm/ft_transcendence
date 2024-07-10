@@ -55,27 +55,31 @@ function InputRange({ id, updatePlayersList }: { id: string; updatePlayersList: 
 }
 
 function GetInput({ type, id, label, updatePlayersList, inputClassName, inputLength = 20 }: getInputProps) {
-  return (
-    <>
-      <div className={`  row ${styles.input_holder} justify-content-center p-0 m-0`}>
-        <div className="col-12  p-0 m-0">
-          <label htmlFor={id} className={`itim-font text-left p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`}>
-            {label}
-          </label>
-        </div>
-        <div className={`col-12 ${styles.input_holder} row justify-content-center p-0 m-1 `}>
-          <input
-            type={type}
-            id={id}
-            className={`${inputClassName} ${styles.input_text} p-3`}
-            maxLength={inputLength}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => updatePlayersList(id, e.target.value)}
-            required
-          />
-        </div>
-      </div>
-    </>
-  );
+    return (
+        <>
+            <div className={`  row ${styles.input_holder} justify-content-center p-0 m-0`}>
+                <div className="col-12  p-0 m-0">
+                    <label
+                        htmlFor={id}
+                        className={`itim-font text-left p-0 m-0 ${styles.inputTitle} ${styles.labelClass}`}
+                    >
+                        {label}
+                    </label>
+                </div>
+                <div className={`col-12 ${styles.input_holder} row justify-content-center p-0 m-1 `}>
+                    <input
+                        type={type}
+                        id={id}
+                        className={`${inputClassName} ${styles.input_text} p-3`}
+                        maxLength={inputLength}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => updatePlayersList(id, e.target.value)}
+                        onKeyDown={(e) => { !/[a-zA-Z]/i.test(e.key) && e.preventDefault(); }}
+                        required
+                    />
+                </div>
+            </div>
+        </>
+    );
 }
 
 function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<React.SetStateAction<boolean>> }) {

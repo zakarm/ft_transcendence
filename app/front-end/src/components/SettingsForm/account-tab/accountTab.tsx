@@ -8,43 +8,43 @@ import { toast } from 'react-toastify';
 function GenerateInputFields() {
   const { oldAccountValues } = useContext<SettingsProps>(FormContext);
 
-  const inputProps = [
-    {
-      inputId: 'first_name',
-      labelText: 'First Name',
-      inputType: 'text',
-      placeholder: oldAccountValues['first_name'],
-      inputLength: 30,
-    },
-    {
-      inputId: 'last_name',
-      labelText: 'Last Name',
-      inputType: 'text',
-      placeholder: oldAccountValues['last_name'],
-      inputLength: 30,
-    },
-    {
-      inputId: 'display_name',
-      labelText: 'Display Name',
-      inputType: 'text',
-      placeholder: oldAccountValues['display_name'],
-      inputLength: 30,
-    },
-    {
-      inputId: 'username',
-      labelText: 'Username',
-      inputType: 'text',
-      placeholder: oldAccountValues['username'],
-      inputLength: 30,
-    },
-    {
-      inputId: 'email',
-      labelText: 'Email',
-      inputType: 'email',
-      placeholder: oldAccountValues['email'],
-      inputLength: 55,
-    },
-  ];
+    const inputProps = [
+        {
+            inputId: 'first_name',
+            labelText: 'First Name',
+            inputType: 'text',
+            placeholder: oldAccountValues['first_name'],
+            inputLength: 30,
+        },
+        {
+            inputId: 'last_name',
+            labelText: 'Last Name',
+            inputType: 'text',
+            placeholder: oldAccountValues['last_name'],
+            inputLength: 30,
+        },
+        {
+            inputId: 'display_name',
+            labelText: 'Display Name',
+            inputType: 'text',
+            placeholder: oldAccountValues['display_name'],
+            inputLength: 30,
+        },
+        {
+            inputId: 'username',
+            labelText: 'Username',
+            inputType: 'text',
+            placeholder: oldAccountValues['username'],
+            inputLength: 30,
+        },
+        {
+            inputId: 'email',
+            labelText: 'Email',
+            // inputType: 'email',
+            placeholder: oldAccountValues['email'],
+            inputLength: 55,
+        },
+    ];
 
   return (
     <>
