@@ -742,10 +742,7 @@
   ],
   "schemaVersion": 27,
   "style": "dark",
-  "tags": [
-    "cadvisor",
-    "docker"
-  ],
+  "tags": ["docker"],
   "templating": {
     "list": [
       {
@@ -810,7 +807,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Cadvisor exporter",
+  "title": "Docker Dashboard",
   "uid": "pMEd7m0Mz",
   "version": 1,
   "description": "Simple exporter for cadvisor only"

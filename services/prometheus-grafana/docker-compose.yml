@@ -1,15 +1,12 @@
-version: '3.8'
-
 services:
     prometheus:
-        image: prometheus:42
         container_name: prometheus
+        restart: unless-stopped
         build:
             context: ./prometheus
             dockerfile: Dockerfile
             args:
               - PROMETHEUS_PASSWORD=${PROMETHEUS_PASSWORD}
-        restart: unless-stopped
         volumes:
             - ./prometheus/data:/prometheus/data
         ports:
@@ -18,7 +15,6 @@ services:
             - ft_transcendence
 
     grafana:
-        image: grafana:42
         container_name: grafana
         restart: unless-stopped
         build:
@@ -35,87 +31,75 @@ services:
         networks:
             - ft_transcendence
 
-    # alertmanager:
-    #     image: prom/alertmanager:latest
-    #     container_name: alertmanager
-    #     restart: unless-stopped
-    #     volumes:
-    #         - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
-    #         - ./alertmanager/data:/alertmanager/data
-    #     ports:
-    #         - '9093:9093'
-    #     networks:
-    #         - ft_transcendence
-
-    # node-exporter:
-    #     image: prom/node-exporter:latest
-    #     container_name: node-exporter
-    #     restart: unless-stopped
-    #     user: root
-    #     volumes:
-    #         - /proc:/host/proc:ro
-    #         - /sys:/host/sys:ro
-    #         - /:/rootfs:ro
-    #         - /dev/disk:/dev/disk:ro
-    #     ports:
-    #         - 9100:9100
-    #     networks:
-    #         - ft_transcendence
+    alertmanager:
+      container_name: alertmanager
+      restart: unless-stopped
+      build:
+        context: ./alertmanager
+        dockerfile: Dockerfile
+        args:
+          - SMTP_TO=${SMTP_TO}
+          - SMTP_FROM=${SMTP_FROM}
+          - SMTP_SMARTHOST=${SMTP_SMARTHOST}
+          - SMTP_AUTH_USERNAME=${SMTP_AUTH_USERNAME}
+          - SMTP_AUTH_IDENTITY=${SMTP_AUTH_IDENTITY}
+          - SMTP_AUTH_PASSWORD=${SMTP_AUTH_PASSWORD}
+      volumes:
+        - ./alertmanager/data:/alertmanager/data
+      networks:
+        - ft_transcendence
 
     cadvisor:
-        image: gcr.io/cadvisor/cadvisor:latest
-        container_name: cadvisor
-        restart: unless-stopped
-        volumes:
-            - /:/rootfs:ro
-            - /var/run/docker.sock:/var/run/docker.sock:rw
-            - /sys:/sys:ro
-            - /var/lib/docker/:/var/lib/docker:ro
-            - /dev/disk/:/dev/disk:ro
-        ports:
-            - 9092:9092
-        command:
-            - '-port=9092'
-        privileged: true
-        networks:
-            - ft_transcendence
+      container_name: cadvisor
+      restart: unless-stopped
+      # privileged: true
+      build:
+        context: ./exporters/cadvisor
+        dockerfile: Dockerfile
+      volumes:
+        - /:/rootfs:ro
+        - /var/run/docker.sock:/var/run/docker.sock:rw
+        - /sys:/sys:ro
+        - /var/lib/docker/:/var/lib/docker:ro
+        - /dev/disk/:/dev/disk:ro
+      networks:
+        - ft_transcendence
 
     redis-exporter:
-        image: oliver006/redis_exporter:latest
-        container_name: redis-exporter
-        restart: unless-stopped
-        ports:
-            - 9121:9121
-        environment:
-            - REDIS_ADDR=redis:6379
-        networks:
-            - ft_transcendence
+      container_name: redis-exporter
+      restart: unless-stopped
+      build:
+        context: ./exporters/redis-exporter
+        dockerfile: Dockerfile
+      environment:
+        - REDIS_ADDR=${REDIS_ADDR}
+      networks:
+        - ft_transcendence
 
     postgres-exporter:
-        image: wrouesnel/postgres_exporter
-        container_name: postgres-exporter
-        restart: unless-stopped
-        ports:
-            - 9187:9187
-        environment:
-            - DATA_SOURCE_NAME=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable
-        env_file:
-            - .env
-        networks:
-            - ft_transcendence
+      container_name: postgres-exporter
+      restart: unless-stopped
+      build:
+        context: ./exporters/postgres-exporter
+        dockerfile: Dockerfile
+      environment:
+        - DATA_SOURCE_NAME=${DATA_SOURCE_NAME}
+      networks:
+        - ft_transcendence
+
     elasticsearch-exporter:
-        image: quay.io/prometheuscommunity/elasticsearch-exporter:latest
-        container_name: elasticsearch_exporter
-        command:
-            - '--es.uri=https://elastic:${ELASTIC_PASSWORD}@elasticsearch:9200'
-            - '--es.ssl-skip-verify'
-            - '--es.all'
-        ports:
-            - '9114:9114'
-        networks:
-            - ft_transcendence
+      container_name: elasticsearch-exporter
+      restart: unless-stopped
+      build:
+        context: ./exporters/elasticsearch-exporter
+        dockerfile: Dockerfile
+        args:
+          - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      networks:
+        - ft_transcendence
 
 networks:
     ft_transcendence:
         name: ft_transcendence
         driver: bridge
+        external: true
