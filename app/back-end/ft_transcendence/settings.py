@@ -200,7 +200,7 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_HOSTS = [os.environ.get("HOST_IP")]
+ALLOWED_HOSTS = [os.environ.get("HOST_IP"), "back-end"]
 
 CSRF_TRUSTED_ORIGINS = [f"https://{os.environ.get("HOST_IP")}", f"http://localhost:9090", f"http://{os.environ.get('HOST_IP')}:9090"]
 
