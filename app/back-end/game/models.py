@@ -68,7 +68,7 @@ class Tournamentsmatches(models.Model):
 
 class Achievements(models.Model):
     achievement_id = models.AutoField(primary_key=True)
-    achievement_name = models.CharField(max_length=45)
+    achievement_name = models.CharField(max_length=45, unique=True)
     achievement_type = models.CharField(max_length=45)
 
     class Meta:

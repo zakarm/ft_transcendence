@@ -67,6 +67,7 @@ def migrate_and_run_server():
     subprocess.run(migrate_cmd.split(), check=True)
     time.sleep(3)
     create_superuser()
+    create_achievements()
     logging.info("Starting server...")
     server_cmd = "python manage.py runserver 0.0.0.0:8000"
     subprocess.run(server_cmd.split(), check=True)
@@ -102,6 +103,10 @@ def create_superuser():
     cursor.close()
     conn.close()
 
+
+def create_achievements():
+    cmd = "python3 generate_achievements.py"
+    subprocess.run(cmd.split(), check=True)
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
