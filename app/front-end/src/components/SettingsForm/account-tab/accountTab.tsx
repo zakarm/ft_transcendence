@@ -40,7 +40,7 @@ function GenerateInputFields() {
         {
             inputId: 'email',
             labelText: 'Email',
-            inputType: 'email',
+            // inputType: 'email',
             placeholder: oldAccountValues['email'],
             inputLength: 55,
         },

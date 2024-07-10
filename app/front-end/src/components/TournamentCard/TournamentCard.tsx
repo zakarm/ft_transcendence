@@ -31,9 +31,16 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
             <div className="Tournament_card_image">
                 <SafeImage src={imageUrl} alt="" />
             </div>
-            <div className="Tournament_card_info mt-3">
-                <p className="Tournament_card_name">{name}</p>
-                <p className="Tournament_card_date">{date}</p>
+            <div className="Tournament_card_info mt-2">
+                {
+                    name.length < 25 ? 
+                        <p className="Tournament_card_name m-0 p-0 h-50 d-flex align-items-center">{name}</p>
+                    :
+                        <marquee className="Tournament_card_name h-50 d-flex align-items-center">
+                            {name}
+                        </marquee>
+                }
+                <p className="Tournament_card_date">{date}</p> 
             </div>
             <hr />
             <div className="Tournament_card_info_row mt-3">

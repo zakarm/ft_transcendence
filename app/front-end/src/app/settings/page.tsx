@@ -172,11 +172,11 @@ function SettingsPage() {
                                     (tab === 'Game' && <GameTab />)}
                             </div>
                         </FormContext.Provider>
-                    </form>
                     <div className="col-12 d-flex justify-content-center my-4">
                         <button
                             className={`valo-font col-8 col-md-6 ${styles.create_button}`}
-                            onClick={() => {
+                            onClick={(e) => {
+                                e.preventDefault()
                                 if (isFormChanged.current && validateInput(currentAccoutValues)
                                         && Object.entries(valuesToPost).length > 0) {
                                     postFormData({ valuesToPost, isFormChanged, setOldAccountValues, currentAccoutValues });
@@ -185,6 +185,7 @@ function SettingsPage() {
                             SAVE
                         </button>
                     </div>
+                    </form>
                 </main>
             </div>
         </div>

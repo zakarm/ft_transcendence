@@ -73,6 +73,7 @@ function GetInput({ type, id, label, updatePlayersList, inputClassName, inputLen
                         className={`${inputClassName} ${styles.input_text} p-3`}
                         maxLength={inputLength}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => updatePlayersList(id, e.target.value)}
+                        onKeyDown={(e) => { !/[a-zA-Z]/i.test(e.key) && e.preventDefault(); }}
                         required
                     />
                 </div>

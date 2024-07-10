@@ -26,6 +26,7 @@ import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { RiProgress1Line } from 'react-icons/ri';
 import { toast } from 'react-toastify';
+import { div } from 'three/examples/jsm/nodes/Nodes';
 
 interface MonthlyStats {
     months: string[];
@@ -205,9 +206,17 @@ export default function () {
                                 <div className="col-xl-2 order-xl-2 my-3 text-center">
                                     <img className={`${styles.profile_img}`} width={200} height={200} src={profile?.image_url ?? '/assets/images/gameProfiles/default_profile.png'} alt="Profile" />
                                     <div>
-                                        <span className="valo-font" style={{ color: '#FFEBEB', fontSize: '1.5em' }}>
-                                            {profile.username}
-                                        </span>
+                                        {
+                                        profile.username.length > 8 ?
+                                            <marquee className="valo-font w-50" style={{ color: '#FFEBEB', fontSize: '1.5em' }}>
+                                                {profile.username}
+                                            </marquee>
+                                        :   
+                                            <span className="valo-font" style={{ color: '#FFEBEB', fontSize: '1.5em' }}>
+                                                {profile.username}
+                                            </span>
+
+                                        }
                                     </div>
                                     <div className={`${styles.action} row d-flex justify-content-center`}>
                                         <div className={`col-md-5 col-8 ${styles.btn}`}>
@@ -224,9 +233,33 @@ export default function () {
                                             <div>
                                                 <SlUser size="1.9em" color="#FFEBEB" />
                                             </div>
-                                            <span style={{ fontSize: '1.2em' }}>
-                                                {profile.first_name} {profile.last_name}
-                                            </span>
+                                            <div>
+
+                                            {
+                                                profile.first_name && profile.first_name.length < 15 ? 
+                                                    <span style={{ fontSize: '1.2em' }}>
+                                                        {profile.first_name}
+                                                    </span>
+                                                :
+                                                    <div>
+                                                        <marquee className='w-75' style={{ fontSize: '1.2em' , color : '#ffebeb'}}>
+                                                            <div>{profile.first_name}</div>
+                                                        </marquee>
+                                                    </div>
+                                            }
+                                                                                        {
+                                                profile.last_name && profile.last_name.length < 15 ? 
+                                                    <span style={{ fontSize: '1.2em' }}>
+                                                        {profile.last_name} {profile.last_name}
+                                                    </span>
+                                                :
+                                                    <div>
+                                                        <marquee className='w-75' style={{ fontSize: '1.2em' , color : '#ffebeb'}}>
+                                                            <div>{profile.last_name}</div>
+                                                        </marquee>
+                                                    </div>
+                                            }
+                                            </div>
                                         </div>
                                         <div className="col-xl-5 col-6 d-flex flex-column justify-content-end ">
                                             <div>
