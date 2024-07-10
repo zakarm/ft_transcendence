@@ -144,7 +144,6 @@ function SettingsPage() {
   useEffect(() => {
     checkDifferences();
   }, [currentAccoutValues]);
-
   return (
     <div className={`${styles.wrapper} container-fluid vh-100 p-0 m-0`}>
       <div className="row h-100 p-0 m-0">
@@ -154,49 +153,46 @@ function SettingsPage() {
           </div>
         </section>
 
-        <main className={`${styles.main_container} row p-0 m-0 h-75 justify-content-center align-items-start`}>
-          <form className={`row ${styles.form_container} p-1 m-0 justify-content-between align-items-center`}>
-            <fieldset className={`${styles.tab_container} row p-0 m-0`}>
-              <div className="col m-2 p-2 d-flex flex-row flex-nowrap">
-                <NavBar options={options} setChoosenTab={setTab} />
-              </div>
-            </fieldset>
-            <FormContext.Provider
-              value={{
-                currentAccoutValues,
-                oldAccountValues,
-                updateField,
-                setOldAccountValues,
-                setCurrentAccoutValues,
-              }}
-            >
-              <div className={`${styles.content_container} row  p-0 m-0  justify-content-center align-items-center`}>
-                {(tab === 'Account' && <AccountTab />) ||
-                  (tab === 'Security' && <SecurityTab />) ||
-                  (tab === 'Game' && <GameTab />)}
-              </div>
-            </FormContext.Provider>
-          </form>
-          <div className="col-12 d-flex justify-content-center my-4">
-            <button
-              className={`valo-font col-8 col-md-6 ${styles.create_button}`}
-              onClick={() => {
-                if (
-                  isFormChanged.current &&
-                  validateInput(currentAccoutValues) &&
-                  Object.entries(valuesToPost).length > 0
-                ) {
-                  postFormData({ valuesToPost, isFormChanged, setOldAccountValues, currentAccoutValues });
-                }
-              }}
-            >
-              SAVE
-            </button>
-          </div>
-        </main>
-      </div>
-    </div>
-  );
+                <main className={`${styles.main_container} row p-0 m-0 h-75 justify-content-center align-items-start`}>
+                    <form className={`row ${styles.form_container} p-1 m-0 justify-content-between align-items-center`}>
+                        <fieldset className={`${styles.tab_container} row p-0 m-0`}>
+                            <div className="col m-2 p-2 d-flex flex-row flex-nowrap">
+                                <NavBar options={options} setChoosenTab={setTab} />
+                            </div>
+                        </fieldset>
+                        <FormContext.Provider
+                            value={{
+                                currentAccoutValues,
+                                oldAccountValues,
+                                updateField,
+                                setOldAccountValues,
+                                setCurrentAccoutValues,
+                            }}>
+                            <div
+                                className={`${styles.content_container} row  p-0 m-0  justify-content-center align-items-center`}>
+                                {(tab === 'Account' && <AccountTab />) ||
+                                    (tab === 'Security' && <SecurityTab />) ||
+                                    (tab === 'Game' && <GameTab />)}
+                            </div>
+                        </FormContext.Provider>
+                    <div className="col-12 d-flex justify-content-center my-4">
+                        <button
+                            className={`valo-font col-8 col-md-6 ${styles.create_button}`}
+                            onClick={(e) => {
+                                e.preventDefault()
+                                if (isFormChanged.current && validateInput(currentAccoutValues)
+                                        && Object.entries(valuesToPost).length > 0) {
+                                    postFormData({ valuesToPost, isFormChanged, setOldAccountValues, currentAccoutValues });
+                                }
+                            }}>
+                            SAVE
+                        </button>
+                    </div>
+                    </form>
+                </main>
+            </div>
+        </div>
+    );
 }
 
 export default SettingsPage;
