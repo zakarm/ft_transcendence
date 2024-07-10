@@ -1,17 +1,10 @@
 from game.models import Match, UserAchievements, Achievements
 from drf_spectacular.utils import extend_schema_field, OpenApiTypes
-from dashboards.serializer import MatchSerializer
 from django.db.models import Count, F, Q, Avg
 from authentication.models import User
 from rest_framework import serializers
-from django.utils import timezone
-from datetime import timedelta
-from datetime import datetime
 from prophet import Prophet
-import numpy as np
 import pandas as pd
-import random
-import sys
 from dashboards.utils import (
     get_lose_games,
     get_win_games,
@@ -39,15 +32,33 @@ class StatisticsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'top_player', 'avg_score', 'image_url', 'last_achiev', 'future_predictions', 
+        fields = ('id', 'username', 'top_player', 'avg_score', 'image_url', 'last_achiev', 'future_predictions',
                   'loses', 'wins', 'scores', 'tackles', 'win_rate', 'player_matches')
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_top_player(self, obj) -> str:
-        users_with_wins = User.objects.annotate(
-            wins_as_user_one=Count('match_user_one_set', filter=Q(match_user_one_set__score_user_one__gt=F('match_user_one_set__score_user_two'))),
-            wins_as_user_two=Count('match_user_two_set', filter=Q(match_user_two_set__score_user_two__gt=F('match_user_two_set__score_user_one')))
-        ).annotate(total_wins=F('wins_as_user_one') + F('wins_as_user_two'))
+        users_with_wins = (
+            User.objects.filter(is_superuser=False)
+            .annotate(
+                wins_as_user_one=Count(
+                    "match_user_one_set",
+                    filter=Q(
+                        match_user_one_set__score_user_one__gt=F(
+                            "match_user_one_set__score_user_two"
+                        )
+                    ),
+                ),
+                wins_as_user_two=Count(
+                    "match_user_two_set",
+                    filter=Q(
+                        match_user_two_set__score_user_two__gt=F(
+                            "match_user_two_set__score_user_one"
+                        )
+                    ),
+                ),
+            )
+            .annotate(total_wins=F("wins_as_user_one") + F("wins_as_user_two"))
+        )
 
         most_wins_user = users_with_wins.order_by('-total_wins').first().username
         return most_wins_user
@@ -88,7 +99,7 @@ class StatisticsSerializer(serializers.ModelSerializer):
     @extend_schema_field(OpenApiTypes.INT)
     def get_scores(self, obj) -> int:
         return get_scores(obj)
-    
+
     @extend_schema_field(OpenApiTypes.FLOAT)
     def get_win_rate(self, obj) -> float:
         return get_win_rate(obj)

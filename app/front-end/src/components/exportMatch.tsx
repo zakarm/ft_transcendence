@@ -20,11 +20,7 @@ const convertToCSV = (data: GameData[]) => {
   csvRows.push(headers.join(','));
 
   for (const row of data) {
-    const values = [
-      row.day.toString(),
-      row.month.toString(),
-      row.minutes.toString(),
-    ];
+    const values = [row.day.toString(), row.month.toString(), row.minutes.toString()];
     csvRows.push(values.join(','));
   }
 
@@ -32,11 +28,11 @@ const convertToCSV = (data: GameData[]) => {
 };
 
 interface ExportCSVProps {
-    data: GameData[];
-    filename?: string;
+  data: GameData[];
+  filename?: string;
 }
-  
-export const ExportMinutes = ( data: GameData[], filename: string = 'data.csv' ) => {
+
+export const ExportMinutes = (data: GameData[], filename: string = 'data.csv') => {
   if (!data || Object.keys(data).length === 0) {
     toast.error('No data to export !');
     return;

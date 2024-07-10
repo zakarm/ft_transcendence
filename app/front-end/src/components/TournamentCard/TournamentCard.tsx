@@ -4,27 +4,27 @@ import './TournamentCard.css';
 import Link from 'next/link';
 
 interface TournamentCardProps {
-    name: string;
-    date: string;
-    participantsJoined: number;
-    imageUrl: string;
-    pageUrl?: string;
-    isDisabled?: boolean;
-    buttonText: string;
-    id: string;
-    setTournamentID?: React.Dispatch<React.SetStateAction<string>>;
+  name: string;
+  date: string;
+  participantsJoined: number;
+  imageUrl: string;
+  pageUrl?: string;
+  isDisabled?: boolean;
+  buttonText: string;
+  id: string;
+  setTournamentID?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const TournamentCard: React.FC<TournamentCardProps> = ({
-    name,
-    date,
-    participantsJoined,
-    imageUrl,
-    pageUrl = '',
-    buttonText = 'JOIN',
-    id = '',
-    setTournamentID = () => {},
-    isDisabled = false,
+  name,
+  date,
+  participantsJoined,
+  imageUrl,
+  pageUrl = '',
+  buttonText = 'JOIN',
+  id = '',
+  setTournamentID = () => {},
+  isDisabled = false,
 }: TournamentCardProps) => {
     return (
         <div className="Tournament_card">
@@ -71,7 +71,7 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
                 </div>
             </div>
         </div>
-    );
+  );
 };
 
 export default TournamentCard;

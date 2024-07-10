@@ -1,6 +1,3 @@
-"""
-Module providing urls utils
-"""
 from django.urls import path, re_path
 from .views import (SignIn2Fa, SignInView, SocialAuthExchangeView,
                     SocialAuthRedirectView, SignUpView, SignOutView, 
@@ -17,4 +14,5 @@ urlpatterns = [
             SocialAuthRedirectView.as_view(), name='social-redirect'),
     re_path(r'^social/(?P<platform>(github|42|google))/callback$',
             SocialAuthExchangeView.as_view(), name='social-callback'),
+
 ]

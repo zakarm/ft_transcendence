@@ -113,7 +113,6 @@ class GameSettingsView(APIView):
     def put(self, request):
         user = request.user
         serializer = GameSettingsSerializer(instance=user, data=request.data)
-        print("request data: ", request.data, file=sys.stderr)
         if serializer.is_valid():
             data = User.objects.get(id=user.id)
             data.first_name = request.data.get("first_name", data.first_name)

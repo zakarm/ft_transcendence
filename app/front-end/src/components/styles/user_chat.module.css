@@ -1,39 +1,37 @@
-
-.message_container{
-    border-radius: 25px;
-    background-color: rgba(34, 42, 56, 38.43);
-    color: #FFEBEB;
-    font-family: 'itim';
-    cursor: pointer;
+.message_container {
+  border-radius: 25px;
+  background-color: rgba(34, 42, 56, 38.43);
+  color: #ffebeb;
+  font-family: 'itim';
+  cursor: pointer;
 }
 
-.message_container:hover{
-    background-color: rgb(54, 64, 81);
+.message_container:hover {
+  background-color: rgb(54, 64, 81);
 }
 
-.img_holder{
-    position: relative;
+.img_holder {
+  position: relative;
 }
 
-.profile_img{
-    height: 75px;
-    width: 75px;
-    border-radius: 999px;
-    overflow: hidden;
-    border: 1px solid #27B299;
+.profile_img {
+  height: 75px;
+  width: 75px;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid #27b299;
 }
 
 @media (max-width: 1600px) {
-    .profile_img{
-        height: 50px;
-        width: 50px;
-    }
+  .profile_img {
+    height: 50px;
+    width: 50px;
+  }
 }
 
 @media (max-width: 1200px) {
-    .profile_img{
-        height: 45px;
-        width: 45px;
-    }
+  .profile_img {
+    height: 45px;
+    width: 45px;
+  }
 }
-

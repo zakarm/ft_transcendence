@@ -11,7 +11,6 @@ from .utils import (get_total_games,
 from django.utils import timezone
 from .reports import (get_minutes_per_day)
 from drf_spectacular.utils import extend_schema_field
-import sys
 
 class MatchSerializer(serializers.ModelSerializer):
     class Meta:
@@ -212,7 +211,7 @@ class GameHistorySerializer(serializers.ModelSerializer):
                                            Q(match_start__day=timezone.now().day))
         elif period == 'month':
             matches = Match.objects.filter(Q(user_one=obj) &
-                                           Q(match_start__day=timezone.now().month))
+                                           Q(match_start__month=timezone.now().month))
         elif period == "year":
             matches = Match.objects.filter(Q(user_one=obj) &
                                            Q(match_start__year=timezone.now().year))

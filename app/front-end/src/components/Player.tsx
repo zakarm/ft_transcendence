@@ -1,13 +1,13 @@
 'use client';
-import { RxDotsVertical } from "react-icons/rx";
-import { forwardRef, useState } from "react";
+import { RxDotsVertical } from 'react-icons/rx';
+import { forwardRef, useState } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import styles from './styles/Player.module.css';
 
-import { GiCrumblingBall } from "react-icons/gi";
-import { PiChatTextThin } from "react-icons/pi";
-import { GiPlagueDoctorProfile } from "react-icons/gi";
-import { useRouter } from "next/navigation";
+import { GiCrumblingBall } from 'react-icons/gi';
+import { PiChatTextThin } from 'react-icons/pi';
+import { GiPlagueDoctorProfile } from 'react-icons/gi';
+import { useRouter } from 'next/navigation';
 
 interface PlayerProps {
   nickname: string;
@@ -21,13 +21,11 @@ interface CustomToggleProps {
   onClick: () => void;
 }
 
-const CustomToggle = forwardRef<HTMLDivElement, CustomToggleProps>(
-  ({ children, onClick }, ref) => (
-      <div ref={ref} onClick={onClick}>
-      {children}
-      </div>
-  )
-);
+const CustomToggle = forwardRef<HTMLDivElement, CustomToggleProps>(({ children, onClick }, ref) => (
+  <div ref={ref} onClick={onClick}>
+    {children}
+  </div>
+));
 
 function Player({ nickname, id, image, isConnected }: PlayerProps) {
   const [isHoverd, setIsHoverd] = useState<boolean>(false);
@@ -39,11 +37,12 @@ function Player({ nickname, id, image, isConnected }: PlayerProps) {
         <img
           className={`${styles.img_usr_class} m-2`}
           src={image}
-          alt='Profile'
-          width={60} height={60}
+          alt="Profile"
+          width={60}
+          height={60}
           style={{
-            border: isConnected ? "3px solid #27B299" : "3px solid #7E7E8D",
-            filter: isConnected ? '' : "grayscale(100%)"
+            border: isConnected ? '3px solid #27B299' : '3px solid #7E7E8D',
+            filter: isConnected ? '' : 'grayscale(100%)',
           }}
         />
         <div className="p-2">
@@ -63,14 +62,18 @@ function Player({ nickname, id, image, isConnected }: PlayerProps) {
               onMouseEnter={() => setIsHoverd(true)}
               onMouseLeave={() => setIsHoverd(false)}
               className={`${styles.opt_class}`}
-              color={isHoverd ? "#27B299" : "#FFEBEB"}
-              size='2em'
+              color={isHoverd ? '#27B299' : '#FFEBEB'}
+              size="2em"
             />
           </Dropdown.Toggle>
           <Dropdown.Menu className="drop-class">
-            <Dropdown.Item eventKey="2" onClick={() => router.push(`/chat?username=${nickname}`)}><PiChatTextThin /> Message</Dropdown.Item>
+            <Dropdown.Item eventKey="2" onClick={() => router.push(`/chat?username=${nickname}`)}>
+              <PiChatTextThin /> Message
+            </Dropdown.Item>
             <hr className="dropdown-divider" />
-            <Dropdown.Item eventKey="3" onClick={() => router.push(`/profile/${nickname}`)}><GiPlagueDoctorProfile /> Profile</Dropdown.Item>
+            <Dropdown.Item eventKey="3" onClick={() => router.push(`/profile/${nickname}`)}>
+              <GiPlagueDoctorProfile /> Profile
+            </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
       </div>

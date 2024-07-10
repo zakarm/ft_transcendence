@@ -1,82 +1,82 @@
-.usr_class1:hover{
-    border: 1px solid #FFEBEB;
-    background-color: #2C3143;
-    border-radius: 15px;
-    cursor: pointer;
-  }
+.usr_class1:hover {
+  border: 1px solid #ffebeb;
+  background-color: #2c3143;
+  border-radius: 15px;
+  cursor: pointer;
+}
 
-.img_usr_class1{
+.img_usr_class1 {
   width: 65px;
   height: 65px;
   border-radius: 25px;
   overflow: hidden; /* Hide overflowing parts of the image */
 }
 
-.opt-class1:hover{
+.opt-class1:hover {
   cursor: pointer;
 }
 
 @media (min-width: 1200px) {
-  .hold  {
-        font-size: 10px;
-        font-family: itim;
-        color: #FFEBEB;
-        background-color: transparent;
+  .hold {
+    font-size: 10px;
+    font-family: itim;
+    color: #ffebeb;
+    background-color: transparent;
   }
-  .img_usr_class1{
+  .img_usr_class1 {
     width: 65px;
     height: 65px;
   }
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
-  .hold  {
+  .hold {
     font-size: 7px;
     font-family: itim;
-    color: #FFEBEB;
+    color: #ffebeb;
     background-color: transparent;
   }
 
-  .img_usr_class1{
+  .img_usr_class1 {
     width: 55px;
     height: 55px;
   }
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
-  .hold  {
+  .hold {
     font-size: 5px;
     font-family: itim;
-    color: #FFEBEB;
+    color: #ffebeb;
     background-color: transparent;
   }
-  .img_usr_class1{
+  .img_usr_class1 {
     width: 41px;
     height: 41px;
   }
 }
 
 @media (min-width: 576px) and (max-width: 767px) {
-  .hold  {
+  .hold {
     font-size: 40%;
     font-family: itim;
-    color: #FFEBEB;
+    color: #ffebeb;
     background-color: transparent;
   }
-  .img_usr_class1{
+  .img_usr_class1 {
     width: 55px;
     height: 55px;
   }
 }
 
 @media (max-width: 575px) {
-  .hold  {
+  .hold {
     font-size: 30%;
     font-family: itim;
-    color: #FFEBEB;
+    color: #ffebeb;
     background-color: transparent;
   }
-  .img_usr_class1{
+  .img_usr_class1 {
     width: 55px;
     height: 55px;
   }

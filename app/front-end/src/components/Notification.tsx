@@ -7,234 +7,234 @@ import { toast } from 'react-toastify';
 import { useState } from 'react';
 
 interface Notif {
-    notification_id: number;
-    image_url: string;
-    message: string;
-    title: string;
-    link: string;
-    count: number;
-    is_chat_notif: boolean;
-    is_friend_notif: boolean;
-    is_tourn_notif: boolean;
-    is_match_notif: boolean;
-    action_by: string;
+  notification_id: number;
+  image_url: string;
+  message: string;
+  title: string;
+  link: string;
+  count: number;
+  is_chat_notif: boolean;
+  is_friend_notif: boolean;
+  is_tourn_notif: boolean;
+  is_match_notif: boolean;
+  action_by: string;
 }
 
 interface User {
-    id: number;
-    username: string;
-    image_url: string;
+  id: number;
+  username: string;
+  image_url: string;
 }
 
 interface Friend_ {
-    user: User;
-    is_accepted: boolean;
-    is_user_from: boolean;
-    blocked: boolean;
+  user: User;
+  is_accepted: boolean;
+  is_user_from: boolean;
+  blocked: boolean;
 }
 
 interface Props {
-    notification: Notif;
+  notification: Notif;
 }
 
 function Notification({ notification }: Props) {
-    const router = useRouter();
-    const [user, setUser] = useState<Friend_ | undefined>(undefined);
-    function goToLink() {
-        router.push(notification.link);
-    }
+  const router = useRouter();
+  const [user, setUser] = useState<Friend_ | undefined>(undefined);
+  function goToLink() {
+    router.push(notification.link);
+  }
 
-    const deleteNotification = async (notification_id: number) => {
-        const access = Cookies.get('access');
-        try {
-            if (access) {
-                const csrftoken = Cookies.get('csrftoken') || '';
-                const notif = await fetch(
-                    `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/notification-delete/${notification_id}`,
-                    {
-                        method: 'DELETE',
-                        headers: {
-                            Authorization: `Bearer ${access}`,
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrftoken,
-                        },
-                    },
-                );
-                const notif_data = await notif.json();
-                if (notif.ok) {
-                    // toast.error('Notification deleted');
-                } else {
-                    const errors = notif_data;
-                    for (const key in errors) {
-                        if (errors.hasOwnProperty(key)) {
-                            errors[key].forEach((errorMessage: string) => {
-                                toast.error(`${key}: ${errorMessage}`);
-                            });
-                        }
-                    }
-                }
-            } else {
-                toast.error('error: Unauthorized. Invalid credentials provided.');
-            }
-        } catch (error) {
-            // console.error(`Error : ${error}`)
-        }
-    };
-
-    const fetchUserState = async (api: string, message: string, username: string, notification_id: number) => {
-        const access = Cookies.get('access');
-        if (access) {
-            try {
-                const csrftoken = Cookies.get('csrftoken') || '';
-                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/${api}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${access}`,
-                        'X-CSRFToken': csrftoken,
-                    },
-
-                    body: JSON.stringify({ username: username }),
-                });
-
-                const data = await res.json();
-                deleteNotification(notification_id);
-                if (!res.ok) {
-                    if (res.status === 400) {
-                        return toast.error('Action not allowed : ' + data.error);
-                    } else throw new Error('Failed to fetch data');
-                }
-
-                if (data) {
-                    if (api === 'friends-remove' || api === 'friends-add') {
-                        if (api === 'friends-remove' && user) setUser(undefined);
-                        else {
-                            setUser({
-                                user: {
-                                    id: 0,
-                                    username: '',
-                                    image_url: '',
-                                },
-                                is_user_from: true,
-                                is_accepted: false,
-                                blocked: false,
-                            });
-                        }
-                    } else if (api === 'friends-accept' && user) {
-                        setUser({
-                            user: {
-                                id: user.user.id,
-                                username: user.user.username,
-                                image_url: user.user.image_url,
-                            },
-                            is_user_from: false,
-                            is_accepted: true,
-                            blocked: false,
-                        });
-                    }
-                    toast.success(message);
-                }
-            } catch (error) {
-                console.error('No response received from server.');
-            }
+  const deleteNotification = async (notification_id: number) => {
+    const access = Cookies.get('access');
+    try {
+      if (access) {
+        const csrftoken = Cookies.get('csrftoken') || '';
+        const notif = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/notification-delete/${notification_id}`,
+          {
+            method: 'DELETE',
+            headers: {
+              Authorization: `Bearer ${access}`,
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrftoken,
+            },
+          },
+        );
+        const notif_data = await notif.json();
+        if (notif.ok) {
+          // toast.error('Notification deleted');
         } else {
-            toast.error('error: Unauthorized. Invalid credentials provided.');
+          const errors = notif_data;
+          for (const key in errors) {
+            if (errors.hasOwnProperty(key)) {
+              errors[key].forEach((errorMessage: string) => {
+                toast.error(`${key}: ${errorMessage}`);
+              });
+            }
+          }
         }
-    };
+      } else {
+        toast.error('error: Unauthorized. Invalid credentials provided.');
+      }
+    } catch (error) {
+      // console.error(`Error : ${error}`)
+    }
+  };
 
-    return (
-        <Toast className="border" onClose={() => deleteNotification(notification.notification_id)}>
-            <Toast.Header style={{ color: 'white', borderBottom: '1px solid white' }}>
-                <img
-                    src={notification.image_url}
-                    width={30}
-                    height={30}
-                    className="rounded me-2"
-                    alt=""
-                    style={{ height: '30px', width: '30px' }}
-                    onClick={goToLink}
-                />
-                <strong className="me-auto link-secondary" onClick={goToLink} style={{ fontFamily: 'Itim' }}>
-                    {notification.title}
-                </strong>
-            </Toast.Header>
-            <Toast.Body
-                className="d-flex justify-content-between align-items-center"
-                style={{ background: '#161625', borderRadius: '0 0 5px 5px' }}
+  const fetchUserState = async (api: string, message: string, username: string, notification_id: number) => {
+    const access = Cookies.get('access');
+    if (access) {
+      try {
+        const csrftoken = Cookies.get('csrftoken') || '';
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/${api}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${access}`,
+            'X-CSRFToken': csrftoken,
+          },
+
+          body: JSON.stringify({ username: username }),
+        });
+
+        const data = await res.json();
+        deleteNotification(notification_id);
+        if (!res.ok) {
+          if (res.status === 400) {
+            return toast.error('Action not allowed : ' + data.error);
+          } else throw new Error('Failed to fetch data');
+        }
+
+        if (data) {
+          if (api === 'friends-remove' || api === 'friends-add') {
+            if (api === 'friends-remove' && user) setUser(undefined);
+            else {
+              setUser({
+                user: {
+                  id: 0,
+                  username: '',
+                  image_url: '',
+                },
+                is_user_from: true,
+                is_accepted: false,
+                blocked: false,
+              });
+            }
+          } else if (api === 'friends-accept' && user) {
+            setUser({
+              user: {
+                id: user.user.id,
+                username: user.user.username,
+                image_url: user.user.image_url,
+              },
+              is_user_from: false,
+              is_accepted: true,
+              blocked: false,
+            });
+          }
+          toast.success(message);
+        }
+      } catch (error) {
+        console.error('No response received from server.');
+      }
+    } else {
+      toast.error('error: Unauthorized. Invalid credentials provided.');
+    }
+  };
+
+  return (
+    <Toast className="border" onClose={() => deleteNotification(notification.notification_id)}>
+      <Toast.Header style={{ color: 'white', borderBottom: '1px solid white' }}>
+        <img
+          src={notification.image_url}
+          width={30}
+          height={30}
+          className="rounded me-2"
+          alt=""
+          style={{ height: '30px', width: '30px' }}
+          onClick={goToLink}
+        />
+        <strong className="me-auto link-secondary" onClick={goToLink} style={{ fontFamily: 'Itim' }}>
+          {notification.title}
+        </strong>
+      </Toast.Header>
+      <Toast.Body
+        className="d-flex justify-content-between align-items-center"
+        style={{ background: '#161625', borderRadius: '0 0 5px 5px' }}
+      >
+        <div style={{ fontFamily: 'Itim', width: '200px', height: 'auto', textWrap: 'wrap' }}>
+          <p className="text-white me-2 mt-3">{notification.message}</p>
+        </div>
+        {notification.is_friend_notif == true && (
+          <>
+            <Button
+              variant="success"
+              className="me-2"
+              onClick={() =>
+                fetchUserState(
+                  'friends-accept',
+                  'Added to friends',
+                  notification.action_by,
+                  notification.notification_id,
+                )
+              }
             >
-                <div style={{ fontFamily: 'Itim', width: '200px', height: 'auto', textWrap: 'wrap' }}>
-                    <p className="text-white me-2 mt-3">{notification.message}</p>
-                </div>
-                {notification.is_friend_notif == true && (
-                    <>
-                        <Button
-                            variant="success"
-                            className="me-2"
-                            onClick={() =>
-                                fetchUserState(
-                                    'friends-accept',
-                                    'Added to friends',
-                                    notification.action_by,
-                                    notification.notification_id,
-                                )
-                            }
-                        >
-                            <FaCheck />
-                        </Button>
-                        <Button
-                            variant="danger"
-                            onClick={
-                                () => deleteNotification(notification.notification_id)
-                                // () =>
-                                // fetchUserState(
-                                //     'friends-remove',
-                                //     'Removed from friends',
-                                //     notification.action_by,
-                                //     notification.notification_id,
-                                // )
-                            }
-                        >
-                            <FaTimes />
-                        </Button>
-                    </>
-                )}
-                {notification.is_match_notif == true && (
-                    <div className="d-flex justify-content-center align-items-center flex-column">
-                        <Button
-                            style={{ width: '100px', fontFamily: 'Itim' }}
-                            variant="success"
-                            className="mb-1"
-                            onClick={() => {
-                                goToLink();
-                                deleteNotification(notification.notification_id);
-                            }}
-                        >
-                            Accept
-                        </Button>
-                        <Button
-                            style={{ width: '100px', fontFamily: 'Itim' }}
-                            variant="danger"
-                            onClick={() => deleteNotification(notification.notification_id)}
-                        >
-                            Reject
-                        </Button>
-                    </div>
-                )}
+              <FaCheck />
+            </Button>
+            <Button
+              variant="danger"
+              onClick={
+                () => deleteNotification(notification.notification_id)
+                // () =>
+                // fetchUserState(
+                //     'friends-remove',
+                //     'Removed from friends',
+                //     notification.action_by,
+                //     notification.notification_id,
+                // )
+              }
+            >
+              <FaTimes />
+            </Button>
+          </>
+        )}
+        {notification.is_match_notif == true && (
+          <div className="d-flex justify-content-center align-items-center flex-column">
+            <Button
+              style={{ width: '100px', fontFamily: 'Itim' }}
+              variant="success"
+              className="mb-1"
+              onClick={() => {
+                goToLink();
+                deleteNotification(notification.notification_id);
+              }}
+            >
+              Accept
+            </Button>
+            <Button
+              style={{ width: '100px', fontFamily: 'Itim' }}
+              variant="danger"
+              onClick={() => deleteNotification(notification.notification_id)}
+            >
+              Reject
+            </Button>
+          </div>
+        )}
 
-                {notification.is_chat_notif == true && (
-                    <Button
-                        variant="success"
-                        onClick={() => {
-                            goToLink();
-                            deleteNotification(notification.notification_id);
-                        }}
-                    >
-                        Chat
-                    </Button>
-                )}
-            </Toast.Body>
-        </Toast>
-    );
+        {notification.is_chat_notif == true && (
+          <Button
+            variant="success"
+            onClick={() => {
+              goToLink();
+              deleteNotification(notification.notification_id);
+            }}
+          >
+            Chat
+          </Button>
+        )}
+      </Toast.Body>
+    </Toast>
+  );
 }
 
 export default Notification;
