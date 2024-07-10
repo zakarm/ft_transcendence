@@ -330,7 +330,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def find_or_create_room(self, user):
         try:
-            if self.private != 'false':
+            if self.private != "false":
                 self.ids = self.private_room.split("_")
                 if self.ids and len(self.ids) == 4:
                     user_in = user.id == int(self.ids[1]) or user.id == int(self.ids[2])
@@ -365,7 +365,14 @@ class GameConsumer(AsyncWebsocketConsumer):
                         await self.message({"message": {"action": "joined"}})
                         return room_name, room
             increment_room_index()
-            new_room = RoomObject()
+            game_data = await get_game_data(self.user)
+            speeds = {
+                "0": 0.05,
+                "1": 0.1,
+                "2": 0.15,
+            }
+            self.speed_ = speeds[str(game_data.game_difficulty)]
+            new_room = RoomObject(self.speed_)
             new_room_name = f"room_{get_room_index()}"
             add_room(new_room_name, new_room)
             new_room.add_user(self.channel_name, user.email, user)
@@ -378,6 +385,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         try:
             if self.scope["user"].is_authenticated:
                 await self.accept()
+                self.speed_ = 0.05
                 query_string = self.scope["query_string"].decode()
                 params = dict(param.split("=") for param in query_string.split("&"))
                 self.private = params.get("private")
@@ -599,8 +607,8 @@ class GameConsumer(AsyncWebsocketConsumer):
         try:
             room = get_room(self.room_name)
             ball_position_z = random.uniform(-2.2, 2.2)
-            ball_velocity_x = 0.05 * random.choice([-1, 1])
-            ball_velocity_z = 0.05 * random.choice([-1, 1])
+            ball_velocity_x = self.speed_ * random.choice([-1, 1])
+            ball_velocity_z = self.speed_ * random.choice([-1, 1])
             room.set_ball_position(0, ball_position_z)
             room.set_ball_velocity(ball_velocity_x, ball_velocity_z)
             room.start_game()
@@ -614,10 +622,10 @@ class GameConsumer(AsyncWebsocketConsumer):
             room = get_room(self.room_name)
             ball_position_z = random.uniform(-2.2, 2.2)
             if room.ball_position["x"] < 0:
-                ball_velocity_x = 0.05
+                ball_velocity_x = self.speed_
             else:
-                ball_velocity_x = -0.05
-            ball_velocity_z = 0.05 * random.choice([-1, 1])
+                ball_velocity_x = -self.speed_
+            ball_velocity_z = self.speed_ * random.choice([-1, 1])
             room.set_ball_position(0, ball_position_z)
             room.set_ball_velocity(ball_velocity_x, ball_velocity_z)
             message = {
