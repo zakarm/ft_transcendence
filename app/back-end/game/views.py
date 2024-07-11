@@ -127,9 +127,49 @@ class GameSettingsView(APIView):
                 "is_2fa_enabled", data.is_2fa_enabled
             )
             if request.data.get("country"):
+                if len(request.data.get("country")) < 3:
+                    return Response(
+                        {"country": {"Country name must be at least 3 characters"}},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                elif len(request.data.get("country")) > 49:
+                    return Response(
+                        {"country": {"Country name must be at most 49 characters"}},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                elif request.data.get("country").isalpha() is False:
+                    return Response(
+                        {"country": {"Country name must contain only alphabetic characters"}},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
                 data.location = request.data.get("country")
+            else:
+                return Response(
+                    {"country": {"Country cannot be empty"}},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
             if request.data.get("city"):
+                if len(request.data.get("city")) < 3:
+                    return Response(
+                        {"city": {"City name must be at least 3 characters"}},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                elif len(request.data.get("city")) > 49:
+                    return Response(
+                        {"city": {"City name must be at most 49 characters"}},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                elif request.data.get("country").isalpha() is False:
+                    return Response(
+                        {"city": {"City name must contain only alphabetic characters"}},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
                 data.location += "/" + request.data.get("city")
+            else:
+                return Response(
+                    {"city": {"City cannot be empty"}},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
             data.save()
             game, _ = GameTable.objects.get_or_create(
                 user=user,

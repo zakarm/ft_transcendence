@@ -53,6 +53,7 @@ const postFormData = async ({
         },
         body: JSON.stringify(valuesToPost),
       });
+      console.log(valuesToPost);
       const data = await res.json();
       if (res.ok) {
         Object.entries(data).map(([key, value]) => {

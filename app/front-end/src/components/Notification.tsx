@@ -185,13 +185,6 @@ function Notification({ notification }: Props) {
               variant="danger"
               onClick={
                 () => deleteNotification(notification.notification_id)
-                // () =>
-                // fetchUserState(
-                //     'friends-remove',
-                //     'Removed from friends',
-                //     notification.action_by,
-                //     notification.notification_id,
-                // )
               }
             >
               <FaTimes />
