@@ -151,8 +151,8 @@ Docker-ip: ## Get the IP address of the Docker containers
 	@echo "$(YELLOW)IP addresses of the Docker containers:$(RESET)"
 	@docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(shell docker ps -q)
 
-IP_ADDRESS := $(shell ifconfig | grep inet | awk 'NR==5 {print $$2}')
-HOST_NAME := $(shell echo ${IP_ADDRESS} | tr '.' '\n' | awk 'NR > 1 { if (NR == 2) segment = "e" substr($$0, 2); else if (NR == 3) segment = "r" $$0; else if (NR == 4) segment = "p" $$0; output = output segment } END { print output ".1337.ma" }')
+HOST_NAME := $(shell hostname)
+IP_ADDRESS := $(shell dig +short $(HOST_NAME))
 
 linkIp: ## Link IP address
 	@echo "$(YELLOW)Linking IP address...$(RESET)"
@@ -166,9 +166,9 @@ restorenv: ## Restore the .env file
 	@cp .env.example .env
 	@echo "$(GREEN).env file restored!$(RESET)"
 
-datagenerator: ## Generate data
+data-generator: ## Generate data
 	@echo "$(YELLOW)Generating data...$(RESET)"
-	@docker exec -it back-end bash -c "python3 generate_users.py"
+	@docker exec -it back-end bash -c "python3 tools/scripts/generator/generator.py"
 
 switch_docker_context: ## Switch Docker context
 	@echo "$(YELLOW)Switching Docker context...$(RESET)"

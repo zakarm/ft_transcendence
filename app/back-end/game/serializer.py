@@ -131,7 +131,7 @@ class UserAchievementsSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(serializers.DictField(child=serializers.BooleanField()))
     def get_match(self, obj) -> dict:
-        return self.get_achievement(obj, "match", ["speedy", "last", "king"])
+        return self.get_achievement(obj, "match", ["speedy", "win20", "king"])
 
 
 class GameTableSerializer(serializers.ModelSerializer):

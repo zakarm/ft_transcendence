@@ -201,10 +201,10 @@ const Achievements: React.FC<AchivProps> = React.memo(({ choosenTab, achievement
       achieved: achievements.match ? achievements.match['speedy'] : false,
     },
     {
-      title: 'LAST-MINUTE COMEBACK',
-      subTitle: 'Win a game after being down by five points',
+      title: 'TWENTY WINS',
+      subTitle: 'Win 20 games',
       imageURL: '/assets/images/achievement/achiv_match2.png',
-      achieved: achievements.match ? achievements.match['last'] : false,
+      achieved: achievements.match ? achievements.match['win20'] : false,
     },
     {
       title: 'TABLE KING/QUEEN',

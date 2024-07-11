@@ -76,9 +76,8 @@ class Achievements(models.Model):
 
 
 class UserAchievements(models.Model):
-    user = models.OneToOneField(
-        "authentication.User", models.DO_NOTHING, primary_key=True
-    )
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey("authentication.User", models.DO_NOTHING)
     achievement = models.ForeignKey(Achievements, models.DO_NOTHING)
     achive_date = models.DateTimeField()
 
