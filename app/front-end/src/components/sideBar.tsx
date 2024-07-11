@@ -35,7 +35,6 @@ export default function SideBar() {
       setActiveIcon(1);
       index = 1;
     } else setActiveIcon(index);
-    console.log(index);
     gsap.to(`.icon_${index}`, { rotation: '45' });
     gsap.to('.logo', { rotation: '+=1080', duration: 1 });
   }, [pathname]);
