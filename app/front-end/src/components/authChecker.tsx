@@ -6,7 +6,6 @@ import Cookies from 'js-cookie';
 import Spinner from 'react-bootstrap/Spinner';
 import styles from './styles/authChecker.module.css';
 import MainContainer from './mainContainer';
-import { toast } from 'react-toastify';
 
 const AuthChecker = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();

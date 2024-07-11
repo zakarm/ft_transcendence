@@ -27,16 +27,15 @@ class UserManager(BaseUserManager):
             raise ValueError("Superuser must have is_superuser=True.")
         return self.create_user(email, password, **extra_fields)
 
-
 only_alphabet_validator = RegexValidator(
     regex=r"^[a-zA-Z]*$", message="Only alphabetic characters are allowed."
 )
+
 reg_validator = RegexValidator(
     regex="^[a-zA-Z0-9_ ]*$",
     message="Username or display name can only contain alphanumeric characters and underscores.",
     code="invalid_username",
 )
-
 
 class User(AbstractBaseUser, PermissionsMixin):
     dft_img = "/assets/images/gameProfiles/default_profile.png"
