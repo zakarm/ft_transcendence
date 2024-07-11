@@ -103,16 +103,6 @@ export default function TwoFa({ value = '', email, qr, setPassOTP = () => {} }: 
                     </span>
                   </p>
                 ) : null}
-                {/* {qr === true ?
-                            <p className="mt-2">
-                                <TbSquareRoundedNumber2Filled size={30} color="#feebeb" />
-                                <span style={{ color: '#feebeb' }}>
-                                    {' '}
-                                    Is mandatory to scan your QR code if you see this message on your screen.
-                                </span>
-                            </p>
-                        : null} */}
-
                 <p className="mt-2">
                   <TbSquareRoundedNumber2Filled size={30} color="#feebeb" />
                   <span style={{ color: '#feebeb' }}> Enter the 6-digit confirmation code shown on the app:</span>

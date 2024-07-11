@@ -28,7 +28,12 @@ export default function Splayer({ nickname, id, image, isConnected }: PlayerProp
           />
         </div>
         <div className="">
-          <h5 className={`${styles.hold}`}>{nickname}</h5>
+          {
+            nickname.length < 20 ?
+              <h5 className={`${styles.hold}`}>{nickname}</h5>
+            :
+              <marquee className={`${styles.hold}`}>{nickname}</marquee>
+          }
         </div>
       </div>
     </div>

@@ -36,6 +36,7 @@ interface ProfileData {
   total_games: number;
   win_games: number;
   lose_games: number;
+  all_time_minutes: number;
   image_url: string | null;
   summary: MonthlyStats;
 }
@@ -59,6 +60,7 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
     total_games: 0,
     win_games: 0,
     lose_games: 0,
+    all_time_minutes: 0,
     image_url: '/assets/images/gameProfiles/default_profile.png',
     summary: { months: [], win: [], lose: [] },
   });
@@ -75,11 +77,12 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
         if (!res.ok) throw new Error('Failed to fetch data');
 
         const data = await res.json();
+        console.log(data);
         setProfile(data);
       } catch (error) {
         console.error(`Error : ${error}`);
       }
-    } else if (selectedChat !== 'none') toast.error('Access token is undefined or falsy');
+    } else if (selectedChat !== 'none') toast.error('Access token is undefined or false');
   };
 
   useEffect(() => {
@@ -99,8 +102,7 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
           profile?.win_games ?? 0,
           profile?.lose_games ?? 0,
           profile?.score ?? 0,
-          // profile?.time ?? 0,
-          0,
+          profile?.all_time_minutes ?? 0,
           profile?.total_games ?? 0,
         ],
         fill: true,
@@ -108,8 +110,8 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
         pointBorderColor: 'rgba(0, 255, 0)',
         pointHoverBackgroundColor: '#fff',
         pointHoverBorderColor: 'rgb(255, 99, 132)',
-        backgroundColor: 'rgba(255, 99, 132, 0.2)', // Example dataset background color
-        borderColor: '#FE4755', // Example dataset border color
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: '#FE4755',
       },
     ],
   };
@@ -188,24 +190,6 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
               <span className="col">High score: {profile?.score}</span>
               <span className="col">Rank: {profile?.rank}</span>
             </div>
-            {/* <span>Matches</span>
-                    <div className="row m-0 p-2">
-                        <div className="col p-0 px-0" style={{ border: '1px solid #505050', borderRadius: '25px' }}>
-                            <StepsPrograssBar colorSet="dark" partialValue={12} totalValue={15} showPrecentage="end"
-                                firstElStyle={{ borderTopLeftRadius: '25px', borderBottomLeftRadius: '25px' }}
-                                lastElStyle={{ borderTopRightRadius: '25px', borderBottomRightRadius: '25px' }}
-                            />
-                        </div>
-                    </div>
-                    <span>Tournaments</span>
-                    <div className="row m-0 p-2">
-                        <div className="col p-0 px-0" style={{ border: '1px solid #505050', borderRadius: '25px' }}>
-                            <StepsPrograssBar colorSet="dark" partialValue={3} totalValue={5} showPrecentage="end"
-                                firstElStyle={{ borderTopLeftRadius: '25px', borderBottomLeftRadius: '25px' }}
-                                lastElStyle={{ borderTopRightRadius: '25px', borderBottomRightRadius: '25px' }}
-                            />
-                        </div>
-                    </div> */}
           </div>
         </div>
       )}

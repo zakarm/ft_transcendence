@@ -74,7 +74,6 @@ const Web_Socket = (url: string) => {
     };
 
     ws.onclose = () => {
-      // setWebSocket(null);
     };
     setWebSocket(ws);
     return () => {
@@ -161,11 +160,9 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
     }
   }, [messages, searchedChat]);
 
-  // WebSocket initialization
   const SocketRef = useRef<WebSocket | null>(null);
   const router = useRouter();
 
-  // Function to handle private game WebSocket connection
   const handlePrivateGame = () => {
     if (searchedChat) {
       const access = Cookies.get('access');

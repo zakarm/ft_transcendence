@@ -132,21 +132,16 @@ export default function ChatFriends({
     const date = new Date(timestamp);
     const now = new Date();
 
-    // Check if the date is today
     if (date.toDateString() === now.toDateString()) {
-      // Format as HH:mm for today's messages
       return `${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}`;
     }
 
-    // Check if the date is yesterday
     const yesterday = new Date(now);
     yesterday.setDate(now.getDate() - 1);
     if (date.toDateString() === yesterday.toDateString()) {
-      // Format as "Yesterday, HH:mm" for yesterday's messages
       return `Yesterday, ${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}`;
     }
 
-    // Otherwise, format as "DD/MM/YYYY, HH:mm"
     const day = ('0' + date.getDate()).slice(-2);
     const month = ('0' + (date.getMonth() + 1)).slice(-2);
     const year = date.getFullYear();
@@ -180,7 +175,6 @@ export default function ChatFriends({
       );
       setFriendsData(generateUserComponents(filteredUsers));
     } else {
-      // Reset to all users if search length is 2 or less
       setFriendsData(generateUserComponents(chatUsers));
     }
   }, [search, usersLastMessage]);

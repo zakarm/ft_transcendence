@@ -16,7 +16,7 @@ from asgiref.sync import async_to_sync
 
 # Local application/library specific imports
 from .room import RoomObject
-from .models import Match, GameTable
+from .models import Match, GameTable, Achievements, UserAchievements
 from dashboards.models import Notification
 
 User = get_user_model()
@@ -107,6 +107,118 @@ def add_match(
             tackle_user_one=tackle_user_one,
             tackle_user_two=tackle_user_two,
         )
+        #'Win a match within the first three minutes'
+        # if (match_end - match_start).seconds < 180:
+        #     achievement = Achievements.objects.get(achievement_name="early")
+        #     if score_user_one > score_user_two:
+        #        user = User.objects.get(id=user_one)
+        #     else:
+        #        user = User.objects.get(id=user_two)
+        #     UserAchievements.objects.create(
+        #         user=user,
+        #         achievement=achievement,
+        #         achive_date=match_end,
+        #     )
+        #'Win a game with a score of 7-0 within three minutes'
+        speedy = Achievements.objects.get(achievement_name="speedy")
+        if abs(score_user_one - score_user_two) == 7:
+            if (match_end - match_start).seconds < 180:
+                if score_user_one > score_user_two:
+                    user = user_one
+                else:
+                    user = user_two
+                achiev = UserAchievements.objects.filter(user=user, achievement=speedy)
+                print(achiev, achiev.exists(), file=sys.stderr)
+                if not achiev.exists():
+                    UserAchievements.objects.create(
+                        user=user,
+                        achievement=speedy,
+                        achive_date=match_end,
+                    )
+        # Win 20 games
+        win20 = Achievements.objects.get(achievement_name="win20")
+        data_ = Match.objects.filter(user_one=user_one)
+        data__ = Match.objects.filter(user_two=user_one)
+        data_user_one = data_ | data__
+        winner_user_one = [
+            (
+                match.user_one
+                if match.score_user_one > match.score_user_two
+                else match.user_two
+            )
+            for match in data_user_one
+        ]
+        if winner_user_one.count(user_one) >= 20:
+            achiev = UserAchievements.objects.filter(user=user_one, achievement=win20)
+            if not achiev.exists():
+                UserAchievements.objects.create(
+                    user=user_one,
+                    achievement=win20,
+                    achive_date=match_end,
+                )
+        data___ = Match.objects.filter(user_one=user_two)
+        data____ = Match.objects.filter(user_two=user_two)
+        data_user_two = data___ | data____
+        winner_user_two = [
+            (
+                match.user_one
+                if match.score_user_one > match.score_user_two
+                else match.user_two
+            )
+            for match in data_user_two
+        ]
+        if winner_user_two.count(user_two) >= 20:
+            achiev = UserAchievements.objects.filter(user=user_two, achievement=win20)
+            if not achiev.exists():
+                UserAchievements.objects.create(
+                    user=user_two,
+                    achievement=win20,
+                    achive_date=match_end,
+                )
+        #'Win ten games in a row without losing'
+        king = Achievements.objects.get(achievement_name="king")
+        data_1 = Match.objects.filter(user_one=user_one)
+        data_2 = Match.objects.filter(user_two=user_one)
+        data_3 = Match.objects.filter(user_one=user_two)
+        data_4 = Match.objects.filter(user_two=user_two)
+        matches_1 = (data_1 | data_2).order_by("-match_end")[:10]
+        matches_2 = (data_3 | data_4).order_by("-match_end")[:10]
+        if len(matches_1) == 10:
+            achiev = UserAchievements.objects.filter(user=user_one, achievement=king)
+            winner = [
+                (
+                    match.user_one
+                    if match.score_user_one > match.score_user_two
+                    else match.user_two
+                )
+                for match in matches_1
+            ]
+            if all(winner[0] == win for win in winner) and winner[0] == user_one:
+                if not achiev.exists():
+                    UserAchievements.objects.create(
+                        user=user_one,
+                        achievement=king,
+                        achive_date=match_end,
+                    )
+        print(len(matches_2), file=sys.stderr)
+        if len(matches_2) == 10:
+            achiev = UserAchievements.objects.filter(user=user_two, achievement=king)
+            winner = [
+                (
+                    match.user_one
+                    if match.score_user_one > match.score_user_two
+                    else match.user_two
+                )
+                for match in matches_2
+            ]
+            if all(winner[0] == win for win in winner) and winner[0] == user_two:
+                if not achiev.exists():
+                    UserAchievements.objects.create(
+                        user=user_two,
+                        achievement=king,
+                        achive_date=match_end,
+                    )
+
     except Exception as e:
         print(f"An error occurred in add_match: {e}", file=sys.stderr)
 
@@ -330,7 +442,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def find_or_create_room(self, user):
         try:
-            if self.private != 'false':
+            if self.private != "false":
                 self.ids = self.private_room.split("_")
                 if self.ids and len(self.ids) == 4:
                     user_in = user.id == int(self.ids[1]) or user.id == int(self.ids[2])
@@ -365,7 +477,14 @@ class GameConsumer(AsyncWebsocketConsumer):
                         await self.message({"message": {"action": "joined"}})
                         return room_name, room
             increment_room_index()
-            new_room = RoomObject()
+            game_data = await get_game_data(self.user)
+            speeds = {
+                "0": 0.05,
+                "1": 0.1,
+                "2": 0.15,
+            }
+            self.speed_ = speeds[str(game_data.game_difficulty)]
+            new_room = RoomObject(self.speed_)
             new_room_name = f"room_{get_room_index()}"
             add_room(new_room_name, new_room)
             new_room.add_user(self.channel_name, user.email, user)
@@ -378,6 +497,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         try:
             if self.scope["user"].is_authenticated:
                 await self.accept()
+                self.speed_ = 0.05
                 query_string = self.scope["query_string"].decode()
                 params = dict(param.split("=") for param in query_string.split("&"))
                 self.private = params.get("private")
@@ -599,8 +719,8 @@ class GameConsumer(AsyncWebsocketConsumer):
         try:
             room = get_room(self.room_name)
             ball_position_z = random.uniform(-2.2, 2.2)
-            ball_velocity_x = 0.05 * random.choice([-1, 1])
-            ball_velocity_z = 0.05 * random.choice([-1, 1])
+            ball_velocity_x = self.speed_ * random.choice([-1, 1])
+            ball_velocity_z = self.speed_ * random.choice([-1, 1])
             room.set_ball_position(0, ball_position_z)
             room.set_ball_velocity(ball_velocity_x, ball_velocity_z)
             room.start_game()
@@ -614,10 +734,10 @@ class GameConsumer(AsyncWebsocketConsumer):
             room = get_room(self.room_name)
             ball_position_z = random.uniform(-2.2, 2.2)
             if room.ball_position["x"] < 0:
-                ball_velocity_x = 0.05
+                ball_velocity_x = self.speed_
             else:
-                ball_velocity_x = -0.05
-            ball_velocity_z = 0.05 * random.choice([-1, 1])
+                ball_velocity_x = -self.speed_
+            ball_velocity_z = self.speed_ * random.choice([-1, 1])
             room.set_ball_position(0, ball_position_z)
             room.set_ball_velocity(ball_velocity_x, ball_velocity_z)
             message = {
