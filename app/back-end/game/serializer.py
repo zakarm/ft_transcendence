@@ -89,8 +89,8 @@ class TournamentCreationSerializer(serializers.Serializer):
         return value
 
     def validate_game_difficulty(self, value):
-        if value not in [1, 2, 3]:
-            error = "Game difficulty accept only [1, 2, 3] values."
+        if value not in [0, 1, 2]:
+            error = "Game difficulty accept only [0, 1, 2] values."
             raise serializers.ValidationError(error)
         return value
 
@@ -127,7 +127,9 @@ class UserAchievementsSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(serializers.DictField(child=serializers.BooleanField()))
     def get_tournament(self, obj) -> dict:
-        return self.get_achievement(obj, "tournament", ["early", "triple", "front"])
+        return self.get_achievement(
+            obj, "tournament", ["early", "unstoppable", "front"]
+        )
 
     @extend_schema_field(serializers.DictField(child=serializers.BooleanField()))
     def get_match(self, obj) -> dict:

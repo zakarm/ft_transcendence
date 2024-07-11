@@ -3,7 +3,7 @@ import sys
 
 
 class Tournament:
-    def __init__(self, tournament_id, tournament_name, difficulty):
+    def __init__(self, tournament_id, tournament_name, difficulty, speed):
         self.tournament_id = tournament_id
         self.ended = False
         self.started = False
@@ -11,35 +11,35 @@ class Tournament:
         self.games = {
             "quarter_final": {
                 "match1": {
-                    "room": RoomObject(),
+                    "room": RoomObject(speed),
                     "room_id": self.tournament_id + "quarter_final" + "match1",
                 },
                 "match2": {
-                    "room": RoomObject(),
+                    "room": RoomObject(speed),
                     "room_id": self.tournament_id + "quarter_final" + "match2",
                 },
                 "match3": {
-                    "room": RoomObject(),
+                    "room": RoomObject(speed),
                     "room_id": self.tournament_id + "quarter_final" + "match3",
                 },
                 "match4": {
-                    "room": RoomObject(),
+                    "room": RoomObject(speed),
                     "room_id": self.tournament_id + "quarter_final" + "match4",
                 },
             },
             "semi_final": {
                 "match1": {
-                    "room": RoomObject(),
+                    "room": RoomObject(speed),
                     "room_id": self.tournament_id + "semi_final" + "match1",
                 },
                 "match2": {
-                    "room": RoomObject(),
+                    "room": RoomObject(speed),
                     "room_id": self.tournament_id + "semi_final" + "match2",
                 },
             },
             "final": {
                 "match1": {
-                    "room": RoomObject(),
+                    "room": RoomObject(speed),
                     "room_id": self.tournament_id + "final" + "match1",
                 }
             },
@@ -105,7 +105,8 @@ class Tournament:
                     match_id = player_["match_id"]
                     player_["channel"] = player["channel"]
                     game = self.get_room_game(match_id)
-                    game.reconecting_user(player_["channel"], player_["email"])
+                    if game is not None:
+                        game.reconecting_user(player_["channel"], player_["email"])
         except Exception as e:
             print(f"An error occurred in reconect_player: {e}", file=sys.stderr)
 

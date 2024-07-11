@@ -15,7 +15,7 @@ from game.models import Achievements
 
 achievements_data = [
     {"name": "early", "type": "tournament"},
-    {"name": "triple", "type": "tournament"},
+    {"name": "unstoppable", "type": "tournament"},
     {"name": "front", "type": "tournament"},
     {"name": "speedy", "type": "match"},
     {"name": "win20", "type": "match"},
@@ -39,5 +39,6 @@ def generator():
     for achievement_data in achievements_data:
         create_achievement(achievement_data)
     print("Achievements created successfully.")
+
 
 generator()

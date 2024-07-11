@@ -221,6 +221,10 @@ const useWebSocketTournament = (url: string) => {
         router.push('/game/Tournament');
         toast.info(data.message.info);
       }
+      if (data.message.action === 'remake') {
+        router.push('/game/Tournament');
+        toast.error('The Tournamnet has been remade, more than 1 player has left the game.');
+      }
     };
 
     ws.onclose = () => {

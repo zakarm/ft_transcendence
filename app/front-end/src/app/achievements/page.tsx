@@ -178,19 +178,19 @@ const Achievements: React.FC<AchivProps> = React.memo(({ choosenTab, achievement
     // TOURNAMENT achievements
     {
       title: 'EARLY BIRD',
-      subTitle: 'Win a match within the first three minutes',
+      subTitle: 'Win a Quarter final match within the first three minutes',
       imageURL: '/assets/images/achievement/achiv_tourn1.png',
       achieved: achievements.tournament ? achievements.tournament['early'] : false,
     },
     {
-      title: 'TRIPLE THREAT',
-      subTitle: 'Score a hat-trick (three consecutive points) in a match',
+      title: 'UNSTOPPABLE FORCE',
+      subTitle: 'Win a tournament with the highest ball speed',
       imageURL: '/assets/images/achievement/achiv_tourn2.png',
-      achieved: achievements.tournament ? achievements.tournament['triple'] : false,
+      achieved: achievements.tournament ? achievements.tournament['unstoppable'] : false,
     },
     {
       title: 'FRONTRUNNER',
-      subTitle: 'Reach the finals of the tournament',
+      subTitle: 'Win a final of a tournament within five minutes',
       imageURL: '/assets/images/achievement/achiv_tourn3.png',
       achieved: achievements.tournament ? achievements.tournament['front'] : false,
     },
