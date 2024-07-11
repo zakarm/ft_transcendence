@@ -5,6 +5,7 @@ from rest_framework import serializers
 from drf_spectacular.utils import extend_schema_field
 from authentication.models import User
 from dashboards.serializer import MatchSerializer
+from django.core.validators import RegexValidator, MinLengthValidator
 from .models import (
     Tournaments,
     Tournamentsmatches,
@@ -140,15 +141,32 @@ class GameTableSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+only_alphabet_validator = RegexValidator(
+    regex=r"^[a-zA-Z]*$", message="Only alphabetic characters are allowed."
+)
+
+reg_validator = RegexValidator(
+    regex="^[a-zA-Z0-9_ ]*$",
+    message="Username or display name can only contain alphanumeric characters and underscores.",
+    code="invalid_username",
+)
+
 class GameSettingsSerializer(serializers.ModelSerializer):
     country = serializers.SerializerMethodField()
     city = serializers.SerializerMethodField()
     game_table = serializers.SerializerMethodField()
     email = serializers.EmailField(min_length=8, max_length=55, required=False)
-    username = serializers.CharField(min_length=4, max_length=30, required=False)
-    display_name = serializers.CharField(min_length=4, max_length=30, required=False)
+    username = serializers.CharField(min_length=4, max_length=30, required=False,
+                                    validators=[reg_validator])
+    first_name = serializers.CharField(min_length=3, max_length=30, required=False,
+                                    validators=[only_alphabet_validator])
+    last_name = serializers.CharField(min_length=3, max_length=30, required=False,
+                                    validators=[only_alphabet_validator])
+    display_name = serializers.CharField(min_length=4, max_length=30, required=False,
+                                        validators=[reg_validator])
     quote = serializers.CharField(max_length=25, required=False)
     intro = serializers.CharField(max_length=45, required=False)
+    is_2fa_enabled = serializers.BooleanField(required=False)
     new_password = serializers.CharField(
         write_only=True, max_length=100, min_length=8, required=False, allow_blank=True
     )
@@ -177,13 +195,18 @@ class GameSettingsSerializer(serializers.ModelSerializer):
         if User.objects.filter(email=value).exclude(id=user.id).exists():
             raise serializers.ValidationError("User with this email already exists.")
         return value
+    
+    def validate_is_2fa_enabled(self, value):
+        if value not in [True, False]:
+            raise serializers.ValidationError("This field accepts only this values [True, False].")
+        return value
 
     def validate_new_password(self, value):
         user = self.instance
         if User.objects.filter(id=user.id).first().password is not None and value == "":
             raise serializers.ValidationError("This field may not be blank.")
         return value
-
+    
     @extend_schema_field(serializers.CharField())
     def get_city(self, obj) -> str:
         if obj.location:
