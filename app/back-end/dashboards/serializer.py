@@ -7,7 +7,8 @@ from .utils import (get_total_games,
                     get_win_games,
                     get_lose_games,
                     get_monthly_game_stats,
-                    get_total_minutes)
+                    get_total_minutes,
+                    get_total_minutes_played)
 from django.utils import timezone
 from .reports import (get_minutes_per_day)
 from drf_spectacular.utils import extend_schema_field
@@ -48,13 +49,14 @@ class ProfileSerializer(serializers.ModelSerializer):
     win_games = serializers.SerializerMethodField()
     lose_games = serializers.SerializerMethodField()
     monthly_stats = serializers.SerializerMethodField()
+    all_time_minutes = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'first_name', 'last_name',
                     'intro', 'quote', 'rank', 'level', 'score',
                     'location', 'total_games', 'win_games', 'image_url',
-                    'lose_games', 'monthly_stats')
+                    'lose_games', 'all_time_minutes', 'monthly_stats')
 
     @extend_schema_field(serializers.IntegerField())
     def get_total_games(self, obj) -> int:
@@ -71,6 +73,9 @@ class ProfileSerializer(serializers.ModelSerializer):
     @extend_schema_field(serializers.JSONField())
     def get_monthly_stats(self, obj) -> dict:
         return get_monthly_game_stats(obj)
+
+    def get_all_time_minutes(self, obj) -> int:
+        return get_total_minutes_played(obj)
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
