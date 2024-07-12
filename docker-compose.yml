@@ -45,11 +45,10 @@ services:
 
     nginx:
         container_name: nginx
-        image: nginx:42
+        restart: always
         build:
             context: ./services/nginx
             dockerfile: Dockerfile
-        restart: always
         ports:
             - '80:80'
             - '443:443'
@@ -60,11 +59,10 @@ services:
 
     adminer:
         container_name: adminer
-        image: adminer:42
+        restart: always
         build:
             context: ./services/adminer
             dockerfile: Dockerfile
-        restart: always
         ports:
             - 8080:8080
         networks:
@@ -72,15 +70,113 @@ services:
 
     redis:
         container_name: redis
-        image: redis:42
+        restart: always
         build:
             context: ./services/redis
             dockerfile: Dockerfile
-        restart: on-failure
         env_file:
             - .env
         networks:
             - ft_transcendence
+
+    prometheus:
+        container_name: prometheus
+        restart: unless-stopped
+        build:
+            context: ./services/prometheus-grafana/prometheus
+            dockerfile: Dockerfile
+            args:
+              - PROMETHEUS_PASSWORD=${PROMETHEUS_PASSWORD}
+        volumes:
+            - ./services/prometheus-grafana/prometheus/data:/prometheus/data
+        ports:
+            - '9090:9090'
+        networks:
+            - ft_transcendence
+
+    grafana:
+        container_name: grafana
+        restart: unless-stopped
+        build:
+            context: ./services/prometheus-grafana/grafana
+            dockerfile: Dockerfile
+        volumes:
+            - ./services/prometheus-grafana/grafana/provisioning:/etc/grafana/provisioning
+            - ./services/prometheus-grafana/grafana/dashboards:/var/lib/grafana/dashboards
+            - ./services/prometheus-grafana/grafana/data:/var/lib/grafana
+        env_file:
+            - .env
+        ports:
+            - '3002:3002'
+        networks:
+            - ft_transcendence
+
+    alertmanager:
+      container_name: alertmanager
+      restart: unless-stopped
+      build:
+        context: ./services/prometheus-grafana/alertmanager
+        dockerfile: Dockerfile
+        args:
+          - SMTP_TO=${SMTP_TO}
+          - SMTP_FROM=${SMTP_FROM}
+          - SMTP_SMARTHOST=${SMTP_SMARTHOST}
+          - SMTP_AUTH_USERNAME=${SMTP_AUTH_USERNAME}
+          - SMTP_AUTH_IDENTITY=${SMTP_AUTH_IDENTITY}
+          - SMTP_AUTH_PASSWORD=${SMTP_AUTH_PASSWORD}
+      volumes:
+        - ./services/prometheus-grafana/alertmanager/data:/alertmanager/data
+      networks:
+        - ft_transcendence
+
+    cadvisor:
+      container_name: cadvisor
+      restart: unless-stopped
+      # privileged: true
+      build:
+        context: ./services/prometheus-grafana/exporters/cadvisor
+        dockerfile: Dockerfile
+      volumes:
+        - /:/rootfs:ro
+        - /var/run/docker.sock:/var/run/docker.sock:rw
+        - /sys:/sys:ro
+        - /var/lib/docker/:/var/lib/docker:ro
+        - /dev/disk/:/dev/disk:ro
+      networks:
+        - ft_transcendence
+
+    redis-exporter:
+      container_name: redis-exporter
+      restart: unless-stopped
+      build:
+        context: ./services/prometheus-grafana/exporters/redis-exporter
+        dockerfile: Dockerfile
+      environment:
+        - REDIS_ADDR=${REDIS_ADDR}
+      networks:
+        - ft_transcendence
+
+    postgres-exporter:
+      container_name: postgres-exporter
+      restart: unless-stopped
+      build:
+        context: ./services/prometheus-grafana/exporters/postgres-exporter
+        dockerfile: Dockerfile
+      environment:
+        - DATA_SOURCE_NAME=${DATA_SOURCE_NAME}
+      networks:
+        - ft_transcendence
+
+    elasticsearch-exporter:
+      container_name: elasticsearch-exporter
+      restart: unless-stopped
+      build:
+        context: ./services/prometheus-grafana/exporters/elasticsearch-exporter
+        dockerfile: Dockerfile
+        args:
+          - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      networks:
+        - ft_transcendence
 
 volumes:
     v_data-base:
