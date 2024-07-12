@@ -214,7 +214,7 @@ function Notification({ notification }: Props) {
           </div>
         )}
 
-        {notification.is_chat_notif == true && (
+        {(notification.is_chat_notif == true || notification.is_tourn_notif) && (
           <Button
             variant="success"
             onClick={() => {
@@ -222,7 +222,7 @@ function Notification({ notification }: Props) {
               deleteNotification(notification.notification_id);
             }}
           >
-            Chat
+            {notification.is_chat_notif == true ? 'Chat' : 'Go'}
           </Button>
         )}
       </Toast.Body>

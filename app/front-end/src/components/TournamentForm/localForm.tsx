@@ -29,8 +29,8 @@ function InputRange({ id, updatePlayersList }: { id: string; updatePlayersList: 
           <div className="col">
             <input
               type="range"
-              min="1"
-              max="3"
+              min="0"
+              max="2"
               step="1"
               className={`${styles.slider}`}
               onChange={(e: ChangeEvent<HTMLInputElement>) => updatePlayersList(id, e.target.value)}

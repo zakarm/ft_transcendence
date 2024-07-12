@@ -107,18 +107,6 @@ def add_match(
             tackle_user_one=tackle_user_one,
             tackle_user_two=tackle_user_two,
         )
-        #'Win a match within the first three minutes'
-        # if (match_end - match_start).seconds < 180:
-        #     achievement = Achievements.objects.get(achievement_name="early")
-        #     if score_user_one > score_user_two:
-        #        user = User.objects.get(id=user_one)
-        #     else:
-        #        user = User.objects.get(id=user_two)
-        #     UserAchievements.objects.create(
-        #         user=user,
-        #         achievement=achievement,
-        #         achive_date=match_end,
-        #     )
         #'Win a game with a score of 7-0 within three minutes'
         speedy = Achievements.objects.get(achievement_name="speedy")
         if abs(score_user_one - score_user_two) == 7:
@@ -224,7 +212,7 @@ def add_match(
 
 
 @database_sync_to_async
-def create_notification(user, user2):
+def create_notif(user, user2):
     try:
         link = f"room_{user.id}_{user2.id}_{get_room_index()}"
         notification = Notification.objects.create(
@@ -239,7 +227,7 @@ def create_notification(user, user2):
         count = Notification.objects.filter(user=user2).count()
         return notification, count
     except Exception as e:
-        print(f"An error occurred in create_notification: {e}", file=sys.stderr)
+        print(f"An error occurred in create_notif: {e}", file=sys.stderr)
 
 
 Room_index = 0
@@ -306,26 +294,24 @@ class PrivateGameConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             print(f"An error occurred in message: {e}", file=sys.stderr)
 
-    async def send_notification(self, event):
+    async def notify_friends_(self):
         try:
-            notification_id = event["notification_id"]
-            count = event["count"]
-            is_chat_notif = event["is_chat_notif"]
-            is_friend_notif = event["is_friend_notif"]
-            is_tourn_notif = event["is_tourn_notif"]
-            is_match_notif = event["is_match_notif"]
-            message = {
-                "action": "notification",
-                "notification_id": notification_id,
-                "count": count,
-                "is_chat_notif": is_chat_notif,
-                "is_friend_notif": is_friend_notif,
-                "is_tourn_notif": is_tourn_notif,
-                "is_match_notif": is_match_notif,
-            }
-            await self.send(text_data=json.dumps(message))
+            group_name = f"user_{self.user2.id}"
+            notification, count = await create_notif(self.user, self.user2)
+            await self.channel_layer.group_send(
+                group_name,
+                {
+                    "type": "send_notification",
+                    "notification_id": notification.notification_id,
+                    "count": count,
+                    "is_chat_notif": notification.is_chat_notif,
+                    "is_friend_notif": notification.is_friend_notif,
+                    "is_tourn_notif": notification.is_tourn_notif,
+                    "is_match_notif": notification.is_match_notif,
+                },
+            )
         except Exception as e:
-            print(f"An error occurred in send_notification: {e}", file=sys.stderr)
+            print(f"An error occurred in notify_friends_: {e}", file=sys.stderr)
 
     async def connect(self):
         try:
@@ -342,24 +328,16 @@ class PrivateGameConsumer(AsyncWebsocketConsumer):
                     room_name = f"room_{self.ids[0]}_{self.ids[1]}_{get_room_index()}"
                     message = {"action": "generated", "room_name": room_name}
                     await self.message({"message": message})
-                    room = RoomObject()
+                    game_data = await get_game_data(self.user)
+                    speeds = {
+                        "0": 0.05,
+                        "1": 0.1,
+                        "2": 0.15,
+                    }
+                    self.speed_ = speeds[str(game_data.game_difficulty)]
+                    room = RoomObject(self.speed_)
                     add_room(room_name, room)
-                    group_name = f"user_{self.user2.id}"
-                    notification, count = await create_notification(
-                        self.user, self.user2
-                    )
-                    await self.channel_layer.group_send(
-                        group_name,
-                        {
-                            "type": "send_notification",
-                            "notification_id": notification.notification_id,
-                            "count": count,
-                            "is_chat_notif": notification.is_chat_notif,
-                            "is_friend_notif": notification.is_friend_notif,
-                            "is_tourn_notif": notification.is_tourn_notif,
-                            "is_match_notif": notification.is_match_notif,
-                        },
-                    )
+                    await self.notify_friends_()
                 else:
                     message = {"action": "error", "error": "Invalid user id"}
                     await self.message({"message": message})

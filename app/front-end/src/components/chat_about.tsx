@@ -77,7 +77,6 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
         if (!res.ok) throw new Error('Failed to fetch data');
 
         const data = await res.json();
-        console.log(data);
         setProfile(data);
       } catch (error) {
         console.error(`Error : ${error}`);

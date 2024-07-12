@@ -81,10 +81,6 @@
   color: white;
 }
 
-.search-text {
-  color: var(--clr-dark);
-  cursor: inherit;
-}
 .winner-text {
   font-size: 4em;
   background-color: transparent;
