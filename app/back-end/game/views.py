@@ -127,7 +127,12 @@ class GameSettingsView(APIView):
                 "is_2fa_enabled", data.is_2fa_enabled
             )
             if request.data.get("country"):
-                if len(request.data.get("country")) < 3:
+                if request.data.get("country") == "":
+                    return Response(
+                        {"country": {"Country cannot be empty"}},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                elif len(request.data.get("country")) < 3:
                     return Response(
                         {"country": {"Country name must be at least 3 characters"}},
                         status=status.HTTP_400_BAD_REQUEST,
@@ -143,13 +148,14 @@ class GameSettingsView(APIView):
                         status=status.HTTP_400_BAD_REQUEST,
                     )
                 data.location = request.data.get("country")
-            else:
-                return Response(
-                    {"country": {"Country cannot be empty"}},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
+                
             if request.data.get("city"):
-                if len(request.data.get("city")) < 3:
+                if request.data.get("city") == "":
+                    return Response(
+                        {"city": {"City cannot be empty"}},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                elif len(request.data.get("city")) < 3:
                     return Response(
                         {"city": {"City name must be at least 3 characters"}},
                         status=status.HTTP_400_BAD_REQUEST,
@@ -165,11 +171,7 @@ class GameSettingsView(APIView):
                         status=status.HTTP_400_BAD_REQUEST,
                     )
                 data.location += "/" + request.data.get("city")
-            else:
-                return Response(
-                    {"city": {"City cannot be empty"}},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
+                
             data.save()
             game, _ = GameTable.objects.get_or_create(
                 user=user,
