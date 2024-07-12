@@ -2,7 +2,7 @@ from datetime import datetime
 
 
 class RoomObject:
-    def __init__(self):
+    def __init__(self, speed):
         # game state
         self.game_started = False
         self.game_ended = False
@@ -12,6 +12,7 @@ class RoomObject:
         self.start_date = datetime.now()
 
         # ball
+        self.ball_speed = speed
         self.ball_radius = 0.1
         self.ball_position = {"x": 0, "z": 0}
         self.ball_velocity = {"velocity_x": 0, "velocity_z": 0}
@@ -312,7 +313,7 @@ class RoomObject:
                     self.paddle1_position["z"]
                     + self.paddle_depth / 2
                     + self.ball_radius
-                    + 0.05
+                    + self.ball_speed
                 )
                 self.ball_velocity["velocity_z"] *= -1
             elif (
@@ -325,7 +326,7 @@ class RoomObject:
                     self.paddle1_position["z"]
                     - self.paddle_depth / 2
                     - self.ball_radius
-                    - 0.05
+                    - self.ball_speed
                 )
                 self.ball_velocity["velocity_z"] *= -1
             else:
@@ -333,7 +334,7 @@ class RoomObject:
                     self.paddle1_position["x"]
                     + self.paddle_width / 2
                     + self.ball_radius
-                    + 0.05
+                    + self.ball_speed
                 )
                 self.ball_velocity["velocity_x"] *= -1
             self.Original_users["user2"]["tackle"] += 1
@@ -355,8 +356,7 @@ class RoomObject:
                 self.ball_position["z"] = (
                     self.paddle2_position["z"]
                     + self.paddle_depth / 2
-                    + self.ball_radius
-                    + 0.05
+                    + self.ball_speed
                 )
                 self.ball_velocity["velocity_z"] *= -1
             elif (
@@ -368,16 +368,12 @@ class RoomObject:
                 self.ball_position["z"] = (
                     self.paddle2_position["z"]
                     - self.paddle_depth / 2
-                    - self.ball_radius
-                    - 0.05
+                    - self.ball_speed
                 )
                 self.ball_velocity["velocity_z"] *= -1
             else:
                 self.ball_position["x"] = (
-                    self.paddle2_position["x"]
-                    - self.paddle_width / 2
-                    - self.ball_radius
-                    - 0.05
+                    self.paddle2_position["x"] - self.paddle_width / 2 - self.ball_speed
                 )
                 self.ball_velocity["velocity_x"] *= -1
             self.Original_users["user1"]["tackle"] += 1

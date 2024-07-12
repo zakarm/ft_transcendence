@@ -2,8 +2,11 @@ import os
 import django
 import sys
 import logging
+from pathlib import Path
 
-# Set up Django environment
+current_dir = Path(__file__).resolve().parent
+sys.path.append(str(current_dir / "../../../"))
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ft_transcendence.settings")
 django.setup()
 
@@ -11,13 +14,14 @@ from django.db import IntegrityError
 from authentication.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 
-# Configure logging to write to data.log
-logging.basicConfig(filename="data.log", level=logging.ERROR)
+logging.basicConfig(filename="data.log", level=logging.DEBUG)
+if os.path.exists("data.log"):
+    with open("data.log", "w"):
+        pass
 
-# Define user data for 8 users
 users_data = [
     {
-        "email": "user1@example.com",
+        "email": "user1@email.com",
         "password": "password123",
         "first_name": "First1",
         "last_name": "Last1",
@@ -25,7 +29,7 @@ users_data = [
         "display_name": "user1",
     },
     {
-        "email": "user2@example.com",
+        "email": "user2@email.com",
         "password": "password123",
         "first_name": "First2",
         "last_name": "Last2",
@@ -33,7 +37,7 @@ users_data = [
         "display_name": "user2",
     },
     {
-        "email": "user3@example.com",
+        "email": "user3@email.com",
         "password": "password123",
         "first_name": "First3",
         "last_name": "Last3",
@@ -41,7 +45,7 @@ users_data = [
         "display_name": "user3",
     },
     {
-        "email": "user4@example.com",
+        "email": "user4@email.com",
         "password": "password123",
         "first_name": "First4",
         "last_name": "Last4",
@@ -49,7 +53,7 @@ users_data = [
         "display_name": "user4",
     },
     {
-        "email": "user5@example.com",
+        "email": "user5@email.com",
         "password": "password123",
         "first_name": "First5",
         "last_name": "Last5",
@@ -57,7 +61,7 @@ users_data = [
         "display_name": "user5",
     },
     {
-        "email": "user6@example.com",
+        "email": "user6@email.com",
         "password": "password123",
         "first_name": "First6",
         "last_name": "Last6",
@@ -65,7 +69,7 @@ users_data = [
         "display_name": "user6",
     },
     {
-        "email": "user7@example.com",
+        "email": "user7@email.com",
         "password": "password123",
         "first_name": "First7",
         "last_name": "Last7",
@@ -73,7 +77,7 @@ users_data = [
         "display_name": "user7",
     },
     {
-        "email": "user8@example.com",
+        "email": "user8@email.com",
         "password": "password123",
         "first_name": "First8",
         "last_name": "Last8",
@@ -83,8 +87,7 @@ users_data = [
 ]
 
 
-# Function to create a user or generate tokens for an existing user
-def create_user_and_generate_token(user_data):
+def create_user(user_data):
     try:
         user = User.objects.create_user(
             email=user_data["email"],
@@ -94,25 +97,20 @@ def create_user_and_generate_token(user_data):
             last_name=user_data["last_name"],
             password=user_data["password"],
         )
+        print(f"    User '{user.username}' created successfully.")
+        refresh = RefreshToken.for_user(user)
+        logging.debug(f"User: {user.username}")
+        logging.debug(f"Access: {refresh.access_token}")
     except IntegrityError:
-        # User with this email already exists, get the existing user
-        user = User.objects.get(email=user_data["email"])
+        user = User.objects.get(username=user_data["username"])
+        refresh = RefreshToken.for_user(user)
+        logging.debug(f"User: {user.username}")
+        logging.debug(f"Access: {refresh.access_token}")
+        print(f"    User {user_data['username']} already exists")
 
-    refresh = RefreshToken.for_user(user)
-    return {"access": str(refresh.access_token), "refresh": str(refresh)}
 
-
-# Create users and collect their tokens
-tokens = []
-for user_data in users_data:
-    token_data = create_user_and_generate_token(user_data)
-    tokens.append(token_data)
-
-# Write the tokens to a file
-with open("data.log", "w") as log_file:
-    for idx, token in enumerate(tokens):
-        log_file.write(f"User {idx+1} Tokens:\n")
-        log_file.write(f"Access: {token['access']}\n")
-        log_file.write(f"Refresh: {token['refresh']}\n\n")
-
-print("Tokens have been written to data.log")
+def generator():
+    print("Generating users...")
+    for user_data in users_data:
+        create_user(user_data)
+    print("Users created successfully.")

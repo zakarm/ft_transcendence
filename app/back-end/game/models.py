@@ -68,7 +68,7 @@ class Tournamentsmatches(models.Model):
 
 class Achievements(models.Model):
     achievement_id = models.AutoField(primary_key=True)
-    achievement_name = models.CharField(max_length=45)
+    achievement_name = models.CharField(max_length=45, unique=True)
     achievement_type = models.CharField(max_length=45)
 
     class Meta:
@@ -76,9 +76,8 @@ class Achievements(models.Model):
 
 
 class UserAchievements(models.Model):
-    user = models.OneToOneField(
-        "authentication.User", models.DO_NOTHING, primary_key=True
-    )
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey("authentication.User", models.DO_NOTHING)
     achievement = models.ForeignKey(Achievements, models.DO_NOTHING)
     achive_date = models.DateTimeField()
 

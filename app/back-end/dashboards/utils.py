@@ -123,3 +123,12 @@ def get_total_minutes(obj):
         minutes_months.insert(0, total_minutes)
 
     return {"months": months, "minutes_months": minutes_months}
+
+
+def get_total_minutes_played(obj) -> float:
+    matches = Match.objects.filter(Q(user_one=obj) | Q(user_two=obj))
+    match_durations = []
+    for match in matches:
+        match_duration = match.match_end - match.match_start
+        match_durations.append(match_duration.total_seconds() / 60)
+    return sum(match_durations)

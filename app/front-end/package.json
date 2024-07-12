@@ -9,7 +9,7 @@
     "watch": "tsc --watch",
     "tsc": "tsc --noEmit",
     "format": "prettier --write ./**/*.{tsx,ts,css}",
-    "format:check": "prettier --check ./**/*.{tsx,ts,css}"
+    "check": "prettier --check ./**/*.{tsx,ts,css}"
   },
   "dependencies": {
     "@gsap/react": "^2.1.1",
@@ -18,7 +18,7 @@
     "cloudinary": "^2.2.0",
     "gsap": "^3.12.5",
     "js-cookie": "^3.0.5",
-    "next": "^14.2.4",
+    "next": "^14.2.5",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.4",
     "react-chartjs-2": "^5.2.0",

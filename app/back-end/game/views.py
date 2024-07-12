@@ -1,4 +1,4 @@
-import sys
+import re
 
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -126,10 +126,56 @@ class GameSettingsView(APIView):
             data.is_2fa_enabled = request.data.get(
                 "is_2fa_enabled", data.is_2fa_enabled
             )
-            if request.data.get("country"):
-                data.location = request.data.get("country")
-            if request.data.get("city"):
-                data.location += "/" + request.data.get("city")
+            country = request.data.get("country")
+            if country:
+                if country == None or country == "":
+                    return Response(
+                        {"country": {"Country cannot be empty"}},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                elif len(country) < 3:
+                    return Response(
+                        {"country": {"Country name must be at least 3 characters"}},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                elif len(country) > 49:
+                    return Response(
+                        {"country": {"Country name must be at most 49 characters"}},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                elif not re.match("^[a-zA-Z- ]+$", country):
+                    return Response(
+                        {"country": {"Country name must contain only alphabetic characters"}},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                data.location = country
+            
+            city = request.data.get("city")
+            if city:
+                if city ==  None or city == "":
+                    return Response(
+                        {"city": {"City cannot be empty"}},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                elif len(city) < 3:
+                    return Response(
+                        {"city": {"City name must be at least 3 characters"}},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                elif len(city) > 49:
+                    return Response(
+                        {"city": {"City name must be at most 49 characters"}},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                elif not re.match("^[a-zA-Z- ]+$", city):
+                    return Response(
+                        {"city": {"City name must contain only alphabetic characters"}},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                if '/' in data.location:
+                    data.location = data.location.split('/')[0]
+                data.location += "/" + city
+                
             data.save()
             game, _ = GameTable.objects.get_or_create(
                 user=user,

@@ -6,6 +6,7 @@ from django.contrib.auth.models import (
     BaseUserManager,
 )
 
+
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         """Function create a User"""
@@ -26,33 +27,45 @@ class UserManager(BaseUserManager):
             raise ValueError("Superuser must have is_superuser=True.")
         return self.create_user(email, password, **extra_fields)
 
+only_alphabet_validator = RegexValidator(
+    regex=r"^[a-zA-Z]*$", message="Only alphabetic characters are allowed."
+)
 
-only_alphabet_validator = RegexValidator(regex=r'^[a-zA-Z]*$',
-                                         message='Only alphabetic characters are allowed.')
 reg_validator = RegexValidator(
-        regex="^[a-zA-Z0-9_ ]*$",
-        message="Username or display name can only contain alphanumeric characters and underscores.",
-        code="invalid_username",
-    )
+    regex="^[a-zA-Z0-9_ ]*$",
+    message="Username or display name can only contain alphanumeric characters and underscores.",
+    code="invalid_username",
+)
 
 class User(AbstractBaseUser, PermissionsMixin):
     dft_img = "/assets/images/gameProfiles/default_profile.png"
     loc_text = "Morocco/Khouribga"
     quote_text = "Hello, It's me!"
     intro_text = "Life's a ping pong game: focus strategy spin"
+    first_name = models.CharField(
+        max_length=30,
+        blank=True,
+        null=True,
+        validators=[
+            MinLengthValidator(3),
+            only_alphabet_validator,
+        ],
+    )
+    last_name = models.CharField(
+        max_length=30,
+        blank=True,
+        null=True,
+        validators=[
+            MinLengthValidator(3),
+            only_alphabet_validator,
+        ],
+    )
+    display_name = models.CharField(
+        max_length=30, validators=[reg_validator], unique=True
+    )
     username = models.CharField(max_length=30, validators=[reg_validator], unique=True)
-    display_name = models.CharField(max_length=30, validators=[reg_validator], unique=True)
     email = models.EmailField(max_length=55, unique=True)
     password = models.CharField(max_length=100, blank=True, null=True)
-    first_name = models.CharField(max_length=30, blank=True, null=True, validators=[
-            MinLengthValidator(3),
-            only_alphabet_validator,
-        ])
-    last_name = models.CharField(max_length=30, blank=True, null=True
-            , validators=[
-            MinLengthValidator(3),
-            only_alphabet_validator,
-        ])
     image_url = models.URLField(max_length=350, blank=True, null=True, default=dft_img)
     location = models.CharField(max_length=100, blank=True, null=True, default=loc_text)
     quote = models.CharField(max_length=25, blank=True, null=True, default=quote_text)

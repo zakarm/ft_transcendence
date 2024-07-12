@@ -16,7 +16,6 @@ const notificationStyle: {} = {
   draggable: true,
   progress: undefined,
   theme: 'dark',
-  // transition: Bounce,
 };
 
 function ToastProvider({ children }: ToastProviderProps) {
@@ -33,7 +32,6 @@ function ToastProvider({ children }: ToastProviderProps) {
         draggable
         pauseOnHover
         theme="dark"
-        //   transition="Bounce"
       />
       {children}
     </>

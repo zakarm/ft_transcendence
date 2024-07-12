@@ -2,19 +2,22 @@
 SHELL := /bin/bash
 
 # Set variables
-DOCKER_COMPOSE := docker-compose
-DOCKER_COMPOSE_FILE := docker-compose.yml
-DATA_DIR := ${HOME}/Desktop/data
+DOCKER_COMPOSE		:= docker-compose
+DOCKER_COMPOSE_FILE	:= docker-compose.yml
+DATA_DIR			:= ${HOME}/Desktop/data
+HOST_NAME			:= $(shell hostname)
+IP_ADDRESS			:= $(shell dig +short $(HOST_NAME))
+CONTAINERS			:= $(shell docker ps --format '{{.Names}}')
 
 # Define colors
-GREEN := $(shell tput -Txterm setaf 2)
-YELLOW := $(shell tput -Txterm setaf 3)
-RESET := $(shell tput -Txterm sgr0)
-RED := $(shell tput -Txterm setaf 1)
-BLUE := $(shell tput -Txterm setaf 4)
-
-# Used to delete files in case permission denied (expect value sudo)
-sudo=
+RED		:= $(shell tput -Txterm setaf 1)
+GREEN	:= $(shell tput -Txterm setaf 2)
+YELLOW	:= $(shell tput -Txterm setaf 3)
+BLUE	:= $(shell tput -Txterm setaf 4)
+MAGENTA	:= $(shell tput -Txterm setaf 5)
+CYAN	:= $(shell tput -Txterm setaf 6)
+WHITE	:= $(shell tput -Txterm setaf 7)
+RESET	:= $(shell tput -Txterm sgr0)
 
 # Define targets
 .PHONY: help start build up down restart logs create-data-dir remove-data-dir remove-volumes clean re check tools
@@ -39,7 +42,9 @@ down: ## Stop and remove Docker containers
 	@echo "$(YELLOW)Stopping and removing Docker containers...$(RESET)"
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) down
 
-restart: down build up ## Restart Docker containers
+restart: ## Restart Docker containers
+	@echo "$(YELLOW)Restarting Docker containers...$(RESET)"
+	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) restart
 
 logs: ## View logs from Docker containers
 	@echo "$(GREEN)Viewing logs from Docker containers...$(RESET)"
@@ -47,22 +52,54 @@ logs: ## View logs from Docker containers
 
 logs-container: ## View logs from a specific Docker container
 	@echo "$(GREEN)Viewing logs from a specific Docker container...$(RESET)"
-	@echo "$(BLUE)1. front-end$(RESET)"
-	@echo "$(BLUE)2. back-end$(RESET)"
-	@echo "$(BLUE)3. data-base$(RESET)"
-	@echo "$(BLUE)4. adminer$(RESET)"
-	@echo "$(BLUE)5. redis$(RESET)"
-	@read -p "Select a container to view logs (1-5): " container_choice; \
-	case $$container_choice in \
-		1) container_name="front-end";; \
-		2) container_name="back-end";; \
-		3) container_name="data-base";; \
-		4) container_name="adminer";; \
-		5) container_name="redis";; \
-		*) echo "Invalid choice!"; exit 1;; \
-	esac; \
+	@echo "$(YELLOW)Available containers:$(RESET)"
+	@counter=1; \
+	for container in $(CONTAINERS); do \
+		echo "$(RED)$$counter. $(BLUE)$$container$(RESET)"; \
+		counter=$$((counter + 1)); \
+	done
+	@read -p "$(MAGENTA)Select a container to view logs (1-$(words $(CONTAINERS))): $(RESET)" container_choice; \
+	container_name=$$(echo "$(CONTAINERS)" | tr ' ' '\n' | sed -n "$$container_choice"p); \
+	if [ -z "$$container_name" ]; then \
+		echo "Invalid choice!"; \
+		exit 1; \
+	fi; \
 	echo "$(GREEN)Viewing logs from the $$container_name container...$(RESET)"; \
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) logs -f $$container_name
+
+restart-container: ## Restart a specific Docker container
+	@echo "$(YELLOW)Restarting a specific Docker container...$(RESET)"
+	@echo "$(YELLOW)Available containers:$(RESET)"
+	@counter=1; \
+	for container in $(CONTAINERS); do \
+		echo "$(RED)$$counter. $(BLUE)$$container$(RESET)"; \
+		counter=$$((counter + 1)); \
+	done
+	@read -p "$(MAGENTA)Select a container to restart (1-$(words $(CONTAINERS))): $(RESET)" container_choice; \
+	container_name=$$(echo "$(CONTAINERS)" | tr ' ' '\n' | sed -n "$$container_choice"p); \
+	if [ -z "$$container_name" ]; then \
+		echo "Invalid choice!"; \
+		exit 1; \
+	fi; \
+	echo "$(YELLOW)Restarting the $$container_name container...$(RESET)"; \
+	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) restart $$container_name
+
+build-container: ## Build a specific Docker container
+	@echo "$(YELLOW)Building a specific Docker container...$(RESET)"
+	@echo "$(YELLOW)Available containers:$(RESET)"
+	@counter=1; \
+	for container in $(CONTAINERS); do \
+		echo "$(RED)$$counter. $(BLUE)$$container$(RESET)"; \
+		counter=$$((counter + 1)); \
+	done
+	@read -p "$(MAGENTA)Select a container to build (1-$(words $(CONTAINERS))): $(RESET)" container_choice; \
+	container_name=$$(echo "$(CONTAINERS)" | tr ' ' '\n' | sed -n "$$container_choice"p); \
+	if [ -z "$$container_name" ]; then \
+		echo "Invalid choice!"; \
+		exit 1; \
+	fi; \
+	echo "$(YELLOW)Building the $$container_name container...$(RESET)"; \
+	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) build --no-cache $$container_name
 
 create-data-dir: ## Create the data directory
 	@echo "$(GREEN)Creating data directory $(DATA_DIR)...$(RESET)"
@@ -75,6 +112,18 @@ remove-data-dir: ## Remove the data directory
 remove-volumes: ## Remove Docker volumes
 	@echo "$(YELLOW)Removing Docker volumes...$(RESET)"
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) down -v
+
+remove-images: ## Remove Docker images
+	@echo "$(YELLOW)Removing Docker images...$(RESET)"
+	@docker rmi -f $(shell docker images -q)
+
+remove-networks: ## Remove Docker networks
+	@echo "$(YELLOW)Removing Docker networks...$(RESET)"
+	@docker network prune -f
+
+remove-containers: ## Remove Docker containers
+	@echo "$(YELLOW)Removing Docker containers...$(RESET)"
+	@docker rm -f $(shell docker ps -a -q)
 
 clean: down remove-volumes remove-data-dir ## Clean up build artifacts and temporary files
 	@echo "$(YELLOW)Cleaning up build artifacts and temporary files...$(RESET)"
@@ -144,16 +193,6 @@ prune: ## Remove all stopped containers, dangling images, and unused networks an
 	@echo "$(YELLOW)Pruning Docker system...$(RESET)"
 	@docker system prune -a -f --volumes
 
-print-%: ## Print the value of a variable
-	@echo $($*)
-
-Docker-ip: ## Get the IP address of the Docker containers
-	@echo "$(YELLOW)IP addresses of the Docker containers:$(RESET)"
-	@docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(shell docker ps -q)
-
-IP_ADDRESS := $(shell ifconfig | grep inet | awk 'NR==5 {print $$2}')
-HOST_NAME := $(shell echo ${IP_ADDRESS} | tr '.' '\n' | awk 'NR > 1 { if (NR == 2) segment = "e" substr($$0, 2); else if (NR == 3) segment = "r" $$0; else if (NR == 4) segment = "p" $$0; output = output segment } END { print output ".1337.ma" }')
-
 linkIp: ## Link IP address
 	@echo "$(YELLOW)Linking IP address...$(RESET)"
 	@echo "$(GREEN)IP address: $(IP_ADDRESS)$(RESET)"
@@ -166,10 +205,13 @@ restorenv: ## Restore the .env file
 	@cp .env.example .env
 	@echo "$(GREEN).env file restored!$(RESET)"
 
-datagenerator: ## Generate data
+data-generator: ## Generate data
 	@echo "$(YELLOW)Generating data...$(RESET)"
-	@docker exec -it back-end bash -c "python3 generate_users.py"
+	@docker exec -it back-end bash -c "python3 tools/scripts/generator/generator.py"
 
 switch_docker_context: ## Switch Docker context
 	@echo "$(YELLOW)Switching Docker context...$(RESET)"
 	@docker context use default
+
+print-%: ## Print the value of a variable
+	@echo $($*)
