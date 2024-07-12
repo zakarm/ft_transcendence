@@ -2884,7 +2884,7 @@
     "refresh": "10s",
     "schemaVersion": 19,
     "style": "dark",
-    "tags": ["postgres", "db", "stats"],
+    "tags": ["postgres"],
     "templating": {
         "list": [
             {
@@ -3076,7 +3076,7 @@
         "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d", "30d"]
     },
     "timezone": "",
-    "title": "PostgreSQL Database",
+    "title": "Postgres Dashboard",
     "uid": "000000039",
     "version": 1
 }

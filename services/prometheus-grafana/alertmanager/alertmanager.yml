@@ -11,10 +11,10 @@ route:
 receivers:
   - name: "gmail-notifications"
     email_configs:
-      - to: "elmouzammil.aimen@gmail.com"
-        from: "elmouzammil.ock@gmail.com"
-        smarthost: "smtp.gmail.com:587"
-        auth_username: "elmouzammil.ock@gmail.com"
-        auth_identity: "elmouzammil.ock@gmail.com"
-        auth_password: "qull ewel irtz xomz"
+      - to: "SMTP_TO"
+        from: "SMTP_FROM"
+        smarthost: "SMTP_SMARTHOST"
+        auth_username: "SMTP_AUTH_USERNAME"
+        auth_identity: "SMTP_AUTH_IDENTITY"
+        auth_password: "SMTP_AUTH_PASSWORD"
         send_resolved: true
