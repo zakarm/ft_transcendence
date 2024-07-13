@@ -142,8 +142,18 @@ export default function () {
         },
         body: JSON.stringify({ username, email, quote, intro }),
       });
-
-      if (!res.ok) throw new Error('Failed to submit data');
+      
+      const data = await res.json()
+      if (res.ok){
+        toast.success('Data updated');
+        throw new Error('Failed to submit data');
+      } else {
+        Object.entries(data).map((key, value) => {
+          if (key[0] && key[1]) {
+            toast.error(`${key[0]} : ${key[1]}`)
+          }}
+        )
+      }
 
       fetchProfileData();
       setModalShow(false);
@@ -245,19 +255,19 @@ export default function () {
                       {
                             profile.first_name && profile.first_name.length < 15 ?
                                 <span style={{ fontSize: '1.2em' }}>
-                                    {profile.first_name}
+                                    {profile.first_name + " "}
                                 </span>
                             :
                                 <div>
                                     <marquee className='w-75' style={{ fontSize: '1.2em' , color : '#ffebeb'}}>
-                                        <div>{profile.first_name}</div>
+                                        <div>{profile.first_name + " "}</div>
                                     </marquee>
                                 </div>
                         }
                                                                     {
                             profile.last_name && profile.last_name.length < 15 ?
                                 <span style={{ fontSize: '1.2em' }}>
-                                    {profile.last_name} {profile.last_name}
+                                    {profile.last_name}
                                 </span>
                             :
                                 <div>
