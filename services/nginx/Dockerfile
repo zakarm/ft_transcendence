@@ -10,6 +10,4 @@ RUN mkdir -p /etc/nginx/certs && \
     -out /etc/nginx/certs/cert.pem \
     -subj "/C=MA/ST=Beni Mellal/L=Khouribga/O=Organization/OU=Department/CN=${HOST_IP}"
 
-EXPOSE 80 443
-
 CMD ["nginx", "-g", "daemon off;"]

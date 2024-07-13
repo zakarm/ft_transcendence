@@ -31,8 +31,6 @@ COPY alert_rules.yml /etc/prometheus/alert_rules.yml
 RUN HASHED_PASSWORD=$(cat /etc/prometheus/auth/hashed_password) && \
     sed -i 's|hashed_password|'"$HASHED_PASSWORD"'|g' /etc/prometheus/web.yml
 
-EXPOSE 9090
-
 CMD ["--config.file=/etc/prometheus/prometheus.yml", \
      "--web.listen-address=:9090", \
      "--web.external-url=https://localhost", \
