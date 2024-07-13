@@ -13,7 +13,6 @@ def get_tackles(obj):
     tackles_as_user_two = Match.objects.filter(user_two=obj).aggregate(Sum('tackle_user_two'))['tackle_user_two__sum']
     return (tackles_as_user_one or 0) + (tackles_as_user_two or 0)
 
-
 def get_scores(obj):
     scores_as_user_one = Match.objects.filter(user_one=obj).aggregate(Sum('score_user_one'))['score_user_one__sum']
     scores_as_user_two = Match.objects.filter(user_two=obj).aggregate(Sum('score_user_two'))['score_user_two__sum']
