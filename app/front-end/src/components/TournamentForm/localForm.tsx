@@ -82,7 +82,7 @@ function GetInput({ type, id, label, updatePlayersList, inputClassName, inputLen
     );
 }
 
-function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<React.SetStateAction<boolean>> }) {
+function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<React.SetStateAction<number>> }) {
   const [players, setPlayers] = useState<LocalTournamentProps>({
     tournament_name: '',
     tournamentImage: '/assets/images/Backgrounds/Ping_Pong_Battle_4.png',
@@ -137,7 +137,7 @@ function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<Reac
 
   const isPlayerNameDuplicate: () => boolean = () => {
     const playersName = Object.entries(players).filter(([key]) => /^player_\d+$/.test(key));
-
+console.log(playersName)
     for (const i in playersName) {
       if (playersName[i]) {
         const [key0, value0] = playersName[i];
@@ -149,6 +149,10 @@ function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<Reac
               return false;
             }
           }
+        }
+        if (value0.length < 3) {
+          toast.error(`Error : player name must be at least 3 charatcters long `);
+          return false;
         }
       }
     }
@@ -186,7 +190,7 @@ function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<Reac
     tournaments.push(players);
     localStorage.setItem('tournaments', JSON.stringify(tournaments));
     toast.success(`${players['tournament_name']} local tournament created successfully`, notificationStyle);
-    setRerender((prev: boolean) => !prev);
+    setRerender((prev: number) => prev += 1);
   };
 
   const updatePlayersList: (key: string, val: string) => void = (key: string, val: string) => {
