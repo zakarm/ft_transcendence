@@ -89,8 +89,7 @@ export default function () {
         const data = await res.json();
         setMe(data.username);
       } catch (error) {
-        console.log('----> ', error);
-        // // console.error(`Error : ${error}`);
+        // console.error(`Error : ${error}`);
       }
     } else {
       toast.error('Access token is undefined or falsy');

@@ -137,7 +137,7 @@ function LocalTournamentForm({ setRerender }: { setRerender: React.Dispatch<Reac
 
   const isPlayerNameDuplicate: () => boolean = () => {
     const playersName = Object.entries(players).filter(([key]) => /^player_\d+$/.test(key));
-console.log(playersName)
+
     for (const i in playersName) {
       if (playersName[i]) {
         const [key0, value0] = playersName[i];

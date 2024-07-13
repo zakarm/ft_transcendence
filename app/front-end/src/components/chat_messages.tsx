@@ -172,7 +172,6 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
         }`;
         const ws = new WebSocket(url);
         ws.onopen = () => {
-          console.log('WebSocket connection established');
         };
         ws.onmessage = (event) => {
           const data = JSON.parse(event.data);

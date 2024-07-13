@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@gsap/react": "^2.1.1",
+    "ajv": "^8.17.1",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.3",
     "cloudinary": "^2.2.0",
