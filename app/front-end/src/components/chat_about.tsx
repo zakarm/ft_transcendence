@@ -79,7 +79,7 @@ export default function ChatAbout({ handleClose, selectedChat }: Props) {
         const data = await res.json();
         setProfile(data);
       } catch (error) {
-        console.error(`Error : ${error}`);
+        // console.error(`Error : ${error}`);
       }
     } else if (selectedChat !== 'none') toast.error('Access token is undefined or false');
   };

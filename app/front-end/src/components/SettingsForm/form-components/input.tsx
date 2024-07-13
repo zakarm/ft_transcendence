@@ -87,7 +87,7 @@ function GetCheckboxInput({ className = 'col', inputType = 'text', inputId = '',
           setTwoFaData({ value: url, email });
         }
       } catch (error) {
-        console.error(`Error : ${error}`);
+        // console.error(`Error : ${error}`);
       }
     } else {
       if ((oldAccountValues[inputId] as Boolean) && !isChk) {

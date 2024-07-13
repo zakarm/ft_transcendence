@@ -107,7 +107,7 @@ export default function Dashboard() {
           } else if (response.status === 401) {
             toast.error('Unauthorized');
           } else {
-            console.error(`Error : ${response.status}`);
+            // console.error(`Error : ${response.status}`);
           }
         } catch (error) {
           toast.error(`Error : ${error}`);
@@ -161,7 +161,7 @@ export default function Dashboard() {
       } else if (response.status === 401) {
         toast.error('Unauthorized');
       } else {
-        console.error(`Error : ${response.status}`);
+        // console.error(`Error : ${response.status}`);
       }
       return null;
     } catch (error) {

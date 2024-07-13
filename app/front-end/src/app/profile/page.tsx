@@ -107,7 +107,7 @@ export default function () {
         setQuote('');
         setIntro('');
         setProfile(initProfileData);
-        console.error(`Error : ${error}`);
+        // console.error(`Error : ${error}`);
       }
     } else toast.error('Access token is undefined or falsy');
   };
@@ -148,7 +148,7 @@ export default function () {
       fetchProfileData();
       setModalShow(false);
     } catch (error) {
-      console.error(`Error : ${error}`);
+      // console.error(`Error : ${error}`);
     }
   };
 
@@ -218,7 +218,7 @@ export default function () {
                             <marquee className="valo-font w-50" style={{ color: '#FFEBEB', fontSize: '1.5em' }}>
                                 {profile.username}
                             </marquee>
-                        :   
+                        :
                             <span className="valo-font" style={{ color: '#FFEBEB', fontSize: '1.5em' }}>
                                 {profile.username}
                             </span>
@@ -243,7 +243,7 @@ export default function () {
                       </div>
                       <span style={{ fontSize: '1.2em' }}>
                       {
-                            profile.first_name && profile.first_name.length < 15 ? 
+                            profile.first_name && profile.first_name.length < 15 ?
                                 <span style={{ fontSize: '1.2em' }}>
                                     {profile.first_name}
                                 </span>
@@ -255,7 +255,7 @@ export default function () {
                                 </div>
                         }
                                                                     {
-                            profile.last_name && profile.last_name.length < 15 ? 
+                            profile.last_name && profile.last_name.length < 15 ?
                                 <span style={{ fontSize: '1.2em' }}>
                                     {profile.last_name} {profile.last_name}
                                 </span>
