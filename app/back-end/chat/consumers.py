@@ -1,10 +1,10 @@
-# chat/consumers.py
 import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from authentication.models import User
 from dashboards.models import Friendship, Notification
 from channels.layers import get_channel_layer
+from django.db.models import Q
 from .models import Messages
 from django.conf import settings
 import sys
@@ -34,22 +34,21 @@ class ChatConsumer(WebsocketConsumer):
         receiver = text_data_json["receiver"]
         timestamp = text_data_json["timestamp"]
 
-        print(f"chat_id: {chat_id}", file = sys.stderr)
-        print(f"message: {message}", file = sys.stderr)
-        print(f"sender: {sender}", file = sys.stderr)
-        print(f"receiver: {receiver}", file = sys.stderr)
-        print(f"timestamp: {timestamp}", file = sys.stderr)
-
         receiver_obj = User.objects.get(username = receiver)
         sender_obj = User.objects.get(username = sender)
 
-        # friendship = Friendship.objects.filter(user_from=sender_obj, user_to=receiver_obj).first()
-        # if not friendship or not friendship.is_accepted or friendship.u_one_is_blocked_u_two:
-        #     self.send(text_data=json.dumps({"error": "You are not friends with the receiver or you have blocked the receiver."}))
-        #     return
-
         if len(message) > 512:
             self.send(text_data=json.dumps({"error": "Message is too long."}))
+            return
+
+        FriendshipObj = Friendship.objects.filter(Q(user_from = sender_obj, user_to = receiver_obj) | Q(user_from = receiver_obj, user_to = sender_obj)).first()
+        
+        if not FriendshipObj:
+            self.send(text_data=json.dumps({"error": "You are not friends with this user."}))
+            return
+        
+        if FriendshipObj.u_one_is_blocked_u_two == True or FriendshipObj.u_two_is_blocked_u_one == True:
+            self.send(text_data=json.dumps({"error": "You are blocked by this user."}))
             return
 
         Messages.objects.create(
@@ -69,7 +68,6 @@ class ChatConsumer(WebsocketConsumer):
             action_by = sender_obj.username,
         )
 
-        # channel_layer = get_channel_layer()
         async_to_sync(self.channel_layer.group_send)(
             f"user_{receiver_obj.id}",
             {

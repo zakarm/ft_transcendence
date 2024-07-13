@@ -29,7 +29,7 @@ const AuthChecker = ({ children }: { children: React.ReactNode }) => {
           return null;
         }
       } catch (error) {
-        console.error(`Error refreshing token: ${error}`);
+        // console.error(`Error refreshing token: ${error}`);
         return null;
       }
     };
@@ -71,7 +71,7 @@ const AuthChecker = ({ children }: { children: React.ReactNode }) => {
           router.push('/sign-in');
         }
       } catch (error: any) {
-        console.error(`Error : ${error}`);
+        // console.error(`Error : ${error}`);
       }
     };
     authentication();

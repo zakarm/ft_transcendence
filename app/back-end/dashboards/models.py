@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class Friendship(models.Model):
     freindship_id = models.AutoField(primary_key=True)
     user_from = models.ForeignKey(

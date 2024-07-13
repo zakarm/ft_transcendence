@@ -39,7 +39,7 @@ async function getData(): Promise<StatisticsDataTypes> {
 
       data = await response.json();
     } catch (error: any) {
-      console.error(`Error : ${error.message}`);
+      // console.error(`Error : ${error.message}`);
     }
   }
 

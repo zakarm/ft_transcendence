@@ -118,7 +118,7 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
         setMe(data.username);
         setMyId(data.id);
       } catch (error) {
-        console.error(`Error : ${error}`);
+        // console.error(`Error : ${error}`);
       }
     } else {
       toast.error('Access token is undefined or falsy');

@@ -83,7 +83,7 @@ function connectToSocket({ pageUrl, setData }: connectSocketTypes) {
             wss = new WebSocket(
                 `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/pingpong/tournament/${tournamentID}/?token=${access}&watch=true`,
             );
-            
+
             wss.onopen = () => {
                 setData(initData);
                 tmpData = initData
@@ -109,7 +109,7 @@ function connectToSocket({ pageUrl, setData }: connectSocketTypes) {
                 reinitializeData();
             };
         } catch (error) {
-            console.error(`Error : ${error}`);
+            // console.error(`Error : ${error}`);
         }
     }
 }
