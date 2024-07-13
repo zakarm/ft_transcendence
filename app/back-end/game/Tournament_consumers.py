@@ -13,6 +13,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.utils import timezone
 from django.db import transaction
 from django.conf import settings
+from asgiref.sync import sync_to_async
 
 # Local application/library specific imports
 from .Tournament import Tournament
@@ -25,6 +26,13 @@ from .models import (
     UserAchievements,
 )
 from dashboards.models import Notification
+from dashboards.utils import (
+    get_win_games,
+    get_lose_games,
+    get_total_games,
+    get_scores,
+    get_total_minutes_played,
+)
 
 User = get_user_model()
 
@@ -547,6 +555,11 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
             game_data = await get_game_data(player["object"])
             room = self.tournament.get_room_game(player["match_id"])
             index = room.get_user_index(player["email"])
+            win_games = await sync_to_async(get_win_games)(player["object"])
+            lose_games = await sync_to_async(get_lose_games)(player["object"])
+            total_games = await sync_to_async(get_total_games)(player["object"])
+            scores = await sync_to_async(get_scores)(player["object"])
+            total_minutes = await sync_to_async(get_total_minutes_played)(player["object"])
             message = {
                 "action": "connection_ack",
                 "index": index,
@@ -558,6 +571,11 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                 "ball_color": game_data.ball_color,
                 "paddle_color": game_data.paddle_color,
                 "table_position": game_data.table_position,
+                "win_games": win_games,
+                "lose_games": lose_games,
+                "total_games": total_games,
+                "scores": scores,
+                "total_minutes": total_minutes,
             }
             await self.send_message_to_channel(player["channel"], message)
         except Exception as e:
@@ -724,7 +742,17 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
     async def opponents(self, match_id, _tournament):
         try:
             room = _tournament.get_room_game(match_id)
-            user1, user1_data, user2, user2_data = room.get_original_users()
+            id ,user1, user1_data, id1, user2, user2_data = room.get_original_users()
+            win_games = await sync_to_async(get_win_games)(id)
+            lose_games = await sync_to_async(get_lose_games)(id)
+            total_games = await sync_to_async(get_total_games)(id)
+            scores = await sync_to_async(get_scores)(id)
+            total_minutes = await sync_to_async(get_total_minutes_played)(id)
+            win_games2 = await sync_to_async(get_win_games)(id1)
+            lose_games2 = await sync_to_async(get_lose_games)(id1)
+            total_games2 = await sync_to_async(get_total_games)(id1)
+            scores2 = await sync_to_async(get_scores)(id1)
+            total_minutes2 = await sync_to_async(get_total_minutes_played)(id1)
             message = {
                 "action": "opponents",
                 "user1": user1,
@@ -733,6 +761,16 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                 "user2": user2,
                 "user2_image_url": user2_data["user_img"],
                 "user2_username": user2_data["username"],
+                "win_games": win_games,
+                "lose_games": lose_games,
+                "total_games": total_games,
+                "score": scores,
+                "total_minutes": total_minutes,
+                "win_games2": win_games2,
+                "lose_games2": lose_games2,
+                "total_games2": total_games2,
+                "score2": scores2,
+                "total_minutes2": total_minutes2,
             }
             await self.broadcast_message(message, match_id)
         except Exception as e:

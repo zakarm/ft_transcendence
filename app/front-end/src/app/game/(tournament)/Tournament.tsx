@@ -139,12 +139,13 @@ function getLocalTournamentFromStorage() {
       tournaments = JSON.parse(data);
     } catch (error) {
       toast.error(`Error : cannot read tournaments data`);
+      localStorage.removeItem('tournaments');
     }
   }
   return tournaments;
 }
 
-function LocalTournamentHTML(value: LocalTournamentProps, index: number): React.JSX.Element {
+function LocalTournamentHTML(value: LocalTournamentProps, index: number, setRerenderLocalTourn ?:React.Dispatch<React.SetStateAction<number>>): React.JSX.Element {
   return (
     <div key={value.tournament_name as string}>
       <TournamentCard
@@ -155,17 +156,18 @@ function LocalTournamentHTML(value: LocalTournamentProps, index: number): React.
         id={index.toString()}
         pageUrl={`/game/LocalTournament/${index}`}
         buttonText="GO"
+        setRerenderLocalTourn={setRerenderLocalTourn}
       />
     </div>
   );
 }
 
-function renderLocalTournaments(setLocalTournaments: React.Dispatch<React.SetStateAction<React.JSX.Element[]>>) {
+function renderLocalTournaments(setLocalTournaments: React.Dispatch<React.SetStateAction<React.JSX.Element[]>>, setRerenderLocalTourn ?:React.Dispatch<React.SetStateAction<number>>) {
   const tournamentCards: React.JSX.Element[] = [];
   let tournaments: LocalTournamentProps[] = getLocalTournamentFromStorage();
 
   tournaments.forEach((value, index) => {
-    tournamentCards.push(LocalTournamentHTML(value, index));
+    tournamentCards.push(LocalTournamentHTML(value, index, setRerenderLocalTourn));
   });
 
   setLocalTournaments(tournamentCards);
@@ -209,8 +211,6 @@ function findNeedleInHaystack({
   return tournamentCards;
 }
 
-/********** Main Component */
-
 const Tournament: React.FC = () => {
   /************ used for NavBar */
   const NavBarOptions: string[] = ['All', 'Ongoing', 'Completed', 'My Tournament', 'Local'];
@@ -221,7 +221,7 @@ const Tournament: React.FC = () => {
   const [tournamentsToRenderSearch, setTournamentsToRenderSearch] = useState<React.JSX.Element[]>([]);
   /************ used to rerender localTournament */
   const [localTournaments, setLocalTournaments] = useState<React.JSX.Element[]>([]);
-  const [rerenderLocalTourn, setRerenderLocalTourn] = useState<boolean>(false);
+  const [rerenderLocalTourn, setRerenderLocalTourn] = useState<number>(0);
   /************ used to capture id from pageURL for TournamentOngoing cards */
   const [tournamentID, setTournamentID] = useState<string>('');
   /************ used to style content */
@@ -248,13 +248,13 @@ const Tournament: React.FC = () => {
 
   /************ Renders Local Tournaments from Session Storage inside localTournaments state */
   useEffect(() => {
-    renderLocalTournaments(setLocalTournaments);
+    renderLocalTournaments(setLocalTournaments, setRerenderLocalTourn);
   }, [rerenderLocalTourn]);
 
   /************ handles Local Tournament in Session Storage */
   useEffect(() => {
     window.addEventListener<'storage'>('storage', () => {
-      setRerenderLocalTourn((prev: boolean) => (prev = !prev));
+      setRerenderLocalTourn((prev: number) => (prev += 1));
     });
   }, []);
 

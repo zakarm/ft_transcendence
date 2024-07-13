@@ -12,12 +12,21 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from django.utils import timezone
 from django.conf import settings
-from asgiref.sync import async_to_sync
+
+# from asgiref.sync import async_to_sync,
+from asgiref.sync import sync_to_async
 
 # Local application/library specific imports
 from .room import RoomObject
 from .models import Match, GameTable, Achievements, UserAchievements
 from dashboards.models import Notification
+from dashboards.utils import (
+    get_win_games,
+    get_lose_games,
+    get_total_games,
+    get_scores,
+    get_total_minutes_played,
+)
 
 User = get_user_model()
 
@@ -402,6 +411,11 @@ class GameConsumer(AsyncWebsocketConsumer):
         try:
             game_data = await get_game_data(self.user)
             index = self.room.get_user_index(self.user.email)
+            win_games = await sync_to_async(get_win_games)(self.user)
+            lose_games = await sync_to_async(get_lose_games)(self.user)
+            total_games = await sync_to_async(get_total_games)(self.user)
+            scores = await sync_to_async(get_scores)(self.user)
+            total_minutes = await sync_to_async(get_total_minutes_played)(self.user)
             message = {
                 "action": "connection_ack",
                 "index": index,
@@ -413,6 +427,11 @@ class GameConsumer(AsyncWebsocketConsumer):
                 "ball_color": game_data.ball_color,
                 "paddle_color": game_data.paddle_color,
                 "table_position": game_data.table_position,
+                "win_games": win_games,
+                "lose_games": lose_games,
+                "total_games": total_games,
+                "scores": scores,
+                "total_minutes": total_minutes,
             }
             await self.message({"message": message})
         except Exception as e:
@@ -537,7 +556,17 @@ class GameConsumer(AsyncWebsocketConsumer):
     # -----------------------> 6. start_game <-----------------------
     async def opponents(self):
         try:
-            user1, user1_data, user2, user2_data = self.room.get_original_users()
+            id ,user1, user1_data, id1, user2, user2_data = self.room.get_original_users()
+            win_games = await sync_to_async(get_win_games)(id)
+            lose_games = await sync_to_async(get_lose_games)(id)
+            total_games = await sync_to_async(get_total_games)(id)
+            scores = await sync_to_async(get_scores)(id)
+            total_minutes = await sync_to_async(get_total_minutes_played)(id)
+            win_games2 = await sync_to_async(get_win_games)(id1)
+            lose_games2 = await sync_to_async(get_lose_games)(id1)
+            total_games2 = await sync_to_async(get_total_games)(id1)
+            scores2 = await sync_to_async(get_scores)(id1)
+            total_minutes2 = await sync_to_async(get_total_minutes_played)(id1)
             message = {
                 "action": "opponents",
                 "user1": user1,
@@ -546,6 +575,16 @@ class GameConsumer(AsyncWebsocketConsumer):
                 "user2": user2,
                 "user2_image_url": user2_data["user_img"],
                 "user2_username": user2_data["username"],
+                "win_games": win_games,
+                "lose_games": lose_games,
+                "total_games": total_games,
+                "score": scores,
+                "total_minutes": total_minutes,
+                "win_games2": win_games2,
+                "lose_games2": lose_games2,
+                "total_games2": total_games2,
+                "score2": scores2,
+                "total_minutes2": total_minutes2,
             }
             await self.broadcast_message(message)
         except Exception as e:
