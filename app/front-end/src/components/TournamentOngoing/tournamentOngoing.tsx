@@ -75,7 +75,6 @@ function connectToSocket({ pageUrl, setData }: connectSocketTypes) {
 
     if (tournamentID && access) {
         try {
-            console.log(oldpg, tournamentID)
             if (wss && oldpg !== tournamentID) {
                 reinitializeData();
                 wss.close();
@@ -88,7 +87,6 @@ function connectToSocket({ pageUrl, setData }: connectSocketTypes) {
             wss.onopen = () => {
                 setData(initData);
                 tmpData = initData
-                // console.log('connected to socket successfully');
                 oldpg = tournamentID;
                 if (wss) {
                     wss.onmessage = (event) => {
@@ -100,18 +98,15 @@ function connectToSocket({ pageUrl, setData }: connectSocketTypes) {
                             tmpData.data.final = dt.message.tournamentdata.final as FinalMatchTypes;
                             setData(tmpData);
                         }
-                        // console.log(event.data);
                     };
                 }
             };
 
             wss.onerror = (error) => {
                 reinitializeData();
-                // console.log(`Error : ${error}`);
             };
             wss.onclose = () => {
                 reinitializeData();
-                // console.log('closed connection');
             };
         } catch (error) {
             console.error(`Error : ${error}`);
