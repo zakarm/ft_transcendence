@@ -85,11 +85,11 @@ interface Player {
   name: string;
   imageUrl: string;
   stats: {
-    adaptation: number;
-    agility: number;
-    winStreaks: number;
-    endurance: number;
-    eliteTierRanking: number;
+    win_games: number;
+    lose_games: number;
+    total_games: number;
+    scores: number;
+    total_minutes: number;
   };
   index: number;
   boxShadowsWinner: boolean;
@@ -119,11 +119,11 @@ const LocalTournamentPage: NextPage = () => {
     name: '',
     imageUrl: '',
     stats: {
-      adaptation: 0,
-      agility: 0,
-      winStreaks: 0,
-      endurance: 0,
-      eliteTierRanking: 0,
+      win_games: 0,
+      lose_games: 0,
+      total_games: 0,
+      scores: 0,
+      total_minutes: 0,
     },
     index: 0,
     boxShadowsWinner: true,
@@ -274,11 +274,11 @@ const LocalTournamentPage: NextPage = () => {
           name: winner.name,
           imageUrl: winner.photoUrl,
           stats: {
-            adaptation: 0,
-            agility: 0,
-            winStreaks: 0,
-            endurance: 0,
-            eliteTierRanking: 0,
+            win_games: 0,
+            lose_games: 0,
+            total_games: 0,
+            scores: 0,
+            total_minutes: 0,
           },
           index: 0,
           boxShadowsWinner: true,

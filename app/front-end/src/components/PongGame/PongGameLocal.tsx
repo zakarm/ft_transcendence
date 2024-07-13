@@ -10,6 +10,7 @@ import Paddle from './Paddle';
 import './PongGame.css';
 import BoardItem from '../BoardItem/BoardItem';
 import gsap from 'gsap';
+import Cookies from 'js-cookie';
 
 type SetScore = (
   side: 'side1' | 'side2',
@@ -31,6 +32,12 @@ interface playerdata {
   imageUrl: string;
 }
 type SetWinner_ = (winner: playerdata) => void;
+
+const convertHexColor = (hex: string): number => {
+  const cleanedHex = hex.replace('#', '');
+  return parseInt(cleanedHex, 16);
+};
+
 interface LocalGame {
   data: {
     user1name: string;
@@ -132,7 +139,11 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
     cameraRef.current = camera;
     controlsRef.current = controls;
 
-    const surface = new Surface(10, 5, 1, 1, 0x161625);
+    const table_color = Cookies.get('table_color') ?? '#161625';
+    const paddle_color = Cookies.get('paddle_color') ?? '#ff4655';
+      const ball_color = Cookies.get('ball_color') ?? '#ffffff';
+
+    const surface = new Surface(10, 5, 1, 1, convertHexColor(table_color));
     surface.addToScene(scene);
 
     const boundaries: {
@@ -148,20 +159,20 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
       { width: 0.05, height: 0.02, depth: 5, positions: [0, 0.01, 0] },
     ];
     boundaries.forEach(({ width, height, depth, positions }) => {
-      const boundary = new Boundary(width, height, depth, positions, 0xff4655);
+      const boundary = new Boundary(width, height, depth, positions, convertHexColor(paddle_color));
       boundary.addToScene(scene);
     });
 
-    const ball = new Ball(0.1, 46, 46, 0xffffff, [0, 0.1, 0], 0.05, 0.05);
+    const ball = new Ball(0.1, 46, 46, convertHexColor(ball_color), [0, 0.1, 0], 0.05, 0.05);
     ball.addToScene(scene);
 
-    const wall1 = new Wall(10, 0.5, 0.1, 0x161625, [0, 0.2, 2.6]);
-    const wall2 = new Wall(10, 0.5, 0.1, 0x161625, [0, 0.2, -2.6]);
+    const wall1 = new Wall(10, 0.5, 0.1, convertHexColor(table_color), [0, 0.2, 2.6]);
+    const wall2 = new Wall(10, 0.5, 0.1, convertHexColor(table_color), [0, 0.2, -2.6]);
     wall1.addToScene(scene);
     wall2.addToScene(scene);
 
-    const paddle1 = new Paddle(0.2, 0.2, 1, 0xff4655, [-4.8, 0.15, 0]);
-    const paddle2 = new Paddle(0.2, 0.2, 1, 0xff4655, [4.8, 0.15, 0]);
+    const paddle1 = new Paddle(0.2, 0.2, 1, convertHexColor(paddle_color), [-4.8, 0.15, 0]);
+    const paddle2 = new Paddle(0.2, 0.2, 1, convertHexColor(paddle_color), [4.8, 0.15, 0]);
     paddle1.addToScene(scene);
     paddle2.addToScene(scene);
 
@@ -178,19 +189,20 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
 
     const handleKeyDown = (event: KeyboardEvent) => {
       switch (event.code) {
-        case 'KeyA':
+        case 'KeyS':
           paddle1.move(0.1);
           break;
-        case 'KeyD':
+        case 'KeyW':
           paddle1.move(-0.1);
           break;
-        case 'ArrowLeft':
+          case 'ArrowDown':
           paddle2.move(0.1);
           break;
-        case 'ArrowRight':
+          case 'ArrowUp':
           paddle2.move(-0.1);
           break;
-        case 'Space':
+          case 'Space':
+              gameStatus == 'playing' ? gameStatus = 'paused' : gameStatus = 'playing';
           break;
         default:
           break;
@@ -199,12 +211,12 @@ const PongGameLocal: React.FC<LocalGame> = ({ data }: LocalGame) => {
 
     const handleKeyUp = (event: KeyboardEvent) => {
       switch (event.code) {
-        case 'KeyA':
-        case 'KeyD':
+        case 'KeyS':
+        case 'KeyW':
           paddle1.stop();
           break;
-        case 'ArrowLeft':
-        case 'ArrowRight':
+        case 'ArrowUp':
+        case 'ArrowDown':
           paddle2.stop();
           break;
         default:

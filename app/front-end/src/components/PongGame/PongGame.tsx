@@ -23,14 +23,16 @@ interface Player {
   name: string;
   imageUrl: string;
   stats: {
-    adaptation: number;
-    agility: number;
-    winStreaks: number;
-    endurance: number;
-    eliteTierRanking: number;
+    win_games: number;
+    lose_games: number;
+    total_games: number;
+    scores: number;
+    total_minutes: number;
   };
   index: number;
+  boxShadowsWinner: boolean;
 }
+
 interface Props {
   webSocket: WebSocket;
   connectionInfo: ConnectionInfo;

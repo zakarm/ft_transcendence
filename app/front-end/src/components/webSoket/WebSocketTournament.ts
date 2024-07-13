@@ -26,7 +26,17 @@ interface ConnectionInfo {
   table_color: string;
   ball_color: string;
   paddle_color: string;
-  table_position: string;
+    table_position: string;
+        win_games: number;
+    lose_games: number;
+    total_games: number;
+    scores: number;
+    total_minutes: number;
+    win_games2: number;
+    lose_games2: number;
+    total_games2: number;
+    scores2: number;
+    total_minutes2: number;
 }
 const initialUser = {
   name: '',
@@ -65,15 +75,16 @@ interface Player {
   name: string;
   imageUrl: string;
   stats: {
-    adaptation: number;
-    agility: number;
-    winStreaks: number;
-    endurance: number;
-    eliteTierRanking: number;
+    win_games: number;
+    lose_games: number;
+    total_games: number;
+    scores: number;
+    total_minutes: number;
   };
   index: number;
   boxShadowsWinner: boolean;
 }
+
 
 const useWebSocketTournament = (url: string) => {
   const router = useRouter();
@@ -95,17 +106,27 @@ const useWebSocketTournament = (url: string) => {
     table_color: '#161625',
     ball_color: '#ffffff',
     paddle_color: '#ff4655',
-    table_position: '6,8,0',
+      table_position: '6,8,0',
+        win_games: 0,
+    lose_games: 0,
+    total_games: 0,
+    scores: 0,
+      total_minutes: 0,
+     win_games2: 0,
+    lose_games2: 0,
+    total_games2: 0,
+    scores2: 0,
+    total_minutes2: 0,
   });
   const [winner, setWinner] = useState<Player>({
     name: '',
     imageUrl: '',
     stats: {
-      adaptation: 0,
-      agility: 0,
-      winStreaks: 0,
-      endurance: 0,
-      eliteTierRanking: 0,
+      win_games: 0,
+      lose_games: 0,
+      total_games: 0,
+      scores: 0,
+      total_minutes: 0,
     },
     index: 0,
     boxShadowsWinner: true,
@@ -169,7 +190,12 @@ const useWebSocketTournament = (url: string) => {
           table_color: data.message.table_color,
           ball_color: data.message.ball_color,
           paddle_color: data.message.paddle_color,
-          table_position: data.message.table_position,
+            table_position: data.message.table_position,
+                      win_games: data.message.win_games,
+            lose_games: data.message.lose_games,
+            total_games: data.message.total_games,
+            scores: data.message.scores,
+            total_minutes: data.message.total_minutes,
         }));
       }
 
@@ -182,7 +208,17 @@ const useWebSocketTournament = (url: string) => {
           username1: data.message.user1_username,
           user2: data.message.user2,
           user2_image: data.message.user2_image_url,
-          username2: data.message.user2_username,
+            username2: data.message.user2_username,
+                        win_games: data.message.win_games,
+            lose_games: data.message.lose_games,
+            total_games: data.message.total_games,
+            scores: data.message.scores,
+            total_minutes: data.message.total_minutes,
+            win_games2: data.message.win_games2,
+            lose_games2: data.message.lose_games2,
+            total_games2: data.message.total_games2,
+            scores2: data.message.scores2,
+            total_minutes2: data.message.total_minutes2,
         }));
       }
 

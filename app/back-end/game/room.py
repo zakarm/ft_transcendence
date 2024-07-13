@@ -154,8 +154,10 @@ class RoomObject:
 
     def get_original_users(self):
         return (
+            self.Original_users["user1"]["id"],
             self.Original_users["user1"]["user_id"],
             self.Original_users["user1"]["user_data"],
+            self.Original_users["user2"]["id"],
             self.Original_users["user2"]["user_id"],
             self.Original_users["user2"]["user_data"],
         )

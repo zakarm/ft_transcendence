@@ -195,6 +195,7 @@ services:
 
     elasticsearch:
         container_name: elasticsearch
+        restart: always
         build:
             context: ./services/elk/elasticsearch
             dockerfile: Dockerfile
@@ -216,6 +217,7 @@ services:
 
     kibana:
         container_name: kibana
+        restart: always
         build:
             context: ./services/elk/kibana
             dockerfile: Dockerfile
@@ -235,6 +237,7 @@ services:
 
     logstash:
         container_name: logstash
+        restart: always
         build:
             context: ./services/elk/logstash
             dockerfile: Dockerfile
@@ -250,6 +253,7 @@ services:
 
     filebeat:
         container_name: filebeat
+        restart: always
         build:
             context: ./services/elk/filebeat
             dockerfile: Dockerfile
