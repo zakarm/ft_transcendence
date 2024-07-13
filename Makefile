@@ -196,8 +196,11 @@ prune: ## Remove all stopped containers, dangling images, and unused networks an
 linkIp: ## Link IP address
 	@echo "$(YELLOW)Linking IP address...$(RESET)"
 	@echo "$(GREEN)IP address: $(IP_ADDRESS)$(RESET)"
+	@echo "$(GREEN)HOST name: $(HOST_NAME)$(RESET)"
 	@echo "$(GREEN)Linking IP address...$(RESET)"
-	@sed -i '' 's/localhost/${IP_ADDRESS}/g' .env
+	@sed -i '' 's/localhost/${HOST_NAME}/g' .env
+	@sed -i '' 's/localhost/${HOST_NAME}/g' ./app/front-end/.env
+	@sed -i '' 's/localhost/${HOST_NAME}/g' ./services/nginx/nginx.conf
 	@echo "$(GREEN)IP address linked!$(RESET)"
 
 restorenv: ## Restore the .env file

@@ -89,7 +89,7 @@ export default function ChatFriendsResp({
           }));
         setChatUsers(friendsArray);
       } catch (error) {
-        console.error(`Error : ${error}`);
+        // console.error(`Error : ${error}`);
       }
     } else {
       toast.error('Access token is undefined or falsy');

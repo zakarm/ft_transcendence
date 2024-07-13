@@ -131,7 +131,7 @@ export default function MainContainer({ children }: { children: React.ReactNode 
             toast.error('Error : cannot get data');
           }
         } catch (error) {
-          console.error(`Error: ${error}`);
+          // console.error(`Error: ${error}`);
         }
       }
     };
@@ -163,10 +163,10 @@ export default function MainContainer({ children }: { children: React.ReactNode 
           } else if (response.status === 401) {
             toast.error('Unauthorized');
           } else {
-            console.error(`An unexpected error happened ${response.status}`);
+            // console.error(`An unexpected error happened ${response.status}`);
           }
         } catch (error) {
-          console.error(`Error: ${error}`);
+          // console.error(`Error: ${error}`);
         }
       }
     };

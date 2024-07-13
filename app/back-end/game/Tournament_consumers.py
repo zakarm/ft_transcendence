@@ -405,7 +405,7 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
         try:
             player = {
                 "data": {
-                    "name": user.username,
+                    "name": user.display_name,
                     "photoUrl": user.image_url,
                     "score": 0,
                     "status": True,
@@ -892,7 +892,7 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                     await self.broadcast_message({"action": "start_game"}, match_id)
                     await self.send_score(match_id, _tournament)
                     await asyncio.sleep(1)
-                    # await self.update_ball_possiton(match_id, _tournament)
+                    await self.update_ball_possiton(match_id, _tournament)
                     await asyncio.sleep(5)
                 if room.is_paused():
                     await self.broadcast_message({"action": "pause"}, match_id)
@@ -901,9 +901,8 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                         await self.broadcast_message(message, match_id)
                         await asyncio.sleep(1)
                     room.set_game_resume()
-                    # await self.opponents()
                     await self.broadcast_message({"action": "start_game"}, match_id)
-                    # await self.update_ball_possiton(match_id, _tournament)
+                    await self.update_ball_possiton(match_id, _tournament)
                     await asyncio.sleep(5)
                 room.ball_update()
                 room.ball_intersect()
@@ -927,7 +926,7 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                     await asyncio.sleep(1)
                 else:
                     pass
-                    # await self.update_ball_possiton(match_id, _tournament)
+                    await self.update_ball_possiton(match_id, _tournament)
                 await asyncio.sleep(1 / 60)
         except Exception as e:
             print(f"An error occurred in connect: {e}", file=sys.stderr)

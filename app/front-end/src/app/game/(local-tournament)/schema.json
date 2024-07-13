@@ -1,0 +1,92 @@
+{
+    "definitions": {
+      "Tournament_User": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "photoUrl": { "type": "string" },
+          "score": { "type": "number" },
+          "status": { "type": "boolean" }
+        },
+        "required": ["name", "photoUrl", "score", "status"]
+      },
+      "Tournament_Match_": {
+        "type": "object",
+        "properties": {
+          "user1": { "$ref": "#/definitions/Tournament_User" },
+          "user2": { "$ref": "#/definitions/Tournament_User" }
+        },
+        "required": ["user1", "user2"]
+      },
+      "Tournament_stage": {
+        "type": "object",
+        "properties": {
+          "quatre_final": {
+            "type": "object",
+            "properties": {
+              "match1": { "$ref": "#/definitions/Tournament_Match_" },
+              "match2": { "$ref": "#/definitions/Tournament_Match_" },
+              "match3": { "$ref": "#/definitions/Tournament_Match_" },
+              "match4": { "$ref": "#/definitions/Tournament_Match_" }
+            },
+            "required": ["match1", "match2", "match3", "match4"]
+          },
+          "semi_final": {
+            "type": "object",
+            "properties": {
+              "match1": { "$ref": "#/definitions/Tournament_Match_" },
+              "match2": { "$ref": "#/definitions/Tournament_Match_" }
+            },
+            "required": ["match1", "match2"]
+          },
+          "final": {
+            "type": "object",
+            "properties": {
+              "match1": { "$ref": "#/definitions/Tournament_Match_" }
+            },
+            "required": ["match1"]
+          }
+        },
+        "required": ["quatre_final", "semi_final", "final"]
+      },
+      "LocalTournamentProps": {
+        "type": "object",
+        "properties": {
+          "tournament_name": { "type": "string" },
+          "tournamentImage": { "type": "string" },
+          "player_1": { "type": "string" },
+          "player_2": { "type": "string" },
+          "player_3": { "type": "string" },
+          "player_4": { "type": "string" },
+          "player_5": { "type": "string" },
+          "player_6": { "type": "string" },
+          "player_7": { "type": "string" },
+          "player_8": { "type": "string" },
+          "difficulty": { "type": "string" },
+          "date": { "type": "string" },
+          "Participants": { "type": "number" },
+          "data": { "$ref": "#/definitions/Tournament_stage" }
+        },
+        "required": [
+          "tournament_name",
+          "tournamentImage",
+          "player_1",
+          "player_2",
+          "player_3",
+          "player_4",
+          "player_5",
+          "player_6",
+          "player_7",
+          "player_8",
+          "difficulty",
+          "date",
+          "Participants",
+          "data"
+        ]
+      }
+    },
+    "type": "array",
+    "items": {
+      "$ref": "#/definitions/LocalTournamentProps"
+    }
+  }

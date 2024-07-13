@@ -72,7 +72,7 @@ async function getInitialData({
     setOldAccountValues(data);
     setCurrentAccoutValues(data);
   } catch (error) {
-    console.error(`Error : ${error}`);
+    // console.error(`Error : ${error}`);
   }
 }
 

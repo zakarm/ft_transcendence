@@ -53,7 +53,7 @@ export default function TwoFa({ value = '', email, qr, setPassOTP = () => {} }: 
           }
         }
       } catch (error) {
-        console.error(`Error : ${error}`);
+        // console.error(`Error : ${error}`);
       }
     };
 

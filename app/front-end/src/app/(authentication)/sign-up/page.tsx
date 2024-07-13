@@ -53,7 +53,7 @@ export default function SignUp() {
         }
       }
     } catch (error: any) {
-      console.error('No response received from server.');
+      // console.error('No response received from server.');
     }
   };
   return (

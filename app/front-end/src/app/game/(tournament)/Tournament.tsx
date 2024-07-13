@@ -147,7 +147,7 @@ function getLocalTournamentFromStorage() {
 
 function LocalTournamentHTML(value: LocalTournamentProps, index: number, setRerenderLocalTourn ?:React.Dispatch<React.SetStateAction<number>>): React.JSX.Element {
   return (
-    <div key={value.tournament_name as string}>
+    <div key={index}>
       <TournamentCard
         name={value.tournament_name as string}
         date={value.date as string}

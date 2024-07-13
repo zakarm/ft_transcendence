@@ -118,7 +118,7 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
         setMe(data.username);
         setMyId(data.id);
       } catch (error) {
-        console.error(`Error : ${error}`);
+        // console.error(`Error : ${error}`);
       }
     } else {
       toast.error('Access token is undefined or falsy');
@@ -172,7 +172,6 @@ export default function ChatMessages({ selectedChat, setChatUsers, messages, cha
         }`;
         const ws = new WebSocket(url);
         ws.onopen = () => {
-          console.log('WebSocket connection established');
         };
         ws.onmessage = (event) => {
           const data = JSON.parse(event.data);
