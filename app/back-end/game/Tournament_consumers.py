@@ -12,10 +12,27 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from django.utils import timezone
 from django.db import transaction
+from django.conf import settings
+from asgiref.sync import sync_to_async
 
 # Local application/library specific imports
 from .Tournament import Tournament
-from .models import Match, GameTable, Tournaments as TournamentModel, Tournamentsmatches
+from .models import (
+    Match,
+    GameTable,
+    Tournaments as TournamentModel,
+    Tournamentsmatches,
+    Achievements,
+    UserAchievements,
+)
+from dashboards.models import Notification
+from dashboards.utils import (
+    get_win_games,
+    get_lose_games,
+    get_total_games,
+    get_scores,
+    get_total_minutes_played,
+)
 
 User = get_user_model()
 
@@ -158,6 +175,8 @@ def add_match(
     match_end,
     tackle_user_one,
     tackle_user_two,
+    round,
+    id,
 ):
     try:
         match = Match.objects.create(
@@ -170,9 +189,82 @@ def add_match(
             tackle_user_one=tackle_user_one,
             tackle_user_two=tackle_user_two,
         )
+        #'Win a match within the first three minutes'
+        early = Achievements.objects.get(achievement_name="early")
+        if (match_end - match_start).seconds < 180 and round == "quarter_final":
+            if score_user_one > score_user_two:
+                user = user_one
+            else:
+                user = user_two
+            achiev = UserAchievements.objects.filter(user=user, achievement=early)
+            if not achiev.exists():
+                UserAchievements.objects.create(
+                    user=user,
+                    achievement=early,
+                    achive_date=match_end,
+                )
+        # Reach the finals of the tournament
+        front = Achievements.objects.get(achievement_name="front")
+        tournament = TournamentModel.objects.get(tournament_id=id)
+        match_end = (
+            timezone.make_aware(match_end)
+            if timezone.is_naive(match_end)
+            else match_end
+        )
+        tournament_start = (
+            timezone.make_aware(tournament.tournament_start)
+            if timezone.is_naive(tournament.tournament_start)
+            else tournament.tournament_start
+        )
+        if round == "final" and (match_end - tournament_start).seconds < 300:
+            if score_user_one > score_user_two:
+                user = user_one
+            else:
+                user = user_two
+            achiev = UserAchievements.objects.filter(user=user, achievement=front)
+            if not achiev.exists():
+                UserAchievements.objects.create(
+                    user=user,
+                    achievement=front,
+                    achive_date=match_end,
+                )
+        # Win a tournament with the highest ball speed
+        unstoppable = Achievements.objects.get(achievement_name="unstoppable")
+        tournament = TournamentModel.objects.get(tournament_id=id)
+        difficulty = tournament.game_difficulty
+        if difficulty == 2 and round == "final":
+            if score_user_one > score_user_two:
+                user = user_one
+            else:
+                user = user_two
+            achiev = UserAchievements.objects.filter(user=user, achievement=unstoppable)
+            if not achiev.exists():
+                UserAchievements.objects.create(
+                    user=user,
+                    achievement=unstoppable,
+                    achive_date=match_end,
+                )
         return match
     except Exception as e:
         print(f"An error occurred in add_match: {e}", file=sys.stderr)
+
+
+@database_sync_to_async
+def create_notif(user, id):
+    try:
+        notification = Notification.objects.create(
+            user=user,
+            title=f"Game warning!",
+            message=f"Match will start soon",
+            image_url=user.image_url,
+            link=f"{settings.FRONTEND_HOST}/game/Tournament/{id}",
+            is_tourn_notif=True,
+            action_by="Tournament",
+        )
+        count = Notification.objects.filter(user=user).count()
+        return notification, count
+    except Exception as e:
+        print(f"An error occurred in create_notif: {e}", file=sys.stderr)
 
 
 Room_index = 0
@@ -290,11 +382,30 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
 
     # -----------------------> 3. connect <-----------------------
 
+    async def notify_friends__(self, user):
+        try:
+            group_name = f"user_{user.id}"
+            notification, count = await create_notif(user, self.tournament_id)
+            await self.channel_layer.group_send(
+                group_name,
+                {
+                    "type": "send_notification",
+                    "notification_id": notification.notification_id,
+                    "count": count,
+                    "is_chat_notif": notification.is_chat_notif,
+                    "is_friend_notif": notification.is_friend_notif,
+                    "is_tourn_notif": notification.is_tourn_notif,
+                    "is_match_notif": notification.is_match_notif,
+                },
+            )
+        except Exception as e:
+            print(f"An error occurred in notify_friends__: {e}", file=sys.stderr)
+
     async def find_tournamnet(self, user):
         try:
             player = {
                 "data": {
-                    "name": user.username,
+                    "name": user.display_name,
                     "photoUrl": user.image_url,
                     "score": 0,
                     "status": True,
@@ -310,9 +421,13 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
             for tournament_name, tournament in rooms_items:
                 if tournament_name == f"tournament_{self.tournament_id}":
                     if tournament.is_joined(user.email):
-                        tournament.reconect_player(player)
-                        match_id = tournament.get_match_id(user.email)
-                        await self.channel_layer.group_add(match_id, self.channel_name)
+                        if tournament.is_ready():
+                            tournament.reconect_player(player)
+                            match_id = tournament.get_match_id(user.email)
+                            if match_id:
+                                await self.channel_layer.group_add(
+                                    match_id, self.channel_name
+                                )
                         return tournament_name, tournament
                     elif not tournament.is_ready():
                         if not tournament.is_joined(user.email):
@@ -325,7 +440,14 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                         return None, None
             name_ = self.tournament_obj.tournament_name
             difficulty_ = self.tournament_obj.game_difficulty
-            new_tournament = Tournament(self.tournament_id, name_, difficulty_)
+            speeds = {
+                "0": 0.05,
+                "1": 0.1,
+                "2": 0.15,
+            }
+            speed = speeds[str(difficulty_)]
+            self.speed = speed
+            new_tournament = Tournament(self.tournament_id, name_, difficulty_, speed)
             new_tournament_name = f"tournament_{self.tournament_id}"
             add_room(new_tournament_name, new_tournament)
             new_tournament.add_player(player)
@@ -340,6 +462,7 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                 # -------------------------------------------------------
                 await self.accept()
                 self.tournament = None
+                self.speed = 0.05
                 self.tournament_id = self.scope["url_route"]["kwargs"]["tournament_id"]
                 self.tournament_obj = await get_tournament_(self.tournament_id)
                 if self.tournament_obj is None or self.tournament_obj.tournament_end:
@@ -432,6 +555,11 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
             game_data = await get_game_data(player["object"])
             room = self.tournament.get_room_game(player["match_id"])
             index = room.get_user_index(player["email"])
+            win_games = await sync_to_async(get_win_games)(player["object"])
+            lose_games = await sync_to_async(get_lose_games)(player["object"])
+            total_games = await sync_to_async(get_total_games)(player["object"])
+            scores = await sync_to_async(get_scores)(player["object"])
+            total_minutes = await sync_to_async(get_total_minutes_played)(player["object"])
             message = {
                 "action": "connection_ack",
                 "index": index,
@@ -443,6 +571,11 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                 "ball_color": game_data.ball_color,
                 "paddle_color": game_data.paddle_color,
                 "table_position": game_data.table_position,
+                "win_games": win_games,
+                "lose_games": lose_games,
+                "total_games": total_games,
+                "scores": scores,
+                "total_minutes": total_minutes,
             }
             await self.send_message_to_channel(player["channel"], message)
         except Exception as e:
@@ -458,6 +591,25 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             print(f"An error occurred in send_tournament_data: {e}", file=sys.stderr)
 
+    async def send_remake_message(self):
+        try:
+            message = {
+                "action": "remake",
+            }
+            await self.tournamnet_broadcast_message(message)
+        except Exception as e:
+            print(f"An error occurred in send_remake_message: {e}", file=sys.stderr)
+
+    async def check_errors(self, resault):
+        try:
+            if resault == None:
+                await delete_tournament(self.tournament_id)
+                await self.send_remake_message()
+                return True
+            return False
+        except Exception as e:
+            print(f"An error occurred in check_errors: {e}", file=sys.stderr)
+
     async def tournament_manager(self):
         try:
             self.tournament.started = True
@@ -467,6 +619,9 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                 "tournamentdata": self.tournament.data,
             }
             await self.tournamnet_broadcast_message(message)
+            for player in self.tournament.players:
+                await self.notify_friends__(player["object"])
+            await asyncio.sleep(1)
             for player in self.tournament.players:
                 await self.connction_ack(player)
             group_name1 = self.tournament_id + "quarter_final" + "match1"
@@ -489,38 +644,42 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
 
             while True:
                 if task_1 and task_1.done():
+                    if await self.check_errors(task_1.result()):
+                        return
                     await self.send_tournament_data(group_name1)
-                    if task_1 == None:
-                        break
                 if task_2 and task_2.done():
+                    if await self.check_errors(task_2.result()):
+                        return
                     await self.send_tournament_data(group_name2)
-                    if task_2 == None:
-                        break
                 if task_3 and task_3.done():
+                    if await self.check_errors(task_3.result()):
+                        return
                     await self.send_tournament_data(group_name3)
-                    if task_3 == None:
-                        break
                 if task_4 and task_4.done():
+                    if await self.check_errors(task_4.result()):
+                        return
                     await self.send_tournament_data(group_name4)
-                    if task_4 == None:
-                        break
                 if task_5 and task_5.done():
+                    if await self.check_errors(task_5.result()):
+                        return
                     await self.send_tournament_data(group_name5)
-                    if task_4 == None:
-                        break
                 if task_6 and task_6.done():
+                    if await self.check_errors(task_6.result()):
+                        return
                     await self.send_tournament_data(group_name6)
-                    if task_5 == None:
-                        break
                 if task_7 and task_7.done():
+                    if await self.check_errors(task_7.result()):
+                        return
                     await self.send_tournament_data(group_name7)
-                    if task_6 == None:
-                        break
+                    self.tournament.promote_final_winner(task_7.result())
                     break
 
                 if task_1 and task_2 and task_1.done() and task_2.done() and not task_5:
                     resault1 = task_1.result()
                     resault2 = task_2.result()
+                    for player in self.tournament.get_player_by_maych_id(group_name6):
+                        await self.notify_friends__(player["object"])
+                    await asyncio.sleep(1)
                     _channel1 = self.tournament.get_qf_winner(1, resault1)
                     await self.channel_layer.group_discard(group_name1, _channel1)
                     _channel2 = self.tournament.get_qf_winner(2, resault2)
@@ -534,6 +693,9 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                 if task_3 and task_4 and task_3.done() and task_4.done() and not task_6:
                     resault3 = task_3.result()
                     resault4 = task_4.result()
+                    for player in self.tournament.get_player_by_maych_id(group_name6):
+                        await self.notify_friends__(player["object"])
+                    await asyncio.sleep(1)
                     _channel3 = self.tournament.get_qf_winner(3, resault3)
                     await self.channel_layer.group_discard(group_name3, _channel3)
                     _channel4 = self.tournament.get_qf_winner(4, resault4)
@@ -547,6 +709,9 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                 if task_5 and task_6 and task_5.done() and task_6.done() and not task_7:
                     resault5 = task_5.result()
                     resault6 = task_6.result()
+                    for player in self.tournament.get_player_by_maych_id(group_name6):
+                        await self.notify_friends__(player["object"])
+                    await asyncio.sleep(1)
                     _channel5 = self.tournament.get_sf_winner(1, resault5)
                     await self.channel_layer.group_discard(group_name5, _channel5)
                     _channel6 = self.tournament.get_sf_winner(2, resault6)
@@ -563,8 +728,10 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
             winner = self.tournament.get_final_winner()
             message = {
                 "action": "winner",
-                "name": winner["data"]["name"],
-                "image_url": winner["data"]["photoUrl"],
+                "winner": {
+                    "name": winner["data"]["name"],
+                    "imageUrl": winner["data"]["photoUrl"],
+                },
             }
             await self.tournamnet_broadcast_message(message)
 
@@ -575,7 +742,17 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
     async def opponents(self, match_id, _tournament):
         try:
             room = _tournament.get_room_game(match_id)
-            user1, user1_data, user2, user2_data = room.get_original_users()
+            id ,user1, user1_data, id1, user2, user2_data = room.get_original_users()
+            win_games = await sync_to_async(get_win_games)(id)
+            lose_games = await sync_to_async(get_lose_games)(id)
+            total_games = await sync_to_async(get_total_games)(id)
+            scores = await sync_to_async(get_scores)(id)
+            total_minutes = await sync_to_async(get_total_minutes_played)(id)
+            win_games2 = await sync_to_async(get_win_games)(id1)
+            lose_games2 = await sync_to_async(get_lose_games)(id1)
+            total_games2 = await sync_to_async(get_total_games)(id1)
+            scores2 = await sync_to_async(get_scores)(id1)
+            total_minutes2 = await sync_to_async(get_total_minutes_played)(id1)
             message = {
                 "action": "opponents",
                 "user1": user1,
@@ -584,6 +761,16 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                 "user2": user2,
                 "user2_image_url": user2_data["user_img"],
                 "user2_username": user2_data["username"],
+                "win_games": win_games,
+                "lose_games": lose_games,
+                "total_games": total_games,
+                "score": scores,
+                "total_minutes": total_minutes,
+                "win_games2": win_games2,
+                "lose_games2": lose_games2,
+                "total_games2": total_games2,
+                "score2": scores2,
+                "total_minutes2": total_minutes2,
             }
             await self.broadcast_message(message, match_id)
         except Exception as e:
@@ -652,6 +839,8 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                 datetime.now(),
                 room.get_tackles(1),
                 room.get_tackles(2),
+                round,
+                self.tournament_id,
             )
             await set_Tournamentsmatches(self.tournament_obj, match, round)
         except Exception as e:
@@ -703,7 +892,7 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                     await self.broadcast_message({"action": "start_game"}, match_id)
                     await self.send_score(match_id, _tournament)
                     await asyncio.sleep(1)
-                    # await self.update_ball_possiton(match_id, _tournament)
+                    await self.update_ball_possiton(match_id, _tournament)
                     await asyncio.sleep(5)
                 if room.is_paused():
                     await self.broadcast_message({"action": "pause"}, match_id)
@@ -712,9 +901,8 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                         await self.broadcast_message(message, match_id)
                         await asyncio.sleep(1)
                     room.set_game_resume()
-                    # await self.opponents()
                     await self.broadcast_message({"action": "start_game"}, match_id)
-                    # await self.update_ball_possiton(match_id, _tournament)
+                    await self.update_ball_possiton(match_id, _tournament)
                     await asyncio.sleep(5)
                 room.ball_update()
                 room.ball_intersect()
@@ -738,7 +926,7 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                     await asyncio.sleep(1)
                 else:
                     pass
-                    # await self.update_ball_possiton(match_id, _tournament)
+                    await self.update_ball_possiton(match_id, _tournament)
                 await asyncio.sleep(1 / 60)
         except Exception as e:
             print(f"An error occurred in connect: {e}", file=sys.stderr)
@@ -748,8 +936,8 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
         try:
             room = _tournament.get_room_game(match_id)
             ball_position_z = random.uniform(-2.2, 2.2)
-            ball_velocity_x = 0.05 * random.choice([-1, 1])
-            ball_velocity_z = 0.05 * random.choice([-1, 1])
+            ball_velocity_x = self.speed * random.choice([-1, 1])
+            ball_velocity_z = self.speed * random.choice([-1, 1])
             room.set_ball_position(0, ball_position_z)
             room.set_ball_velocity(ball_velocity_x, ball_velocity_z)
             room.start_game()
@@ -763,10 +951,10 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
             room = _tournament.get_room_game(match_id)
             ball_position_z = random.uniform(-2.2, 2.2)
             if room.ball_position["x"] < 0:
-                ball_velocity_x = 0.05
+                ball_velocity_x = self.speed
             else:
-                ball_velocity_x = -0.05
-            ball_velocity_z = 0.05 * random.choice([-1, 1])
+                ball_velocity_x = -self.speed
+            ball_velocity_z = self.speed * random.choice([-1, 1])
             room.set_ball_position(0, ball_position_z)
             room.set_ball_velocity(ball_velocity_x, ball_velocity_z)
             message = {

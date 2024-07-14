@@ -46,7 +46,12 @@ function Player({ nickname, id, image, isConnected }: PlayerProps) {
           }}
         />
         <div className="p-2">
-          <h5 style={{ fontFamily: 'itim', color: '#FFEBEB' }}>{nickname}</h5>
+          {
+            nickname.length < 20 ?
+              <h5 style={{ fontFamily: 'itim', color: '#FFEBEB' }}>{nickname}</h5>
+            :
+            <marquee style={{ fontFamily: 'itim', color: '#FFEBEB' }}>{nickname}</marquee>
+          }
           <h6 style={{ fontFamily: 'itim', color: '#FFEBEB' }}>#{id}</h6>
         </div>
       </div>

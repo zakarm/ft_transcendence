@@ -3,12 +3,18 @@ import './localTournamentPage.css';
 import { NextPage } from 'next';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 import { useState, useEffect, use } from 'react';
 import TournamentLobby from '../(tournamet-lobby)/TournamentLobby';
 import Link from 'next/link';
 import type { TournamentData, LocalTournamentProps, TournamentData_User, Tournament_User } from '@/lib/game/Tournament';
 import PongGameLocal from '@/components/PongGame/PongGameLocal';
 import PlayerCard from '@/components/PlayerCard/PlayerCard';
+import Ajv from 'ajv';
+import schema from './schema.json'
+
+const ajv = new Ajv();
+const validate = ajv.compile(schema);
 
 const initialUser = {
   name: '',
@@ -85,11 +91,11 @@ interface Player {
   name: string;
   imageUrl: string;
   stats: {
-    adaptation: number;
-    agility: number;
-    winStreaks: number;
-    endurance: number;
-    eliteTierRanking: number;
+    win_games: number;
+    lose_games: number;
+    total_games: number;
+    scores: number;
+    total_minutes: number;
   };
   index: number;
   boxShadowsWinner: boolean;
@@ -119,11 +125,11 @@ const LocalTournamentPage: NextPage = () => {
     name: '',
     imageUrl: '',
     stats: {
-      adaptation: 0,
-      agility: 0,
-      winStreaks: 0,
-      endurance: 0,
-      eliteTierRanking: 0,
+      win_games: 0,
+      lose_games: 0,
+      total_games: 0,
+      scores: 0,
+      total_minutes: 0,
     },
     index: 0,
     boxShadowsWinner: true,
@@ -131,38 +137,54 @@ const LocalTournamentPage: NextPage = () => {
   const pathname = usePathname();
   const router = useRouter();
   useEffect(() => {
-    const data = localStorage.getItem('tournaments');
-    const tournaments: LocalTournamentProps[] = data ? JSON.parse(data) : [];
-    const id = pathname.split('/').pop();
-    const index = id ? parseInt(id, 10) : -1;
+    try {
 
-    if (index >= 0 && index < tournaments.length) {
-      const tournament = tournaments[index];
-      tournament.data.quatre_final.match1.user1.name = tournament.player_1;
-      tournament.data.quatre_final.match1.user2.name = tournament.player_2;
-      tournament.data.quatre_final.match2.user1.name = tournament.player_3;
-      tournament.data.quatre_final.match2.user2.name = tournament.player_4;
-      tournament.data.quatre_final.match3.user1.name = tournament.player_5;
-      tournament.data.quatre_final.match3.user2.name = tournament.player_6;
-      tournament.data.quatre_final.match4.user1.name = tournament.player_7;
-      tournament.data.quatre_final.match4.user2.name = tournament.player_8;
-      setLocalTournamentData(tournament);
-      const updatedData = JSON.stringify(tournaments);
-      localStorage.setItem('tournaments', updatedData);
-      setwinner((prevState: Player) => {
+      const data = localStorage.getItem('tournaments');
+      const tournaments: LocalTournamentProps[] = data ? JSON.parse(data) : [];
+      const id = pathname.split('/').pop();
+      const index = id ? parseInt(id, 10) : -1;
+      const valid = validate(tournaments);
+
+      if (!valid) {
+        localStorage.removeItem('tournaments');
+        toast.error('invalid tournament data');
+        router.push('/game/Tournament');
+        return ;
+        
+      }
+
+      if (index >= 0 && index < tournaments.length) {
+        const tournament = tournaments[index];
+        tournament.data.quatre_final.match1.user1.name = tournament.player_1;
+        tournament.data.quatre_final.match1.user2.name = tournament.player_2;
+        tournament.data.quatre_final.match2.user1.name = tournament.player_3;
+        tournament.data.quatre_final.match2.user2.name = tournament.player_4;
+        tournament.data.quatre_final.match3.user1.name = tournament.player_5;
+        tournament.data.quatre_final.match3.user2.name = tournament.player_6;
+        tournament.data.quatre_final.match4.user1.name = tournament.player_7;
+        tournament.data.quatre_final.match4.user2.name = tournament.player_8;
+        setLocalTournamentData(tournament);
+        const updatedData = JSON.stringify(tournaments);
+        localStorage.setItem('tournaments', updatedData);
+        setwinner((prevState: Player) => {
         return {
           ...prevState,
           name: tournament.data.final.match1.user1.status
-            ? tournament.data.final.match1.user1.name
-            : tournament.data.final.match1.user2.name,
+          ? tournament.data.final.match1.user1.name
+          : tournament.data.final.match1.user2.name,
           imageUrl: tournament.data.final.match1.user1.status
-            ? tournament.data.final.match1.user1.photoUrl
-            : tournament.data.final.match1.user2.photoUrl,
+          ? tournament.data.final.match1.user1.photoUrl
+          : tournament.data.final.match1.user2.photoUrl,
         };
       });
     } else {
       router.push('/game/Tournament');
     }
+  } catch (error) {
+    localStorage.removeItem('tournaments');
+    toast.error('invalid tournament data');
+    router.push('/game/Tournament');
+  }
   }, [pathname, router, localStorage]);
 
   const updateLocalTournamentData = () => {
@@ -274,11 +296,11 @@ const LocalTournamentPage: NextPage = () => {
           name: winner.name,
           imageUrl: winner.photoUrl,
           stats: {
-            adaptation: 0,
-            agility: 0,
-            winStreaks: 0,
-            endurance: 0,
-            eliteTierRanking: 0,
+            win_games: 0,
+            lose_games: 0,
+            total_games: 0,
+            scores: 0,
+            total_minutes: 0,
           },
           index: 0,
           boxShadowsWinner: true,

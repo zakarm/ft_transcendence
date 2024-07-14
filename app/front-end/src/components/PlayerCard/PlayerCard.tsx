@@ -4,29 +4,27 @@ import { Radar, RadarChart, PolarGrid, PolarAngleAxis } from 'recharts';
 
 import './PlayerCard.css';
 
-interface PlayerStats {
-  adaptation: number;
-  agility: number;
-  winStreaks: number;
-  endurance: number;
-  eliteTierRanking: number;
-}
-
-interface PlayerCardProps {
+interface Player {
   name: string;
   imageUrl: string;
-  stats: PlayerStats;
+  stats: {
+    win_games: number;
+    lose_games: number;
+    total_games: number;
+    scores: number;
+    total_minutes: number;
+  };
   index: number;
   boxShadowsWinner: boolean;
 }
 
-const PlayerCard: React.FC<PlayerCardProps> = ({ name, imageUrl, stats, index, boxShadowsWinner }: PlayerCardProps) => {
+const PlayerCard: React.FC<Player> = ({ name, imageUrl, stats, index, boxShadowsWinner }: Player) => {
   const data = [
-    { subject: 'Adaptation', A: stats.adaptation },
-    { subject: 'Agility', A: stats.agility },
-    { subject: 'Win Streaks', A: stats.winStreaks },
-    { subject: 'Endurance', A: stats.endurance },
-    { subject: 'Ranking', A: stats.eliteTierRanking },
+    { subject: 'Win', A: stats.win_games },
+    { subject: 'Lose', A: stats.lose_games },
+    { subject: 'Total game', A: stats.total_games },
+    { subject: 'Scores', A: stats.scores },
+    { subject: 'Time', A: stats.total_minutes },
   ];
   const isNameTooLong = name.length > 10;
   const class_ = index === 1 ? 'left' : index === 2 ? 'right' : '';

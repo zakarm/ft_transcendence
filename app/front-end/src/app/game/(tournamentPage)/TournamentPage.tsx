@@ -13,11 +13,11 @@ interface Player {
   name: string;
   imageUrl: string;
   stats: {
-    adaptation: number;
-    agility: number;
-    winStreaks: number;
-    endurance: number;
-    eliteTierRanking: number;
+    win_games: number;
+    lose_games: number;
+    total_games: number;
+    scores: number;
+    total_minutes: number;
   };
   index: number;
   boxShadowsWinner: boolean;
@@ -35,11 +35,11 @@ const TournamentPage: React.FC = () => {
     name: '',
     imageUrl: '',
     stats: {
-      adaptation: 0,
-      agility: 0,
-      winStreaks: 0,
-      endurance: 0,
-      eliteTierRanking: 0,
+      win_games: 0,
+      lose_games: 0,
+      total_games: 0,
+      scores: 0,
+      total_minutes: 0,
     },
     index: 0,
     boxShadowsWinner: false,
@@ -54,11 +54,11 @@ const TournamentPage: React.FC = () => {
       name: connectionInfo.username,
       imageUrl: connectionInfo.user_image,
       stats: {
-        adaptation: 80,
-        agility: 60,
-        winStreaks: 70,
-        endurance: 90,
-        eliteTierRanking: 75,
+        win_games: connectionInfo.win_games,
+        lose_games: connectionInfo.lose_games,
+        total_games: connectionInfo.total_games,
+        scores: connectionInfo.scores,
+        total_minutes: connectionInfo.total_minutes,
       },
     });
 
@@ -68,11 +68,11 @@ const TournamentPage: React.FC = () => {
         name: connectionInfo.username1,
         imageUrl: connectionInfo.user1_image,
         stats: {
-          adaptation: 80,
-          agility: 60,
-          winStreaks: 70,
-          endurance: 90,
-          eliteTierRanking: 75,
+            win_games: connectionInfo.win_games,
+            lose_games: connectionInfo.lose_games,
+            total_games: connectionInfo.total_games,
+            scores: connectionInfo.scores,
+            total_minutes: connectionInfo.total_minutes,
         },
         index: 1,
         boxShadowsWinner: false,
@@ -82,11 +82,11 @@ const TournamentPage: React.FC = () => {
         name: connectionInfo.username2,
         imageUrl: connectionInfo.user2_image,
         stats: {
-          adaptation: 80,
-          agility: 60,
-          winStreaks: 70,
-          endurance: 90,
-          eliteTierRanking: 75,
+            win_games: connectionInfo.win_games2,
+            lose_games: connectionInfo.lose_games2,
+            total_games: connectionInfo.total_games2,
+            scores: connectionInfo.scores2,
+            total_minutes: connectionInfo.total_minutes2,
         },
         index: 2,
         boxShadowsWinner: false,

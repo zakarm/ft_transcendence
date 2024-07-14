@@ -162,7 +162,12 @@ export default function RightBar({
                         />
                       </div>
                       <div className={`col ${styles.profile} mt-2`}>
-                        <h3 className="valo-font">{userdata && userdata.username}</h3>
+                        {
+                            userdata && userdata.username && userdata.username.length > 8 ?
+                            <marquee className="valo-font w-50">{userdata && userdata.username}</marquee>
+                            :
+                            <h3 className="valo-font">{userdata && userdata.username}</h3>
+                        }
                         <h4 style={{ fontFamily: 'Itim', color: '#FFEBEB' }}>#{userdata && userdata.id}</h4>
                       </div>
                     </div>

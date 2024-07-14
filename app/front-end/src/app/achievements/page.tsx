@@ -168,7 +168,7 @@ const Achievements: React.FC<AchivProps> = React.memo(({ choosenTab, achievement
         const data = await response.json();
         setAchievements(data);
       } catch (error) {
-        console.error(`Error : ${error}`);
+        // console.error(`Error : ${error}`);
       }
     };
     getAchievements();
@@ -178,35 +178,22 @@ const Achievements: React.FC<AchivProps> = React.memo(({ choosenTab, achievement
     // TOURNAMENT achievements
     {
       title: 'EARLY BIRD',
-      subTitle: 'Win a match within the first three minutes',
+      subTitle: 'Win a Quarter final match within the first three minutes',
       imageURL: '/assets/images/achievement/achiv_tourn1.png',
       achieved: achievements.tournament ? achievements.tournament['early'] : false,
     },
-    // {
-    //     title: 'GRAND SLAM',
-    //     subTitle: 'Win three consecutive tournaments',
-    //     imageURL: '/assets/images/achievement/achiv_tourn4.png',
-    //     achieved: achievements.tournament ? achievements.tournament['slam'] : false,
-    // },
     {
-      title: 'TRIPLE THREAT',
-      subTitle: 'Score a hat-trick (three consecutive points) at least twice in a match',
+      title: 'UNSTOPPABLE FORCE',
+      subTitle: 'Win a tournament with the highest ball speed',
       imageURL: '/assets/images/achievement/achiv_tourn2.png',
-      achieved: achievements.tournament ? achievements.tournament['triple'] : false,
+      achieved: achievements.tournament ? achievements.tournament['unstoppable'] : false,
     },
     {
       title: 'FRONTRUNNER',
-      subTitle: 'Reach the finals of the tournament',
+      subTitle: 'Win a final of a tournament within five minutes',
       imageURL: '/assets/images/achievement/achiv_tourn3.png',
       achieved: achievements.tournament ? achievements.tournament['front'] : false,
     },
-    // MATCH GAME achievements
-    // {
-    //     title: 'IRON DEFENSE',
-    //     subTitle: 'Win a game without letting your opponent score more than five points',
-    //     imageURL: '/assets/images/achievement/achiv_match4.png',
-    //     achieved: achievements.match ? achievements.match['iron'] : false,
-    // },
     {
       title: 'SPEEDY VICTORY',
       subTitle: 'Win a game with a score of 7-0 within three minutes',
@@ -214,10 +201,10 @@ const Achievements: React.FC<AchivProps> = React.memo(({ choosenTab, achievement
       achieved: achievements.match ? achievements.match['speedy'] : false,
     },
     {
-      title: 'LAST-MINUTE COMEBACK',
-      subTitle: 'Win a game after being down by five points',
+      title: 'TWENTY WINS',
+      subTitle: 'Win 20 games',
       imageURL: '/assets/images/achievement/achiv_match2.png',
-      achieved: achievements.match ? achievements.match['last'] : false,
+      achieved: achievements.match ? achievements.match['win20'] : false,
     },
     {
       title: 'TABLE KING/QUEEN',

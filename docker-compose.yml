@@ -1,13 +1,31 @@
 services:
     back-end:
         container_name: back-end
-        image: back-end:42
+        restart: always
         build:
             context: ./app/back-end
             dockerfile: Dockerfile
-        restart: always
-        env_file:
-            - .env
+        environment:
+            - POSTGRES_HOST=${POSTGRES_HOST}
+            - POSTGRES_DB=${POSTGRES_DB}
+            - POSTGRES_USER=${POSTGRES_USER}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+            - POSTGRES_PORT=${POSTGRES_PORT}
+            - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
+            - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
+            - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
+            - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
+            - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+            - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+            - GITHUB_REDIRECT_URI=${GITHUB_REDIRECT_URI}
+            - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+            - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+            - GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}
+            - FORTYTWO_CLIENT_ID=${FORTYTWO_CLIENT_ID}
+            - FORTYTWO_CLIENT_SECRET=${FORTYTWO_CLIENT_SECRET}
+            - FORTYTWO_REDIRECT_URI=${FORTYTWO_REDIRECT_URI}
+            - HOST_IP=${HOST_IP}
+            - FRONTEND_HOST=${FRONTEND_HOST}
         volumes:
             - ./app/back-end:/back-end
             - v_data-base:/var/lib/postgresql/data
@@ -16,11 +34,10 @@ services:
 
     front-end:
         container_name: front-end
-        image: front-end:42
+        restart: always
         build:
             context: ./app/front-end
             dockerfile: Dockerfile
-        restart: always
         volumes:
             - ./app/front-end/src:/front-end/src
             - ./app/front-end/public:/front-end/public
@@ -31,13 +48,14 @@ services:
 
     data-base:
         container_name: data-base
-        image: data-base:42
+        restart: always
         build:
             context: ./app/data-base
             dockerfile: Dockerfile
-        restart: always
-        env_file:
-            - .env
+        environment:
+            - POSTGRES_USER=${POSTGRES_USER}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+            - POSTGRES_DB=${POSTGRES_DB}
         volumes:
             - v_data-base:/var/lib/postgresql/data
         networks:
@@ -45,40 +63,207 @@ services:
 
     nginx:
         container_name: nginx
-        image: nginx:42
+        restart: always
         build:
             context: ./services/nginx
             dockerfile: Dockerfile
-        restart: always
         ports:
             - '80:80'
             - '443:443'
-        env_file:
-            - .env
-        networks:
-            - ft_transcendence
-
-    adminer:
-        container_name: adminer
-        image: adminer:42
-        build:
-            context: ./services/adminer
-            dockerfile: Dockerfile
-        restart: always
-        ports:
-            - 8080:8080
         networks:
             - ft_transcendence
 
     redis:
         container_name: redis
-        image: redis:42
+        restart: always
         build:
             context: ./services/redis
             dockerfile: Dockerfile
-        restart: on-failure
-        env_file:
-            - .env
+        networks:
+            - ft_transcendence
+
+    prometheus:
+        container_name: prometheus
+        restart: always
+        build:
+            context: ./services/prometheus-grafana/prometheus
+            dockerfile: Dockerfile
+            args:
+              - PROMETHEUS_PASSWORD=${PROMETHEUS_PASSWORD}
+        volumes:
+            - ./services/prometheus-grafana/prometheus/data:/prometheus/data
+        ports:
+            - '9090:9090'
+        networks:
+            - ft_transcendence
+
+    grafana:
+        container_name: grafana
+        restart: always
+        build:
+            context: ./services/prometheus-grafana/grafana
+            dockerfile: Dockerfile
+        volumes:
+            - ./services/prometheus-grafana/grafana/provisioning:/etc/grafana/provisioning
+            - ./services/prometheus-grafana/grafana/dashboards:/var/lib/grafana/dashboards
+            - ./services/prometheus-grafana/grafana/data:/var/lib/grafana
+        environment:
+            - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
+            - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
+            - GF_SERVER_HTTP_PORT=${GF_SERVER_HTTP_PORT}
+            - GF_SERVER_PROTOCOL=${GF_SERVER_PROTOCOL}
+            - GF_SERVER_CERT_FILE=${GF_SERVER_CERT_FILE}
+            - GF_SERVER_CERT_KEY=${GF_SERVER_CERT_KEY}
+            - PROMETHEUS_PASSWORD=${PROMETHEUS_PASSWORD}
+        ports:
+            - '3002:3002'
+        networks:
+            - ft_transcendence
+
+    alertmanager:
+      container_name: alertmanager
+      restart: always
+      build:
+        context: ./services/prometheus-grafana/alertmanager
+        dockerfile: Dockerfile
+        args:
+          - SMTP_TO=${SMTP_TO}
+          - SMTP_FROM=${SMTP_FROM}
+          - SMTP_SMARTHOST=${SMTP_SMARTHOST}
+          - SMTP_AUTH_USERNAME=${SMTP_AUTH_USERNAME}
+          - SMTP_AUTH_IDENTITY=${SMTP_AUTH_IDENTITY}
+          - SMTP_AUTH_PASSWORD=${SMTP_AUTH_PASSWORD}
+      volumes:
+        - ./services/prometheus-grafana/alertmanager/data:/alertmanager/data
+      networks:
+        - ft_transcendence
+
+    cadvisor:
+      container_name: cadvisor
+      restart: always
+      build:
+        context: ./services/prometheus-grafana/exporters/cadvisor
+        dockerfile: Dockerfile
+      volumes:
+        - /:/rootfs:ro
+        - /var/run/docker.sock:/var/run/docker.sock:rw
+        - /sys:/sys:ro
+        - /var/lib/docker/:/var/lib/docker:ro
+        - /dev/disk/:/dev/disk:ro
+      networks:
+        - ft_transcendence
+
+    redis-exporter:
+      container_name: redis-exporter
+      restart: always
+      build:
+        context: ./services/prometheus-grafana/exporters/redis-exporter
+        dockerfile: Dockerfile
+      environment:
+        - REDIS_ADDR=${REDIS_ADDR}
+      networks:
+        - ft_transcendence
+
+    postgres-exporter:
+      container_name: postgres-exporter
+      restart: always
+      build:
+        context: ./services/prometheus-grafana/exporters/postgres-exporter
+        dockerfile: Dockerfile
+      environment:
+        - DATA_SOURCE_NAME=${DATA_SOURCE_NAME}
+      networks:
+        - ft_transcendence
+
+    setup:
+        container_name: setup
+        build:
+            context: ./services/elk/tools
+            dockerfile: Dockerfile
+        volumes:
+            - certs:/usr/share/elasticsearch/config/certs
+        environment:
+            - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+            - KIBANA_PASSWORD=${KIBANA_PASSWORD}
+        healthcheck:
+            test: ['CMD-SHELL', '[ -f config/certs/elasticsearch/elasticsearch.crt ]']
+            interval: 1s
+            timeout: 5s
+            retries: 120
+        networks:
+            - ft_transcendence
+
+    elasticsearch:
+        container_name: elasticsearch
+        restart: always
+        build:
+            context: ./services/elk/elasticsearch
+            dockerfile: Dockerfile
+        volumes:
+            - certs:/usr/share/elasticsearch/config/certs
+            - elasticsearchdata:/usr/share/elasticsearch/data
+        ports:
+            - '9200:9200'
+        environment:
+            - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+        mem_limit: ${MEM_LIMIT}
+        ulimits:
+            memlock: { soft: -1, hard: -1 }
+        depends_on:
+            setup:
+                condition: service_healthy
+        networks:
+            - ft_transcendence
+
+    kibana:
+        container_name: kibana
+        restart: always
+        build:
+            context: ./services/elk/kibana
+            dockerfile: Dockerfile
+        volumes:
+            - certs:/usr/share/kibana/config/certs
+            - kibanadata:/usr/share/kibana/data
+        ports:
+            - '5601:5601'
+        environment:
+            - KIBANA_PASSWORD=${KIBANA_PASSWORD}
+        mem_limit: ${MEM_LIMIT}
+        depends_on:
+            setup:
+                condition: service_healthy
+        networks:
+            - ft_transcendence
+
+    logstash:
+        container_name: logstash
+        restart: always
+        build:
+            context: ./services/elk/logstash
+            dockerfile: Dockerfile
+        volumes:
+            - certs:/usr/share/logstash/certs
+        environment:
+            - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+        depends_on:
+            setup:
+                condition: service_healthy
+        networks:
+            - ft_transcendence
+
+    filebeat:
+        container_name: filebeat
+        restart: always
+        build:
+            context: ./services/elk/filebeat
+            dockerfile: Dockerfile
+        volumes:
+            - /var/lib/docker/containers:/var/lib/docker/containers:ro
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - certs:/usr/share/filebeat/certs
+        depends_on:
+            setup:
+                condition: service_healthy
         networks:
             - ft_transcendence
 
@@ -90,6 +275,18 @@ volumes:
             type: none
             o: bind
             device: ${HOME}/Desktop/data
+    certs:
+        name: certs
+    elasticsearchdata:
+        name: elasticsearchdata
+    kibanadata:
+        name: kibanadata
+    grfaana-data:
+        name: grfaana-data
+    prometheus-data:
+        name: prometheus-data
+    alertmanager-data:
+        name: alertmanager-data
 
 networks:
     ft_transcendence:

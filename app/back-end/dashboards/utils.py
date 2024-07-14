@@ -13,7 +13,6 @@ def get_tackles(obj):
     tackles_as_user_two = Match.objects.filter(user_two=obj).aggregate(Sum('tackle_user_two'))['tackle_user_two__sum']
     return (tackles_as_user_one or 0) + (tackles_as_user_two or 0)
 
-
 def get_scores(obj):
     scores_as_user_one = Match.objects.filter(user_one=obj).aggregate(Sum('score_user_one'))['score_user_one__sum']
     scores_as_user_two = Match.objects.filter(user_two=obj).aggregate(Sum('score_user_two'))['score_user_two__sum']
@@ -123,3 +122,12 @@ def get_total_minutes(obj):
         minutes_months.insert(0, total_minutes)
 
     return {"months": months, "minutes_months": minutes_months}
+
+
+def get_total_minutes_played(obj) -> float:
+    matches = Match.objects.filter(Q(user_one=obj) | Q(user_two=obj))
+    match_durations = []
+    for match in matches:
+        match_duration = match.match_end - match.match_start
+        match_durations.append(match_duration.total_seconds() / 60)
+    return sum(match_durations)

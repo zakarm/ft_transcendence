@@ -73,52 +73,45 @@ function connectToSocket({ pageUrl, setData }: connectSocketTypes) {
     tmpData = initData;
   };
 
-  if (tournamentID && access) {
-    try {
-      if (wss && oldpg !== tournamentID) {
-        reinitializeData();
-        wss.close();
-        wss = null;
-      }
-      wss = new WebSocket(
-        `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/pingpong/tournament/${tournamentID}/?token=${access}&watch=true`,
-      );
-
-      wss.onopen = () => {
-        setData(initData);
-        tmpData = initData;
-        console.log('connected to socket successfully');
-        oldpg = tournamentID;
-        if (wss) {
-          wss.onmessage = (event) => {
-            const dt = JSON.parse(event.data);
-            if (dt.message.action === 'TournamentData') {
-              tmpData = initData;
-              tmpData.data.quarter_final = dt.message.tournamentdata.quarter_final as QuarterFinalMatchTypes;
-              tmpData.data.semi_final = dt.message.tournamentdata.semi_final as SemiFinalMatchTypes;
-              tmpData.data.final = dt.message.tournamentdata.final as FinalMatchTypes;
-              setData(tmpData);
-              console.log('l----<;------>>>>> ', tmpData);
+    if (tournamentID && access) {
+        try {
+            if (wss && oldpg !== tournamentID) {
+                reinitializeData();
+                wss.close();
+                wss = null;
             }
-            console.log(event.data);
-          };
-        }
-      };
+            wss = new WebSocket(
+                `${process.env.NEXT_PUBLIC_BACKEND_WS_HOST}/ws/pingpong/tournament/${tournamentID}/?token=${access}&watch=true`,
+            );
 
-      wss.onerror = (error) => {
-        reinitializeData();
-        console.log(`Error : ${error}`);
-      };
-      wss.onclose = () => {
-        reinitializeData();
-        console.log('closed connection');
-      };
-    } catch (error) {
-      console.error(`Error : ${error}`);
+            wss.onopen = () => {
+                setData(initData);
+                tmpData = initData
+                oldpg = tournamentID;
+                if (wss) {
+                    wss.onmessage = (event) => {
+                        const dt = JSON.parse(event.data);
+                        if(dt.message.action === 'TournamentData'){
+                            tmpData = initData;
+                            tmpData.data.quarter_final = dt.message.tournamentdata.quarter_final as QuarterFinalMatchTypes;
+                            tmpData.data.semi_final = dt.message.tournamentdata.semi_final as SemiFinalMatchTypes;
+                            tmpData.data.final = dt.message.tournamentdata.final as FinalMatchTypes;
+                            setData(tmpData);
+                        }
+                    };
+                }
+            };
+
+            wss.onerror = (error) => {
+                reinitializeData();
+            };
+            wss.onclose = () => {
+                reinitializeData();
+            };
+        } catch (error) {
+            // console.error(`Error : ${error}`);
+        }
     }
-  } else {
-    console.log('Missing tournamentID or access token');
-  }
 }
 
 function UpcomingMatch({ p1, p2 }: { p1: UserInfoTypes; p2: UserInfoTypes }) {

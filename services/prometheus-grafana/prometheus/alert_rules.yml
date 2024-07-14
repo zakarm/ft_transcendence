@@ -2,14 +2,14 @@ groups:
   - name: example
     rules:
       # General instance down alert
-      # - alert: InstanceDown
-      #   expr: up == 0
-      #   for: 1m
-      #   labels:
-      #     severity: critical
-      #   annotations:
-      #     summary: "Instance {{ $labels.instance }} down"
-      #     description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute."
+      - alert: InstanceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Instance {{ $labels.instance }} down"
+          description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute."
 
       # cAdvisor alerts
       - alert: HighContainerCPUUsage
@@ -68,32 +68,3 @@ groups:
         annotations:
           summary: "Redis memory usage is above 1 GB"
           description: "Redis instance ({{ $labels.instance }}) is using {{ $value | humanize1024 }} of memory, which is more than 1 GB."
-
-      # # Elasticsearch alerts (continued)
-      # - alert: ElasticsearchClusterRed
-      #   expr: elasticsearch_cluster_health_status == "red"
-      #   for: 1m
-      #   labels:
-      #     severity: critical
-      #   annotations:
-      #     summary: "Elasticsearch cluster is in red status"
-      #     description: "The Elasticsearch cluster is in a critical state (red)."
-
-      # - alert: ElasticsearchUnavailableNodes
-      #   expr: elasticsearch_nodes_unavailable > 0
-      #   for: 1m
-      #   labels:
-      #     severity: warning
-      #   annotations:
-      #     summary: "Elasticsearch nodes unavailable"
-      #     description: "There are unavailable nodes in the Elasticsearch cluster."
-
-      # # High request latency alert
-      # - alert: HighRequestLatency
-      #   expr: http_request_duration_seconds_sum{job="django"} / http_request_duration_seconds_count{job="django"} > 2
-      #   for: 5m
-      #   labels:
-      #     severity: warning
-      #   annotations:
-      #     summary: "High request latency on Django server"
-      #     description: "Average request latency is too high on the Django server."

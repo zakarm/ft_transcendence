@@ -52,7 +52,7 @@ export default function SignInPage() {
         }
       }
     } catch (error) {
-      console.error('No response received from server.');
+      // console.error('No response received from server.');
     }
   };
   return (

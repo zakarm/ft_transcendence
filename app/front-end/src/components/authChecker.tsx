@@ -6,7 +6,6 @@ import Cookies from 'js-cookie';
 import Spinner from 'react-bootstrap/Spinner';
 import styles from './styles/authChecker.module.css';
 import MainContainer from './mainContainer';
-import { toast } from 'react-toastify';
 
 const AuthChecker = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
@@ -30,7 +29,7 @@ const AuthChecker = ({ children }: { children: React.ReactNode }) => {
           return null;
         }
       } catch (error) {
-        console.error(`Error refreshing token: ${error}`);
+        // console.error(`Error refreshing token: ${error}`);
         return null;
       }
     };
@@ -72,7 +71,7 @@ const AuthChecker = ({ children }: { children: React.ReactNode }) => {
           router.push('/sign-in');
         }
       } catch (error: any) {
-        console.error(`Error : ${error}`);
+        // console.error(`Error : ${error}`);
       }
     };
     authentication();

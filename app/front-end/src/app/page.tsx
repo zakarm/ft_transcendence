@@ -57,7 +57,7 @@ const ThreeScene = () => {
       },
       undefined,
       (error: any) => {
-        console.error(`Error : ${error}`);
+        // console.error(`Error : ${error}`);
       },
     );
 
