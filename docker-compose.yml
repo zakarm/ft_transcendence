@@ -281,12 +281,6 @@ volumes:
         name: elasticsearchdata
     kibanadata:
         name: kibanadata
-    grfaana-data:
-        name: grfaana-data
-    prometheus-data:
-        name: prometheus-data
-    alertmanager-data:
-        name: alertmanager-data
 
 networks:
     ft_transcendence:

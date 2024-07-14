@@ -888,6 +888,8 @@ class TournamnetGameConsumer(AsyncWebsocketConsumer):
                             await set_user_rank()
                             await asyncio.sleep(2)
                             return room.get_winner_index()
+                    for player in self.tournament.get_player_by_maych_id(match_id):
+                        await self.connction_ack(player)
                     await self.opponents(match_id, _tournament)
                     await self.broadcast_message({"action": "start_game"}, match_id)
                     await self.send_score(match_id, _tournament)
