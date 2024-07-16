@@ -1,6 +1,6 @@
 # ft_transcendence ⏳
 
-- You can play matches and tournaments of Ping Pong, and chat live with you friends!
+- Play Ping Pong matches and tournaments, and chat live with your friends!
 
 ## Index
 
