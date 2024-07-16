@@ -216,6 +216,9 @@ export default function InviteFriend({ show, close }: Props) {
 
   useEffect(() => {
     update();
+    searchedPendingFriends.map((friend, index) => (
+      console.log(friend, index)
+    ))
   }, [selectedTab]);
 
   const handle_search = () => {
@@ -394,13 +397,16 @@ export default function InviteFriend({ show, close }: Props) {
                       />
                     </div>
                     <div className="col-9 text-end">
-                      <Button
+                      {
+                        !friend.is_user_from &&
+                        <Button
                         className="mx-1"
                         variant="dark"
                         onClick={() => fetchUser('friends-accept', 'added to friends', friend)}
-                      >
-                        Accept <IoMdCheckmarkCircle color="#FFEBEB" />
-                      </Button>
+                        >
+                          Accept <IoMdCheckmarkCircle color="#FFEBEB" />
+                        </Button>
+                      }
                       <Button
                         variant="dark"
                         onClick={() => fetchUser('friends-remove', 'removed from pending', friend)}
